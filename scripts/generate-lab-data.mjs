@@ -1,4 +1,4 @@
-import { mkdir, readdir, readFile, writeFile } from 'node:fs/promises';
+import { access, mkdir, readdir, readFile, writeFile } from 'node:fs/promises';
 import { dirname, join, relative } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
@@ -6,6 +6,15 @@ const root = dirname(dirname(fileURLToPath(import.meta.url)));
 const homelabRoot = join(root, '..', 'khe-homelab');
 const servicesRoot = join(homelabRoot, 'services');
 const outputPath = join(root, 'src', 'landing', 'lab', 'lab-data.json');
+
+async function pathExists(path) {
+  try {
+    await access(path);
+    return true;
+  } catch {
+    return false;
+  }
+}
 
 async function findComposeFiles(directory) {
   const found = [];
@@ -65,6 +74,11 @@ function byCategory(composeFiles) {
     if (!acc[category].includes(stack)) acc[category].push(stack);
     return acc;
   }, {});
+}
+
+if (!await pathExists(servicesRoot)) {
+  console.log('Using committed lab-data.json; khe-homelab services directory is not available.');
+  process.exit(0);
 }
 
 const composeFiles = await findComposeFiles(servicesRoot);
