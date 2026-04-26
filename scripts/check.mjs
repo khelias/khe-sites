@@ -12,6 +12,7 @@ const htmlFiles = [
 
 const requiredMarkers = [
   '/assets/site-locale.js',
+  '/assets/site.css',
   'data-lang-option="et"',
   'data-lang-option="en"',
 ];
@@ -23,6 +24,12 @@ for (const relativePath of htmlFiles) {
       throw new Error(`${relativePath} is missing ${marker}`);
     }
   }
+  if (content.includes('<style>')) {
+    throw new Error(`${relativePath} still contains inline CSS`);
+  }
+  if (content.includes('href="/fonts/') || content.includes("url('/fonts/")) {
+    throw new Error(`${relativePath} still references root-level fonts`);
+  }
 
   for (const match of content.matchAll(/<script type="module">([\s\S]*?)<\/script>/g)) {
     const script = match[1].replace(/^\s*import\s.+;\s*$/gm, '');
@@ -33,6 +40,7 @@ for (const relativePath of htmlFiles) {
 const sourceFiles = [
   ...htmlFiles,
   'src/shared/site-locale.js',
+  'src/shared/site.css',
 ];
 const bannedText = [
   'Tarkvaraarhitekt töö poolest',

@@ -9,6 +9,9 @@ The individual games are deployed from their own repositories. This repo owns
 the landing pages, shared locale handoff helper, and the launcher shell that
 links into the game apps.
 
+Shared static assets live in `src/shared/` and are copied into each site's
+`/assets/` directory during build.
+
 ## Development
 
 ```sh

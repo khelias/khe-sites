@@ -28,6 +28,8 @@ for (const app of apps) {
   await mkdir(join(outputDir, 'assets'), { recursive: true });
   await copyDirectory(join(root, 'src', app), outputDir);
   await copyFile(join(root, 'src', 'shared', 'site-locale.js'), join(outputDir, 'assets', 'site-locale.js'));
+  await copyFile(join(root, 'src', 'shared', 'site.css'), join(outputDir, 'assets', 'site.css'));
+  await copyDirectory(join(root, 'src', 'shared', 'fonts'), join(outputDir, 'assets', 'fonts'));
 }
 
 console.log(`Built ${apps.join(' and ')} sites into dist/`);
