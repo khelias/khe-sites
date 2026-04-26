@@ -23,6 +23,10 @@
   <p class="tagline" data-i18n="tagline">Software architect by trade. Tinkerer by nature.</p>
 
   <nav>
+    <a href="/lab/?lang=en" data-link="lab">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7h5v5H4zM15 4h5v5h-5zM14 15h6v5h-6zM7 12v4h7M9 9h6"/></svg>
+      <span data-i18n="labLink">Lab Atlas</span>
+    </a>
     <a href="https://games.khe.ee/?lang=en" data-link="games">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="6" width="20" height="12" rx="2"/><path d="M6 12h4M8 10v4"/><circle cx="15" cy="10.5" r="1"/><circle cx="18" cy="13.5" r="1"/></svg>
       <span data-i18n="gamesLink">Games</span>
@@ -53,6 +57,7 @@
       description: 'Tarkvaraarhitekt — projektid ja lingid',
       languageLabel: 'Keel',
       tagline: 'Ehitan tarkvara, väikseid mänge ja kodust pilve.',
+      labLink: 'Lab Atlas',
       gamesLink: 'Mängud',
       footer: 'Self-hosted in Tallinn',
       privacyLink: 'Privaatsus',
@@ -62,6 +67,7 @@
       description: 'Software architect — projects and links',
       languageLabel: 'Language',
       tagline: 'Software architect by trade. Tinkerer by nature.',
+      labLink: 'Lab Atlas',
       gamesLink: 'Games',
       footer: 'Self-hosted in Tallinn',
       privacyLink: 'Privacy',
@@ -72,6 +78,7 @@
     copy: COPY,
     defaultLocale: 'en',
     links: {
+      lab: (locale) => `/lab/?lang=${locale}`,
       games: (locale) => `https://games.khe.ee/?lang=${locale}`,
       privacy: (locale) => `/privacy?lang=${locale}`,
     },

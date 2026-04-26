@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>KHE Lab Atlas</title>
+  <meta name="description" content="Interactive map of the KHE homelab ingress, deploy path, security boundaries, and recovery layers">
+  <link rel="preload" href="/assets/fonts/inter-400.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/assets/fonts/inter-500.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="modulepreload" href="/assets/site-locale.js">
+  <link rel="stylesheet" href="/assets/site.css">
+  <script defer src="/assets/analytics-consent.js" data-analytics-token="58734ed4ae1e4b4e8a8f8f7d50ff74f2" data-analytics-privacy-url="/privacy?lang=en"></script>
+</head>
+<body class="lab-atlas lab-atlas-v3">
+
+<main class="lab-vista">
+  <header class="lab-vista-top">
+    <a class="lab-vista-mark" href="/?lang=en" data-link="home" data-i18n-aria="homeLabel" aria-label="KHE home">KHE</a>
+    <div class="lab-vista-title">
+      <p data-i18n="kicker">Public systems atlas</p>
+      <h1 data-i18n="headline">KHE Lab Atlas</h1>
+      <span data-i18n="subtitle">An interactive map of the homelab paths that matter: public ingress, private access, deploy, trust boundaries, and recovery.</span>
+    </div>
+    <div class="lab-vista-metrics" aria-label="Lab highlights" data-i18n-aria="statusLabel">
+      <div><strong data-lab-metric="routerPorts">0</strong><span data-i18n="metricPorts">open router ports</span></div>
+      <div><strong data-lab-metric="services">17</strong><span data-i18n="metricServices">services</span></div>
+      <div><strong data-lab-metric="containers">27</strong><span data-i18n="metricContainers">containers</span></div>
+      <div><strong data-lab-metric="recoveryLayers">4</strong><span data-i18n="metricLayers">recovery layers</span></div>
+    </div>
+    <div class="language-switcher" role="group" aria-label="Language" data-i18n-aria="languageLabel">
+      <button type="button" data-lang-option="et" aria-pressed="false">ET</button>
+      <button type="button" data-lang-option="en" aria-pressed="true">EN</button>
+    </div>
+  </header>
+
+  <section class="lab-showcase">
+    <nav class="lab-story-rail" role="tablist" aria-label="Atlas mode" data-i18n-aria="modeLabel"></nav>
+
+    <section class="lab-map-stage" aria-label="Interactive route map" data-i18n-aria="mapLabel">
+      <div class="lab-map-copy">
+        <span data-map-code>NET</span>
+        <div>
+          <p data-map-kicker>Signal path</p>
+          <h2 data-map-title>Network without open ports</h2>
+          <strong data-map-summary>Two clean routes explain how the public edge and private LAN path reach the same runtime core.</strong>
+        </div>
+        <div class="lab-map-tools">
+          <button type="button" class="lab-play-route" data-play-route>
+            <span data-i18n="playRoute">Play route</span>
+          </button>
+          <small data-snapshot-status>Repo snapshot unavailable</small>
+        </div>
+      </div>
+      <div class="lab-cinematic-map">
+        <svg data-route-map viewBox="0 0 1000 620" role="img" aria-label="Focused infrastructure route map" data-i18n-aria="mapLabel"></svg>
+      </div>
+      <div class="lab-stage-dock">
+        <div class="lab-lane-tabs" data-lane-tabs></div>
+        <aside class="lab-node-panel" data-node-panel aria-live="polite"></aside>
+      </div>
+    </section>
+  </section>
+</main>
+
+<script type="module" src="/lab/atlas.js"></script>
+</body>
+</html>

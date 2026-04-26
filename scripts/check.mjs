@@ -5,6 +5,7 @@ import { fileURLToPath } from 'node:url';
 const root = dirname(dirname(fileURLToPath(import.meta.url)));
 const htmlFiles = [
   'src/landing/index.html',
+  'src/landing/lab/index.html',
   'src/landing/privacy/index.html',
   'src/games/index.html',
   'src/games/privacy/index.html',

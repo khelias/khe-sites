@@ -1,0 +1,45 @@
+{
+  "generatedAt": "2026-04-26T15:51:16.257Z",
+  "source": {
+    "repo": "khe-homelab",
+    "composeFiles": 18,
+    "composeServiceDefinitions": 32,
+    "publicMetrics": "khe-homelab/README.md service summary"
+  },
+  "metrics": {
+    "routerPorts": 0,
+    "services": 17,
+    "containers": 27,
+    "recoveryLayers": 4
+  },
+  "categories": {
+    "ai": [
+      "n8n",
+      "ollama",
+      "openclaw"
+    ],
+    "apps": [
+      "games",
+      "landing"
+    ],
+    "core": [
+      "adguard",
+      "autoheal",
+      "cloudflare-tunnel",
+      "dockge",
+      "homepage",
+      "nginx-proxy-manager",
+      "uptime-kuma",
+      "vaultwarden"
+    ],
+    "media": [
+      "audiobookshelf",
+      "immich",
+      "jellyfin"
+    ],
+    "productivity": [
+      "nextcloud",
+      "paperless-ngx"
+    ]
+  }
+}
