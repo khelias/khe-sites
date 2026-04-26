@@ -1,0 +1,52 @@
+name: Deploy to Homelab
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: [self-hosted, linux, homelab]
+    env:
+      FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Check
+        run: npm run check
+
+      - name: Build
+        run: npm run build
+
+      - name: Deploy landing
+        run: |
+          test -f dist/landing/index.html
+          mkdir -p /srv/data/sites/khe
+          rm -rf /srv/data/sites/khe/*
+          cp -r dist/landing/* /srv/data/sites/khe/
+
+      - name: Deploy games launcher
+        run: |
+          test -f dist/games/index.html
+          mkdir -p /srv/data/games/launcher
+          rm -rf /srv/data/games/launcher/*
+          cp -r dist/games/* /srv/data/games/launcher/
+
+      - name: Restart static nginx containers
+        run: |
+          cd /home/khe/homelab/services/apps/landing
+          docker compose up -d landing
+          cd /home/khe/homelab/services/apps/games
+          docker compose up -d games
