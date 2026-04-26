@@ -3,476 +3,387 @@ import { createLocaleController } from '/assets/site-locale.js';
 const COPY = {
   en: {
     title: 'KHE Lab Atlas',
-    description: 'Interactive map of the KHE homelab ingress, deploy path, security boundaries, and recovery layers',
+    description: 'A public systems atlas for the KHE homelab: ingress, deploys, private operations, and recovery.',
     homeLabel: 'KHE home',
     languageLabel: 'Language',
-    statusLabel: 'Lab highlights',
-    modeLabel: 'Atlas mode',
-    mapLabel: 'Interactive route map',
-    kicker: 'Public systems atlas',
+    modeLabel: 'Atlas scenes',
+    mapLabel: 'Animated homelab route',
+    stageLabel: 'KHE Lab Atlas',
+    kicker: 'Live homelab atlas',
     headline: 'KHE Lab Atlas',
-    subtitle: 'An interactive map of the homelab paths that matter: public ingress, private access, deploy, trust boundaries, and recovery.',
-    metricPorts: 'open router ports',
-    metricServices: 'services',
-    metricContainers: 'containers',
-    metricLayers: 'recovery layers',
-    selectedLabel: 'Selected node',
-    laneLabel: 'Active route',
-    factsLabel: 'Technical facts',
-    plainLabel: 'Plain version',
-    proofLabel: 'What it proves',
-    playRoute: 'Play route',
-    stopRoute: 'Stop',
-    snapshotLoading: 'Loading repo snapshot',
-    snapshotFallback: 'Repo snapshot unavailable',
-    snapshotGenerated: (data) => `Repo snapshot: ${data.source.composeFiles} compose files`,
-    homeHref: '/?lang=en',
+    proofLink: 'Read the proof',
+    proofKicker: 'Public proof',
+    mapOpen: 'Open diagram',
+    mapClose: 'Close',
+    mapCloseLabel: 'Close diagram',
+    mapModalKicker: 'Large diagram',
+    selectedNode: 'Selected system point',
+    routerPorts: 'open router ports',
+    services: 'services',
+    containers: 'containers',
+    recoveryLayers: 'recovery layers',
+    composeFiles: 'compose files',
+    serviceDefinitions: 'service definitions',
+    publicApps: 'public apps',
+    statusReady: 'ready',
+    statusRunning: 'running path',
+    statusDone: 'path complete',
+    snapshot: (data) => `Snapshot: ${data.source.composeFiles} Compose files`,
+    snapshotFallback: 'Static snapshot',
   },
   et: {
     title: 'KHE Lab Atlas',
-    description: 'Interaktiivne kaart KHE kodulabori ligipääsust, deploy teest, turvapiiridest ja taastest',
+    description: 'KHE homelabi avalik süsteemiatlas: ingress, deploy-protsess, privaatne haldus ja taaste.',
     homeLabel: 'KHE avaleht',
     languageLabel: 'Keel',
-    statusLabel: 'Labori põhinäitajad',
-    modeLabel: 'Atlase režiim',
-    mapLabel: 'Interaktiivne teekonnakaart',
-    kicker: 'Avalik süsteemiatlas',
+    modeLabel: 'Atlase stseenid',
+    mapLabel: 'Animeeritud homelabi teekond',
+    stageLabel: 'KHE Lab Atlas',
+    kicker: 'Elav homelabi atlas',
     headline: 'KHE Lab Atlas',
-    subtitle: 'Interaktiivne kaart homelabi olulistest teedest: avalik ligipääs, privaatne ligipääs, deploy, usalduspiirid ja taaste.',
-    metricPorts: 'avatud ruuteripordi',
-    metricServices: 'teenust',
-    metricContainers: 'containerit',
-    metricLayers: 'taastekihti',
-    selectedLabel: 'Valitud sõlm',
-    laneLabel: 'Aktiivne rada',
-    factsLabel: 'Tehnilised faktid',
-    plainLabel: 'Lihtne seletus',
-    proofLabel: 'Mida see tõestab',
-    playRoute: 'Mängi rada',
-    stopRoute: 'Peata',
-    snapshotLoading: 'Loen repo snapshoti',
-    snapshotFallback: 'Repo snapshot pole saadaval',
-    snapshotGenerated: (data) => `Repo snapshot: ${data.source.composeFiles} compose faili`,
-    homeHref: '/?lang=et',
+    proofLink: 'Vaata tõestust',
+    proofKicker: 'Avalik tõestus',
+    mapOpen: 'Ava diagramm',
+    mapClose: 'Sulge',
+    mapCloseLabel: 'Sulge diagramm',
+    mapModalKicker: 'Suur diagramm',
+    selectedNode: 'Valitud süsteemipunkt',
+    routerPorts: 'avatud ruuteripordid',
+    services: 'teenust',
+    containers: 'konteinerit',
+    recoveryLayers: 'taastekihti',
+    composeFiles: 'Compose faili',
+    serviceDefinitions: 'teenuse definitsiooni',
+    publicApps: 'avalikku rakendust',
+    statusReady: 'valmis',
+    statusRunning: 'rada jookseb',
+    statusDone: 'rada valmis',
+    snapshot: (data) => `Hetkeseis: ${data.source.composeFiles} Compose faili`,
+    snapshotFallback: 'Staatiline hetkeseis',
   },
 };
 
-const STEPS = {
-  visitor: {
-    icon: '01',
-    copy: {
-      en: ['Visitor', 'Public entry', 'This is a normal person opening the public site or games page.', ['Public-only surface', 'No admin links', 'Static app first']],
-      et: ['Külastaja', 'Avalik sisenemine', 'See on inimene, kes avab avaliku saidi või mängude lehe.', ['Ainult avalik pind', 'Admin-liideseid pole', 'Staatiline sait esimesena']],
-    },
+const FALLBACK_DATA = {
+  source: {
+    composeFiles: 18,
+    composeServiceDefinitions: 32,
   },
-  cloudflare: {
-    icon: 'CF',
-    copy: {
-      en: ['Cloudflare edge', 'External front door', 'Cloudflare acts like the public front desk before traffic reaches home.', ['TLS at the edge', 'Access OTP for tools', 'No router NAT']],
-      et: ['Cloudflare edge', 'Väline uks', 'Cloudflare on avalik vastuvõtukiht enne, kui liiklus koju jõuab.', ['TLS Cloudflare’is', 'OTP kaitstud tööriistad', 'Ruuteri NAT puudub']],
-    },
+  metrics: {
+    routerPorts: 0,
+    services: 17,
+    containers: 27,
+    recoveryLayers: 4,
   },
-  tunnel: {
-    icon: 'TN',
-    copy: {
-      en: ['Cloudflare Tunnel', 'Outbound ingress', 'The server calls out to Cloudflare, instead of strangers connecting directly into the house.', ['Outbound tunnel', 'Selected hostnames', 'Small public surface']],
-      et: ['Cloudflare Tunnel', 'Väljuv ingress', 'Server ühendub ise Cloudflare poole, mitte võõrad ei tule otse koju sisse.', ['Väljuv tunnel', 'Valitud domeenid', 'Väike avalik pind']],
-    },
-  },
-  docker: {
-    icon: 'VM',
-    copy: {
-      en: ['Docker VM', 'Runtime core', 'This is the main machine where the home services actually run.', ['17 services', '27 containers', 'Compose-managed']],
-      et: ['Docker VM', 'Runtime tuum', 'See on masin, kus homelabi teenused päriselt jooksevad.', ['17 teenust', '27 konteinerit', 'Compose haldus']],
-    },
-  },
-  publicApps: {
-    icon: 'APP',
-    copy: {
-      en: ['Public apps', 'Product surface', 'These are the parts other people can safely open and use.', ['khe.ee', 'games.khe.ee', 'Static deployment']],
-      et: ['Avalikud äpid', 'Toote pind', 'Need on osad, mida teised inimesed saavad avada ja kasutada ilma admin-pinda nägemata.', ['khe.ee', 'games.khe.ee', 'Staatiline deploy']],
-    },
-  },
-  device: {
-    icon: 'LAN',
-    copy: {
-      en: ['Trusted device', 'Private user', 'Your own laptop or phone gets a private route that visitors never see.', ['Home network', 'Mobile via VPN', 'No public admin']],
-      et: ['Usaldatud seade', 'Privaatne kasutaja', 'Sinu enda läppar või telefon saab privaatse tee, mida külastajad ei näe.', ['Koduvõrk', 'Mobiil VPN-iga', 'Avalikku adminit pole']],
-    },
-  },
-  tailscale: {
-    icon: 'TS',
-    copy: {
-      en: ['Tailscale', 'Private access', 'This creates a private lane back home when you are away.', ['Subnet router', 'Admin path', 'Bypasses upload limits']],
-      et: ['Tailscale', 'Privaatne ligipääs', 'See loob privaatse raja koju tagasi, kui oled eemal.', ['LAN subnet-router', 'Admini tee', 'Väldib upload piiranguid']],
-    },
-  },
-  adguard: {
-    icon: 'DNS',
-    copy: {
-      en: ['AdGuard DNS', 'Split-horizon DNS', 'Local domains resolve to LAN routes instead of bouncing through the public edge.', ['LAN rewrites', 'Single DNS path', 'Filtering follows devices']],
-      et: ['AdGuard DNS', 'Split-horizon DNS', 'Kohalikud domeenid lahenevad LAN teele, mitte avaliku edge’i kaudu tagasi.', ['LAN DNS-ümberkirjutused', 'Üks DNS tee', 'Filter liigub seadmetega']],
-    },
-  },
-  npm: {
-    icon: 'TLS',
-    copy: {
-      en: ['Nginx Proxy Manager', 'LAN TLS proxy', 'A wildcard certificate gives home services clean HTTPS on private routes.', ['Wildcard TLS', 'LAN-only admin', 'No upload cap']],
-      et: ['Nginx Proxy Manager', 'LAN TLS proxy', 'Wildcard-sertifikaat annab koduteenustele privaatteedel puhta HTTPS-i.', ['Wildcard TLS', 'LAN-only admin', 'Upload cap puudub']],
-    },
-  },
-  commit: {
-    icon: 'GIT',
-    copy: {
-      en: ['Commit', 'Source change', 'A site change starts as a tracked code change, not as manual server tinkering.', ['Git history', 'Reviewable diff', 'Rollback source']],
-      et: ['Commit', 'Koodimuudatus', 'Saidi muudatus algab jälgitava koodimuudatusena, mitte serveris käsitsi nokitsemisena.', ['Git history', 'Ülevaadatav diff', 'Rollback allikas']],
-    },
-  },
-  actions: {
-    icon: 'CI',
-    copy: {
-      en: ['GitHub Actions', 'CI pipeline', 'Build and checks run before deploy, so the public surface is not a manual copy.', ['Automated checks', 'Build artifact', 'Repeatable path']],
-      et: ['GitHub Actions', 'CI pipeline', 'Build ja kontrollid jooksevad enne deploy’d, seega avalik pind ei ole käsitsi copy.', ['Automaatkontrollid', 'Build artefakt', 'Korratav tee']],
-    },
-  },
-  runner: {
-    icon: 'RUN',
-    copy: {
-      en: ['Self-hosted runner', 'Deploy worker', 'This worker receives the finished build and places it where the site is served.', ['Runs in homelab', 'Repo-scoped', 'No manual upload']],
-      et: ['Self-hosted runner', 'Deploy worker', 'See worker võtab valmis buildi ja paneb selle kohta, kust saiti serveeritakse.', ['Jookseb homelabis', 'Repo-scoped', 'Käsitsi uploadi pole']],
-    },
-  },
-  servedDirs: {
-    icon: 'WWW',
-    copy: {
-      en: ['Served directories', 'Static root', 'Built files land in served directories instead of requiring an app server for everything.', ['Static assets', 'Simple rollback shape', 'Small runtime']],
-      et: ['Serve directory’d', 'Static root', 'Buildi failid lähevad serveeritavatesse kataloogidesse, mitte igale asjale app serverisse.', ['Static assetid', 'Lihtne rollback kuju', 'Väike runtime']],
-    },
-  },
-  checks: {
-    icon: 'CHK',
-    copy: {
-      en: ['Static checks', 'Guardrail', 'The route proves that UI, copy, and links are valid before publishing.', ['HTML markers', 'Locale hooks', 'No inline CSS drift']],
-      et: ['Staatilised kontrollid', 'Guardrail', 'Tee tõestab, et UI, copy ja lingid on enne avaldamist korras.', ['HTML markerid', 'Locale hookid', 'Inline CSS puudub']],
-    },
-  },
-  build: {
-    icon: 'BLD',
-    copy: {
-      en: ['Build', 'Artifact creation', 'The same build output can be previewed locally and published to production.', ['dist/landing', 'dist/games', 'Font assets copied']],
-      et: ['Build', 'Artefakti loomine', 'Sama build outputi saab lokaalselt eelvaadata ja productionisse avaldada.', ['dist/landing', 'dist/games', 'Font assetid kopeeritud']],
-    },
-  },
-  smoke: {
-    icon: 'E2E',
-    copy: {
-      en: ['Smoke test', 'User-visible check', 'The strongest version verifies the public path in a browser after deploy.', ['Browser load', 'Console clean', 'Responsive check']],
-      et: ['Smoke test', 'Kasutajale nähtav kontroll', 'Tugevaim versioon kontrollib pärast deploy’d avaliku tee brauseris üle.', ['Brauseris laadimine', 'Konsool puhas', 'Responsive check']],
-    },
-  },
-  releaseNote: {
-    icon: 'LOG',
-    copy: {
-      en: ['Release note', 'Human context', 'A tiny release trail makes the site feel alive without exposing internal dashboards.', ['Last deploy', 'Last check', 'Public-safe metadata']],
-      et: ['Release jälg', 'Inimlik kontekst', 'Väike release trail teeb saidi elusaks ilma sisemisi dashboarde avamata.', ['Viimane deploy', 'Viimane kontroll', 'Avalik metadata']],
-    },
-  },
-  closedRouter: {
-    icon: '0',
-    copy: {
-      en: ['Closed router', 'Zero inbound ports', 'The strongest security story is that the home router is not the public interface.', ['0 open ports', 'Tunnel ingress', 'No WAN NAT']],
-      et: ['Suletud ruuter', 'Null sissetulevat porti', 'Tugevaim turvalugu on see, et koduruuter ei ole avalik liides.', ['0 avatud porti', 'Tunnel ingress', 'WAN NAT puudub']],
-    },
-  },
-  cloudflareAccess: {
-    icon: 'OTP',
-    copy: {
-      en: ['Cloudflare Access', 'Sensitive gate', 'Dashboards and ops tools sit behind identity checks before reaching the tunnel.', ['Email OTP', 'Tool-only gate', 'Public apps stay simple']],
-      et: ['Cloudflare Access', 'Tundlik värav', 'Dashboardid ja ops tööriistad on enne tunnelit identiteedikontrolli taga.', ['Email OTP + allowlist', 'Ainult tööriistade gate', 'Avalikud äpid jäävad lihtsaks']],
-    },
-  },
-  openclaw: {
-    icon: 'AI',
-    copy: {
-      en: ['OpenClaw', 'AI ops workspace', 'A protected agent workspace exists, but the public atlas describes it without exposing controls.', ['Access protected', 'Operational context', 'No public control plane']],
-      et: ['OpenClaw', 'AI ops workspace', 'Kaitstud agent workspace eksisteerib, aga avalik atlas kirjeldab seda ilma juhtpaneele avamata.', ['Ligipääs kaitstud', 'Operatiivne kontekst', 'Avalikku control plane’i pole']],
-    },
-  },
-  socketProxy: {
-    icon: 'SOX',
-    copy: {
-      en: ['Docker socket proxy', 'Narrow capability', 'Tools that need Docker visibility receive scoped access, not the raw socket.', ['Read-limited pattern', 'Restart only where needed', 'No broad exec/create']],
-      et: ['Docker socket proxy', 'Kitsas võimekus', 'Dockerit vajavad tööriistad saavad piiratud ligipääsu, mitte raw socketit.', ['Read-limited pattern', 'Restart ainult vajadusel', 'Lai exec/create puudub']],
-    },
-  },
-  noSecrets: {
-    icon: 'ENV',
-    copy: {
-      en: ['Secrets boundary', 'Repo hygiene', 'The public showcase can be generated only from sanitized metadata.', ['No .env values', 'No tokens', 'No admin URLs']],
-      et: ['Saladuste piir', 'Repo hügieen', 'Avalik showcase tuleb ainult sanitiseeritud metadatast.', ['.env väärtusi pole', 'Tokeneid pole', 'Admin URL-e pole']],
-    },
-  },
-  healthcheck: {
-    icon: 'HC',
-    copy: {
-      en: ['Healthchecks', 'Local signal', 'Containers publish health so recovery can start before humans notice symptoms.', ['Service-level signal', 'Autoheal input', 'Standardization target']],
-      et: ['Healthcheckid', 'Kohalik signaal', 'Healthcheckiga konteinerid annavad seisust märku, et taastumine algaks enne kui inimene sümptomeid märkab.', ['Teenusepõhine signaal', 'Autoheali sisend', 'Standardiseerimise siht']],
-    },
-  },
-  uptime: {
-    icon: 'UP',
-    copy: {
-      en: ['Uptime Kuma', 'Alert layer', 'Service monitors turn outages into phone-visible alerts quickly.', ['HTTP/DNS monitors', 'Telegram alerts', 'Config backed up']],
-      et: ['Uptime Kuma', 'Alert kiht', 'Teenusemonitorid muudavad katkestused kiiresti telefonis nähtavaks alertiks.', ['HTTP/DNS monitorid', 'Telegram alertid', 'Config backupitud']],
-    },
-  },
-  uptimeRobot: {
-    icon: 'EXT',
-    copy: {
-      en: ['UptimeRobot', 'External monitor', 'An outside monitor can still alert when the whole homelab or home internet is unreachable.', ['5 minute ping', 'iOS push', 'Outside the LAN']],
-      et: ['UptimeRobot', 'Väline monitor', 'Väline monitor saab hoiatada ka siis, kui terve homelab või koduinternet on maas.', ['5 min ping', 'iOS push', 'Väljaspool LAN-i']],
-    },
-  },
-  autoheal: {
-    icon: 'AH',
-    copy: {
-      en: ['Autoheal', 'Container restart', 'Unhealthy containers are restarted without waiting for a full crash.', ['Docker health state', 'Socket proxy path', 'Covers stuck workers']],
-      et: ['Autoheal', 'Konteineri restart', 'Unhealthy konteinerid restarditakse ilma täielikku crashi ootamata.', ['Docker health state', 'Socket proxy tee', 'Katab kinni jäänud workerid']],
-    },
-  },
-  watchdog: {
-    icon: 'WD',
-    copy: {
-      en: ['Hardware watchdog', 'VM recovery', 'When the kernel wedges and containers cannot report anything, the watchdog is the last local layer.', ['30s timeout', 'Hypervisor reset', 'Kernel hang class']],
-      et: ['Hardware watchdog', 'VM taastumine', 'Kui kernel hangib ja konteinerid ei saa midagi raporteerida, on watchdog viimane kohalik kiht.', ['30s timeout', 'Hypervisor reset', 'Kernel hang klass']],
-    },
-  },
-  postgresDump: {
-    icon: 'DB',
-    copy: {
-      en: ['Postgres dumps', 'Database backup', 'Stateful services need recoverable database snapshots, not just container restarts.', ['Service DBs', 'Scheduled backup', 'Restore test target']],
-      et: ['Postgres dumpid', 'Andmebaasi backup', 'Stateful teenused vajavad taastatavaid DB snapshote, mitte ainult konteineri restarti.', ['Teenuste DB-d', 'Ajastatud backup', 'Restore testi siht']],
-    },
-  },
-  configSnapshot: {
-    icon: 'CFG',
-    copy: {
-      en: ['Config snapshots', 'Service memory', 'Configs and monitor definitions are part of recovery, not decoration.', ['Compose files', 'Kuma config', 'Homepage config']],
-      et: ['Config snapshotid', 'Teenuse mälu', 'Configud ja monitori definitsioonid on taastumise osa, mitte dekoratsioon.', ['Compose failid', 'Kuma config', 'Homepage config']],
-    },
-  },
-  zfs: {
-    icon: 'ZFS',
-    copy: {
-      en: ['ZFS mirror', 'Local storage', 'Bulk data and backups live on mirrored disks behind the Docker VM.', ['2 x 12TB mirror', 'NFS mount', 'Bulk media and docs']],
-      et: ['ZFS mirror', 'Kohalik salvestus', 'Bulk data ja backupid elavad Docker VM-i taga mirroritud ketastel.', ['2 x 12TB mirror', 'NFS mount', 'Media ja dokumendid']],
-    },
-  },
-  offsiteNext: {
-    icon: 'B2',
-    copy: {
-      en: ['Offsite backup', 'Cloudflare R2 tier', 'Restic ships local backup payloads to Cloudflare R2 so recovery is not tied to the local ZFS pool.', ['restic to R2', 'AES-256 + retention', 'Restore runbook']],
-      et: ['Offsite backup', 'Cloudflare R2 kiht', 'Restic saadab kohalikud backupid Cloudflare R2-sse, et taaste ei sõltuks ainult kohalikust ZFS poolist.', ['restic -> R2', 'AES-256 + retention', 'Restore runbook']],
-    },
+  categories: {
+    apps: ['games', 'landing'],
   },
 };
 
-const MODES = [
+const SCENES = [
   {
-    id: 'network',
-    code: 'NET',
-    accent: 'cyan',
+    id: 'ingress',
+    number: '01',
+    code: 'INGRESS',
+    accent: '#67e8f9',
+    accentDim: '#11343b',
     copy: {
       en: {
-        title: 'Network without open ports',
-        summary: 'Two clean routes explain how the public edge and private LAN path reach the same runtime core.',
-        kicker: 'Signal path',
+        nav: 'Tunnel ingress',
+        tab: 'Public path',
+        kicker: 'Public ingress',
+        title: 'A browser reaches the homelab without opening the home router.',
+        lead: 'Cloudflare accepts the public request, the server keeps an outbound tunnel open, and only the site/API layer is exposed.',
+        state: 'edge - tunnel - runtime',
+        proofTitle: 'Public request path',
+        run: 'Trace public request',
+        done: 'Request served',
       },
       et: {
-        title: 'Võrk ilma avatud portideta',
-        summary: 'Kaks puhast rada näitavad, kuidas avalik edge ja privaatne LAN tee jõuavad sama runtime tuumani.',
-        kicker: 'Signaali tee',
+        nav: 'Tunnel ingress',
+        tab: 'Avalik tee',
+        kicker: 'Avalik ingress',
+        title: 'Brauser jõuab homelabini ilma koduruuterit avamata.',
+        lead: 'Cloudflare võtab avaliku päringu vastu, server hoiab väljuvat tunnelit lahti ja avalikuks jääb ainult saidi/API kiht.',
+        state: 'edge - tunnel - runtime',
+        proofTitle: 'Avaliku päringu tee',
+        run: 'Jälgi avalikku päringut',
+        done: 'Päring serveeritud',
       },
     },
-    lanes: [
-      {
-        id: 'public',
-        copy: {
-          en: ['Public request path', 'Internet traffic reaches only the public product surface.'],
-          et: ['Avalik päringu tee', 'Internetiliiklus jõuab ainult avaliku toote pinnani.'],
-        },
-        nodes: [
-          ['visitor', 92, 205],
-          ['cloudflare', 270, 140],
-          ['tunnel', 462, 245],
-          ['docker', 642, 300],
-          ['publicApps', 850, 180],
-        ],
-      },
-      {
-        id: 'private',
-        copy: {
-          en: ['Private LAN path', 'Admin and home devices stay on private routes.'],
-          et: ['Privaatne LAN tee', 'Admin ja koduseadmed jäävad privaatsetele teedele.'],
-        },
-        nodes: [
-          ['device', 92, 470],
-          ['tailscale', 276, 510],
-          ['adguard', 470, 430],
-          ['npm', 645, 430],
-          ['docker', 642, 300],
-        ],
-      },
+    path: ['browser', 'edge', 'tunnel', 'runtime', 'site'],
+    ghostPath: ['device', 'tailscale', 'runtime'],
+    nodes: [
+      node('browser', 96, 382, '01', {
+        en: ['Browser', 'Public visitor', 'A normal visitor only sees the public surface.', ['No admin surface', 'No account required']],
+        et: ['Brauser', 'Avalik külastaja', 'Tavaline külastaja näeb ainult avalikku pinda.', ['Adminipinda pole', 'Kontot pole vaja']],
+      }),
+      node('edge', 300, 184, 'CF', {
+        en: ['Cloudflare', 'Public edge', 'TLS and policy apply at the edge before traffic reaches home.', ['TLS at edge', 'Selected hostnames']],
+        et: ['Cloudflare', 'Avalik edge', 'TLS ja poliitikad rakenduvad edge’is enne, kui liiklus koju jõuab.', ['TLS edge’is', 'Valitud hostid']],
+      }),
+      node('tunnel', 552, 304, 'TN', {
+        en: ['Tunnel', 'Outbound ingress', 'The homelab dials out, so the router does not expose inbound ports.', ['Outbound path', 'No WAN NAT']],
+        et: ['Tunnel', 'Väljuv ingress', 'Homelab loob ühenduse ise välja; ruuter ei ava sissetulevaid porte.', ['Väljuv tee', 'WAN NAT puudub']],
+      }, 'core'),
+      node('runtime', 724, 334, 'VM', {
+        en: ['Docker VM', 'Runtime core', 'The public site, games, and support services run in one Compose-managed runtime.', ['17 services', '27 containers']],
+        et: ['Docker VM', 'Runtime tuum', 'Avalik sait, mängud ja tugiteenused jooksevad ühes Compose’i hallatud runtime’is.', ['17 teenust', '27 konteinerit']],
+      }, 'core'),
+      node('site', 902, 190, 'APP', {
+        en: ['Public apps', 'Public surface', 'These are the URLs other people can safely open.', ['khe.ee', 'games.khe.ee']],
+        et: ['Avalikud rakendused', 'Avalik pind', 'Need on URL-id, mida teised inimesed saavad turvaliselt avada.', ['khe.ee', 'games.khe.ee']],
+      }),
+      node('device', 120, 520, 'LAN', {
+        en: ['Trusted device', 'Private user', 'Admin and home traffic use private routes instead.', ['LAN', 'Mobile over VPN']],
+        et: ['Usaldatud seade', 'Privaatne kasutaja', 'Admin ja kodune liiklus kasutavad privaatseid radasid.', ['LAN', 'Mobiil üle VPN-i']],
+      }, 'quiet'),
+      node('tailscale', 330, 520, 'TS', {
+        en: ['Tailscale', 'Private lane', 'Private access stays separate from public visitors.', ['Subnet router', 'Admin path']],
+        et: ['Tailscale', 'Privaatne rada', 'Privaatne ligipääs jääb avalikest külastajatest eraldi.', ['Subnet-router', 'Admini tee']],
+      }, 'quiet'),
     ],
+    logs: {
+      en: ['GET /lab reaches Cloudflare', 'Cloudflare forwards through a tunnel', 'Tunnel terminates inside the Docker network', 'Homelab serves the static page', 'Inbound router ports stay at 0'],
+      et: ['GET /lab jõuab Cloudflare’i', 'Cloudflare suunab päringu tunnelisse', 'Tunnel lõpeb Docker networkis', 'Homelab serveerib staatilise lehe', 'Ruuteri sissetulevad pordid jäävad 0 peale'],
+    },
   },
   {
     id: 'deploy',
-    code: 'DEP',
-    accent: 'amber',
+    number: '02',
+    code: 'DEPLOY',
+    accent: '#facc15',
+    accentDim: '#332d0d',
     copy: {
       en: {
-        title: 'Commit to public site',
-        summary: 'The release map shows how code becomes a public app without a manual upload step.',
-        kicker: 'Release path',
+        nav: 'Checks + deploy',
+        tab: 'Ship path',
+        kicker: 'Ship path',
+        title: 'A code change moves from Git to the public route automatically.',
+        lead: 'The self-hosted runner checks the repo, builds the public artifacts, copies them into served paths, and brings the nginx containers back up.',
+        state: 'git - ci - runner - live',
+        proofTitle: 'Deploy path',
+        run: 'Trace deploy path',
+        done: 'Deploy path complete',
       },
       et: {
-        title: 'Commitist avaliku saidini',
-        summary: 'Release kaart näitab, kuidas kood muutub avalikuks äpiks ilma käsitsi uploadita.',
-        kicker: 'Release tee',
+        nav: 'Kontrollid + deploy',
+        tab: 'Tarne tee',
+        kicker: 'Tarne tee',
+        title: 'Koodimuudatus liigub Gitist avalikule teele automaatselt.',
+        lead: 'Self-hosted runner kontrollib repo, ehitab avalikud artefaktid, kopeerib need serveeritavatesse kataloogidesse ja tõstab nginx-konteinerid uuesti üles.',
+        state: 'git - ci - runner - live',
+        proofTitle: 'Deploy tee',
+        run: 'Jälgi deploy teed',
+        done: 'Deploy tee valmis',
       },
     },
-    lanes: [
-      {
-        id: 'release',
-        copy: {
-          en: ['Release path', 'The app stack moves from Git to the homelab-served static roots.'],
-          et: ['Release tee', 'App stack liigub Gitist homelabis serveeritavatesse static rootidesse.'],
-        },
-        nodes: [
-          ['commit', 92, 180],
-          ['actions', 282, 180],
-          ['runner', 475, 300],
-          ['servedDirs', 670, 300],
-          ['publicApps', 860, 180],
-        ],
-      },
-      {
-        id: 'quality',
-        copy: {
-          en: ['Quality path', 'Checks and browser smoke make the public showcase credible.'],
-          et: ['Quality tee', 'Kontrollid ja browser smoke teevad avaliku showcase’i usutavaks.'],
-        },
-        nodes: [
-          ['checks', 185, 475],
-          ['build', 380, 475],
-          ['smoke', 575, 475],
-          ['releaseNote', 770, 475],
-        ],
-      },
+    path: ['commit', 'ci', 'runner', 'staticRoot', 'liveSite'],
+    ghostPath: ['check', 'build', 'smoke', 'releaseNote'],
+    nodes: [
+      node('commit', 106, 370, 'GIT', {
+        en: ['Commit', 'Source change', 'Changes start as tracked code, not server drift.', ['Git history', 'Reviewable diff']],
+        et: ['Commit', 'Koodimuudatus', 'Muudatus algab jälgitava koodina, mitte serveris tekkinud driftina.', ['Git history', 'Ülevaadatav diff']],
+      }),
+      node('ci', 310, 224, 'CI', {
+        en: ['GitHub Actions', 'Workflow trigger', 'A push to main dispatches the homelab runner before anything changes publicly.', ['main branch', 'Manual dispatch']],
+        et: ['GitHub Actions', 'Workflow käivitaja', 'Push main branchi käivitab homelabi runneri enne, kui avalik pind muutub.', ['main branch', 'Käsitsi käivitus']],
+      }),
+      node('runner', 526, 352, 'RUN', {
+        en: ['Self-hosted runner', 'Deploy runner', 'The runner lives in the homelab and performs install, checks, build, copy, and compose restart.', ['Repo-scoped', 'No manual SSH']],
+        et: ['Self-hosted runner', 'Deploy runner', 'Runner elab homelabis ning teeb installi, kontrollid, buildi, kopeerimise ja compose restarti.', ['Repo piiratud', 'Käsitsi SSH puudub']],
+      }, 'core'),
+      node('staticRoot', 724, 278, 'WWW', {
+        en: ['Nginx/proxy layer', 'Served paths', 'Release files land in served paths and nginx containers expose the public routes.', ['dist/landing', 'dist/games']],
+        et: ['Nginx/proxy kiht', 'Serveeritavad teed', 'Release failid jõuavad serveeritavatesse kataloogidesse ja nginx-konteinerid annavad avalikud marsruudid.', ['dist/landing', 'dist/games']],
+      }),
+      node('liveSite', 900, 170, 'LIVE', {
+        en: ['Live page', 'Public result', 'The result is a URL, not a screenshot of a private dashboard.', ['khe.ee/lab', 'Public proof']],
+        et: ['Live leht', 'Avalik tulemus', 'Tulemus on URL, mitte kuvatõmmis privaatsest juhtpaneelist.', ['khe.ee/lab', 'Avalik tõestus']],
+      }),
+      node('check', 214, 528, 'CHK', {
+        en: ['Static checks', 'Guardrails', 'HTML, locale hooks, and shared assets are verified before deploy.', ['No inline CSS', 'Locale hooks']],
+        et: ['Staatilised kontrollid', 'Kaitsekontrollid', 'HTML, keelelüliti seosed ja ühised failid kontrollitakse enne deploy’d.', ['Inline CSS puudub', 'Keeleseosed']],
+      }, 'quiet'),
+      node('build', 422, 528, 'BLD', {
+        en: ['Build', 'Artifacts', 'The build produces public landing and games outputs from the same repo.', ['dist/landing', 'dist/games']],
+        et: ['Build', 'Artefaktid', 'Build loob samast repost landing- ja games-artefaktid.', ['dist/landing', 'dist/games']],
+      }, 'quiet'),
+      node('smoke', 628, 528, 'E2E', {
+        en: ['Smoke check', 'User-visible check', 'A browser loads the public path after deploy and the console must stay clean.', ['Browser load', 'Clean console']],
+        et: ['Smoke check', 'Kasutajale nähtav kontroll', 'Brauser avab pärast deploy’d avaliku tee ja konsool peab jääma puhtaks.', ['Brauser laadib', 'Puhas konsool']],
+      }, 'quiet'),
+      node('releaseNote', 820, 528, 'LOG', {
+        en: ['Release trail', 'Freshness signal', 'A small public trace can show last deploy and last check without exposing dashboards.', ['Last deploy', 'Last check']],
+        et: ['Release jälg', 'Värskuse signaal', 'Väike avalik jälg saab näidata viimast deploy’d ja kontrolli ilma juhtpaneele avamata.', ['Viimane deploy', 'Viimane kontroll']],
+      }, 'quiet'),
     ],
+    logs: {
+      en: ['Commit reaches main', 'Runner installs dependencies and checks repo', 'Build writes dist/landing and dist/games', 'Runner copies files into served paths', 'nginx containers are recreated'],
+      et: ['Commit jõuab main branchi', 'Runner paigaldab sõltuvused ja kontrollib repo', 'Build kirjutab dist/landing ja dist/games', 'Runner kopeerib failid serveeritavatesse kataloogidesse', 'nginx-konteinerid luuakse uuesti'],
+    },
   },
   {
-    id: 'security',
-    code: 'SEC',
-    accent: 'red',
+    id: 'trust',
+    number: '03',
+    code: 'OPS',
+    accent: '#fb7185',
+    accentDim: '#3b121c',
     copy: {
       en: {
-        title: 'Trust boundary map',
-        summary: 'The security view explains the defensive shape without exposing controls, secrets, or admin dashboards.',
-        kicker: 'Trust boundary',
+        nav: 'OpenClaw + Docker',
+        tab: 'Private operations',
+        kicker: 'Private operations',
+        title: 'OpenClaw and admin tools sit behind identity checks and scoped Docker access.',
+        lead: 'OpenClaw, n8n, and stack tools sit behind Access. Docker control uses socket proxies, not a raw host socket, and the public page exposes facts instead of controls.',
+        state: 'identity - workspace - scoped docker',
+        proofTitle: 'Private operations boundary',
+        run: 'Trace private operations',
+        done: 'Private path traced',
       },
       et: {
-        title: 'Usalduspiiride kaart',
-        summary: 'Turvavaade selgitab kaitsekuju ilma juhtpaneele, saladusi või admin dashboarde avamata.',
-        kicker: 'Usalduspiir',
+        nav: 'OpenClaw + Docker',
+        tab: 'Privaatne haldus',
+        kicker: 'Privaatne haldus',
+        title: 'OpenClaw ja adminitöö on identiteedikontrolli ning piiratud Dockeri ligipääsu taga.',
+        lead: 'OpenClaw, n8n ja stacki tööriistad on Accessi taga. Dockeri juhtimine käib socket proxy kaudu, mitte otse hosti socketiga, ja avalik leht näitab fakte, mitte juhtnuppe.',
+        state: 'identiteet - tööruum - piiratud docker',
+        proofTitle: 'Privaatse halduse piir',
+        run: 'Jälgi haldusrada',
+        done: 'Haldusrada jälgitud',
       },
     },
-    lanes: [
-      {
-        id: 'external',
-        copy: {
-          en: ['External boundary', 'The public route is intentionally narrow.'],
-          et: ['Väline piir', 'Avalik tee on meelega kitsas.'],
-        },
-        nodes: [
-          ['closedRouter', 108, 320],
-          ['cloudflareAccess', 305, 165],
-          ['tunnel', 505, 165],
-          ['publicApps', 812, 165],
-        ],
-      },
-      {
-        id: 'ops',
-        copy: {
-          en: ['Ops boundary', 'Operational tools stay behind private and scoped paths.'],
-          et: ['Ops piir', 'Operatiivsed tööriistad jäävad privaatsete ja piiratud teede taha.'],
-        },
-        nodes: [
-          ['tailscale', 130, 500],
-          ['openclaw', 360, 500],
-          ['socketProxy', 595, 500],
-          ['noSecrets', 820, 500],
-        ],
-      },
+    path: ['admin', 'access', 'openclaw', 'socketProxy', 'runtimeOps'],
+    ghostPath: ['n8n', 'dockge', 'repoClean', 'operatorChannel'],
+    nodes: [
+      node('admin', 104, 348, 'ADM', {
+        en: ['Admin', 'Private operator', 'Admin work starts from an authenticated human, not a public dashboard.', ['No public admin', 'Private session']],
+        et: ['Admin', 'Privaatne operaator', 'Haldustöö algab autenditud kasutajast, mitte avalikust juhtpaneelist.', ['Avalikku adminit pole', 'Privaatne sessioon']],
+      }),
+      node('access', 306, 210, 'OTP', {
+        en: ['Cloudflare Access', 'Identity check', 'Sensitive tools require identity before the request reaches the homelab.', ['Email OTP', 'Protected hostnames']],
+        et: ['Cloudflare Access', 'Identiteedikontroll', 'Tundlikud tööriistad nõuavad identiteeti enne homelabini jõudmist.', ['Email OTP', 'Kaitstud hostid']],
+      }),
+      node('openclaw', 520, 332, 'AI', {
+        en: ['OpenClaw', 'Protected workspace', 'OpenClaw is available only behind Access and inside a constrained workspace.', ['CF Access protected', 'Tracked workspace']],
+        et: ['OpenClaw', 'Kaitstud tööruum', 'OpenClaw on saadaval ainult Accessi taga ja piiratud tööruumis.', ['CF Access kaitseb', 'Jälgitav tööruum']],
+      }, 'core'),
+      node('socketProxy', 720, 332, 'SOX', {
+        en: ['Socket proxy', 'Scoped Docker', 'OpenClaw and Dockge use proxy endpoints instead of mounting the raw Docker socket.', ['Limited API', 'Reduced blast radius']],
+        et: ['Socket proxy', 'Piiratud Docker', 'OpenClaw ja Dockge kasutavad proxy endpoint’e, mitte otse Docker socketit.', ['Kitsas API', 'Väiksem mõjuulatus']],
+      }, 'core'),
+      node('runtimeOps', 900, 210, 'VM', {
+        en: ['Docker VM', 'Operations target', 'Admin actions reach the runtime only through protected and scoped paths.', ['Compose stacks', 'No broad controls']],
+        et: ['Docker VM', 'Haldussiht', 'Admini tegevused jõuavad runtime’i ainult kaitstud ja piiratud teede kaudu.', ['Compose stackid', 'Laia juhtpinda pole']],
+      }),
+      node('n8n', 230, 520, 'n8n', {
+        en: ['n8n', 'Operations automation', 'Internal reports and workflows can run without publishing raw operational data.', ['Weekly report', 'Protected workflow']],
+        et: ['n8n', 'Haldusautomaatika', 'Sisemised raportid ja workflow’d saavad joosta ilma halduse toorandmeid avaldamata.', ['Nädalaraport', 'Kaitstud workflow']],
+      }, 'quiet'),
+      node('dockge', 420, 520, 'DG', {
+        en: ['Dockge', 'Stack UI', 'Manual stack management stays behind protected admin access.', ['CF Access', 'Docker via proxy']],
+        et: ['Dockge', 'Stack UI', 'Stackide käsihaldus jääb kaitstud adminiligipääsu taha.', ['CF Access', 'Docker proxy kaudu']],
+      }, 'quiet'),
+      node('repoClean', 620, 520, 'ENV', {
+        en: ['Clean metadata', 'No secrets', 'The public atlas is generated from sanitized facts.', ['No .env values', 'No tokens']],
+        et: ['Puhas metadata', 'Ilma saladusteta', 'Avalik atlas tekib puhastatud faktidest.', ['.env väärtusi pole', 'Tokeneid pole']],
+      }, 'quiet'),
+      node('operatorChannel', 820, 520, 'TG', {
+        en: ['Operator channel', 'Private alerts', 'Telegram is an owner channel for alerts and reports, not a public feed.', ['Owner notification', 'No public feed']],
+        et: ['Operaatori kanal', 'Privaatsed teavitused', 'Telegram on omaniku teavituste ja raportite kanal, mitte avalik voog.', ['Omaniku teavitus', 'Avalikku voogu pole']],
+      }, 'quiet'),
     ],
+    logs: {
+      en: ['Admin opens a protected hostname', 'Cloudflare Access checks identity', 'OpenClaw runs inside a constrained workspace', 'Docker actions route through socket proxy', 'Public atlas exposes facts, not controls'],
+      et: ['Admin avab kaitstud hosti', 'Cloudflare Access kontrollib identiteeti', 'OpenClaw töötab piiratud tööruumis', 'Dockeri tegevused liiguvad socket proxy kaudu', 'Avalik atlas näitab fakte, mitte juhtnuppe'],
+    },
   },
   {
     id: 'recovery',
-    code: 'REC',
-    accent: 'green',
+    number: '04',
+    code: 'OBSERVE',
+    accent: '#4ade80',
+    accentDim: '#12351d',
     copy: {
       en: {
-        title: 'Recovery by failure class',
-        summary: 'Each layer catches a different failure, from a stuck container to a whole VM hang.',
-        kicker: 'Failure path',
+        nav: 'Alerts + restore',
+        tab: 'Observe & recover',
+        kicker: 'Observe & recover',
+        title: 'Broken containers do not fail silently.',
+        lead: 'Healthchecks and Autoheal handle local faults, Uptime Kuma sends Telegram alerts, and backups cover state when restart is not enough.',
+        state: 'detect - alert - restart - restore',
+        proofTitle: 'Recovery path',
+        run: 'Run recovery drill',
+        done: 'Drill complete',
       },
       et: {
-        title: 'Taaste tõrkeklassi järgi',
-        summary: 'Iga kiht püüab eri tõrke, kinni jäänud konteinerist kuni terve VM-i hangini.',
-        kicker: 'Tõrke tee',
+        nav: 'Teavitused + taaste',
+        tab: 'Jälgi ja taasta',
+        kicker: 'Jälgi ja taasta',
+        title: 'Katkine konteiner ei jää vaikseks.',
+        lead: 'Healthcheckid ja Autoheal katavad kohalikud tõrked, Uptime Kuma saadab Telegrami teavitused ning varukoopiad katavad andmed, kui taaskäivitusest ei piisa.',
+        state: 'tuvasta - teavita - restardi - taasta',
+        proofTitle: 'Taaste tee',
+        run: 'Käivita taasteharjutus',
+        done: 'Harjutus valmis',
       },
     },
-    lanes: [
-      {
-        id: 'runtime',
-        copy: {
-          en: ['Runtime recovery', 'Runtime failures recover close to the failure source.'],
-          et: ['Runtime taaste', 'Runtime tõrked taastuvad tõrke allika lähedal.'],
-        },
-        nodes: [
-          ['healthcheck', 105, 215],
-          ['autoheal', 285, 215],
-          ['uptime', 470, 305],
-          ['watchdog', 650, 215],
-          ['uptimeRobot', 830, 215],
-        ],
-      },
-      {
-        id: 'data',
-        copy: {
-          en: ['Data recovery', 'Stateful services need a path beyond restart logic.'],
-          et: ['Andmete taaste', 'Stateful teenused vajavad rohkemat kui restart-loogikat.'],
-        },
-        nodes: [
-          ['postgresDump', 135, 500],
-          ['configSnapshot', 360, 500],
-          ['zfs', 585, 500],
-          ['offsiteNext', 810, 500],
-        ],
-      },
+    path: ['failure', 'health', 'autoheal', 'kuma', 'telegram'],
+    ghostPath: ['database', 'watchdog', 'zfs', 'offsite'],
+    nodes: [
+      node('failure', 102, 330, 'ERR', {
+        en: ['Failure', 'Symptom starts', 'Faults are treated as classes: stuck container, VM hang, or data loss.', ['Stuck container', 'VM hang', 'Data loss class']],
+        et: ['Tõrge', 'Sümptom algab', 'Tõrkeid käsitletakse klassidena: kinni jäänud konteiner, VM hang või andmekadu.', ['Kinni jäänud konteiner', 'VM hang', 'Andmekadu']],
+      }, 'locked'),
+      node('health', 292, 214, 'HC', {
+        en: ['Healthchecks', 'Local signal', 'Services report unhealthy state before a human inspects logs.', ['Service signal', 'Autoheal input']],
+        et: ['Healthcheckid', 'Kohalik signaal', 'Teenused annavad vigasest seisust märku enne, kui keegi logisid loeb.', ['Teenuse signaal', 'Autoheali sisend']],
+      }),
+      node('autoheal', 500, 330, 'AH', {
+        en: ['Autoheal', 'Container restart', 'Unhealthy containers can recover without manual SSH.', ['Restart path', 'Socket proxy']],
+        et: ['Autoheal', 'Konteineri restart', 'Vigases seisus konteinerid saavad taastuda ilma käsitsi SSH-ta.', ['Restart tee', 'Socket proxy']],
+      }, 'core'),
+      node('kuma', 704, 214, 'UP', {
+        en: ['Uptime Kuma', 'Alert layer', 'Service monitors turn symptoms into visible alerts.', ['HTTP monitors', 'Telegram alerts']],
+        et: ['Uptime Kuma', 'Teavituste kiht', 'Teenuse monitorid muudavad sümptomid nähtavateks teavitusteks.', ['HTTP monitorid', 'Telegrami teavitused']],
+      }),
+      node('telegram', 884, 330, 'TG', {
+        en: ['Telegram', 'Owner alert', 'A service-down signal reaches the owner instead of staying hidden in a dashboard.', ['Phone push', '~90s target']],
+        et: ['Telegram', 'Omaniku teavitus', 'Teenuse maasoleku signaal jõuab omanikuni, mitte ei jää peitu juhtpaneeli.', ['Telefoni push', '~90s siht']],
+      }),
+      node('database', 160, 528, 'DB', {
+        en: ['Database dumps', 'State backup', 'Stateful services need snapshots, not only restarts.', ['Postgres dumps', 'Restore target']],
+        et: ['Andmebaasi dumpid', 'Andmete varukoopia', 'Olekuga teenused vajavad hetktõmmiseid, mitte ainult restarti.', ['Postgres dumpid', 'Taaste siht']],
+      }, 'quiet'),
+      node('watchdog', 360, 528, 'WD', {
+        en: ['Watchdog', 'VM recovery', 'When containers cannot report anything, the VM still has a local recovery layer.', ['Kernel hang', 'Host reset']],
+        et: ['Watchdog', 'VM taaste', 'Kui konteinerid ei saa midagi raporteerida, on VM-il ikka kohalik taastekiht.', ['Kernel hang', 'Host reset']],
+      }, 'quiet'),
+      node('zfs', 590, 528, 'ZFS', {
+        en: ['ZFS mirror', 'Local data', 'Bulk data sits on mirrored local storage.', ['2 x 12TB', 'NFS mount']],
+        et: ['ZFS mirror', 'Kohalik data', 'Suurem andmemaht asub peegeldatud kohalikul salvestusel.', ['2 x 12TB', 'NFS mount']],
+      }, 'quiet'),
+      node('offsite', 834, 528, 'R2', {
+        en: ['Offsite backup', 'R2 tier', 'Restic sends backup data away from the local pool.', ['Cloudflare R2', 'Retention']],
+        et: ['Väline backup', 'R2 kiht', 'Restic saadab varukoopia andmed kohalikust poolist eemale.', ['Cloudflare R2', 'Säilitus']],
+      }, 'quiet'),
     ],
+    logs: {
+      en: ['Healthcheck marks the service unhealthy', 'Autoheal restarts the container', 'Uptime Kuma keeps external visibility', 'Telegram notifies the owner', 'State recovery has local and offsite layers'],
+      et: ['Healthcheck märgib teenuse vigaseks', 'Autoheal taaskäivitab konteineri', 'Uptime Kuma hoiab välise vaate', 'Telegram teavitab omanikku', 'Andmete taastel on kohalik ja väline kiht'],
+    },
   },
 ];
 
-let activeModeId = 'network';
-let activeLaneId = 'public';
-let selectedStepId = 'docker';
-let labData = null;
-let isPlaying = false;
+let activeSceneId = 'ingress';
+let activeNodeId = 'tunnel';
+let labData = FALLBACK_DATA;
+let isRunning = false;
+let runFinished = false;
+let runProgress = 0;
 let playbackTimer = null;
-let playbackIndex = 0;
+let mapReturnFocus = null;
 
-const modeById = new Map(MODES.map((mode) => [mode.id, mode]));
+const sceneById = new Map(SCENES.map((scene) => [scene.id, scene]));
 
 const localeController = createLocaleController({
   copy: COPY,
@@ -482,295 +393,381 @@ const localeController = createLocaleController({
   },
 });
 
+function node(id, x, y, tag, copy, tone = 'normal') {
+  return { id, x, y, tag, copy, tone };
+}
+
 function locale() {
   return document.documentElement.lang === 'et' ? 'et' : 'en';
 }
 
-function activeMode() {
-  return modeById.get(activeModeId);
+function t() {
+  return COPY[locale()];
 }
 
-function modeText(mode = activeMode()) {
-  return mode.copy[locale()];
+function scene() {
+  return sceneById.get(activeSceneId) || SCENES[0];
 }
 
-function stepText(stepId) {
-  return STEPS[stepId].copy[locale()];
+function sceneText(current = scene()) {
+  return current.copy[locale()];
 }
 
-function activeLane() {
-  return activeMode().lanes.find((lane) => lane.id === activeLaneId) || activeMode().lanes[0];
+function nodeText(currentNode) {
+  return currentNode.copy[locale()];
 }
 
-function resetMapScroll() {
-  const map = document.querySelector('.lab-cinematic-map');
-  if (map) map.scrollLeft = 0;
+function escapeHtml(value) {
+  return String(value)
+    .replaceAll('&', '&amp;')
+    .replaceAll('<', '&lt;')
+    .replaceAll('>', '&gt;')
+    .replaceAll('"', '&quot;')
+    .replaceAll("'", '&#39;');
 }
 
-function setMode(modeId) {
-  stopPlayback();
-  activeModeId = modeId;
-  activeLaneId = activeMode().lanes[0].id;
-  selectedStepId = activeLane().nodes[Math.min(2, activeLane().nodes.length - 1)][0];
-  render();
-  resetMapScroll();
+function formatMetric(value, label) {
+  return `<div><dt>${escapeHtml(value)}</dt><dd>${escapeHtml(label)}</dd></div>`;
 }
 
-function setLane(laneId) {
-  stopPlayback();
-  activeLaneId = laneId;
-  selectedStepId = activeLane().nodes[Math.min(2, activeLane().nodes.length - 1)][0];
-  render();
-  resetMapScroll();
+function metricItems() {
+  const metrics = labData.metrics || FALLBACK_DATA.metrics;
+  const source = labData.source || FALLBACK_DATA.source;
+  const apps = labData.categories?.apps?.length || FALLBACK_DATA.categories.apps.length;
+  const labels = t();
+
+  if (activeSceneId === 'deploy') {
+    return [
+      [source.composeFiles, labels.composeFiles],
+      [source.composeServiceDefinitions, labels.serviceDefinitions],
+      [apps, labels.publicApps],
+    ];
+  }
+
+  if (activeSceneId === 'trust') {
+    return [
+      ['1', locale() === 'et' ? 'OpenClaw tööruum Accessi taga' : 'OpenClaw workspace behind Access'],
+      ['2', locale() === 'et' ? 'socket proxy klienti' : 'socket-proxy clients'],
+      ['0', locale() === 'et' ? 'avalikku juhtpinda' : 'public control surfaces'],
+    ];
+  }
+
+  if (activeSceneId === 'recovery') {
+    return [
+      [metrics.recoveryLayers, labels.recoveryLayers],
+      [metrics.containers, labels.containers],
+      ['TG', locale() === 'et' ? 'teavituskanal' : 'alert channel'],
+    ];
+  }
+
+  return [
+    [metrics.routerPorts, labels.routerPorts],
+    [metrics.services, labels.services],
+    [metrics.containers, labels.containers],
+  ];
 }
 
-function selectNode(stepId, laneId, stopActivePlayback = true) {
-  if (stopActivePlayback) stopPlayback();
-  selectedStepId = stepId;
-  activeLaneId = laneId;
-  render();
+function selectedNode() {
+  return scene().nodes.find((item) => item.id === activeNodeId) || scene().nodes[2] || scene().nodes[0];
+}
+
+function pathFor(ids) {
+  const current = scene();
+  const points = ids
+    .map((id) => current.nodes.find((item) => item.id === id))
+    .filter(Boolean);
+
+  return points
+    .map((point, index) => `${index === 0 ? 'M' : 'L'} ${point.x} ${point.y}`)
+    .join(' ');
+}
+
+function pathNodes(ids) {
+  const current = scene();
+  return ids
+    .map((id) => current.nodes.find((item) => item.id === id))
+    .filter(Boolean);
+}
+
+function splitLabel(label) {
+  const words = label.split(' ');
+  if (words.length < 3 || label.length < 15) return [label];
+  const midpoint = Math.ceil(words.length / 2);
+  return [words.slice(0, midpoint).join(' '), words.slice(midpoint).join(' ')];
 }
 
 function stopPlayback() {
   if (playbackTimer) window.clearTimeout(playbackTimer);
   playbackTimer = null;
-  playbackIndex = 0;
-  isPlaying = false;
-  document.body.classList.remove('is-playing-route');
+  isRunning = false;
+  runProgress = 0;
 }
 
-function startPlayback() {
+function clearProofHash() {
+  if (window.location.hash) {
+    window.history.replaceState(null, '', `${window.location.pathname}${window.location.search}`);
+  }
+}
+
+function bringSceneIntoView() {
+  if (window.scrollY < 80) return;
+  document.querySelector('.lab-scenes')?.scrollIntoView({ block: 'start', behavior: 'smooth' });
+}
+
+function setScene(sceneId) {
   stopPlayback();
-  isPlaying = true;
-  document.body.classList.add('is-playing-route');
-  const nodes = activeLane().nodes.map(([stepId]) => stepId);
+  runFinished = false;
+  activeSceneId = sceneId;
+  activeNodeId = scene().path[Math.min(2, scene().path.length - 1)];
+  render();
+  clearProofHash();
+  bringSceneIntoView();
+}
+
+function runScene() {
+  stopPlayback();
+  isRunning = true;
+  runFinished = false;
+  runProgress = 0;
+  const activePath = scene().path;
+  const maxTicks = Math.max(activePath.length, scene().logs[locale()].length);
 
   function tick() {
-    selectedStepId = nodes[playbackIndex];
+    activeNodeId = activePath[Math.min(runProgress, activePath.length - 1)];
+    runProgress += 1;
     render();
-    playbackIndex += 1;
-    if (playbackIndex >= nodes.length) {
-      playbackTimer = window.setTimeout(() => {
-        stopPlayback();
-        render();
-      }, 850);
+
+    if (runProgress <= maxTicks) {
+      playbackTimer = window.setTimeout(tick, 720);
       return;
     }
-    playbackTimer = window.setTimeout(tick, 900);
+
+    isRunning = false;
+    runFinished = true;
+    runProgress = maxTicks;
+    render();
   }
 
   tick();
 }
 
-function togglePlayback() {
-  if (isPlaying) {
-    stopPlayback();
-    render();
-  } else {
-    startPlayback();
-  }
+function renderShell() {
+  const current = scene();
+  const copy = sceneText(current);
+  document.body.dataset.scene = current.id;
+  document.body.style.setProperty('--lab-accent', current.accent);
+  document.body.style.setProperty('--lab-accent-dim', current.accentDim);
+
+  document.querySelector('[data-scene-kicker]').textContent = copy.kicker;
+  document.querySelector('[data-scene-title]').textContent = copy.title;
+  document.querySelector('[data-scene-lead]').textContent = copy.lead;
+  document.querySelector('[data-scene-code]').textContent = current.code;
+  document.querySelector('[data-scene-state]').textContent = isRunning
+    ? t().statusRunning
+    : runFinished
+      ? t().statusDone
+      : copy.state;
+  document.querySelector('[data-proof-title]').textContent = copy.proofTitle;
+  const mapTitle = document.querySelector('[data-map-title]');
+  if (mapTitle) mapTitle.textContent = `${current.number} ${copy.tab}`;
 }
 
-function splitLabel(label) {
-  const words = label.split(' ');
-  if (words.length < 3 || label.length < 16) return [label];
-  const midpoint = Math.ceil(words.length / 2);
-  return [words.slice(0, midpoint).join(' '), words.slice(midpoint).join(' ')];
-}
-
-function linePath(nodes) {
-  return nodes
-    .map(([, x, y], index) => `${index === 0 ? 'M' : 'L'} ${x} ${y}`)
-    .join(' ');
-}
-
-function renderModeRail() {
-  const rail = document.querySelector('.lab-story-rail');
-  rail.innerHTML = MODES.map((mode) => {
-    const text = modeText(mode);
-    const active = mode.id === activeModeId;
+function renderTabs() {
+  const tabs = document.querySelector('[data-scene-tabs]');
+  tabs.innerHTML = SCENES.map((item) => {
+    const copy = sceneText(item);
+    const active = item.id === activeSceneId;
     return `
-      <button type="button" class="lab-story-card" data-mode="${mode.id}" role="tab" aria-selected="${active}">
-        <span>${mode.code}</span>
-        <strong>${text.title}</strong>
-        <small>${text.kicker}</small>
+      <button type="button" class="lab-scene-tab" data-scene-target="${item.id}" aria-pressed="${active}">
+        <span>${item.number}</span>
+        <strong>${escapeHtml(copy.tab)}</strong>
+        <small>${escapeHtml(copy.nav)}</small>
       </button>
     `;
   }).join('');
 
-  rail.querySelectorAll('[data-mode]').forEach((button) => {
-    button.addEventListener('click', () => setMode(button.getAttribute('data-mode')));
+  tabs.querySelectorAll('[data-scene-target]').forEach((button) => {
+    button.addEventListener('click', () => setScene(button.getAttribute('data-scene-target')));
   });
 }
 
-function renderMapCopy() {
-  const mode = activeMode();
-  const text = modeText(mode);
-  document.body.dataset.accent = mode.accent;
-  document.querySelector('[data-map-code]').textContent = mode.code;
-  document.querySelector('[data-map-kicker]').textContent = text.kicker;
-  document.querySelector('[data-map-title]').textContent = text.title;
-  document.querySelector('[data-map-summary]').textContent = text.summary;
+function renderButton() {
+  const button = document.querySelector('[data-run-scene]');
+  const label = button.querySelector('[data-run-label]');
+  const copy = sceneText();
+  button.setAttribute('aria-pressed', isRunning ? 'true' : 'false');
+  label.textContent = isRunning ? t().statusRunning : runFinished ? copy.done : copy.run;
+  button.onclick = () => {
+    if (!isRunning) runScene();
+  };
 }
 
 function renderMetrics() {
-  if (!labData?.metrics) return;
-  Object.entries(labData.metrics).forEach(([key, value]) => {
-    const node = document.querySelector(`[data-lab-metric="${key}"]`);
-    if (node) node.textContent = String(value);
-  });
+  const metrics = document.querySelector('[data-proof-metrics]');
+  metrics.innerHTML = metricItems()
+    .map(([value, label]) => formatMetric(value, label))
+    .join('');
 }
 
-function renderSnapshotStatus() {
-  const status = document.querySelector('[data-snapshot-status]');
-  if (!status) return;
-  status.textContent = labData
-    ? COPY[locale()].snapshotGenerated(labData)
-    : COPY[locale()].snapshotFallback;
+function renderTerminal() {
+  const lines = scene().logs[locale()];
+  const visibleCount = isRunning || runFinished
+    ? Math.min(lines.length, Math.max(1, runProgress))
+    : 3;
+  const visible = lines.slice(0, visibleCount);
+  const snapshot = labData === FALLBACK_DATA ? t().snapshotFallback : t().snapshot(labData);
+
+  document.querySelector('[data-terminal-lines]').innerHTML = [
+    `<p><span>$</span> ${escapeHtml(snapshot)}</p>`,
+    ...visible.map((line) => `<p><span>></span> ${escapeHtml(line)}</p>`),
+  ].join('');
 }
 
-function renderPlaybackControl() {
-  const button = document.querySelector('[data-play-route]');
-  if (!button) return;
-  button.setAttribute('aria-pressed', isPlaying ? 'true' : 'false');
-  button.querySelector('span').textContent = isPlaying
-    ? COPY[locale()].stopRoute
-    : COPY[locale()].playRoute;
-  button.onclick = togglePlayback;
+function renderReadout() {
+  const currentNode = selectedNode();
+  const [title, role, body, facts] = nodeText(currentNode);
+  const readout = document.querySelector('[data-readout]');
+
+  readout.innerHTML = `
+    <span>${escapeHtml(t().selectedNode)}</span>
+    <strong>${escapeHtml(title)}</strong>
+    <p>${escapeHtml(body)}</p>
+    <ul>${facts.map((fact) => `<li>${escapeHtml(fact)}</li>`).join('')}</ul>
+  `;
 }
 
-function renderLaneTabs() {
-  const tabs = document.querySelector('[data-lane-tabs]');
-  tabs.innerHTML = activeMode().lanes.map((lane) => {
-    const [title, summary] = lane.copy[locale()];
-    const active = lane.id === activeLaneId;
-    return `
-      <button type="button" class="lab-lane-tab" data-lane="${lane.id}" aria-pressed="${active}">
-        <span>${COPY[locale()].laneLabel}</span>
-        <strong>${title}</strong>
-        <small>${summary}</small>
-      </button>
-    `;
-  }).join('');
+function renderMap() {
+  const current = scene();
+  const svgs = document.querySelectorAll('[data-stage-map]');
+  const activePathD = pathFor(current.path);
+  const ghostPathD = pathFor(current.ghostPath);
+  const activeNodes = new Set(current.path);
+  const ghostNodes = new Set(current.ghostPath);
+  const currentPathNodes = pathNodes(current.path);
+  const packetNode = selectedNode();
 
-  tabs.querySelectorAll('[data-lane]').forEach((button) => {
-    button.addEventListener('click', () => setLane(button.getAttribute('data-lane')));
-  });
-}
-
-function renderSvgMap() {
-  const svg = document.querySelector('[data-route-map]');
-  const mode = activeMode();
-  svg.innerHTML = `
+  svgs.forEach((svg, index) => {
+    const gridId = `lab-grid-v4-${index}`;
+    svg.innerHTML = `
     <defs>
-      <pattern id="lab-grid" width="48" height="48" patternUnits="userSpaceOnUse">
-        <path d="M 48 0 L 0 0 0 48" fill="none" stroke="rgba(255,255,255,0.055)" stroke-width="1" />
+      <pattern id="${gridId}" width="56" height="56" patternUnits="userSpaceOnUse">
+        <path d="M 56 0 L 0 0 0 56" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="1" />
       </pattern>
-      <radialGradient id="lab-core-glow" cx="50%" cy="50%" r="50%">
-        <stop offset="0%" stop-color="currentColor" stop-opacity="0.24" />
-        <stop offset="100%" stop-color="currentColor" stop-opacity="0" />
-      </radialGradient>
-      <filter id="lab-glow" x="-30%" y="-30%" width="160%" height="160%">
-        <feGaussianBlur stdDeviation="4" result="blur" />
+      <filter id="lab-v4-glow" x="-50%" y="-50%" width="200%" height="200%">
+        <feGaussianBlur stdDeviation="5" result="blur" />
         <feMerge>
           <feMergeNode in="blur" />
           <feMergeNode in="SourceGraphic" />
         </feMerge>
       </filter>
+      <linearGradient id="lab-v4-active-line" x1="0%" y1="0%" x2="100%" y2="0%">
+        <stop offset="0%" stop-color="rgba(255,255,255,0.22)" />
+        <stop offset="45%" stop-color="var(--lab-accent)" />
+        <stop offset="100%" stop-color="rgba(255,255,255,0.82)" />
+      </linearGradient>
     </defs>
-    <rect class="lab-svg-bg" x="0" y="0" width="1000" height="620"></rect>
-    <rect class="lab-svg-grid" x="0" y="0" width="1000" height="620"></rect>
-    <circle class="lab-svg-radar" cx="500" cy="310" r="250"></circle>
-    <circle class="lab-svg-radar lab-svg-radar-outer" cx="500" cy="310" r="390"></circle>
-    ${mode.lanes.map((lane) => {
-      const active = lane.id === activeLaneId;
+    <rect class="lab-v4-bg" x="0" y="0" width="1000" height="640"></rect>
+    <rect class="lab-v4-grid" style="fill: url(#${gridId});" x="0" y="0" width="1000" height="640"></rect>
+    <path class="lab-v4-horizon" d="M 42 470 C 250 385 385 420 500 340 C 650 236 810 270 960 168"></path>
+    <circle class="lab-v4-ring" cx="500" cy="320" r="126"></circle>
+    <circle class="lab-v4-ring lab-v4-ring-wide" cx="500" cy="320" r="265"></circle>
+    <circle class="lab-v4-ring lab-v4-ring-far" cx="500" cy="320" r="410"></circle>
+    ${ghostPathD ? `<path class="lab-v4-path lab-v4-path-ghost" d="${ghostPathD}"></path>` : ''}
+    <path id="lab-active-path" class="lab-v4-path lab-v4-path-active" d="${activePathD}"></path>
+    ${currentPathNodes.map((point, index) => {
+      const next = currentPathNodes[index + 1];
+      if (!next) return '';
+      const midX = (point.x + next.x) / 2;
+      const midY = (point.y + next.y) / 2;
+      return `<circle class="lab-v4-step-dot" cx="${midX}" cy="${midY}" r="3.5"></circle>`;
+    }).join('')}
+    <circle class="lab-v4-packet ${isRunning ? 'is-running' : ''}" cx="${packetNode.x}" cy="${packetNode.y}" r="9"></circle>
+    ${current.nodes.map((item) => {
+      const [title, role] = nodeText(item);
+      const active = item.id === activeNodeId;
+      const onPrimary = activeNodes.has(item.id);
+      const onGhost = ghostNodes.has(item.id);
+      const labelLines = splitLabel(title);
       return `
-        <g class="lab-svg-lane ${active ? 'is-active' : 'is-idle'}" data-svg-lane="${lane.id}">
-          <path class="lab-svg-path" d="${linePath(lane.nodes)}"></path>
-          ${lane.nodes.map(([stepId, x, y]) => {
-            const [label, role] = stepText(stepId);
-            const selected = stepId === selectedStepId && lane.id === activeLaneId;
-            const playing = selected && isPlaying;
-            const labelLines = splitLabel(label);
-            return `
-              <g class="lab-svg-node ${selected ? 'is-selected' : ''} ${playing ? 'is-playing' : ''}" data-step="${stepId}" data-lane="${lane.id}" role="button" tabindex="0" aria-label="${label}">
-                <circle class="lab-node-aura" cx="${x}" cy="${y}" r="56"></circle>
-                <rect class="lab-node-plate" x="${x - 72}" y="${y - 43}" width="144" height="86" rx="10"></rect>
-                <circle class="lab-node-dot" cx="${x - 46}" cy="${y - 16}" r="10"></circle>
-                <text class="lab-node-icon" x="${x - 46}" y="${y - 12}">${STEPS[stepId].icon}</text>
-                <text class="lab-node-title" x="${x - 22}" y="${y - 16}">
-                  ${labelLines.map((line, index) => `<tspan x="${x - 22}" dy="${index === 0 ? 0 : 15}">${line}</tspan>`).join('')}
-                </text>
-                <text class="lab-node-role" x="${x - 22}" y="${y + 28}">${role}</text>
-                <rect class="lab-node-hitbox" x="${x - 72}" y="${y - 43}" width="144" height="86" rx="10"></rect>
-              </g>
-            `;
-          }).join('')}
+        <g class="lab-v4-node ${item.tone} ${active ? 'is-active' : ''} ${onPrimary ? 'is-primary' : ''} ${onGhost ? 'is-ghost' : ''}" data-node-id="${item.id}" role="button" tabindex="0" aria-label="${escapeHtml(title)}">
+          <circle class="lab-v4-node-aura" cx="${item.x}" cy="${item.y}" r="58"></circle>
+          <rect class="lab-v4-node-box" x="${item.x - 74}" y="${item.y - 43}" width="148" height="86" rx="8"></rect>
+          <circle class="lab-v4-node-mark" cx="${item.x - 48}" cy="${item.y - 15}" r="14"></circle>
+          <text class="lab-v4-node-tag" x="${item.x - 48}" y="${item.y - 11}">${escapeHtml(item.tag)}</text>
+          <text class="lab-v4-node-title" x="${item.x - 22}" y="${item.y - 18}">
+            ${labelLines.map((line, index) => `<tspan x="${item.x - 22}" dy="${index === 0 ? 0 : 15}">${escapeHtml(line)}</tspan>`).join('')}
+          </text>
+          <text class="lab-v4-node-role" x="${item.x - 22}" y="${item.y + 27}">${escapeHtml(role)}</text>
+          <rect class="lab-v4-hitbox" x="${item.x - 74}" y="${item.y - 43}" width="148" height="86" rx="8"></rect>
         </g>
       `;
     }).join('')}
   `;
 
-  svg.querySelectorAll('[data-step]').forEach((node) => {
-    node.addEventListener('click', () => selectNode(node.getAttribute('data-step'), node.getAttribute('data-lane')));
-    node.addEventListener('keydown', (event) => {
-      if (event.key === 'Enter' || event.key === ' ') {
-        event.preventDefault();
-        selectNode(node.getAttribute('data-step'), node.getAttribute('data-lane'));
-      }
+    svg.querySelectorAll('[data-node-id]').forEach((item) => {
+      item.addEventListener('click', () => {
+        stopPlayback();
+        runFinished = false;
+        activeNodeId = item.getAttribute('data-node-id');
+        render();
+      });
+      item.addEventListener('keydown', (event) => {
+        if (event.key === 'Enter' || event.key === ' ') {
+          event.preventDefault();
+          stopPlayback();
+          runFinished = false;
+          activeNodeId = item.getAttribute('data-node-id');
+          render();
+        }
+      });
     });
   });
 }
 
-function renderNodePanel() {
-  const panel = document.querySelector('[data-node-panel]');
-  const [title, role, summary, facts] = stepText(selectedStepId);
-  const lane = activeLane();
-  const [laneTitle, laneSummary] = lane.copy[locale()];
-  const proof = facts[0] || role;
-  panel.innerHTML = `
-    <div class="lab-node-panel-head">
-      <div class="lab-node-panel-icon">${STEPS[selectedStepId].icon}</div>
-      <div>
-        <div class="lab-node-panel-kicker">${COPY[locale()].selectedLabel}</div>
-        <h2>${title}</h2>
-        <p class="lab-node-panel-role">${role}</p>
-      </div>
-    </div>
-    <p class="lab-node-panel-summary">${summary}</p>
-    <div class="lab-node-panel-meta">
-      <div>
-        <span>${COPY[locale()].laneLabel}</span>
-        <strong>${laneTitle}</strong>
-        <p>${laneSummary}</p>
-      </div>
-      <div>
-        <span>${COPY[locale()].proofLabel}</span>
-        <strong>${proof}</strong>
-      </div>
-    </div>
-    <div class="lab-node-panel-facts-group">
-      <span>${COPY[locale()].factsLabel}</span>
-      <ul class="lab-node-panel-facts">${facts.map((fact) => `<li>${fact}</li>`).join('')}</ul>
-    </div>
-  `;
+function setMapModal(open) {
+  const modal = document.querySelector('[data-map-modal]');
+  if (!modal) return;
+
+  if (open) {
+    mapReturnFocus = document.activeElement;
+    modal.hidden = false;
+    document.body.classList.add('is-lab-map-open');
+    renderMap();
+    document.querySelector('[data-map-close]')?.focus();
+    return;
+  }
+
+  modal.hidden = true;
+  document.body.classList.remove('is-lab-map-open');
+  if (mapReturnFocus instanceof HTMLElement) mapReturnFocus.focus();
+}
+
+function bindMapModal() {
+  document.querySelector('[data-map-open]')?.addEventListener('click', () => setMapModal(true));
+  document.querySelector('[data-map-close]')?.addEventListener('click', () => setMapModal(false));
+  document.querySelector('[data-map-modal]')?.addEventListener('click', (event) => {
+    if (event.target === event.currentTarget) setMapModal(false);
+  });
+  document.addEventListener('keydown', (event) => {
+    if (event.key === 'Escape' && !document.querySelector('[data-map-modal]')?.hidden) {
+      setMapModal(false);
+    }
+  });
 }
 
 function render() {
+  renderShell();
+  renderTabs();
+  renderButton();
   renderMetrics();
-  renderModeRail();
-  renderMapCopy();
-  renderSnapshotStatus();
-  renderPlaybackControl();
-  renderLaneTabs();
-  renderSvgMap();
-  renderNodePanel();
+  renderTerminal();
+  renderReadout();
+  renderMap();
 }
 
 document.querySelectorAll('[data-lang-option]').forEach((button) => {
   button.addEventListener('click', () => {
-    localeController.applyLocale(button.getAttribute('data-lang-option'));
-    render();
+    window.requestAnimationFrame(render);
   });
 });
 
@@ -786,4 +783,5 @@ async function loadLabData() {
 }
 
 render();
+bindMapModal();
 loadLabData();

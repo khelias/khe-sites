@@ -154,6 +154,40 @@
           flex-direction: column;
         }
       }
+      @media (max-width: 520px) {
+        body.lab-atlas-v4 .khe-analytics-consent {
+          position: static;
+          width: auto;
+          max-height: none;
+          margin: 0.72rem;
+          overflow: visible;
+          padding: 0.48rem;
+          font-size: 0.72rem;
+          line-height: 1.22;
+        }
+        body.lab-atlas-v4 .khe-analytics-consent strong {
+          margin-bottom: 0.12rem;
+          font-size: 0.78rem;
+        }
+        body.lab-atlas-v4 .khe-analytics-consent p {
+          margin-bottom: 0.34rem;
+          overflow: visible;
+          white-space: normal;
+        }
+        body.lab-atlas-v4 .khe-analytics-actions {
+          display: grid;
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+          gap: 0.36rem;
+        }
+        body.lab-atlas-v4 .khe-analytics-actions button {
+          min-height: 1.72rem;
+          padding: 0 0.48rem;
+          font-size: 0.7rem;
+        }
+        body.lab-atlas-v4 .khe-analytics-status {
+          display: none;
+        }
+      }
     `;
     document.head.appendChild(style);
   }
