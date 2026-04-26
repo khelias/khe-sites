@@ -76,44 +76,43 @@ function byCategory(composeFiles) {
   }, {});
 }
 
-if (!await pathExists(servicesRoot)) {
+if (await pathExists(servicesRoot)) {
+  const composeFiles = await findComposeFiles(servicesRoot);
+  let composeServiceDefinitions = 0;
+
+  for (const file of composeFiles) {
+    const text = await readFile(file, 'utf8');
+    const serviceNames = extractServiceNames(text);
+    composeServiceDefinitions += serviceNames.length;
+  }
+
+  const readme = await readFile(join(homelabRoot, 'README.md'), 'utf8');
+  const metrics = extractReadmeMetrics(readme);
+  const categories = byCategory(composeFiles);
+
+  const snapshot = {
+    generatedAt: new Date().toISOString(),
+    source: {
+      repo: 'khe-homelab',
+      composeFiles: composeFiles.length,
+      composeServiceDefinitions,
+      publicMetrics: 'khe-homelab/README.md service summary',
+    },
+    metrics: {
+      routerPorts: metrics.routerPorts,
+      services: metrics.services ?? composeFiles.length,
+      containers: metrics.containers ?? composeServiceDefinitions,
+      recoveryLayers: metrics.recoveryLayers,
+    },
+    categories,
+  };
+
+  await mkdir(dirname(outputPath), { recursive: true });
+  await writeFile(outputPath, `${JSON.stringify(snapshot, null, 2)}\n`);
+
+  console.log(
+    `Generated lab-data.json from ${composeFiles.length} compose files and ${composeServiceDefinitions} service definitions`,
+  );
+} else {
   console.log('Using committed lab-data.json; khe-homelab services directory is not available.');
-  process.exit(0);
 }
-
-const composeFiles = await findComposeFiles(servicesRoot);
-let composeServiceDefinitions = 0;
-
-for (const file of composeFiles) {
-  const text = await readFile(file, 'utf8');
-  const serviceNames = extractServiceNames(text);
-  composeServiceDefinitions += serviceNames.length;
-}
-
-const readme = await readFile(join(homelabRoot, 'README.md'), 'utf8');
-const metrics = extractReadmeMetrics(readme);
-const categories = byCategory(composeFiles);
-
-const snapshot = {
-  generatedAt: new Date().toISOString(),
-  source: {
-    repo: 'khe-homelab',
-    composeFiles: composeFiles.length,
-    composeServiceDefinitions,
-    publicMetrics: 'khe-homelab/README.md service summary',
-  },
-  metrics: {
-    routerPorts: metrics.routerPorts,
-    services: metrics.services ?? composeFiles.length,
-    containers: metrics.containers ?? composeServiceDefinitions,
-    recoveryLayers: metrics.recoveryLayers,
-  },
-  categories,
-};
-
-await mkdir(dirname(outputPath), { recursive: true });
-await writeFile(outputPath, `${JSON.stringify(snapshot, null, 2)}\n`);
-
-console.log(
-  `Generated lab-data.json from ${composeFiles.length} compose files and ${composeServiceDefinitions} service definitions`,
-);
