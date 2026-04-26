@@ -8,6 +8,7 @@
   <link rel="preload" href="/assets/fonts/inter-400.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="/assets/fonts/inter-500.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="/assets/site.css">
+  <script defer src="/assets/analytics-consent.js" data-analytics-token="58734ed4ae1e4b4e8a8f8f7d50ff74f2" data-analytics-privacy-url="/privacy?lang=en"></script>
 </head>
 <body class="privacy-page landing-privacy">
 
@@ -25,13 +26,17 @@
   <h1 data-i18n="heading">Privacy</h1>
   <p class="updated" data-i18n="updated">Last updated: 2026-04-26</p>
 
-  <p data-i18n="intro">This site (khe.ee) is a personal page. It does not use analytics, advertising, or third-party tracking. No personal data is collected or stored on the site itself.</p>
+  <p data-i18n="intro">This site (khe.ee) is a personal page. If you allow analytics, it uses Cloudflare Web Analytics for aggregate page-view and performance statistics. It does not use advertising, profiling, analytics cookies, or cross-site tracking.</p>
+
+  <h2 data-i18n="analyticsHeading">Analytics</h2>
+  <p data-i18n-html="analyticsBody">If you allow analytics, Cloudflare Web Analytics collects aggregate usage and performance metrics such as visits, page views, top paths, referrers, countries, browser/device types, and page load timing. It is not used for advertising. Your choice is stored in this browser's <code>localStorage</code> under <code>khe.analyticsConsent.v1</code>.</p>
+  <button type="button" class="privacy-action" data-analytics-preferences data-i18n="analyticsButton">Analytics choices</button>
 
   <h2 data-i18n="cookiesHeading">Cookies</h2>
   <p data-i18n-html="cookiesBody">The only cookie set on this domain is Cloudflare's bot management cookie <code>_cf_bm</code>, issued automatically by the CDN to tell humans from automated traffic. It is considered strictly necessary under EU ePrivacy rules and expires within 30 minutes. No consent banner is required for this kind of cookie.</p>
 
   <h2 data-i18n="requestsHeading">Third-party requests</h2>
-  <p data-i18n="requestsBody">Fonts are served from this server, not from a third party. The page makes no outbound requests to external services as it loads.</p>
+  <p data-i18n="requestsBody">Fonts and the analytics consent script are served from this server. If analytics is allowed, the Cloudflare Web Analytics beacon loads from static.cloudflareinsights.com and sends measurement data to Cloudflare.</p>
 
   <h2 data-i18n="hostingHeading">Hosting and network</h2>
   <ul>
@@ -57,11 +62,14 @@
       back: 'Tagasi khe.ee lehele',
       heading: 'Privaatsus',
       updated: 'Uuendatud: 2026-04-26',
-      intro: 'khe.ee on isiklik avaleht. Leht ei kasuta analüütikat, reklaame ega kolmanda osapoole jälitamist. Leht ise ei kogu ega salvesta isikuandmeid.',
+      intro: 'khe.ee on isiklik avaleht. Kui lubad analüütika, kasutab leht Cloudflare Web Analyticsit koondatud lehevaatamiste ja jõudluse statistika jaoks. See ei kasuta reklaame, profileerimist, analüütikaküpsiseid ega saitideülest jälitamist.',
+      analyticsHeading: 'Analüütika',
+      analyticsBody: 'Kui lubad analüütika, kogub Cloudflare Web Analytics koondatud kasutus- ja jõudlusstatistikat, näiteks külastusi, lehevaatamisi, populaarseid aadresse, viitajaid, riike, brauseri/seadme tüüpe ja lehe laadimisaega. Seda ei kasutata reklaamimiseks. Sinu valik salvestatakse selles brauseris <code>localStorage</code> väljal <code>khe.analyticsConsent.v1</code>.',
+      analyticsButton: 'Analüütika valikud',
       cookiesHeading: 'Küpsised',
       cookiesBody: 'Selle domeeni ainus küpsis on Cloudflare\'i botihalduse küpsis <code>_cf_bm</code>, mille CDN väljastab automaatselt inimeste ja automaatse liikluse eristamiseks. ELi ePrivacy reeglite järgi on see rangelt vajalik küpsis, aegub umbes 30 minuti jooksul ega vaja nõusolekubännerit.',
       requestsHeading: 'Kolmanda osapoole päringud',
-      requestsBody: 'Fondid tulevad samast serverist, mitte kolmandalt osapoolelt. Leht ei tee laadimise ajal välisteenustesse päringuid.',
+      requestsBody: 'Fondid ja analüütika nõusoleku skript tulevad samast serverist. Kui analüütika on lubatud, laaditakse Cloudflare Web Analyticsi beacon aadressilt static.cloudflareinsights.com ja mõõteandmed saadetakse Cloudflare\'i.',
       hostingHeading: 'Majutus ja võrk',
       hostingServer: 'Majutatud eraserveris Tallinnas.',
       hostingCloudflare: 'Avalik ligipääs käib Cloudflare\'i võrgu kaudu (DNS, tunnel, TLS). Cloudflare näeb päringu metaandmeid, näiteks IP-aadressi, URL-i ja user agentit, ning on avaliku marsruudi TLS-lõpp-punkt.',
@@ -77,11 +85,14 @@
       back: 'Back to khe.ee',
       heading: 'Privacy',
       updated: 'Last updated: 2026-04-26',
-      intro: 'This site (khe.ee) is a personal page. It does not use analytics, advertising, or third-party tracking. No personal data is collected or stored on the site itself.',
+      intro: 'This site (khe.ee) is a personal page. If you allow analytics, it uses Cloudflare Web Analytics for aggregate page-view and performance statistics. It does not use advertising, profiling, analytics cookies, or cross-site tracking.',
+      analyticsHeading: 'Analytics',
+      analyticsBody: 'If you allow analytics, Cloudflare Web Analytics collects aggregate usage and performance metrics such as visits, page views, top paths, referrers, countries, browser/device types, and page load timing. It is not used for advertising. Your choice is stored in this browser\'s <code>localStorage</code> under <code>khe.analyticsConsent.v1</code>.',
+      analyticsButton: 'Analytics choices',
       cookiesHeading: 'Cookies',
       cookiesBody: 'The only cookie set on this domain is Cloudflare\'s bot management cookie <code>_cf_bm</code>, issued automatically by the CDN to tell humans from automated traffic. It is considered strictly necessary under EU ePrivacy rules and expires within 30 minutes. No consent banner is required for this kind of cookie.',
       requestsHeading: 'Third-party requests',
-      requestsBody: 'Fonts are served from this server, not from a third party. The page makes no outbound requests to external services as it loads.',
+      requestsBody: 'Fonts and the analytics consent script are served from this server. If analytics is allowed, the Cloudflare Web Analytics beacon loads from static.cloudflareinsights.com and sends measurement data to Cloudflare.',
       hostingHeading: 'Hosting and network',
       hostingServer: 'Hosted on a private server in Tallinn, Estonia.',
       hostingCloudflare: 'Public access goes through Cloudflare\'s edge network (DNS, tunnel, TLS termination). Cloudflare can see request metadata such as IP address, URL, and user agent, and operates as the TLS endpoint for the public route.',

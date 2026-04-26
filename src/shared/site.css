@@ -499,6 +499,27 @@ body.privacy-page {
   margin-bottom: 0.75rem;
 }
 
+.privacy-action {
+  min-height: 2.35rem;
+  margin: 0.15rem 0 0.4rem;
+  padding: 0 0.85rem;
+  border: 1px solid var(--border-hover);
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.04);
+  color: var(--text);
+  cursor: pointer;
+  font: 600 0.82rem/1 'Inter', system-ui, sans-serif;
+}
+
+.privacy-action:hover {
+  border-color: var(--accent-border);
+}
+
+.privacy-action:focus-visible {
+  outline: 2px solid var(--accent-border);
+  outline-offset: 3px;
+}
+
 .privacy-page ul {
   list-style: none;
   padding-left: 0;

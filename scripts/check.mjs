@@ -12,6 +12,7 @@ const htmlFiles = [
 
 const requiredMarkers = [
   '/assets/site-locale.js',
+  '/assets/analytics-consent.js',
   '/assets/site.css',
   'data-lang-option="et"',
   'data-lang-option="en"',
@@ -39,6 +40,7 @@ for (const relativePath of htmlFiles) {
 
 const sourceFiles = [
   ...htmlFiles,
+  'src/shared/analytics-consent.js',
   'src/shared/site-locale.js',
   'src/shared/site.css',
 ];

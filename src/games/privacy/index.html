@@ -8,6 +8,7 @@
   <link rel="preload" href="/assets/fonts/inter-400.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="/assets/fonts/inter-500.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="/assets/site.css">
+  <script defer src="/assets/analytics-consent.js" data-analytics-token="81aecd30e30c4e97a4d733334d88775b" data-analytics-privacy-url="/privacy?lang=et"></script>
 </head>
 <body class="privacy-page games-privacy">
 
@@ -25,7 +26,11 @@
   <h1 data-i18n="heading">Privaatsus</h1>
   <p class="updated" data-i18n="updated">Uuendatud: 2026-04-26</p>
 
-  <p data-i18n="intro">games.khe.ee on avalik isiklik leht, mida majutan koduserveris. Siin ei ole reklaame, kasutajakontosid ega külastaja käitumise jälgimist.</p>
+  <p data-i18n="intro">games.khe.ee on avalik isiklik leht, mida majutan koduserveris. Siin ei ole reklaame, kasutajakontosid ega reklaamiks või profileerimiseks mõeldud jälitamist.</p>
+
+  <h2 data-i18n="analyticsHeading">Analüütika</h2>
+  <p data-i18n-html="analyticsBody">Kui lubad analüütika, kogub Cloudflare Web Analytics koondatud kasutus- ja jõudlusstatistikat, näiteks külastusi, lehevaatamisi, populaarseid aadresse, viitajaid, riike, brauseri/seadme tüüpe ja lehe laadimisaega. Seda ei kasutata reklaamimiseks. Sinu valik salvestatakse selles brauseris <code>localStorage</code> väljal <code>khe.analyticsConsent.v1</code>.</p>
+  <button type="button" class="privacy-action" data-analytics-preferences data-i18n="analyticsButton">Analüütika valikud</button>
 
   <h2 data-i18n="cookiesHeading">Küpsised</h2>
   <p data-i18n-html="cookiesBody">Leht ise küpsiseid ei sea. Cloudflare'i CDN võib seada botihalduse küpsise <code>_cf_bm</code>, mille eluiga on umbes 30 minutit. ELi ePrivacy reeglite järgi on see rangelt vajalik küpsis ega vaja nõusolekubännerit.</p>
@@ -50,7 +55,7 @@
   <ul>
     <li data-i18n="hostingServer">Server asub Tallinnas koduvõrgus.</li>
     <li data-i18n="hostingCloudflare">Avalik ligipääs käib Cloudflare'i kaudu (DNS, tunnel, TLS). Cloudflare näeb päringu metaandmeid, näiteks IP-aadressi, URL-i ja user agentit, ning on avaliku marsruudi TLS-lõpp-punkt.</li>
-    <li data-i18n="hostingFonts">Fondid tulevad samast serverist, mitte kolmandalt osapoolelt.</li>
+    <li data-i18n="hostingFonts">Launcheri fondid tulevad samast serverist. Mõned mängurakendused võivad laadida fonte Google Fontsist.</li>
   </ul>
 
   <h2 data-i18n="contactHeading">Kontakt</h2>
@@ -68,7 +73,10 @@
       back: 'Tagasi mängude juurde',
       heading: 'Privaatsus',
       updated: 'Uuendatud: 2026-04-26',
-      intro: 'games.khe.ee on avalik isiklik leht, mida majutan koduserveris. Siin ei ole reklaame, kasutajakontosid ega külastaja käitumise jälgimist.',
+      intro: 'games.khe.ee on avalik isiklik leht, mida majutan koduserveris. Siin ei ole reklaame, kasutajakontosid ega reklaamiks või profileerimiseks mõeldud jälitamist.',
+      analyticsHeading: 'Analüütika',
+      analyticsBody: 'Kui lubad analüütika, kogub Cloudflare Web Analytics koondatud kasutus- ja jõudlusstatistikat, näiteks külastusi, lehevaatamisi, populaarseid aadresse, viitajaid, riike, brauseri/seadme tüüpe ja lehe laadimisaega. Seda ei kasutata reklaamimiseks. Sinu valik salvestatakse selles brauseris <code>localStorage</code> väljal <code>khe.analyticsConsent.v1</code>.',
+      analyticsButton: 'Analüütika valikud',
       cookiesHeading: 'Küpsised',
       cookiesBody: 'Leht ise küpsiseid ei sea. Cloudflare\'i CDN võib seada botihalduse küpsise <code>_cf_bm</code>, mille eluiga on umbes 30 minutit. ELi ePrivacy reeglite järgi on see rangelt vajalik küpsis ega vaja nõusolekubännerit.',
       storageHeading: 'Brauseri kohalik salvestus',
@@ -84,7 +92,7 @@
       hostingHeading: 'Majutus ja võrk',
       hostingServer: 'Server asub Tallinnas koduvõrgus.',
       hostingCloudflare: 'Avalik ligipääs käib Cloudflare\'i kaudu (DNS, tunnel, TLS). Cloudflare näeb päringu metaandmeid, näiteks IP-aadressi, URL-i ja user agentit, ning on avaliku marsruudi TLS-lõpp-punkt.',
-      hostingFonts: 'Fondid tulevad samast serverist, mitte kolmandalt osapoolelt.',
+      hostingFonts: 'Launcheri fondid tulevad samast serverist. Mõned mängurakendused võivad laadida fonte Google Fontsist.',
       contactHeading: 'Kontakt',
       contactBody: 'Küsimused: <a href="https://github.com/khelias" target="_blank" rel="noopener">github.com/khelias</a>.',
     },
@@ -95,7 +103,10 @@
       back: 'Back to Games',
       heading: 'Privacy',
       updated: 'Last updated: 2026-04-26',
-      intro: 'games.khe.ee is a public personal home-server page. It has no advertising, no user accounts, and no visitor behaviour tracking.',
+      intro: 'games.khe.ee is a public personal home-server page. It has no advertising, no user accounts, and no tracking for advertising or profiling.',
+      analyticsHeading: 'Analytics',
+      analyticsBody: 'If you allow analytics, Cloudflare Web Analytics collects aggregate usage and performance metrics such as visits, page views, top paths, referrers, countries, browser/device types, and page load timing. It is not used for advertising. Your choice is stored in this browser\'s <code>localStorage</code> under <code>khe.analyticsConsent.v1</code>.',
+      analyticsButton: 'Analytics choices',
       cookiesHeading: 'Cookies',
       cookiesBody: 'The page itself sets no cookies. Cloudflare\'s CDN may set its bot management cookie <code>_cf_bm</code>, with a lifetime of about 30 minutes. It is considered strictly necessary under EU ePrivacy rules and requires no consent banner.',
       storageHeading: 'Browser local storage',
@@ -111,7 +122,7 @@
       hostingHeading: 'Hosting and network',
       hostingServer: 'The server is in Tallinn, on a home LAN.',
       hostingCloudflare: 'Public access goes through Cloudflare (DNS, tunnel, TLS). Cloudflare can see request metadata such as IP address, URL, and user agent, and acts as the TLS endpoint.',
-      hostingFonts: 'Fonts are served from this server, not from a third party.',
+      hostingFonts: 'Launcher fonts are served from this server. Some game apps may load fonts from Google Fonts.',
       contactHeading: 'Contact',
       contactBody: 'Questions: <a href="https://github.com/khelias" target="_blank" rel="noopener">github.com/khelias</a>.',
     },

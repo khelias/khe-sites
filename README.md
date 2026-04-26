@@ -19,6 +19,18 @@ npm run check
 npm run build
 ```
 
+## Analytics Consent
+
+Public pages include a consent-gated Cloudflare Web Analytics loader with
+beacon token placeholders:
+
+- `khe.ee` token is configured in the landing pages.
+- `games.khe.ee` token is configured in the games launcher and game apps.
+
+Replace these with the site tokens from Cloudflare Web Analytics before
+deployment. The tokens are embedded in browser HTML and are not secrets. The
+Cloudflare beacon is loaded only after the visitor allows analytics.
+
 Build output:
 
 - `dist/landing` -> `/srv/data/sites/khe`
