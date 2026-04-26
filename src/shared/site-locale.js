@@ -28,6 +28,13 @@ function setText(selector, copy, attribute) {
   });
 }
 
+function setHtml(selector, copy, attribute) {
+  document.querySelectorAll(selector).forEach((node) => {
+    const key = node.getAttribute(attribute);
+    if (copy[key]) node.innerHTML = copy[key];
+  });
+}
+
 function setAttribute(selector, copy, dataAttribute, targetAttribute) {
   document.querySelectorAll(selector).forEach((node) => {
     const key = node.getAttribute(dataAttribute);
@@ -64,6 +71,7 @@ export function createLocaleController({
     setQueryLocale(activeLocale);
 
     setText('[data-i18n]', activeCopy, 'data-i18n');
+    setHtml('[data-i18n-html]', activeCopy, 'data-i18n-html');
     setAttribute('[data-i18n-aria]', activeCopy, 'data-i18n-aria', 'aria-label');
     setAttribute('[data-i18n-title]', activeCopy, 'data-i18n-title', 'title');
 

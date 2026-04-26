@@ -5,7 +5,9 @@ import { fileURLToPath } from 'node:url';
 const root = dirname(dirname(fileURLToPath(import.meta.url)));
 const htmlFiles = [
   'src/landing/index.html',
+  'src/landing/privacy/index.html',
   'src/games/index.html',
+  'src/games/privacy/index.html',
 ];
 
 const requiredMarkers = [
@@ -19,6 +21,30 @@ for (const relativePath of htmlFiles) {
   for (const marker of requiredMarkers) {
     if (!content.includes(marker)) {
       throw new Error(`${relativePath} is missing ${marker}`);
+    }
+  }
+
+  for (const match of content.matchAll(/<script type="module">([\s\S]*?)<\/script>/g)) {
+    const script = match[1].replace(/^\s*import\s.+;\s*$/gm, '');
+    new Function(script);
+  }
+}
+
+const sourceFiles = [
+  ...htmlFiles,
+  'src/shared/site-locale.js',
+];
+const bannedText = [
+  'Tarkvaraarhitekt töö poolest',
+  'Nokitseja loomult',
+  'Ise majutatud Tallinnas',
+];
+
+for (const relativePath of sourceFiles) {
+  const content = await readFile(join(root, relativePath), 'utf8');
+  for (const text of bannedText) {
+    if (content.includes(text)) {
+      throw new Error(`${relativePath} contains stale copy: ${text}`);
     }
   }
 }

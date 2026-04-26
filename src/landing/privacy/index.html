@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Privacy — Kaido Henrik Elias</title>
+  <title>Privacy - Kaido Henrik Elias</title>
   <meta name="description" content="Privacy notice for khe.ee">
   <link rel="preload" href="/fonts/inter-400.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="/fonts/inter-500.woff2" as="font" type="font/woff2" crossorigin>
@@ -39,6 +39,7 @@
       --text-muted: #71717a;
       --text-faint: #52525b;
       --border: rgba(255, 255, 255, 0.08);
+      --accent-border: rgba(139, 92, 246, 0.25);
     }
 
     body {
@@ -65,6 +66,42 @@
       z-index: 0;
     }
 
+    .language-switcher {
+      position: fixed;
+      top: 1.5rem;
+      right: 1.5rem;
+      z-index: 2;
+      display: inline-flex;
+      gap: 0.2rem;
+      padding: 0.18rem;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      background: rgba(255, 255, 255, 0.03);
+      backdrop-filter: blur(6px);
+    }
+    .language-switcher button {
+      min-width: 2.7rem;
+      min-height: 2.35rem;
+      border: 1px solid transparent;
+      border-radius: 8px;
+      background: transparent;
+      color: var(--text-muted);
+      cursor: pointer;
+      font: 600 0.7rem/1 'Inter', system-ui;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      transition: background 0.15s, border-color 0.15s, color 0.15s;
+    }
+    .language-switcher button[aria-pressed="true"] {
+      border-color: var(--accent-border);
+      background: rgba(139, 92, 246, 0.18);
+      color: var(--text);
+    }
+    .language-switcher button:focus-visible {
+      outline: 2px solid var(--accent-border);
+      outline-offset: 2px;
+    }
+
     main {
       max-width: 640px;
       margin: 0 auto;
@@ -85,7 +122,7 @@
     }
     a.back:hover { color: var(--text); gap: 0.5rem; }
     a.back:focus-visible {
-      outline: 2px solid rgba(139, 92, 246, 0.25);
+      outline: 2px solid var(--accent-border);
       outline-offset: 3px;
       border-radius: 4px;
     }
@@ -123,7 +160,7 @@
       margin-bottom: 0.5rem;
     }
     li::before {
-      content: "—";
+      content: "-";
       position: absolute;
       left: 0;
       color: var(--text-faint);
@@ -139,53 +176,104 @@
 
     a { color: var(--text-dim); }
     a:hover { color: var(--text); }
+
+    @media (max-width: 520px) {
+      .language-switcher { top: 1rem; right: 1rem; }
+      main { padding-top: 5rem; }
+    }
   </style>
 </head>
 <body>
 
+<div class="language-switcher" role="group" aria-label="Language" data-i18n-aria="languageLabel">
+  <button type="button" data-lang-option="et" aria-pressed="false">ET</button>
+  <button type="button" data-lang-option="en" aria-pressed="true">EN</button>
+</div>
+
 <main>
-  <a class="back" href="/">
+  <a class="back" href="/?lang=en" data-link="home">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>
-    Back to khe.ee
+    <span data-i18n="back">Back to khe.ee</span>
   </a>
 
-  <h1>Privacy</h1>
-  <p class="updated">Last updated: 2026-04-18</p>
+  <h1 data-i18n="heading">Privacy</h1>
+  <p class="updated" data-i18n="updated">Last updated: 2026-04-26</p>
 
-  <p>This site (khe.ee) is a personal page. It does not use analytics,
-  advertising, or third-party tracking. No personal data is collected
-  or stored on the site itself.</p>
+  <p data-i18n="intro">This site (khe.ee) is a personal page. It does not use analytics, advertising, or third-party tracking. No personal data is collected or stored on the site itself.</p>
 
-  <h2>Cookies</h2>
-  <p>The only cookie set on this domain is Cloudflare's bot management
-  cookie <code>_cf_bm</code>, issued automatically by the CDN to tell humans
-  from automated traffic. It is considered strictly necessary under EU
-  ePrivacy rules and expires within 30 minutes. No consent banner is
-  required for this kind of cookie.</p>
+  <h2 data-i18n="cookiesHeading">Cookies</h2>
+  <p data-i18n-html="cookiesBody">The only cookie set on this domain is Cloudflare's bot management cookie <code>_cf_bm</code>, issued automatically by the CDN to tell humans from automated traffic. It is considered strictly necessary under EU ePrivacy rules and expires within 30 minutes. No consent banner is required for this kind of cookie.</p>
 
-  <h2>Third-party requests</h2>
-  <p>Fonts are served from this server, not from a third party. The page
-  makes no outbound requests to external services as it loads.</p>
+  <h2 data-i18n="requestsHeading">Third-party requests</h2>
+  <p data-i18n="requestsBody">Fonts are served from this server, not from a third party. The page makes no outbound requests to external services as it loads.</p>
 
-  <h2>Hosting and network</h2>
+  <h2 data-i18n="hostingHeading">Hosting and network</h2>
   <ul>
-    <li>Hosted on a private server in Tallinn, Estonia.</li>
-    <li>Public access goes through Cloudflare's edge network
-        (DNS, tunnel, TLS termination). Cloudflare can see request metadata
-        such as IP address, URL, and user agent, and operates as the TLS
-        endpoint for the public route.</li>
+    <li data-i18n="hostingServer">Hosted on a private server in Tallinn, Estonia.</li>
+    <li data-i18n="hostingCloudflare">Public access goes through Cloudflare's edge network (DNS, tunnel, TLS termination). Cloudflare can see request metadata such as IP address, URL, and user agent, and operates as the TLS endpoint for the public route.</li>
   </ul>
 
-  <h2>Other services on this domain</h2>
-  <p>Subdomains (cloud.khe.ee, photos.khe.ee, vault.khe.ee, etc.) host
-  self-hosted applications used by the site owner and immediate family.
-  They are not open to public registration. Each application has its own
-  data handling — see the upstream project documentation if you have
-  account access.</p>
+  <h2 data-i18n="servicesHeading">Other services on this domain</h2>
+  <p data-i18n="servicesBody">Subdomains (cloud.khe.ee, photos.khe.ee, vault.khe.ee, etc.) host self-hosted applications used by the site owner and immediate family. They are not open to public registration. Each application has its own data handling.</p>
 
-  <h2>Contact</h2>
-  <p>For questions: <a href="https://github.com/khelias" target="_blank" rel="noopener">github.com/khelias</a>.</p>
+  <h2 data-i18n="contactHeading">Contact</h2>
+  <p data-i18n-html="contactBody">For questions: <a href="https://github.com/khelias" target="_blank" rel="noopener">github.com/khelias</a>.</p>
 </main>
+
+<script type="module">
+  import { createLocaleController } from '/assets/site-locale.js';
+
+  const COPY = {
+    et: {
+      title: 'Privaatsus - Kaido Henrik Elias',
+      description: 'khe.ee privaatsusteave',
+      languageLabel: 'Keel',
+      back: 'Tagasi khe.ee lehele',
+      heading: 'Privaatsus',
+      updated: 'Uuendatud: 2026-04-26',
+      intro: 'khe.ee on isiklik avaleht. Leht ei kasuta analüütikat, reklaame ega kolmanda osapoole jälitamist. Leht ise ei kogu ega salvesta isikuandmeid.',
+      cookiesHeading: 'Küpsised',
+      cookiesBody: 'Selle domeeni ainus küpsis on Cloudflare\'i botihalduse küpsis <code>_cf_bm</code>, mille CDN väljastab automaatselt inimeste ja automaatse liikluse eristamiseks. ELi ePrivacy reeglite järgi on see rangelt vajalik küpsis, aegub umbes 30 minuti jooksul ega vaja nõusolekubännerit.',
+      requestsHeading: 'Kolmanda osapoole päringud',
+      requestsBody: 'Fondid tulevad samast serverist, mitte kolmandalt osapoolelt. Leht ei tee laadimise ajal välisteenustesse päringuid.',
+      hostingHeading: 'Majutus ja võrk',
+      hostingServer: 'Majutatud eraserveris Tallinnas.',
+      hostingCloudflare: 'Avalik ligipääs käib Cloudflare\'i võrgu kaudu (DNS, tunnel, TLS). Cloudflare näeb päringu metaandmeid, näiteks IP-aadressi, URL-i ja user agentit, ning on avaliku marsruudi TLS-lõpp-punkt.',
+      servicesHeading: 'Teised teenused sellel domeenil',
+      servicesBody: 'Alamdomeenid (cloud.khe.ee, photos.khe.ee, vault.khe.ee jne) majutavad saidi omaniku ja lähima pere kasutuses olevaid self-hosted rakendusi. Need ei ole avalikuks registreerimiseks avatud. Igal rakendusel on oma andmekäitlus.',
+      contactHeading: 'Kontakt',
+      contactBody: 'Küsimused: <a href="https://github.com/khelias" target="_blank" rel="noopener">github.com/khelias</a>.',
+    },
+    en: {
+      title: 'Privacy - Kaido Henrik Elias',
+      description: 'Privacy notice for khe.ee',
+      languageLabel: 'Language',
+      back: 'Back to khe.ee',
+      heading: 'Privacy',
+      updated: 'Last updated: 2026-04-26',
+      intro: 'This site (khe.ee) is a personal page. It does not use analytics, advertising, or third-party tracking. No personal data is collected or stored on the site itself.',
+      cookiesHeading: 'Cookies',
+      cookiesBody: 'The only cookie set on this domain is Cloudflare\'s bot management cookie <code>_cf_bm</code>, issued automatically by the CDN to tell humans from automated traffic. It is considered strictly necessary under EU ePrivacy rules and expires within 30 minutes. No consent banner is required for this kind of cookie.',
+      requestsHeading: 'Third-party requests',
+      requestsBody: 'Fonts are served from this server, not from a third party. The page makes no outbound requests to external services as it loads.',
+      hostingHeading: 'Hosting and network',
+      hostingServer: 'Hosted on a private server in Tallinn, Estonia.',
+      hostingCloudflare: 'Public access goes through Cloudflare\'s edge network (DNS, tunnel, TLS termination). Cloudflare can see request metadata such as IP address, URL, and user agent, and operates as the TLS endpoint for the public route.',
+      servicesHeading: 'Other services on this domain',
+      servicesBody: 'Subdomains (cloud.khe.ee, photos.khe.ee, vault.khe.ee, etc.) host self-hosted applications used by the site owner and immediate family. They are not open to public registration. Each application has its own data handling.',
+      contactHeading: 'Contact',
+      contactBody: 'For questions: <a href="https://github.com/khelias" target="_blank" rel="noopener">github.com/khelias</a>.',
+    },
+  };
+
+  createLocaleController({
+    copy: COPY,
+    defaultLocale: 'en',
+    links: {
+      home: (locale) => `/?lang=${locale}`,
+    },
+  });
+</script>
 
 </body>
 </html>
