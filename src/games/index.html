@@ -13,7 +13,7 @@
 <body class="games-home">
   <header class="site-header" aria-label="Lehe navigeerimine" data-i18n-aria="siteNavAria">
     <div class="site-header__inner">
-      <a href="/?lang=et" class="site-header__brand brand-mark" aria-label="KHE Games avaleht" data-i18n-aria="siteHomeAria" data-link="home">
+      <a href="https://khe.ee/?lang=et" class="site-header__brand brand-mark" aria-label="KHE.ee avaleht" data-i18n-aria="siteHomeAria" data-link="home">
         <span>KHE</span><span class="brand-mark__suffix">.ee</span>
       </a>
       <div class="site-header__context" aria-current="page">
@@ -86,7 +86,7 @@
         title: 'Mängud — KHE',
         description: 'Eliase pere mängud',
         siteNavAria: 'Lehe navigeerimine',
-        siteHomeAria: 'KHE Games avaleht',
+        siteHomeAria: 'KHE.ee avaleht',
         siteKicker: 'KHE Games',
         siteTitle: 'Mängud',
         languageLabel: 'Keel',
@@ -106,7 +106,7 @@
         title: 'Games — KHE',
         description: 'Elias family games',
         siteNavAria: 'Site navigation',
-        siteHomeAria: 'KHE Games home',
+        siteHomeAria: 'KHE.ee home',
         siteKicker: 'KHE Games',
         siteTitle: 'Games',
         languageLabel: 'Language',
@@ -125,6 +125,9 @@
     };
 
     const localPreviewHost = ['localhost', '127.0.0.1', '::1'].includes(window.location.hostname);
+    const landingOrigin = localPreviewHost
+      ? `${window.location.protocol}//${window.location.hostname}:8791`
+      : 'https://khe.ee';
     const gamesOrigin = localPreviewHost ? 'https://games.khe.ee' : '';
 
     renderSiteFooter();
@@ -134,7 +137,7 @@
       defaultLocale: 'et',
       useBrowserDefault: true,
       links: {
-        home: (locale) => `/?lang=${locale}`,
+        home: (locale) => `${landingOrigin}/?lang=${locale}`,
         study: (locale) => `${gamesOrigin}/study/?lang=${locale}`,
         adventure: (locale) => `${gamesOrigin}/adventure/?lang=${locale}`,
         privacy: (locale) => `/privacy?lang=${locale}`,
