@@ -1,5 +1,5 @@
-import { createLocaleController } from '/assets/site-locale.js?v=20260427d';
-import { renderSiteFooter, withSiteFooterCopy } from '/assets/site-footer.js?v=20260427d';
+import { createLocaleController } from '/assets/site-locale.js?v=20260427e';
+import { renderSiteFooter, withSiteFooterCopy } from '/assets/site-footer.js?v=20260427e';
 
 const COPY = {
   en: {

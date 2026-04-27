@@ -148,7 +148,7 @@ a:hover { color: var(--text); }
 }
 
 .site-header__brand {
-  min-width: 3.1rem;
+  min-width: 3.35rem;
   height: 2.75rem;
   display: inline-flex;
   align-items: center;
@@ -166,8 +166,12 @@ a:hover { color: var(--text); }
 }
 
 .brand-mark {
-  gap: 0.02em;
+  gap: 0.025em;
   white-space: nowrap;
+}
+
+.site-header__brand.brand-mark {
+  font-size: 0.78rem;
 }
 
 .brand-mark__suffix {
@@ -177,6 +181,11 @@ a:hover { color: var(--text); }
   font-weight: 800;
   line-height: 1;
   transform: translateY(0.2em);
+}
+
+.site-header__brand .brand-mark__suffix {
+  font-size: 0.58em;
+  transform: translateY(0.26em);
 }
 
 .site-header__brand:hover {
@@ -2882,9 +2891,13 @@ strong {
   }
 
   .site-header__brand {
-    min-width: 2.95rem;
+    min-width: 3.05rem;
     height: 2.55rem;
     font-size: 0.68rem;
+  }
+
+  .site-header__brand.brand-mark {
+    font-size: 0.7rem;
   }
 
   .site-header__context span {
