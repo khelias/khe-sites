@@ -1,4 +1,5 @@
 import { createLocaleController } from '/assets/site-locale.js';
+import { renderSiteFooter, withSiteFooterCopy } from '/assets/site-footer.js';
 
 const COPY = {
   en: {
@@ -11,6 +12,7 @@ const COPY = {
     stageLabel: 'KHE Lab Atlas',
     kicker: 'Live homelab atlas',
     headline: 'KHE Lab Atlas',
+    intro: 'A public map of how the home lab reaches the internet, deploys changes, protects operations, and recovers from failure.',
     proofLink: 'Read the proof',
     proofKicker: 'Public proof',
     mapOpen: 'Open diagram',
@@ -41,6 +43,7 @@ const COPY = {
     stageLabel: 'KHE Lab Atlas',
     kicker: 'Elav homelabi atlas',
     headline: 'KHE Lab Atlas',
+    intro: 'Avalik kaart sellest, kuidas kodulab internetti jõuab, muudatusi deploy’b, haldust kaitseb ja tõrgetest taastub.',
     proofLink: 'Vaata tõestust',
     proofKicker: 'Avalik tõestus',
     mapOpen: 'Ava diagramm',
@@ -385,11 +388,14 @@ let mapReturnFocus = null;
 
 const sceneById = new Map(SCENES.map((scene) => [scene.id, scene]));
 
+renderSiteFooter();
+
 const localeController = createLocaleController({
-  copy: COPY,
+  copy: withSiteFooterCopy(COPY),
   defaultLocale: 'en',
   links: {
     home: (locale) => `/?lang=${locale}`,
+    privacy: (locale) => `/privacy?lang=${locale}`,
   },
 });
 

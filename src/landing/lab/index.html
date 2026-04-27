@@ -8,6 +8,7 @@
   <link rel="preload" href="/assets/fonts/inter-400.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="/assets/fonts/inter-500.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="modulepreload" href="/assets/site-locale.js">
+  <link rel="modulepreload" href="/assets/site-footer.js">
   <link rel="stylesheet" href="/assets/site.css?v=lab-v4j">
   <script defer src="/assets/analytics-consent.js?v=lab-v4e" data-analytics-token="58734ed4ae1e4b4e8a8f8f7d50ff74f2" data-analytics-privacy-url="/privacy?lang=en"></script>
 </head>
@@ -19,6 +20,7 @@
     <div class="lab-shell-title">
       <span data-i18n="kicker">Live homelab atlas</span>
       <strong data-i18n="headline">KHE Lab Atlas</strong>
+      <p data-i18n="intro">A public map of how the home lab reaches the internet, deploys changes, protects operations, and recovers from failure.</p>
     </div>
     <div class="language-switcher" role="group" aria-label="Language" data-i18n-aria="languageLabel">
       <button type="button" data-lang-option="et" aria-pressed="false">ET</button>
@@ -67,6 +69,8 @@
     </aside>
   </section>
 </main>
+
+<footer class="site-footer" data-site-footer></footer>
 
 <div class="lab-map-modal" data-map-modal hidden>
   <section class="lab-map-panel" role="dialog" aria-modal="true" aria-labelledby="lab-map-title">
