@@ -7,15 +7,15 @@ const COPY = {
     description: 'A public systems atlas for the KHE homelab: ingress, deploys, private operations, and recovery.',
     siteNavAria: 'Site navigation',
     siteKicker: 'KHE Lab',
-    siteTitle: 'Lab Atlas',
+    siteTitle: 'Atlas',
     homeLabel: 'KHE home',
     languageLabel: 'Language',
     modeLabel: 'Atlas scenes',
     mapLabel: 'Animated homelab route',
     stageLabel: 'KHE Lab Atlas',
-    kicker: 'Live homelab atlas',
-    headline: 'KHE Lab Atlas',
-    intro: 'A public map of how the home lab reaches the internet, deploys changes, protects operations, and recovers from failure.',
+    kicker: 'Public systems map',
+    headline: 'How the homelab works',
+    intro: 'Ingress, deploys, private operations, and recovery in one inspectable view.',
     proofLink: 'Read the proof',
     proofKicker: 'Public proof',
     mapOpen: 'Open diagram',
@@ -41,15 +41,15 @@ const COPY = {
     description: 'KHE homelabi avalik süsteemiatlas: ingress, deploy-protsess, privaatne haldus ja taaste.',
     siteNavAria: 'Lehe navigeerimine',
     siteKicker: 'KHE Lab',
-    siteTitle: 'Lab Atlas',
+    siteTitle: 'Atlas',
     homeLabel: 'KHE avaleht',
     languageLabel: 'Keel',
     modeLabel: 'Atlase stseenid',
     mapLabel: 'Animeeritud homelabi teekond',
     stageLabel: 'KHE Lab Atlas',
-    kicker: 'Elav homelabi atlas',
-    headline: 'KHE Lab Atlas',
-    intro: 'Avalik kaart sellest, kuidas kodulab internetti jõuab, muudatusi deploy’b, haldust kaitseb ja tõrgetest taastub.',
+    kicker: 'Avalik süsteemikaart',
+    headline: 'Kuidas homelab töötab',
+    intro: 'Ingress, deploy, privaatne haldus ja taaste ühes vaates.',
     proofLink: 'Vaata tõestust',
     proofKicker: 'Avalik tõestus',
     mapOpen: 'Ava diagramm',
@@ -745,6 +745,11 @@ function setMapModal(open) {
     modal.hidden = false;
     document.body.classList.add('is-lab-map-open');
     renderMap();
+    const stage = modal.querySelector('.lab-map-modal-stage');
+    if (stage) {
+      stage.scrollLeft = Math.max(0, (stage.scrollWidth - stage.clientWidth) / 2);
+      stage.scrollTop = Math.max(0, (stage.scrollHeight - stage.clientHeight) / 2);
+    }
     document.querySelector('[data-map-close]')?.focus();
     return;
   }

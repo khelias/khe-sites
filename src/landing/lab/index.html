@@ -16,10 +16,12 @@
 
 <header class="site-header" aria-label="Site navigation" data-i18n-aria="siteNavAria">
   <div class="site-header__inner">
-    <a class="site-header__brand" href="/?lang=en" data-link="home" data-i18n-aria="homeLabel" aria-label="KHE home">KHE</a>
+    <a class="site-header__brand brand-mark" href="/?lang=en" data-link="home" data-i18n-aria="homeLabel" aria-label="KHE home">
+      <span>KHE</span><span class="brand-mark__suffix">.ee</span>
+    </a>
     <div class="site-header__context" aria-current="page">
       <span data-i18n="siteKicker">KHE Lab</span>
-      <strong data-i18n="siteTitle">Lab Atlas</strong>
+      <strong data-i18n="siteTitle">Atlas</strong>
     </div>
     <div class="site-header__actions">
       <div class="language-switcher" role="group" aria-label="Language" data-i18n-aria="languageLabel">
@@ -33,9 +35,9 @@
 <main class="lab-experience">
   <header class="lab-shell">
     <div class="lab-shell-title">
-      <span data-i18n="kicker">Live homelab atlas</span>
-      <strong data-i18n="headline">KHE Lab Atlas</strong>
-      <p data-i18n="intro">A public map of how the home lab reaches the internet, deploys changes, protects operations, and recovers from failure.</p>
+      <span data-i18n="kicker">Public systems map</span>
+      <strong data-i18n="headline">How the homelab works</strong>
+      <p data-i18n="intro">Ingress, deploys, private operations, and recovery in one inspectable view.</p>
     </div>
   </header>
 
@@ -63,7 +65,7 @@
         </div>
       </div>
       <div class="lab-viewport">
-        <svg data-stage-map viewBox="0 0 1000 640" role="img" aria-label="Animated homelab route" data-i18n-aria="mapLabel"></svg>
+        <svg data-stage-map viewBox="0 120 1000 460" role="img" aria-label="Animated homelab route" data-i18n-aria="mapLabel"></svg>
       </div>
       <div class="lab-readout" data-readout></div>
     </section>
