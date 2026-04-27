@@ -341,6 +341,7 @@ body.landing-home {
 }
 
 .project-games { --project-accent: var(--accent-warm); }
+.project-contact { --project-accent: #86efac; }
 
 .project-index {
   align-self: start;

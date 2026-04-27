@@ -45,6 +45,15 @@
         </div>
         <span class="project-arrow" aria-hidden="true">→</span>
       </a>
+
+      <a class="project-item project-contact" href="mailto:kaidoelias@gmail.com?subject=KHE.ee%20project%20inquiry" data-link="contact">
+        <span class="project-index">03</span>
+        <div class="project-copy">
+          <h3 data-i18n="contactTitle">Work with me</h3>
+          <p data-i18n="contactDesc">Need a website, application, automation, or AI-enabled workflow? Send me a note.</p>
+        </div>
+        <span class="project-arrow" aria-hidden="true">→</span>
+      </a>
     </div>
   </section>
 </main>
@@ -61,11 +70,13 @@
       description: 'Tarkvaraarhitekt — projektid ja lingid',
       languageLabel: 'Keel',
       projectsLabel: 'Projektid',
-      tagline: 'Töölt tarkvaraarhitekt. Loomult nokitseja.',
+      tagline: 'Ametilt tarkvaraarhitekt. Loomult nokitseja.',
       labTitle: 'Lab Atlas',
       labDesc: 'Tallinna kodulabi teenused ja piirid ühes vaates.',
       gamesTitle: 'Mängud',
       gamesDesc: 'Õppemängud ja AI seiklus ühe väikese mänguriiulina.',
+      contactTitle: 'Koostöö',
+      contactDesc: 'Kui vajad veebilehte, rakendust, automatsiooni või AI-põhist lahendust, kirjuta mulle.',
     },
     en: {
       title: 'Kaido Henrik Elias',
@@ -77,6 +88,8 @@
       labDesc: 'The Tallinn home lab services and boundaries in one view.',
       gamesTitle: 'Games',
       gamesDesc: 'Learning games and an AI adventure in one small shelf.',
+      contactTitle: 'Work with me',
+      contactDesc: 'Need a website, application, automation, or AI-enabled workflow? Send me a note.',
     },
   };
 
@@ -93,6 +106,7 @@
     links: {
       lab: (locale) => `/lab/?lang=${locale}`,
       games: (locale) => `${gamesOrigin}/?lang=${locale}`,
+      contact: () => 'mailto:kaidoelias@gmail.com?subject=KHE.ee%20project%20inquiry',
       privacy: (locale) => `/privacy?lang=${locale}`,
     },
   });
