@@ -7,15 +7,26 @@
   <meta name="description" content="games.khe.ee privaatsusteave">
   <link rel="preload" href="/assets/fonts/inter-400.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="/assets/fonts/inter-500.woff2" as="font" type="font/woff2" crossorigin>
-  <link rel="stylesheet" href="/assets/site.css?v=20260427b">
-  <script defer src="/assets/analytics-consent.js?v=20260427b" data-analytics-token="81aecd30e30c4e97a4d733334d88775b" data-analytics-privacy-url="/privacy?lang=et"></script>
+  <link rel="stylesheet" href="/assets/site.css?v=20260427c">
+  <script defer src="/assets/analytics-consent.js?v=20260427c" data-analytics-token="81aecd30e30c4e97a4d733334d88775b" data-analytics-privacy-url="/privacy?lang=et"></script>
 </head>
 <body class="privacy-page games-privacy">
 
-<div class="language-switcher" role="group" aria-label="Keel" data-i18n-aria="languageLabel">
-  <button type="button" data-lang-option="et" aria-pressed="true">ET</button>
-  <button type="button" data-lang-option="en" aria-pressed="false">EN</button>
-</div>
+<header class="site-header" aria-label="Lehe navigeerimine" data-i18n-aria="siteNavAria">
+  <div class="site-header__inner">
+    <a class="site-header__brand" href="https://khe.ee/?lang=et" data-link="khe" data-i18n-aria="siteHomeAria" aria-label="KHE avaleht">KHE</a>
+    <div class="site-header__context" aria-current="page">
+      <span data-i18n="siteKicker">KHE Games</span>
+      <strong data-i18n="siteTitle">Privaatsus</strong>
+    </div>
+    <div class="site-header__actions">
+      <div class="language-switcher" role="group" aria-label="Keel" data-i18n-aria="languageLabel">
+        <button type="button" data-lang-option="et" aria-pressed="true">ET</button>
+        <button type="button" data-lang-option="en" aria-pressed="false">EN</button>
+      </div>
+    </div>
+  </div>
+</header>
 
 <main>
   <a class="back" href="/?lang=et" data-link="home">
@@ -65,13 +76,17 @@
 <footer class="site-footer" data-site-footer></footer>
 
 <script type="module">
-  import { createLocaleController } from '/assets/site-locale.js?v=20260427b';
-  import { renderSiteFooter, withSiteFooterCopy } from '/assets/site-footer.js?v=20260427b';
+  import { createLocaleController } from '/assets/site-locale.js?v=20260427c';
+  import { renderSiteFooter, withSiteFooterCopy } from '/assets/site-footer.js?v=20260427c';
 
   const COPY = {
     et: {
       title: 'Privaatsus - KHE Games',
       description: 'games.khe.ee privaatsusteave',
+      siteNavAria: 'Lehe navigeerimine',
+      siteHomeAria: 'KHE avaleht',
+      siteKicker: 'KHE Games',
+      siteTitle: 'Privaatsus',
       languageLabel: 'Keel',
       back: 'Tagasi mängude juurde',
       heading: 'Privaatsus',
@@ -102,6 +117,10 @@
     en: {
       title: 'Privacy - KHE Games',
       description: 'Privacy notice for games.khe.ee',
+      siteNavAria: 'Site navigation',
+      siteHomeAria: 'KHE home',
+      siteKicker: 'KHE Games',
+      siteTitle: 'Privacy',
       languageLabel: 'Language',
       back: 'Back to Games',
       heading: 'Privacy',
@@ -133,11 +152,17 @@
 
   renderSiteFooter();
 
+  const localPreviewHost = ['localhost', '127.0.0.1', '::1'].includes(window.location.hostname);
+  const kheOrigin = localPreviewHost
+    ? `${window.location.protocol}//${window.location.hostname}:8787`
+    : 'https://khe.ee';
+
   createLocaleController({
     copy: withSiteFooterCopy(COPY),
     defaultLocale: 'et',
     useBrowserDefault: true,
     links: {
+      khe: (locale) => `${kheOrigin}/?lang=${locale}`,
       home: (locale) => `/?lang=${locale}`,
       privacy: (locale) => `/privacy?lang=${locale}`,
     },

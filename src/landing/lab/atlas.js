@@ -1,10 +1,13 @@
-import { createLocaleController } from '/assets/site-locale.js?v=20260427b';
-import { renderSiteFooter, withSiteFooterCopy } from '/assets/site-footer.js?v=20260427b';
+import { createLocaleController } from '/assets/site-locale.js?v=20260427c';
+import { renderSiteFooter, withSiteFooterCopy } from '/assets/site-footer.js?v=20260427c';
 
 const COPY = {
   en: {
     title: 'KHE Lab Atlas',
     description: 'A public systems atlas for the KHE homelab: ingress, deploys, private operations, and recovery.',
+    siteNavAria: 'Site navigation',
+    siteKicker: 'KHE Lab',
+    siteTitle: 'Lab Atlas',
     homeLabel: 'KHE home',
     languageLabel: 'Language',
     modeLabel: 'Atlas scenes',
@@ -36,6 +39,9 @@ const COPY = {
   et: {
     title: 'KHE Lab Atlas',
     description: 'KHE homelabi avalik süsteemiatlas: ingress, deploy-protsess, privaatne haldus ja taaste.',
+    siteNavAria: 'Lehe navigeerimine',
+    siteKicker: 'KHE Lab',
+    siteTitle: 'Lab Atlas',
     homeLabel: 'KHE avaleht',
     languageLabel: 'Keel',
     modeLabel: 'Atlase stseenid',

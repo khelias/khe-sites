@@ -7,19 +7,28 @@
   <meta name="description" content="Eliase pere mängud">
   <link rel="preload" href="/assets/fonts/inter-400.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="/assets/fonts/inter-600.woff2" as="font" type="font/woff2" crossorigin>
-  <link rel="stylesheet" href="/assets/site.css?v=20260427b">
-  <script defer src="/assets/analytics-consent.js?v=20260427b" data-analytics-token="81aecd30e30c4e97a4d733334d88775b" data-analytics-privacy-url="/privacy?lang=et"></script>
+  <link rel="stylesheet" href="/assets/site.css?v=20260427c">
+  <script defer src="/assets/analytics-consent.js?v=20260427c" data-analytics-token="81aecd30e30c4e97a4d733334d88775b" data-analytics-privacy-url="/privacy?lang=et"></script>
 </head>
 <body class="games-home">
-  <div class="container">
-    <header>
-      <div class="header-top">
-        <a href="https://khe.ee/?lang=et" class="monogram" aria-label="Tagasi khe.ee lehele" data-i18n-aria="monogramAria" data-link="khe">KHE</a>
+  <header class="site-header" aria-label="Lehe navigeerimine" data-i18n-aria="siteNavAria">
+    <div class="site-header__inner">
+      <a href="https://khe.ee/?lang=et" class="site-header__brand" aria-label="KHE avaleht" data-i18n-aria="siteHomeAria" data-link="khe">KHE</a>
+      <div class="site-header__context" aria-current="page">
+        <span data-i18n="siteKicker">KHE Games</span>
+        <strong data-i18n="siteTitle">Mängud</strong>
+      </div>
+      <div class="site-header__actions">
         <div class="language-switcher" role="group" aria-label="Keel" data-i18n-aria="languageLabel">
           <button type="button" data-lang-option="et" aria-pressed="true">ET</button>
           <button type="button" data-lang-option="en" aria-pressed="false">EN</button>
         </div>
       </div>
+    </div>
+  </header>
+
+  <div class="container">
+    <header class="games-hero">
       <h1 data-i18n="heading">Mängud</h1>
       <p class="subtitle" data-i18n="subtitle">Väikesed veebimängud, mida saab mängida ja uurida.</p>
     </header>
@@ -67,14 +76,17 @@
     <footer class="site-footer" data-site-footer></footer>
   </div>
   <script type="module">
-    import { createLocaleController } from '/assets/site-locale.js?v=20260427b';
-    import { renderSiteFooter, withSiteFooterCopy } from '/assets/site-footer.js?v=20260427b';
+    import { createLocaleController } from '/assets/site-locale.js?v=20260427c';
+    import { renderSiteFooter, withSiteFooterCopy } from '/assets/site-footer.js?v=20260427c';
 
     const COPY = {
       et: {
         title: 'Mängud — KHE',
         description: 'Eliase pere mängud',
-        monogramAria: 'Tagasi khe.ee lehele',
+        siteNavAria: 'Lehe navigeerimine',
+        siteHomeAria: 'KHE avaleht',
+        siteKicker: 'KHE Games',
+        siteTitle: 'Mängud',
         languageLabel: 'Keel',
         heading: 'Mängud',
         subtitle: 'Väikesed veebimängud, mida saab mängida ja uurida.',
@@ -90,7 +102,10 @@
       en: {
         title: 'Games — KHE',
         description: 'Elias family games',
-        monogramAria: 'Back to khe.ee',
+        siteNavAria: 'Site navigation',
+        siteHomeAria: 'KHE home',
+        siteKicker: 'KHE Games',
+        siteTitle: 'Games',
         languageLabel: 'Language',
         heading: 'Games',
         subtitle: 'Small web games you can play and inspect.',
