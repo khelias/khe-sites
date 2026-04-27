@@ -29,6 +29,7 @@ for (const app of apps) {
   await mkdir(join(outputDir, 'assets'), { recursive: true });
   await copyDirectory(join(root, 'src', app), outputDir);
   await copyFile(join(root, 'src', 'shared', 'site-locale.js'), join(outputDir, 'assets', 'site-locale.js'));
+  await copyFile(join(root, 'src', 'shared', 'site-footer.js'), join(outputDir, 'assets', 'site-footer.js'));
   await copyFile(join(root, 'src', 'shared', 'analytics-consent.js'), join(outputDir, 'assets', 'analytics-consent.js'));
   await copyFile(join(root, 'src', 'shared', 'site.css'), join(outputDir, 'assets', 'site.css'));
   await copyDirectory(join(root, 'src', 'shared', 'fonts'), join(outputDir, 'assets', 'fonts'));

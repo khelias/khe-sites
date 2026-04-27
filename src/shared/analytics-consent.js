@@ -22,7 +22,7 @@
   const copy = {
     en: {
       title: 'Allow analytics?',
-      body: 'I use Cloudflare Web Analytics to collect aggregate page-view and performance statistics. No advertising, profiling, analytics cookies, or cross-site tracking.',
+      body: 'I use Cloudflare Web Analytics for aggregate page-view and performance stats. No ads, profiling, analytics cookies, or cross-site tracking.',
       allow: 'Allow analytics',
       deny: 'Decline',
       privacy: 'Privacy',
@@ -31,7 +31,7 @@
     },
     et: {
       title: 'Lubad analüütikat?',
-      body: 'Kasutan Cloudflare Web Analyticsit koondatud lehevaatamiste ja jõudluse statistika jaoks. Reklaame, profileerimist, analüütikaküpsiseid ega saitideülest jälitamist ei ole.',
+      body: 'Kasutan Cloudflare Web Analyticsit koondatud lehevaatamiste ja jõudluse statistika jaoks. Ei reklaame, profiile, analüütikaküpsiseid ega saitideülest jälitamist.',
       allow: 'Luba analüütika',
       deny: 'Keeldu',
       privacy: 'Privaatsus',
@@ -95,13 +95,13 @@
         bottom: 1rem;
         z-index: 10000;
         width: min(27rem, calc(100vw - 2rem));
-        padding: 1rem;
+        padding: 0.9rem;
         border: 1px solid rgba(255,255,255,0.14);
         border-radius: 8px;
-        background: rgba(12,12,15,0.96);
+        background: rgba(9,10,10,0.96);
         color: #fafafa;
-        box-shadow: 0 18px 70px rgba(0,0,0,0.45);
-        font: 400 0.9rem/1.45 Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        box-shadow: 0 18px 70px rgba(0,0,0,0.42);
+        font: 400 0.86rem/1.42 Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
       }
       .khe-analytics-consent strong {
         display: block;
@@ -111,7 +111,7 @@
         font-weight: 650;
       }
       .khe-analytics-consent p {
-        margin: 0 0 0.8rem;
+        margin: 0 0 0.75rem;
         color: #c4c4cc;
       }
       .khe-analytics-consent a {
@@ -145,13 +145,29 @@
       }
       @media (max-width: 520px) {
         .khe-analytics-consent {
-          right: 0.75rem;
-          bottom: 0.75rem;
-          width: calc(100vw - 1.5rem);
-        }
-        .khe-analytics-actions {
+        right: 0.75rem;
+        bottom: 0.75rem;
+        width: calc(100vw - 1.5rem);
+        padding: 0.82rem;
+        font-size: 0.78rem;
+        line-height: 1.35;
+      }
+      .khe-analytics-consent strong {
+        margin-bottom: 0.28rem;
+        font-size: 0.92rem;
+      }
+      .khe-analytics-consent p {
+        margin-bottom: 0.6rem;
+      }
+      .khe-analytics-actions {
+          display: grid;
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+          gap: 0.45rem;
           align-items: stretch;
-          flex-direction: column;
+        }
+        .khe-analytics-actions button {
+          width: 100%;
+          min-height: 2.55rem;
         }
       }
       @media (max-width: 520px) {

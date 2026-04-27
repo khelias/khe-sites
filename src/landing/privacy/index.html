@@ -51,8 +51,11 @@
   <p data-i18n-html="contactBody">For questions: <a href="https://github.com/khelias" target="_blank" rel="noopener">github.com/khelias</a>.</p>
 </main>
 
+<footer class="site-footer" data-site-footer></footer>
+
 <script type="module">
   import { createLocaleController } from '/assets/site-locale.js';
+  import { renderSiteFooter, withSiteFooterCopy } from '/assets/site-footer.js';
 
   const COPY = {
     et: {
@@ -103,11 +106,14 @@
     },
   };
 
+  renderSiteFooter();
+
   createLocaleController({
-    copy: COPY,
+    copy: withSiteFooterCopy(COPY),
     defaultLocale: 'en',
     links: {
       home: (locale) => `/?lang=${locale}`,
+      privacy: (locale) => `/privacy?lang=${locale}`,
     },
   });
 </script>

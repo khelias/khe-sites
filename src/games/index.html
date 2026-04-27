@@ -21,43 +21,54 @@
         </div>
       </div>
       <h1 data-i18n="heading">Mängud</h1>
-      <p class="subtitle" data-i18n="subtitle">Eliase pere väikesed veebimängud</p>
+      <p class="subtitle" data-i18n="subtitle">Väikesed veebimängud, mida saab mängida ja uurida.</p>
     </header>
 
     <main>
-      <a href="/study/?lang=et" class="game-card card-study" data-link="study">
-        <div class="game-icon">
-          <svg viewBox="0 0 24 24"><path d="M4 19.5v-15A2.5 2.5 0 016.5 2H20v20H6.5a2.5 2.5 0 010-5H20"/><path d="M9 7h6M9 11h4"/></svg>
-        </div>
-        <div class="game-title" data-i18n="studyTitle">Tarkade Mängud</div>
-        <p class="game-desc" data-i18n="studyDesc">Lugemine, matemaatika ja loogika lühikeste harjutusmängudena. Sobib lastele, aga töötab ka pere ühise ajutrennina.</p>
-        <span class="game-cta">
-          <span data-i18n="playCta">Mängi</span>
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
-        </span>
-      </a>
+      <article class="game-card card-adventure">
+        <a class="game-main-link" href="/adventure/?lang=et" data-link="adventure">
+          <span class="game-number">01</span>
+          <span class="game-content">
+            <span class="game-tags">
+              <span>AI</span>
+              <span data-i18n="liveTag">Live</span>
+            </span>
+            <span class="game-title">AI Adventure</span>
+            <span class="game-desc" data-i18n="adventureDesc">AI jutustajaga seltskonnaseiklus 3-6 mängijale. Vali keel, žanr ja mängu pikkus; lugu sünnib käigu kaupa teie otsustest.</span>
+          </span>
+          <span class="game-arrow" aria-hidden="true">→</span>
+        </a>
+        <a class="game-source-link" href="https://github.com/khelias/ai-adventure-engine" aria-label="AI Adventure GitHubis" data-i18n-aria="adventureGithubAria">
+          <svg viewBox="0 0 24 24" aria-hidden="true" class="brand-icon"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
+          <span data-i18n="githubCta">GitHub</span>
+        </a>
+      </article>
 
-      <a href="/adventure/?lang=et" class="game-card card-adventure" data-link="adventure">
-        <div class="game-icon">
-          <svg viewBox="0 0 24 24"><path d="M12 2l2.6 5.3 5.9.8-4.3 4.1 1 5.8L12 15.3l-5.2 2.7 1-5.8L3.5 8.1l5.9-.8L12 2z"/></svg>
-        </div>
-        <div class="game-title">AI Adventure</div>
-        <p class="game-desc" data-i18n="adventureDesc">AI jutustajaga seltskonnaseiklus 3-6 mängijale. Vali keel, žanr ja mängu pikkus; lugu sünnib käigu kaupa teie otsustest.</p>
-        <span class="game-cta">
-          <span data-i18n="playCta">Mängi</span>
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
-        </span>
-      </a>
+      <article class="game-card card-study">
+        <a class="game-main-link" href="/study/?lang=et" data-link="study">
+          <span class="game-number">02</span>
+          <span class="game-content">
+            <span class="game-tags">
+              <span data-i18n="studyTag">Õppimine</span>
+              <span data-i18n="liveTag">Live</span>
+            </span>
+            <span class="game-title" data-i18n="studyTitle">Tarkade Mängud</span>
+            <span class="game-desc" data-i18n="studyDesc">Lugemine, matemaatika ja loogika lühikeste harjutusmängudena. Sobib lastele, aga töötab ka pere ühise ajutrennina.</span>
+          </span>
+          <span class="game-arrow" aria-hidden="true">→</span>
+        </a>
+        <a class="game-source-link" href="https://github.com/khelias/study-game" aria-label="Tarkade Mängud GitHubis" data-i18n-aria="studyGithubAria">
+          <svg viewBox="0 0 24 24" aria-hidden="true" class="brand-icon"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
+          <span data-i18n="githubCta">GitHub</span>
+        </a>
+      </article>
     </main>
 
-    <footer>
-      <span data-i18n="footer">Self-hosted in Tallinn</span>
-      <span class="divider">·</span>
-      <a href="/privacy?lang=et" data-i18n="privacyLink" data-link="privacy">Privaatsus</a>
-    </footer>
+    <footer class="site-footer" data-site-footer></footer>
   </div>
   <script type="module">
     import { createLocaleController } from '/assets/site-locale.js';
+    import { renderSiteFooter, withSiteFooterCopy } from '/assets/site-footer.js';
 
     const COPY = {
       et: {
@@ -66,13 +77,15 @@
         monogramAria: 'Tagasi khe.ee lehele',
         languageLabel: 'Keel',
         heading: 'Mängud',
-        subtitle: 'Eliase pere väikesed veebimängud',
+        subtitle: 'Väikesed veebimängud, mida saab mängida ja uurida.',
         studyTitle: 'Tarkade Mängud',
+        studyTag: 'Õppimine',
+        liveTag: 'Live',
         studyDesc: 'Lugemine, matemaatika ja loogika lühikeste harjutusmängudena. Sobib lastele, aga töötab ka pere ühise ajutrennina.',
         adventureDesc: 'AI jutustajaga seltskonnaseiklus 3-6 mängijale. Vali keel, žanr ja mängu pikkus; lugu sünnib käigu kaupa teie otsustest.',
-        playCta: 'Mängi',
-        footer: 'Self-hosted in Tallinn',
-        privacyLink: 'Privaatsus',
+        githubCta: 'GitHub',
+        studyGithubAria: 'Tarkade Mängud GitHubis',
+        adventureGithubAria: 'AI Adventure GitHubis',
       },
       en: {
         title: 'Games — KHE',
@@ -80,24 +93,34 @@
         monogramAria: 'Back to khe.ee',
         languageLabel: 'Language',
         heading: 'Games',
-        subtitle: 'Small web games for the Elias family',
+        subtitle: 'Small web games you can play and inspect.',
         studyTitle: 'Smart Games',
+        studyTag: 'Learning',
+        liveTag: 'Live',
         studyDesc: 'Reading, math, and logic as quick exercise games. Built for kids, useful for the whole family.',
         adventureDesc: 'An AI-narrated group adventure for 3-6 players. Choose the language, genre, and session length; the story grows from your decisions turn by turn.',
-        playCta: 'Play',
-        footer: 'Self-hosted in Tallinn',
-        privacyLink: 'Privacy',
+        githubCta: 'GitHub',
+        studyGithubAria: 'Smart Games on GitHub',
+        adventureGithubAria: 'AI Adventure on GitHub',
       },
     };
 
+    const localPreviewHost = ['localhost', '127.0.0.1', '::1'].includes(window.location.hostname);
+    const kheOrigin = localPreviewHost
+      ? `${window.location.protocol}//${window.location.hostname}:8787`
+      : 'https://khe.ee';
+    const gamesOrigin = localPreviewHost ? 'https://games.khe.ee' : '';
+
+    renderSiteFooter();
+
     createLocaleController({
-      copy: COPY,
+      copy: withSiteFooterCopy(COPY),
       defaultLocale: 'et',
       useBrowserDefault: true,
       links: {
-        khe: (locale) => `https://khe.ee/?lang=${locale}`,
-        study: (locale) => `/study/?lang=${locale}`,
-        adventure: (locale) => `/adventure/?lang=${locale}`,
+        khe: (locale) => `${kheOrigin}/?lang=${locale}`,
+        study: (locale) => `${gamesOrigin}/study/?lang=${locale}`,
+        adventure: (locale) => `${gamesOrigin}/adventure/?lang=${locale}`,
         privacy: (locale) => `/privacy?lang=${locale}`,
       },
     });

@@ -42,6 +42,7 @@ for (const relativePath of htmlFiles) {
 const sourceFiles = [
   ...htmlFiles,
   'src/shared/analytics-consent.js',
+  'src/shared/site-footer.js',
   'src/shared/site-locale.js',
   'src/shared/site.css',
 ];
@@ -61,5 +62,6 @@ for (const relativePath of sourceFiles) {
 }
 
 await import(join(root, 'src/shared/site-locale.js'));
+await import(join(root, 'src/shared/site-footer.js'));
 
 console.log('Static site checks passed');
