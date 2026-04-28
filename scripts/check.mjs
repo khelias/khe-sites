@@ -50,6 +50,8 @@ const bannedText = [
   'Tarkvaraarhitekt töö poolest',
   'Nokitseja loomult',
   'Ise majutatud Tallinnas',
+  'Self-hosted in Tallinn',
+  'Software architect in Tallinn',
 ];
 
 for (const relativePath of sourceFiles) {

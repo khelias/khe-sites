@@ -1,12 +1,12 @@
 const FOOTER_COPY = {
   et: {
     footerLinksLabel: 'Lehe lingid',
-    footer: 'Self-hosted in Tallinn',
+    footer: 'Ise majutatud Eestis',
     privacyLink: 'Privaatsus',
   },
   en: {
     footerLinksLabel: 'Page links',
-    footer: 'Self-hosted in Tallinn',
+    footer: 'Self-hosted in Estonia',
     privacyLink: 'Privacy',
   },
 };
@@ -36,6 +36,6 @@ export function renderSiteFooter(target = '[data-site-footer]') {
       <span class="divider">·</span>
       <a href="/privacy?lang=en" data-i18n="privacyLink" data-link="privacy">Privacy</a>
     </nav>
-    <span data-i18n="footer">Self-hosted in Tallinn</span>
+    <span data-i18n="footer">Self-hosted in Estonia</span>
   `;
 }
