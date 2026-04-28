@@ -42,6 +42,11 @@ function setAttribute(selector, copy, dataAttribute, targetAttribute) {
   });
 }
 
+function setMetaContent(selector, content) {
+  const meta = document.querySelector(selector);
+  if (meta && content) meta.setAttribute('content', content);
+}
+
 export function createLocaleController({
   copy,
   defaultLocale = 'en',
@@ -60,13 +65,14 @@ export function createLocaleController({
   function applyLocale(locale) {
     const activeLocale = normalizeLocale(locale, supported) || fallbackLocale;
     const activeCopy = copy[activeLocale] || copy[fallbackLocale];
-    const metaDescription = document.querySelector('meta[name="description"]');
 
     document.documentElement.lang = activeLocale;
     document.title = activeCopy.title;
-    if (metaDescription && activeCopy.description) {
-      metaDescription.setAttribute('content', activeCopy.description);
-    }
+    setMetaContent('meta[name="description"]', activeCopy.description);
+    setMetaContent('meta[property="og:title"]', activeCopy.title);
+    setMetaContent('meta[property="og:description"]', activeCopy.description);
+    setMetaContent('meta[name="twitter:title"]', activeCopy.title);
+    setMetaContent('meta[name="twitter:description"]', activeCopy.description);
     window.localStorage.setItem(STORAGE_KEY, activeLocale);
     setQueryLocale(activeLocale);
 

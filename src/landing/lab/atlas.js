@@ -3,7 +3,7 @@ import { renderSiteFooter, withSiteFooterCopy } from '/assets/site-footer.js?v=2
 
 const COPY = {
   en: {
-    title: 'KHE Lab Atlas',
+    title: 'KHE Lab Atlas | Homelab Systems Map',
     description: 'A public systems atlas for the KHE homelab: ingress, deploys, private operations, and recovery.',
     siteNavAria: 'Site navigation',
     siteKicker: 'KHE Lab',
@@ -37,7 +37,7 @@ const COPY = {
     snapshotFallback: 'Static snapshot',
   },
   et: {
-    title: 'KHE Lab Atlas',
+    title: 'KHE Lab Atlas | Homelabi süsteemikaart',
     description: 'KHE homelabi avalik süsteemiatlas: ingress, deploy-protsess, privaatne haldus ja taaste.',
     siteNavAria: 'Lehe navigeerimine',
     siteKicker: 'KHE Lab',

@@ -1,73 +1,91 @@
 <!DOCTYPE html>
-<html lang="et">
+<html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Privaatsus - KHE Games</title>
-  <meta name="description" content="games.khe.ee privaatsusteave">
+  <title>Privacy - KHE Games</title>
+  <meta name="description" content="Privacy notice for KHE Games, including analytics, browser local storage, AI Adventure providers, and hosting.">
+  <link rel="canonical" href="https://games.khe.ee/privacy">
+  <link rel="alternate" hreflang="et" href="https://games.khe.ee/privacy?lang=et">
+  <link rel="alternate" hreflang="en" href="https://games.khe.ee/privacy?lang=en">
+  <link rel="alternate" hreflang="x-default" href="https://games.khe.ee/privacy">
+  <link rel="icon" href="https://khe.ee/logo.svg" type="image/svg+xml" sizes="any">
+  <meta name="theme-color" content="#09090b">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://games.khe.ee/privacy">
+  <meta property="og:site_name" content="KHE Games">
+  <meta property="og:title" content="Privacy - KHE Games">
+  <meta property="og:description" content="Privacy notice for KHE Games, including analytics, browser local storage, AI Adventure providers, and hosting.">
+  <meta property="og:image" content="https://games.khe.ee/og-image.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="Privacy - KHE Games">
+  <meta name="twitter:description" content="Privacy notice for KHE Games, including analytics, browser local storage, AI Adventure providers, and hosting.">
+  <meta name="twitter:image" content="https://games.khe.ee/og-image.png">
   <link rel="preload" href="/assets/fonts/inter-400.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="/assets/fonts/inter-500.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="/assets/site.css?v=20260427e">
-  <script defer src="/assets/analytics-consent.js?v=20260427e" data-analytics-token="81aecd30e30c4e97a4d733334d88775b" data-analytics-privacy-url="/privacy?lang=et"></script>
+  <script defer src="/assets/analytics-consent.js?v=20260427e" data-analytics-token="81aecd30e30c4e97a4d733334d88775b" data-analytics-privacy-url="/privacy?lang=en"></script>
 </head>
 <body class="privacy-page games-privacy">
 
-<header class="site-header" aria-label="Lehe navigeerimine" data-i18n-aria="siteNavAria">
+<header class="site-header" aria-label="Site navigation" data-i18n-aria="siteNavAria">
   <div class="site-header__inner">
-    <a class="site-header__brand brand-mark" href="/?lang=et" data-link="home" data-i18n-aria="siteHomeAria" aria-label="KHE Games avaleht">
+    <a class="site-header__brand brand-mark" href="/?lang=en" data-link="home" data-i18n-aria="siteHomeAria" aria-label="KHE Games home">
       <span>KHE</span><span class="brand-mark__suffix">.ee</span>
     </a>
     <div class="site-header__context" aria-current="page">
       <span data-i18n="siteKicker">KHE Games</span>
-      <strong data-i18n="siteTitle">Privaatsus</strong>
+      <strong data-i18n="siteTitle">Privacy</strong>
     </div>
     <div class="site-header__actions">
-      <div class="language-switcher" role="group" aria-label="Keel" data-i18n-aria="languageLabel">
-        <button type="button" data-lang-option="et" aria-pressed="true">ET</button>
-        <button type="button" data-lang-option="en" aria-pressed="false">EN</button>
+      <div class="language-switcher" role="group" aria-label="Language" data-i18n-aria="languageLabel">
+        <button type="button" data-lang-option="et" aria-pressed="false">ET</button>
+        <button type="button" data-lang-option="en" aria-pressed="true">EN</button>
       </div>
     </div>
   </div>
 </header>
 
 <main>
-  <h1 data-i18n="heading">Privaatsus</h1>
-  <p class="updated" data-i18n="updated">Uuendatud: 2026-04-26</p>
+  <h1 data-i18n="heading">Privacy</h1>
+  <p class="updated" data-i18n="updated">Last updated: 2026-04-26</p>
 
-  <p data-i18n="intro">games.khe.ee on avalik isiklik leht, mida majutan koduserveris. Siin ei ole reklaame, kasutajakontosid ega reklaamiks või profileerimiseks mõeldud jälitamist.</p>
+  <p data-i18n="intro">games.khe.ee is a public personal home-server page. It has no advertising, no user accounts, and no tracking for advertising or profiling.</p>
 
-  <h2 data-i18n="analyticsHeading">Analüütika</h2>
-  <p data-i18n-html="analyticsBody">Kui lubad analüütika, kogub Cloudflare Web Analytics koondatud kasutus- ja jõudlusstatistikat, näiteks külastusi, lehevaatamisi, populaarseid aadresse, viitajaid, riike, brauseri/seadme tüüpe ja lehe laadimisaega. Seda ei kasutata reklaamimiseks. Sinu valik salvestatakse selles brauseris <code>localStorage</code> väljal <code>khe.analyticsConsent.v1</code>.</p>
-  <button type="button" class="privacy-action" data-analytics-preferences data-i18n="analyticsButton">Analüütika valikud</button>
+  <h2 data-i18n="analyticsHeading">Analytics</h2>
+  <p data-i18n-html="analyticsBody">If you allow analytics, Cloudflare Web Analytics collects aggregate usage and performance metrics such as visits, page views, top paths, referrers, countries, browser/device types, and page load timing. It is not used for advertising. Your choice is stored in this browser's <code>localStorage</code> under <code>khe.analyticsConsent.v1</code>.</p>
+  <button type="button" class="privacy-action" data-analytics-preferences data-i18n="analyticsButton">Analytics choices</button>
 
-  <h2 data-i18n="cookiesHeading">Küpsised</h2>
-  <p data-i18n-html="cookiesBody">Leht ise küpsiseid ei sea. Cloudflare'i CDN võib seada botihalduse küpsise <code>_cf_bm</code>, mille eluiga on umbes 30 minutit. ELi ePrivacy reeglite järgi on see rangelt vajalik küpsis ega vaja nõusolekubännerit.</p>
+  <h2 data-i18n="cookiesHeading">Cookies</h2>
+  <p data-i18n-html="cookiesBody">The page itself sets no cookies. Cloudflare's CDN may set its bot management cookie <code>_cf_bm</code>, with a lifetime of about 30 minutes. It is considered strictly necessary under EU ePrivacy rules and requires no consent banner.</p>
 
-  <h2 data-i18n="storageHeading">Brauseri kohalik salvestus</h2>
+  <h2 data-i18n="storageHeading">Browser local storage</h2>
   <ul>
-    <li data-i18n-html="storageLocale">Keele-eelistus salvestatakse brauseri <code>localStorage</code> väljal <code>app_locale</code>, et keel liiguks khe.ee, launcher'i ja mängude vahel kaasa.</li>
-    <li data-i18n-html="storageStudy"><strong>Smart Games (/study/)</strong> salvestab mänguseisu, näiteks taseme edenemise, brauseri <code>localStorage</code> sisse. Server seda ei näe.</li>
-    <li data-i18n-html="storageAdventure"><strong>AI Seiklus (/adventure/)</strong> salvestab mänguseisu brauseri <code>localStorage</code> sisse.</li>
+    <li data-i18n-html="storageLocale">The language preference is stored in browser <code>localStorage</code> under <code>app_locale</code>, so the selected language can carry between khe.ee, the launcher, and the games.</li>
+    <li data-i18n-html="storageStudy"><strong>Smart Games (/study/)</strong> stores game state, such as level progress, in browser <code>localStorage</code>. The server never sees it.</li>
+    <li data-i18n-html="storageAdventure"><strong>AI Adventure (/adventure/)</strong> stores game state in browser <code>localStorage</code>.</li>
   </ul>
 
-  <h2 data-i18n="adventureHeading">AI Seiklus</h2>
-  <p data-i18n="adventureBody">AI Seiklus saadab mängijate sisestatud teksti ja valitud mänguseaded serveripoolse proxy kaudu AI teenusepakkujale, et luua järgmine loo osa.</p>
-  <p data-i18n-html="providersBody">Kasutatavad teenusepakkujad võivad olla <strong>USA-põhised</strong> ning töötlevad päringu sisu oma tingimuste järgi:</p>
+  <h2 data-i18n="adventureHeading">AI Adventure</h2>
+  <p data-i18n="adventureBody">AI Adventure sends player-entered text and selected game settings through a server-side proxy to an AI provider to generate the next part of the story.</p>
+  <p data-i18n-html="providersBody">The providers used may be <strong>US-based</strong> and process request content under their own terms:</p>
   <ul>
     <li data-i18n-html="anthropicLink">Anthropic - <a href="https://www.anthropic.com/legal/privacy" target="_blank" rel="noopener">privacy policy</a></li>
     <li data-i18n-html="geminiLink">Google Gemini - <a href="https://ai.google.dev/gemini-api/terms" target="_blank" rel="noopener">terms</a></li>
   </ul>
-  <p data-i18n-html="advice"><strong>Soovitus:</strong> ära sisesta päris nimesid, aadresse, isikukoode ega muud isikuinfot, mida sa ei taha kolmandale osapoolele saata.</p>
+  <p data-i18n-html="advice"><strong>Advice:</strong> do not enter real names, addresses, national ID numbers, or other personal data you would not want to send to a third party.</p>
 
-  <h2 data-i18n="hostingHeading">Majutus ja võrk</h2>
+  <h2 data-i18n="hostingHeading">Hosting and network</h2>
   <ul>
-    <li data-i18n="hostingServer">Server asub Tallinnas koduvõrgus.</li>
-    <li data-i18n="hostingCloudflare">Avalik ligipääs käib Cloudflare'i kaudu (DNS, tunnel, TLS). Cloudflare näeb päringu metaandmeid, näiteks IP-aadressi, URL-i ja user agentit, ning on avaliku marsruudi TLS-lõpp-punkt.</li>
-    <li data-i18n="hostingFonts">Launcheri fondid tulevad samast serverist. Mõned mängurakendused võivad laadida fonte Google Fontsist.</li>
+    <li data-i18n="hostingServer">The server is in Tallinn, on a home LAN.</li>
+    <li data-i18n="hostingCloudflare">Public access goes through Cloudflare (DNS, tunnel, TLS). Cloudflare can see request metadata such as IP address, URL, and user agent, and acts as the TLS endpoint.</li>
+    <li data-i18n="hostingFonts">Launcher fonts are served from this server. Some game apps may load fonts from Google Fonts.</li>
   </ul>
 
-  <h2 data-i18n="contactHeading">Kontakt</h2>
-  <p data-i18n-html="contactBody">Küsimused: <a href="https://github.com/khelias" target="_blank" rel="noopener">github.com/khelias</a>.</p>
+  <h2 data-i18n="contactHeading">Contact</h2>
+  <p data-i18n-html="contactBody">Questions: <a href="https://github.com/khelias" target="_blank" rel="noopener">github.com/khelias</a>.</p>
 </main>
 
 <footer class="site-footer" data-site-footer></footer>
@@ -79,7 +97,7 @@
   const COPY = {
     et: {
       title: 'Privaatsus - KHE Games',
-      description: 'games.khe.ee privaatsusteave',
+      description: 'KHE Games privaatsusteave analüütika, brauseri kohaliku salvestuse, AI Seikluse teenusepakkujate ja majutuse kohta.',
       siteNavAria: 'Lehe navigeerimine',
       siteHomeAria: 'KHE Games avaleht',
       siteKicker: 'KHE Games',
@@ -112,7 +130,7 @@
     },
     en: {
       title: 'Privacy - KHE Games',
-      description: 'Privacy notice for games.khe.ee',
+      description: 'Privacy notice for KHE Games, including analytics, browser local storage, AI Adventure providers, and hosting.',
       siteNavAria: 'Site navigation',
       siteHomeAria: 'KHE Games home',
       siteKicker: 'KHE Games',
@@ -149,8 +167,7 @@
 
   createLocaleController({
     copy: withSiteFooterCopy(COPY),
-    defaultLocale: 'et',
-    useBrowserDefault: true,
+    defaultLocale: 'en',
     links: {
       home: (locale) => `/?lang=${locale}`,
       privacy: (locale) => `/privacy?lang=${locale}`,

@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+        xmlns:xhtml="http://www.w3.org/1999/xhtml">
+  <url>
+    <loc>https://khe.ee/</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://khe.ee/?lang=en"/>
+    <xhtml:link rel="alternate" hreflang="et" href="https://khe.ee/?lang=et"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://khe.ee/"/>
+  </url>
+  <url>
+    <loc>https://khe.ee/lab/</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://khe.ee/lab/?lang=en"/>
+    <xhtml:link rel="alternate" hreflang="et" href="https://khe.ee/lab/?lang=et"/>
+  </url>
+  <url>
+    <loc>https://khe.ee/privacy</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://khe.ee/privacy?lang=en"/>
+    <xhtml:link rel="alternate" hreflang="et" href="https://khe.ee/privacy?lang=et"/>
+  </url>
+</urlset>

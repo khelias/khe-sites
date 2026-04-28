@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+        xmlns:xhtml="http://www.w3.org/1999/xhtml">
+  <url>
+    <loc>https://games.khe.ee/</loc>
+    <xhtml:link rel="alternate" hreflang="et" href="https://games.khe.ee/?lang=et"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://games.khe.ee/?lang=en"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://games.khe.ee/"/>
+  </url>
+  <url>
+    <loc>https://games.khe.ee/adventure/</loc>
+    <xhtml:link rel="alternate" hreflang="et" href="https://games.khe.ee/adventure/?lang=et"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://games.khe.ee/adventure/?lang=en"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://games.khe.ee/adventure/"/>
+  </url>
+  <url>
+    <loc>https://games.khe.ee/study/</loc>
+    <xhtml:link rel="alternate" hreflang="et" href="https://games.khe.ee/study/?lang=et"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://games.khe.ee/study/?lang=en"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://games.khe.ee/study/"/>
+  </url>
+  <url>
+    <loc>https://games.khe.ee/privacy</loc>
+    <xhtml:link rel="alternate" hreflang="et" href="https://games.khe.ee/privacy?lang=et"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://games.khe.ee/privacy?lang=en"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://games.khe.ee/privacy"/>
+  </url>
+</urlset>

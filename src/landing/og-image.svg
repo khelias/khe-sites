@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630" width="1200" height="630">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#09090b"/>
+      <stop offset="1" stop-color="#17122b"/>
+    </linearGradient>
+  </defs>
+  <rect width="1200" height="630" fill="url(#bg)"/>
+  <rect x="64" y="64" width="1072" height="502" rx="44" fill="#111114" stroke="#2a2438" stroke-width="2"/>
+  <g transform="translate(112 118)">
+    <rect width="156" height="156" rx="36" fill="#09090b" stroke="#8b5cf6" stroke-opacity="0.38" stroke-width="3"/>
+    <text x="70" y="78" text-anchor="middle" dominant-baseline="central"
+      font-family="Inter, Arial, sans-serif" font-weight="700" font-size="43" fill="#fafafa">KHE</text>
+    <text x="104" y="104" dominant-baseline="central"
+      font-family="Inter, Arial, sans-serif" font-weight="700" font-size="22" fill="#fb4b57">.ee</text>
+  </g>
+  <text x="112" y="362" font-family="Inter, Arial, sans-serif" font-weight="700" font-size="72" fill="#fafafa">Kaido Henrik Elias</text>
+  <text x="116" y="432" font-family="Inter, Arial, sans-serif" font-weight="500" font-size="34" fill="#d4d4d8">Software Architect</text>
+  <text x="116" y="492" font-family="Inter, Arial, sans-serif" font-weight="400" font-size="27" fill="#a1a1aa">Web applications | homelab | automation | games</text>
+</svg>
