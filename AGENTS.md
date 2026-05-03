@@ -18,7 +18,10 @@ Individual games deploy from their own repos.
 
 ```
 src/
-  landing/   khe.ee pages (incl. lab/atlas.js + generated lab-data.json)
+  landing/   khe.ee pages, including:
+    lab/     KHE Lab Atlas - public systems map of the homelab
+             (ingress, deploys, recovery layers, service counts).
+             Renders lab-data.json via lab/atlas.js.
   games/     games.khe.ee launcher shell
   shared/    fonts, site.css, analytics-consent.js, site-footer.js,
              site-locale.js. Copied into each site's /assets/ at build.
@@ -46,3 +49,8 @@ the launcher at `/study/` and `/adventure/`.
   allows analytics (consent-gated via `src/shared/analytics-consent.js`).
 - The launcher hosts no game code itself. Game directories on the VM are
   bind-mounted into nginx by the homelab compose stack.
+- `scripts/generate-lab-data.mjs` reads `../khe-homelab/` (sibling repo) to
+  count compose files, services, and containers. Without `khe-homelab`
+  cloned next to this repo, lab-data generation fails. CI must check out
+  both repos. For local generation:
+  `git clone https://github.com/khelias/khe-homelab ../khe-homelab`
