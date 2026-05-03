@@ -6,6 +6,7 @@
   "schedule": ["every weekend"],
   "dependencyDashboard": true,
   "prConcurrentLimit": 5,
+  "pinDigests": true,
   "packageRules": [
     {
       "description": "Major updates need manual review",
