@@ -33,6 +33,10 @@ const COPY = {
     statusReady: 'ready',
     statusRunning: 'running path',
     statusDone: 'path complete',
+    trustWorkspace: 'OpenClaw workspace behind Access',
+    trustProxyClients: 'socket-proxy clients',
+    trustControlSurfaces: 'public control surfaces',
+    recoveryAlertChannel: 'alert channel',
     snapshot: (data) => `Snapshot: ${data.source.composeFiles} Compose files`,
     snapshotFallback: 'Static snapshot',
   },
@@ -67,6 +71,10 @@ const COPY = {
     statusReady: 'valmis',
     statusRunning: 'rada jookseb',
     statusDone: 'rada valmis',
+    trustWorkspace: 'OpenClaw tööruum Accessi taga',
+    trustProxyClients: 'socket proxy klienti',
+    trustControlSurfaces: 'avalikku juhtpinda',
+    recoveryAlertChannel: 'teavituskanal',
     snapshot: (data) => `Hetkeseis: ${data.source.composeFiles} Compose faili`,
     snapshotFallback: 'Staatiline hetkeseis',
   },
@@ -458,9 +466,9 @@ function metricItems() {
 
   if (activeSceneId === 'trust') {
     return [
-      ['1', locale() === 'et' ? 'OpenClaw tööruum Accessi taga' : 'OpenClaw workspace behind Access'],
-      ['2', locale() === 'et' ? 'socket proxy klienti' : 'socket-proxy clients'],
-      ['0', locale() === 'et' ? 'avalikku juhtpinda' : 'public control surfaces'],
+      ['1', labels.trustWorkspace],
+      ['2', labels.trustProxyClients],
+      ['0', labels.trustControlSurfaces],
     ];
   }
 
@@ -468,7 +476,7 @@ function metricItems() {
     return [
       [metrics.recoveryLayers, labels.recoveryLayers],
       [metrics.containers, labels.containers],
-      ['TG', locale() === 'et' ? 'teavituskanal' : 'alert channel'],
+      ['TG', labels.recoveryAlertChannel],
     ];
   }
 

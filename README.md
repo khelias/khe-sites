@@ -6,12 +6,26 @@
 
 Static source for:
 
-- `khe.ee`
+- `khe.ee` — landing page and Lab Atlas (`/lab/`)
 - `games.khe.ee` launcher
 
 The individual games are deployed from their own repositories. This repo owns
-the landing pages, shared locale handoff helper, and the launcher shell that
-links into the game apps.
+the landing pages, Lab Atlas, shared locale handoff helper, and the launcher
+shell that links into the game apps.
+
+## Lab Atlas
+
+`src/landing/lab/` is a public interactive systems map of the homelab: ingress,
+deploy path, private operations, and recovery. It renders `lab-data.json`, which
+is generated from the sibling `khe-homelab` repo via `scripts/generate-lab-data.mjs`.
+
+Without `khe-homelab` cloned next to this repo, lab-data generation fails. CI
+checks out both repos automatically. For local generation:
+
+```sh
+git clone https://github.com/khelias/khe-homelab ../khe-homelab
+node scripts/generate-lab-data.mjs
+```
 
 Shared static assets live in `src/shared/` and are copied into each site's
 `/assets/` directory during build.
