@@ -30,6 +30,10 @@ jobs:
 
       - name: Build
         run: npm run build
+        env:
+          # The homelab checkout the runner deploys from; keeps the Lab Atlas
+          # snapshot in step with the stacks instead of the committed copy.
+          HOMELAB_ROOT: /home/khe/homelab
 
       - name: Deploy landing
         run: |

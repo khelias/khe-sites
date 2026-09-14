@@ -1,15 +1,15 @@
 {
-  "generatedAt": "2026-05-12T19:11:30.079Z",
+  "generatedAt": "2026-09-14T12:46:36.557Z",
   "source": {
     "repo": "khe-homelab",
-    "composeFiles": 23,
-    "composeServiceDefinitions": 37,
+    "composeFiles": 25,
+    "composeServiceDefinitions": 41,
     "publicMetrics": "khe-homelab/README.md service summary"
   },
   "metrics": {
     "routerPorts": 0,
-    "services": 18,
-    "containers": 31,
+    "services": 25,
+    "containers": 41,
     "recoveryLayers": 4
   },
   "categories": {
@@ -21,6 +21,7 @@
     "apps": [
       "games",
       "landing",
+      "pages",
       "trips"
     ],
     "core": [
@@ -33,6 +34,9 @@
       "uptime-kuma",
       "vaultwarden"
     ],
+    "home": [
+      "homeassistant"
+    ],
     "media": [
       "audiobookshelf",
       "immich",
@@ -40,9 +44,9 @@
     ],
     "observability": [
       "alertmanager",
+      "alloy",
       "grafana",
-      "loki",
-      "otel-collector"
+      "loki"
     ],
     "productivity": [
       "nextcloud",

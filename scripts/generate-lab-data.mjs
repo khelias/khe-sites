@@ -1,9 +1,13 @@
 import { access, mkdir, readdir, readFile, writeFile } from 'node:fs/promises';
-import { dirname, join, relative } from 'node:path';
+import { dirname, join, relative, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const root = dirname(dirname(fileURLToPath(import.meta.url)));
-const homelabRoot = join(root, '..', 'khe-homelab');
+// HOMELAB_ROOT lets the deploy runner point at its own khe-homelab checkout;
+// without it the snapshot silently freezes at whatever was last committed.
+const homelabRoot = process.env.HOMELAB_ROOT
+  ? resolve(process.env.HOMELAB_ROOT)
+  : join(root, '..', 'khe-homelab');
 const servicesRoot = join(homelabRoot, 'services');
 const outputPath = join(root, 'src', 'landing', 'lab', 'lab-data.json');
 
@@ -114,5 +118,7 @@ if (await pathExists(servicesRoot)) {
     `Generated lab-data.json from ${composeFiles.length} compose files and ${composeServiceDefinitions} service definitions`,
   );
 } else {
-  console.log('Using committed lab-data.json; khe-homelab services directory is not available.');
+  console.log(
+    `Using committed lab-data.json; no services directory at ${servicesRoot}. Set HOMELAB_ROOT to regenerate.`,
+  );
 }
