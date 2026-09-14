@@ -4,7 +4,7 @@ import { renderSiteFooter, withSiteFooterCopy } from '/assets/site-footer.js?v=2
 const COPY = {
   en: {
     title: 'KHE Lab Atlas | Homelab Systems Map',
-    description: 'A public systems atlas for the KHE homelab: ingress, deploys, private operations, and recovery.',
+    description: 'A public systems atlas for the KHE homelab: ingress, deploys, private operations, telemetry, recovery, and house automation.',
     siteNavAria: 'Site navigation',
     siteKicker: 'KHE Lab',
     siteTitle: 'Atlas',
@@ -15,7 +15,7 @@ const COPY = {
     stageLabel: 'KHE Lab Atlas',
     kicker: 'Public systems map',
     headline: 'How the homelab works',
-    intro: 'Ingress, deploys, private operations, and recovery in one inspectable view.',
+    intro: 'Ingress, deploys, private operations, telemetry, recovery, and the house in one inspectable view.',
     proofLink: 'Read the proof',
     proofKicker: 'Public proof',
     mapOpen: 'Open diagram',
@@ -29,7 +29,14 @@ const COPY = {
     recoveryLayers: 'recovery layers',
     composeFiles: 'compose files',
     serviceDefinitions: 'service definitions',
-    publicApps: 'public apps',
+    appStacks: 'app stacks',
+    logRetention: 'day log retention',
+    logShippers: 'containers ship logs',
+    backupRule: 'backup rule',
+    offsiteTier: 'offsite tier',
+    housePublicHosts: 'public house hostnames',
+    houseControlProtocols: 'local control protocols',
+    houseRemoteAccess: 'remote access',
     statusReady: 'ready',
     statusRunning: 'running path',
     statusDone: 'path complete',
@@ -42,7 +49,7 @@ const COPY = {
   },
   et: {
     title: 'KHE Lab Atlas | Homelabi süsteemikaart',
-    description: 'KHE homelabi avalik süsteemiatlas: ingress, deploy-protsess, privaatne haldus ja taaste.',
+    description: 'KHE homelabi avalik süsteemiatlas: ingress, deploy-protsess, privaatne haldus, telemeetria, taaste ja majaautomaatika.',
     siteNavAria: 'Lehe navigeerimine',
     siteKicker: 'KHE Lab',
     siteTitle: 'Atlas',
@@ -53,7 +60,7 @@ const COPY = {
     stageLabel: 'KHE Lab Atlas',
     kicker: 'Avalik süsteemikaart',
     headline: 'Kuidas homelab töötab',
-    intro: 'Ingress, deploy, privaatne haldus ja taaste ühes vaates.',
+    intro: 'Ingress, deploy, privaatne haldus, telemeetria, taaste ja maja ühes vaates.',
     proofLink: 'Vaata tõestust',
     proofKicker: 'Avalik tõestus',
     mapOpen: 'Ava diagramm',
@@ -67,7 +74,14 @@ const COPY = {
     recoveryLayers: 'taastekihti',
     composeFiles: 'Compose faili',
     serviceDefinitions: 'teenuse definitsiooni',
-    publicApps: 'avalikku rakendust',
+    appStacks: 'rakenduse stacki',
+    logRetention: 'päeva logisäilitust',
+    logShippers: 'konteinerit saadab logisid',
+    backupRule: 'varunduse reegel',
+    offsiteTier: 'väline kiht',
+    housePublicHosts: 'avalikku majahostinime',
+    houseControlProtocols: 'kohalikku juhtprotokolli',
+    houseRemoteAccess: 'kaugligipääs',
     statusReady: 'valmis',
     statusRunning: 'rada jookseb',
     statusDone: 'rada valmis',
@@ -82,17 +96,17 @@ const COPY = {
 
 const FALLBACK_DATA = {
   source: {
-    composeFiles: 18,
-    composeServiceDefinitions: 32,
+    composeFiles: 25,
+    composeServiceDefinitions: 41,
   },
   metrics: {
     routerPorts: 0,
-    services: 17,
-    containers: 27,
+    services: 25,
+    containers: 41,
     recoveryLayers: 4,
   },
   categories: {
-    apps: ['games', 'landing'],
+    apps: ['games', 'landing', 'pages', 'trips'],
   },
 };
 
@@ -128,7 +142,7 @@ const SCENES = [
       },
     },
     path: ['browser', 'edge', 'tunnel', 'runtime', 'site'],
-    ghostPath: ['device', 'tailscale', 'runtime'],
+    ghostPath: ['device', 'tailscale', 'dns', 'proxy', 'runtime'],
     nodes: [
       node('browser', 96, 382, '01', {
         en: ['Browser', 'Public visitor', 'A normal visitor only sees the public surface.', ['No admin surface', 'No account required']],
@@ -143,20 +157,28 @@ const SCENES = [
         et: ['Tunnel', 'Väljuv ingress', 'Homelab loob ühenduse ise välja; ruuter ei ava sissetulevaid porte.', ['Väljuv tee', 'WAN NAT puudub']],
       }, 'core'),
       node('runtime', 724, 334, 'VM', {
-        en: ['Docker VM', 'Runtime core', 'The public site, games, and support services run in one Compose-managed runtime.', ['17 services', '27 containers']],
-        et: ['Docker VM', 'Runtime tuum', 'Avalik sait, mängud ja tugiteenused jooksevad ühes Compose’i hallatud runtime’is.', ['17 teenust', '27 konteinerit']],
+        en: ['Docker VM', 'Runtime core', 'The public site, games, and support services run in one Compose-managed runtime.', ['One VM', 'Compose stacks']],
+        et: ['Docker VM', 'Runtime tuum', 'Avalik sait, mängud ja tugiteenused jooksevad ühes Compose’i hallatud runtime’is.', ['Üks VM', 'Compose stackid']],
       }, 'core'),
       node('site', 902, 190, 'APP', {
-        en: ['Public apps', 'Public surface', 'These are the URLs other people can safely open.', ['khe.ee', 'games.khe.ee']],
-        et: ['Avalikud rakendused', 'Avalik pind', 'Need on URL-id, mida teised inimesed saavad turvaliselt avada.', ['khe.ee', 'games.khe.ee']],
+        en: ['Public apps', 'Public surface', 'These are the URLs other people can safely open.', ['khe.ee', 'games.khe.ee', 'khe.ee/lab']],
+        et: ['Avalikud rakendused', 'Avalik pind', 'Need on URL-id, mida teised inimesed saavad turvaliselt avada.', ['khe.ee', 'games.khe.ee', 'khe.ee/lab']],
       }),
-      node('device', 120, 520, 'LAN', {
+      node('device', 112, 520, 'LAN', {
         en: ['Trusted device', 'Private user', 'Admin and home traffic use private routes instead.', ['LAN', 'Mobile over VPN']],
         et: ['Usaldatud seade', 'Privaatne kasutaja', 'Admin ja kodune liiklus kasutavad privaatseid radasid.', ['LAN', 'Mobiil üle VPN-i']],
       }, 'quiet'),
-      node('tailscale', 330, 520, 'TS', {
-        en: ['Tailscale', 'Private lane', 'Private access stays separate from public visitors.', ['Subnet router', 'Admin path']],
-        et: ['Tailscale', 'Privaatne rada', 'Privaatne ligipääs jääb avalikest külastajatest eraldi.', ['Subnet-router', 'Admini tee']],
+      node('tailscale', 322, 520, 'TS', {
+        en: ['Tailscale', 'Private lane', 'Away from home, private access rides a VPN instead of a public hostname.', ['Subnet router', 'Admin path']],
+        et: ['Tailscale', 'Privaatne rada', 'Kodust eemal käib privaatne ligipääs VPN-i kaudu, mitte avaliku hostinime kaudu.', ['Subnet-router', 'Admini tee']],
+      }, 'quiet'),
+      node('dns', 532, 520, 'DNS', {
+        en: ['Split-horizon DNS', 'Local answer', 'At home the same hostnames resolve to the local server instead of the public edge.', ['AdGuard rewrites', 'No detour abroad']],
+        et: ['Split-horizon DNS', 'Kohalik vastus', 'Kodus lahenevad samad hostinimed kohaliku serveri peale, mitte avaliku edge’i peale.', ['AdGuardi rewrite’id', 'Ringi välismaale ei tehta']],
+      }, 'quiet'),
+      node('proxy', 742, 520, 'NPM', {
+        en: ['Local proxy', 'LAN entry', 'A wildcard certificate serves the private lane with no upload size ceiling.', ['Wildcard TLS', 'No 100MB cap']],
+        et: ['Kohalik proxy', 'LAN-i sissepääs', 'Wildcard-sertifikaat teenindab privaatset rada ilma üleslaadimise piirita.', ['Wildcard TLS', '100MB piiri pole']],
       }, 'quiet'),
     ],
     logs: {
@@ -315,37 +337,112 @@ const SCENES = [
     },
   },
   {
-    id: 'recovery',
+    id: 'observe',
     number: '04',
-    code: 'OBSERVE',
+    code: 'SIGNALS',
+    accent: '#a78bfa',
+    accentDim: '#241a3d',
+    copy: {
+      en: {
+        nav: 'Logs + alerts',
+        tab: 'Signals',
+        kicker: 'Signals',
+        title: 'Every container writes into one searchable log stream.',
+        lead: 'A collector reads container logs through a read-only Docker proxy, ships them to Loki, and rule matches leave as alerts instead of waiting to be noticed.',
+        state: 'collect - store - rule - alert',
+        proofTitle: 'Signal path',
+        run: 'Trace a log line',
+        done: 'Signal delivered',
+      },
+      et: {
+        nav: 'Logid + teavitused',
+        tab: 'Signaalid',
+        kicker: 'Signaalid',
+        title: 'Iga konteiner kirjutab ühte otsitavasse logivoogu.',
+        lead: 'Koguja loeb konteinerite logisid ainult lugemisõigusega Docker proxy kaudu, saadab need Lokisse ja reeglite tabamused lähevad välja teavitusena, mitte ei oota märkamist.',
+        state: 'kogu - salvesta - reegel - teavita',
+        proofTitle: 'Signaali tee',
+        run: 'Jälgi logirida',
+        done: 'Signaal kohal',
+      },
+    },
+    path: ['logline', 'alloy', 'loki', 'alertmanager', 'alertChannel'],
+    ghostPath: ['alloyProxy', 'ruler', 'grafana', 'kuma'],
+    nodes: [
+      node('logline', 100, 350, 'LOG', {
+        en: ['Log line', 'Raw signal', 'A container writes one line; nothing about it is special until something reads it.', ['stdout', 'Per-container stream']],
+        et: ['Logirida', 'Toorsignaal', 'Konteiner kirjutab ühe rea; selles pole midagi erilist enne, kui keegi seda loeb.', ['stdout', 'Konteineripõhine voog']],
+      }),
+      node('alloy', 300, 196, 'ALY', {
+        en: ['Collector', 'Log shipper', 'One collector discovers every running container and tails its log stream.', ['Docker discovery', 'Container labels']],
+        et: ['Koguja', 'Logisaatja', 'Üks koguja avastab kõik jooksvad konteinerid ja loeb nende logivoogu.', ['Docker discovery', 'Konteinerisildid']],
+      }, 'core'),
+      node('loki', 520, 326, 'LOK', {
+        en: ['Log store', 'Searchable history', 'Logs land on the mirrored bulk disk with a fixed retention window, not on the fast system disk.', ['30-day retention', 'ZFS mirror']],
+        et: ['Logihoidla', 'Otsitav ajalugu', 'Logid maanduvad peegeldatud mahukettale kindla säilitusaknaga, mitte kiirele süsteemikettale.', ['30 päeva säilitust', 'ZFS mirror']],
+      }, 'core'),
+      node('alertmanager', 724, 210, 'AM', {
+        en: ['Alertmanager', 'Routing', 'Matching rules are grouped and de-duplicated before anyone is told.', ['Grouping', 'No alert storm']],
+        et: ['Alertmanager', 'Marsruutimine', 'Tabanud reeglid grupeeritakse ja korduvad summutatakse enne, kui kellelegi teatatakse.', ['Grupeerimine', 'Teavitustormi pole']],
+      }),
+      node('alertChannel', 900, 334, 'TG', {
+        en: ['Owner channel', 'Private alert', 'The alert ends on a phone, not on a dashboard somebody has to remember to open.', ['Phone push', 'Owner only']],
+        et: ['Omaniku kanal', 'Privaatne teavitus', 'Teavitus lõpeb telefonis, mitte juhtpaneelis, mille avamist peab meeles pidama.', ['Telefoni push', 'Ainult omanik']],
+      }),
+      node('alloyProxy', 130, 528, 'SOX', {
+        en: ['Read-only proxy', 'Scoped Docker', 'The collector reads containers through a proxy with no write surface at all.', ['Containers only', 'No write API']],
+        et: ['Ainult lugev proxy', 'Piiratud Docker', 'Koguja loeb konteinereid proxy kaudu, millel puudub igasugune kirjutuspind.', ['Ainult konteinerid', 'Kirjutus-API-t pole']],
+      }, 'quiet'),
+      node('ruler', 350, 528, 'RUL', {
+        en: ['Alert rules', 'Version-controlled', 'Rules are files in the repo, mounted read-only and reloaded on a timer.', ['In git', 'Read-only mount']],
+        et: ['Teavitusreeglid', 'Versioonihalduses', 'Reeglid on repos failid, monteeritud ainult lugemiseks ja laetakse taimeri järgi uuesti.', ['Gitis', 'Read-only mount']],
+      }, 'quiet'),
+      node('grafana', 570, 528, 'GRF', {
+        en: ['Dashboards', 'Read-only view', 'Two provisioned dashboards show state; they are not an edit surface.', ['Provisioned', 'LAN only']],
+        et: ['Töölauad', 'Ainult vaatamiseks', 'Kaks ettevalmistatud töölauda näitavad seisu; need pole muutmispind.', ['Ette valmistatud', 'Ainult LAN']],
+      }, 'quiet'),
+      node('kuma', 800, 528, 'UP', {
+        en: ['Uptime checks', 'Outside view', 'HTTP probes answer the question logs cannot: is it reachable at all?', ['HTTP probes', 'Independent path']],
+        et: ['Saadavuse kontroll', 'Väline vaade', 'HTTP-probe’id vastavad küsimusele, mida logid ei kata: kas see on üldse kättesaadav?', ['HTTP probe’id', 'Sõltumatu rada']],
+      }, 'quiet'),
+    ],
+    logs: {
+      en: ['A container writes a log line', 'The collector tails it through a read-only proxy', 'Loki stores it inside the retention window', 'A rule matches and fires', 'Alertmanager routes it to the owner'],
+      et: ['Konteiner kirjutab logirea', 'Koguja loeb selle read-only proxy kaudu', 'Loki salvestab selle säilitusaknasse', 'Reegel tabab ja käivitub', 'Alertmanager marsruudib selle omanikule'],
+    },
+  },
+  {
+    id: 'recover',
+    number: '05',
+    code: 'RECOVER',
     accent: '#4ade80',
     accentDim: '#12351d',
     copy: {
       en: {
-        nav: 'Alerts + restore',
-        tab: 'Observe & recover',
-        kicker: 'Observe & recover',
+        nav: 'Restart + restore',
+        tab: 'Recover',
+        kicker: 'Recover',
         title: 'Broken containers do not fail silently.',
-        lead: 'Healthchecks and Autoheal handle local faults, Uptime Kuma sends Telegram alerts, and backups cover state when restart is not enough.',
-        state: 'detect - alert - restart - restore',
+        lead: 'Healthchecks and Autoheal handle local faults; when a restart is not enough, nightly backups and an offsite copy carry the state back.',
+        state: 'detect - restart - back up - restore',
         proofTitle: 'Recovery path',
         run: 'Run recovery drill',
         done: 'Drill complete',
       },
       et: {
-        nav: 'Teavitused + taaste',
-        tab: 'Jälgi ja taasta',
-        kicker: 'Jälgi ja taasta',
+        nav: 'Restart + taaste',
+        tab: 'Taaste',
+        kicker: 'Taaste',
         title: 'Katkine konteiner ei jää vaikseks.',
-        lead: 'Healthcheckid ja Autoheal katavad kohalikud tõrked, Uptime Kuma saadab Telegrami teavitused ning varukoopiad katavad andmed, kui taaskäivitusest ei piisa.',
-        state: 'tuvasta - teavita - restardi - taasta',
+        lead: 'Healthcheckid ja Autoheal katavad kohalikud tõrked; kui taaskäivitusest ei piisa, toovad öised varukoopiad ja väline koopia andmed tagasi.',
+        state: 'tuvasta - restardi - varunda - taasta',
         proofTitle: 'Taaste tee',
         run: 'Käivita taasteharjutus',
         done: 'Harjutus valmis',
       },
     },
-    path: ['failure', 'health', 'autoheal', 'kuma', 'telegram'],
-    ghostPath: ['database', 'watchdog', 'zfs', 'offsite'],
+    path: ['failure', 'health', 'autoheal', 'backup', 'restore'],
+    ghostPath: ['watchdog', 'database', 'zfs', 'offsite'],
     nodes: [
       node('failure', 102, 330, 'ERR', {
         en: ['Failure', 'Symptom starts', 'Faults are treated as classes: stuck container, VM hang, or data loss.', ['Stuck container', 'VM hang', 'Data loss class']],
@@ -359,36 +456,111 @@ const SCENES = [
         en: ['Autoheal', 'Container restart', 'Unhealthy containers can recover without manual SSH.', ['Restart path', 'Socket proxy']],
         et: ['Autoheal', 'Konteineri restart', 'Vigases seisus konteinerid saavad taastuda ilma käsitsi SSH-ta.', ['Restart tee', 'Socket proxy']],
       }, 'core'),
-      node('kuma', 704, 214, 'UP', {
-        en: ['Uptime Kuma', 'Alert layer', 'Service monitors turn symptoms into visible alerts.', ['HTTP monitors', 'Telegram alerts']],
-        et: ['Uptime Kuma', 'Teavituste kiht', 'Teenuse monitorid muudavad sümptomid nähtavateks teavitusteks.', ['HTTP monitorid', 'Telegrami teavitused']],
+      node('backup', 704, 214, 'BKP', {
+        en: ['Nightly backup', 'State capture', 'Databases and service state are dumped on a schedule, because a restart does not bring data back.', ['Scheduled dumps', 'Encrypted offsite copy']],
+        et: ['Öine varukoopia', 'Oleku jäädvustus', 'Andmebaasid ja teenuste olek dumbitakse graafiku alusel, sest restart andmeid tagasi ei too.', ['Graafikuga dumbid', 'Krüptitud väline koopia']],
       }),
-      node('telegram', 884, 330, 'TG', {
-        en: ['Telegram', 'Owner alert', 'A service-down signal reaches the owner instead of staying hidden in a dashboard.', ['Phone push', '~90s target']],
-        et: ['Telegram', 'Omaniku teavitus', 'Teenuse maasoleku signaal jõuab omanikuni, mitte ei jää peitu juhtpaneeli.', ['Telefoni push', '~90s siht']],
+      node('restore', 884, 330, 'RST', {
+        en: ['Restore drill', 'Proven recovery', 'A backup counts only once it has been restored somewhere on purpose.', ['Verified restore', 'Documented runbook']],
+        et: ['Taasteharjutus', 'Tõestatud taaste', 'Varukoopia loeb alles siis, kui see on kuskil teadlikult taastatud.', ['Kontrollitud taaste', 'Dokumenteeritud runbook']],
       }),
-      node('database', 160, 528, 'DB', {
-        en: ['Database dumps', 'State backup', 'Stateful services need snapshots, not only restarts.', ['Postgres dumps', 'Restore target']],
-        et: ['Andmebaasi dumpid', 'Andmete varukoopia', 'Olekuga teenused vajavad hetktõmmiseid, mitte ainult restarti.', ['Postgres dumpid', 'Taaste siht']],
-      }, 'quiet'),
-      node('watchdog', 360, 528, 'WD', {
+      node('watchdog', 160, 528, 'WD', {
         en: ['Watchdog', 'VM recovery', 'When containers cannot report anything, the VM still has a local recovery layer.', ['Kernel hang', 'Host reset']],
         et: ['Watchdog', 'VM taaste', 'Kui konteinerid ei saa midagi raporteerida, on VM-il ikka kohalik taastekiht.', ['Kernel hang', 'Host reset']],
       }, 'quiet'),
-      node('zfs', 590, 528, 'ZFS', {
+      node('database', 380, 528, 'DB', {
+        en: ['Database dumps', 'State backup', 'Stateful services need snapshots, not only restarts.', ['Postgres dumps', 'Restore target']],
+        et: ['Andmebaasi dumpid', 'Andmete varukoopia', 'Olekuga teenused vajavad hetktõmmiseid, mitte ainult restarti.', ['Postgres dumpid', 'Taaste siht']],
+      }, 'quiet'),
+      node('zfs', 600, 528, 'ZFS', {
         en: ['ZFS mirror', 'Local data', 'Bulk data sits on mirrored local storage.', ['2 x 12TB', 'NFS mount']],
         et: ['ZFS mirror', 'Kohalik data', 'Suurem andmemaht asub peegeldatud kohalikul salvestusel.', ['2 x 12TB', 'NFS mount']],
       }, 'quiet'),
-      node('offsite', 834, 528, 'R2', {
-        en: ['Offsite backup', 'R2 tier', 'Restic sends backup data away from the local pool.', ['Cloudflare R2', 'Retention']],
-        et: ['Väline backup', 'R2 kiht', 'Restic saadab varukoopia andmed kohalikust poolist eemale.', ['Cloudflare R2', 'Säilitus']],
+      node('offsite', 830, 528, 'R2', {
+        en: ['Offsite backup', 'Third tier', 'Restic sends encrypted backup data away from the local pool every night.', ['Client-side AES', 'Retention policy']],
+        et: ['Väline backup', 'Kolmas kiht', 'Restic saadab igal ööl krüptitud varukoopia kohalikust poolist eemale.', ['Kliendipoolne AES', 'Säilituspoliitika']],
       }, 'quiet'),
     ],
     logs: {
-      en: ['Healthcheck marks the service unhealthy', 'Autoheal restarts the container', 'Uptime Kuma keeps external visibility', 'Telegram notifies the owner', 'State recovery has local and offsite layers'],
-      et: ['Healthcheck märgib teenuse vigaseks', 'Autoheal taaskäivitab konteineri', 'Uptime Kuma hoiab välise vaate', 'Telegram teavitab omanikku', 'Andmete taastel on kohalik ja väline kiht'],
+      en: ['Healthcheck marks the service unhealthy', 'Autoheal restarts the container', 'A nightly job dumps database and service state', 'An encrypted copy leaves the house', 'Restore is rehearsed, not assumed'],
+      et: ['Healthcheck märgib teenuse vigaseks', 'Autoheal taaskäivitab konteineri', 'Öine töö dumbib andmebaasid ja teenuste oleku', 'Krüptitud koopia lahkub majast', 'Taastet harjutatakse, mitte ei eeldata'],
     },
   },
+  {
+    id: 'home',
+    number: '06',
+    code: 'HOUSE',
+    accent: '#fb923c',
+    accentDim: '#3a2410',
+    copy: {
+      en: {
+        nav: 'House automation',
+        tab: 'The house',
+        kicker: 'House automation',
+        title: 'The house runs on local protocols, not on a vendor cloud.',
+        lead: 'Ventilation, heating, metering, and cameras are read over the local network. Automations turn that into decisions, and the result arrives as a message instead of a dashboard to watch.',
+        state: 'devices - hub - automation - phone',
+        proofTitle: 'House path',
+        run: 'Trace a house decision',
+        done: 'Decision delivered',
+      },
+      et: {
+        nav: 'Majaautomaatika',
+        tab: 'Maja',
+        kicker: 'Majaautomaatika',
+        title: 'Maja töötab kohalike protokollide, mitte tootja pilve peal.',
+        lead: 'Ventilatsiooni, kütet, mõõtmist ja kaameraid loetakse kohtvõrgust. Automaatika teeb sellest otsused ja tulemus jõuab kohale sõnumina, mitte juhtpaneelina, mida jälgida.',
+        state: 'seadmed - keskus - automaatika - telefon',
+        proofTitle: 'Maja tee',
+        run: 'Jälgi maja otsust',
+        done: 'Otsus kohal',
+      },
+    },
+    path: ['devices', 'hub', 'automation', 'digest', 'owner'],
+    ghostPath: ['ventilation', 'heatpump', 'meter', 'cameras'],
+    nodes: [
+      node('devices', 100, 344, 'DEV', {
+        en: ['House devices', 'Local endpoints', 'Each device is read on the local network with its own protocol.', ['No vendor app', 'LAN only']],
+        et: ['Majaseadmed', 'Kohalikud otspunktid', 'Iga seadet loetakse kohtvõrgus tema enda protokolliga.', ['Tootja äppi pole', 'Ainult LAN']],
+      }),
+      node('hub', 306, 200, 'HA', {
+        en: ['House hub', 'State in one place', 'One hub holds the house state; it runs as a plain container next to everything else.', ['Container, no appliance', 'Config in git']],
+        et: ['Majakeskus', 'Olek ühes kohas', 'Üks keskus hoiab maja olekut; see jookseb tavalise konteinerina teiste kõrval.', ['Konteiner, mitte seade', 'Config gitis']],
+      }, 'core'),
+      node('automation', 520, 330, 'AUT', {
+        en: ['Automations', 'Decisions', 'Rules turn prices, temperatures, and schedules into a decision about when something should run.', ['Price-aware', 'Household hours']],
+        et: ['Automaatikad', 'Otsused', 'Reeglid teevad hindadest, temperatuuridest ja graafikutest otsuse, millal midagi käia võiks.', ['Hinnateadlik', 'Majapidamise tunnid']],
+      }, 'core'),
+      node('digest', 724, 206, 'MSG', {
+        en: ['Daily digest', 'One message', 'Instead of a dashboard to check, the day arrives as one summary with tomorrow in it.', ['Today and tomorrow', 'Cheapest window']],
+        et: ['Päevakokkuvõte', 'Üks sõnum', 'Jälgitava juhtpaneeli asemel saabub päev ühe kokkuvõttena, kus on ka homne sees.', ['Täna ja homme', 'Soodsaim aken']],
+      }),
+      node('owner', 900, 330, 'TS', {
+        en: ['Phone', 'Private access', 'The house is deliberately off the public tunnel; remote access is over the VPN.', ['No public hostname', 'VPN from away']],
+        et: ['Telefon', 'Privaatne ligipääs', 'Maja on teadlikult avalikust tunnelist väljas; kaugligipääs käib VPN-i kaudu.', ['Avalikku hostinime pole', 'Eemalt üle VPN-i']],
+      }),
+      node('ventilation', 140, 528, 'VNT', {
+        en: ['Ventilation', 'Modbus TCP', 'The ventilation unit is controlled directly over the local network.', ['Local control', 'No cloud account']],
+        et: ['Ventilatsioon', 'Modbus TCP', 'Ventilatsiooniseadet juhitakse otse kohtvõrgus.', ['Kohalik juhtimine', 'Pilvekontot pole']],
+      }, 'quiet'),
+      node('heatpump', 360, 528, 'HP', {
+        en: ['Heat pump', 'Local API', 'Heating and hot water are read and set through the unit local interface.', ['Local API', 'Modes and schedules']],
+        et: ['Soojuspump', 'Kohalik API', 'Kütet ja sooja vett loetakse ja seatakse seadme kohaliku liidese kaudu.', ['Kohalik API', 'Režiimid ja graafikud']],
+      }, 'quiet'),
+      node('meter', 580, 528, 'kWh', {
+        en: ['Grid metering', 'Measured, not guessed', 'Metered consumption and day-ahead prices come from the grid data service, so cost is measured rather than estimated.', ['Metered data', 'Day-ahead prices']],
+        et: ['Võrgumõõtmine', 'Mõõdetud, mitte pakutud', 'Mõõdetud tarbimine ja järgmise päeva hinnad tulevad võrguandmete teenusest, nii et kulu on mõõdetud, mitte hinnanguline.', ['Mõõdetud andmed', 'Järgmise päeva hinnad']],
+      }, 'quiet'),
+      node('cameras', 800, 528, 'CAM', {
+        en: ['Cameras', 'Stay indoors', 'Camera streams are read on the local network and never published outward.', ['LAN streams', 'No vendor cloud']],
+        et: ['Kaamerad', 'Jäävad koju', 'Kaamerate vooge loetakse kohtvõrgus ja neid ei avaldata väljapoole.', ['LAN-voog', 'Tootja pilve pole']],
+      }, 'quiet'),
+    ],
+    logs: {
+      en: ['Devices answer on the local network', 'The hub keeps the house state', 'An automation picks the window worth using', 'The digest is composed once for the day', 'It arrives on the phone, over the VPN'],
+      et: ['Seadmed vastavad kohtvõrgus', 'Keskus hoiab maja olekut', 'Automaatika valib akna, mida tasub kasutada', 'Kokkuvõte pannakse päeva kohta korra kokku', 'See jõuab telefoni, üle VPN-i'],
+    },
+  }
 ];
 
 let activeSceneId = 'ingress';
@@ -460,7 +632,7 @@ function metricItems() {
     return [
       [source.composeFiles, labels.composeFiles],
       [source.composeServiceDefinitions, labels.serviceDefinitions],
-      [apps, labels.publicApps],
+      [apps, labels.appStacks],
     ];
   }
 
@@ -472,11 +644,27 @@ function metricItems() {
     ];
   }
 
-  if (activeSceneId === 'recovery') {
+  if (activeSceneId === 'observe') {
+    return [
+      ['30', labels.logRetention],
+      [metrics.containers, labels.logShippers],
+      ['TG', labels.recoveryAlertChannel],
+    ];
+  }
+
+  if (activeSceneId === 'recover') {
     return [
       [metrics.recoveryLayers, labels.recoveryLayers],
-      [metrics.containers, labels.containers],
-      ['TG', labels.recoveryAlertChannel],
+      ['3-2-1', labels.backupRule],
+      ['R2', labels.offsiteTier],
+    ];
+  }
+
+  if (activeSceneId === 'home') {
+    return [
+      ['0', labels.housePublicHosts],
+      ['2', labels.houseControlProtocols],
+      ['VPN', labels.houseRemoteAccess],
     ];
   }
 

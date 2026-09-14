@@ -25,8 +25,8 @@ repos and deploy separately; this repo only owns the launcher shell.
 src/
   landing/   Site #1: khe.ee, including:
     lab/     KHE Lab Atlas - public systems map of the homelab
-             (ingress, deploys, recovery layers, service counts).
-             Renders lab-data.json via lab/atlas.js.
+             (public path, ship path, private ops, signals, recovery,
+             the house). Renders lab-data.json via lab/atlas.js.
   games/     Site #2: games.khe.ee launcher shell
   shared/    Cross-site assets - copied into each site's /assets/ at
              build time. Currently: site.css, site-footer.js,
@@ -78,8 +78,9 @@ on the homelab VM and are mounted into the launcher at `/study/` and
   allows analytics (consent-gated via `src/shared/analytics-consent.js`).
 - The launcher hosts no game code itself. Game directories on the VM are
   bind-mounted into nginx by the homelab compose stack.
-- `scripts/generate-lab-data.mjs` reads `../khe-homelab/` (sibling repo) to
-  count compose files, services, and containers. Without `khe-homelab`
-  cloned next to this repo, lab-data generation fails. CI must check out
-  both repos. For local generation:
+- `scripts/generate-lab-data.mjs` reads `HOMELAB_ROOT` (deploy sets it to
+  `/home/khe/homelab`) or `../khe-homelab/` to count compose files, services,
+  and containers. With neither present it silently keeps the committed
+  `lab-data.json`, so a stale snapshot is the failure mode, not a build
+  error. For local generation:
   `git clone https://github.com/khelias/khe-homelab ../khe-homelab`

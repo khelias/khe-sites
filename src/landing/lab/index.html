@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>KHE Lab Atlas | Homelab Systems Map</title>
-  <meta name="description" content="A public systems atlas for the KHE homelab: ingress, deploys, private operations, and recovery.">
+  <meta name="description" content="A public systems atlas for the KHE homelab: ingress, deploys, private operations, telemetry, recovery, and house automation.">
   <link rel="canonical" href="https://khe.ee/lab/">
   <link rel="alternate" hreflang="en" href="https://khe.ee/lab/?lang=en">
   <link rel="alternate" hreflang="et" href="https://khe.ee/lab/?lang=et">
@@ -15,13 +15,13 @@
   <meta property="og:url" content="https://khe.ee/lab/">
   <meta property="og:site_name" content="Kaido Henrik Elias">
   <meta property="og:title" content="KHE Lab Atlas | Homelab Systems Map">
-  <meta property="og:description" content="A public systems atlas for the KHE homelab: ingress, deploys, private operations, and recovery.">
+  <meta property="og:description" content="A public systems atlas for the KHE homelab: ingress, deploys, private operations, telemetry, recovery, and house automation.">
   <meta property="og:image" content="https://khe.ee/og-image.png">
   <meta property="og:image:width" content="1200">
   <meta property="og:image:height" content="630">
   <meta name="twitter:card" content="summary">
   <meta name="twitter:title" content="KHE Lab Atlas | Homelab Systems Map">
-  <meta name="twitter:description" content="A public systems atlas for the KHE homelab: ingress, deploys, private operations, and recovery.">
+  <meta name="twitter:description" content="A public systems atlas for the KHE homelab: ingress, deploys, private operations, telemetry, recovery, and house automation.">
   <meta name="twitter:image" content="https://khe.ee/og-image.png">
   <link rel="preload" href="/assets/fonts/inter-400.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="/assets/fonts/inter-500.woff2" as="font" type="font/woff2" crossorigin>
@@ -36,7 +36,7 @@
       "@id": "https://khe.ee/lab/#webpage",
       "url": "https://khe.ee/lab/",
       "name": "KHE Lab Atlas",
-      "description": "A public systems atlas for the KHE homelab: ingress, deploys, private operations, and recovery.",
+      "description": "A public systems atlas for the KHE homelab: ingress, deploys, private operations, telemetry, recovery, and house automation.",
       "isPartOf": {
         "@id": "https://khe.ee/#website"
       },
@@ -45,7 +45,9 @@
         "Self-hosting",
         "Cloudflare Tunnel",
         "GitHub Actions",
-        "Docker"
+        "Docker",
+        "Observability",
+        "Home Assistant"
       ],
       "inLanguage": [
         "en",
@@ -79,7 +81,7 @@
     <div class="lab-shell-title">
       <span data-i18n="kicker">Public systems map</span>
       <strong data-i18n="headline">How the homelab works</strong>
-      <p data-i18n="intro">Ingress, deploys, private operations, and recovery in one inspectable view.</p>
+      <p data-i18n="intro">Ingress, deploys, private operations, telemetry, recovery, and the house in one inspectable view.</p>
     </div>
   </header>
 
@@ -142,6 +144,6 @@
   </section>
 </div>
 
-<script type="module" src="/lab/atlas.js?v=20260427e"></script>
+<script type="module" src="/lab/atlas.js?v=20260914a"></script>
 </body>
 </html>

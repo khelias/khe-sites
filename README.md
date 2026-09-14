@@ -15,12 +15,16 @@ shell that links into the game apps.
 
 ## Lab Atlas
 
-`src/landing/lab/` is a public interactive systems map of the homelab: ingress,
-deploy path, private operations, and recovery. It renders `lab-data.json`, which
-is generated from the sibling `khe-homelab` repo via `scripts/generate-lab-data.mjs`.
+`src/landing/lab/` is a public interactive systems map of the homelab in six
+scenes: public path, ship path, private operations, signals, recovery, and the
+house. It renders `lab-data.json`, which is generated from the `khe-homelab`
+repo via `scripts/generate-lab-data.mjs` (also run as part of `npm run build`).
 
-Without `khe-homelab` cloned next to this repo, lab-data generation fails. CI
-checks out both repos automatically. For local generation:
+The generator looks for `khe-homelab` next to this repo, or at `HOMELAB_ROOT`
+if that is set. When neither exists it keeps the committed `lab-data.json`
+instead of failing, so a build without the homelab repo serves the last
+committed snapshot. The deploy workflow sets `HOMELAB_ROOT=/home/khe/homelab`
+so the published snapshot tracks the live stacks. For local generation:
 
 ```sh
 git clone https://github.com/khelias/khe-homelab ../khe-homelab
