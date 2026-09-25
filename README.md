@@ -4,58 +4,29 @@
 [![CodeQL](https://github.com/khelias/khe-sites/actions/workflows/codeql.yml/badge.svg)](https://github.com/khelias/khe-sites/actions/workflows/codeql.yml)
 [![Deploy](https://github.com/khelias/khe-sites/actions/workflows/deploy.yml/badge.svg)](https://github.com/khelias/khe-sites/actions/workflows/deploy.yml)
 
-Static source for:
+Static source for the public KHE web presence, in plain HTML, CSS and
+JavaScript:
 
-- `khe.ee` — landing page and Lab Atlas (`/lab/`)
-- `games.khe.ee` launcher
+- [khe.ee](https://khe.ee) - the landing page and the
+  [Lab Atlas](https://khe.ee/lab/), an interactive systems map of the homelab
+- [games.khe.ee](https://games.khe.ee) - the launcher that links into the
+  game apps, which deploy from their own repos
 
-The individual games are deployed from their own repositories. This repo owns
-the landing pages, Lab Atlas, shared locale handoff helper, and the launcher
-shell that links into the game apps.
+The Lab Atlas renders a snapshot generated from
+[khe-homelab](https://github.com/khelias/khe-homelab) at build time, so it
+follows the live stacks without anyone updating it by hand. Analytics are
+Cloudflare Web Analytics, loaded only after the visitor consents.
 
-## Lab Atlas
-
-`src/landing/lab/` is a public interactive systems map of the homelab in six
-scenes: public path, ship path, private operations, signals, recovery, and the
-house. It renders `lab-data.json`, which is generated from the `khe-homelab`
-repo via `scripts/generate-lab-data.mjs` (also run as part of `npm run build`).
-
-The generator looks for `khe-homelab` next to this repo, or at `HOMELAB_ROOT`
-if that is set. When neither exists it keeps the committed `lab-data.json`
-instead of failing, so a build without the homelab repo serves the last
-committed snapshot. The deploy workflow sets `HOMELAB_ROOT=/home/khe/homelab`
-so the published snapshot tracks the live stacks. For local generation:
-
-```sh
-git clone https://github.com/khelias/khe-homelab ../khe-homelab
-node scripts/generate-lab-data.mjs
-```
-
-Shared static assets live in `src/shared/` and are copied into each site's
-`/assets/` directory during build.
-
-## Development
+## Running it
 
 ```sh
 npm run check
-npm run build
+npm run build     # dist/landing and dist/games
 ```
 
-## Analytics Consent
+The build regenerates the Lab Atlas data when a `khe-homelab` checkout sits
+next to this repo (or at `HOMELAB_ROOT`); without one it keeps the committed
+snapshot. Every push to `main` deploys both sites to the homelab. The rules
+for working on the code are in [AGENTS.md](AGENTS.md).
 
-Public pages include a consent-gated Cloudflare Web Analytics loader with
-beacon token placeholders:
-
-- `khe.ee` token is configured in the landing pages.
-- `games.khe.ee` token is configured in the games launcher and game apps.
-
-Replace these with the site tokens from Cloudflare Web Analytics before
-deployment. The tokens are embedded in browser HTML and are not secrets. The
-Cloudflare beacon is loaded only after the visitor allows analytics.
-
-Build output:
-
-- `dist/landing` -> `/srv/data/sites/khe`
-- `dist/games` -> `/srv/data/games/launcher`
-
-GitHub Actions deploys both directories on push to `main`.
+MIT licensed.
