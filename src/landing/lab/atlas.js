@@ -40,7 +40,7 @@ const COPY = {
     statusReady: 'ready',
     statusRunning: 'running path',
     statusDone: 'path complete',
-    trustWorkspace: 'OpenClaw workspace behind Access',
+    trustAccessApps: 'apps behind Access',
     trustProxyClients: 'socket-proxy clients',
     trustControlSurfaces: 'public control surfaces',
     recoveryAlertChannel: 'alert channel',
@@ -85,7 +85,7 @@ const COPY = {
     statusReady: 'valmis',
     statusRunning: 'rada jookseb',
     statusDone: 'rada valmis',
-    trustWorkspace: 'OpenClaw tööruum Accessi taga',
+    trustAccessApps: 'rakendust Accessi taga',
     trustProxyClients: 'socket proxy klienti',
     trustControlSurfaces: 'avalikku juhtpinda',
     recoveryAlertChannel: 'teavituskanal',
@@ -269,29 +269,29 @@ const SCENES = [
     accentDim: '#3b121c',
     copy: {
       en: {
-        nav: 'OpenClaw + Docker',
+        nav: 'Access + Docker',
         tab: 'Private operations',
         kicker: 'Private operations',
-        title: 'OpenClaw and admin tools sit behind identity checks and scoped Docker access.',
-        lead: 'OpenClaw, n8n, and stack tools sit behind Access. Docker control uses socket proxies, not a raw host socket, and the public page exposes facts instead of controls.',
-        state: 'identity - workspace - scoped docker',
+        title: 'Admin tools open only after an identity check or from the home LAN.',
+        lead: 'The dashboard, n8n, trips and the pages editor sit behind Access, and Dockge answers only on the LAN. Dockge, autoheal and Alloy reach Docker through scoped socket proxies, and the public page exposes facts instead of controls.',
+        state: 'identity - scoped docker',
         proofTitle: 'Private operations boundary',
         run: 'Trace private operations',
         done: 'Private path traced',
       },
       et: {
-        nav: 'OpenClaw + Docker',
+        nav: 'Access + Docker',
         tab: 'Privaatne haldus',
         kicker: 'Privaatne haldus',
-        title: 'OpenClaw ja adminitöö on identiteedikontrolli ning piiratud Dockeri ligipääsu taga.',
-        lead: 'OpenClaw, n8n ja stacki tööriistad on Accessi taga. Dockeri juhtimine käib socket proxy kaudu, mitte otse hosti socketiga, ja avalik leht näitab fakte, mitte juhtnuppe.',
-        state: 'identiteet - tööruum - piiratud docker',
+        title: 'Adminitööriistadeni pääseb ainult identiteedikontrolli või koduvõrgu kaudu.',
+        lead: 'Juhtpaneel, n8n, trips ja lehtede toimetaja on Accessi taga, Dockge on kättesaadav ainult kohtvõrgus. Dockge, autoheal ja Alloy jõuavad Dockerini piiratud socket proxy kaudu ning avalik leht näitab fakte, mitte juhtnuppe.',
+        state: 'identiteet - piiratud docker',
         proofTitle: 'Privaatse halduse piir',
         run: 'Jälgi haldusrada',
         done: 'Haldusrada jälgitud',
       },
     },
-    path: ['admin', 'access', 'openclaw', 'socketProxy', 'runtimeOps'],
+    path: ['admin', 'access', 'socketProxy', 'runtimeOps'],
     ghostPath: ['n8n', 'dockge', 'repoClean', 'operatorChannel'],
     nodes: [
       node('admin', 104, 348, 'ADM', {
@@ -302,25 +302,21 @@ const SCENES = [
         en: ['Cloudflare Access', 'Identity check', 'Sensitive tools require identity before the request reaches the homelab.', ['Email OTP', 'Protected hostnames']],
         et: ['Cloudflare Access', 'Identiteedikontroll', 'Tundlikud tööriistad nõuavad identiteeti enne homelabini jõudmist.', ['Email OTP', 'Kaitstud hostid']],
       }),
-      node('openclaw', 520, 332, 'AI', {
-        en: ['OpenClaw', 'Protected workspace', 'OpenClaw is available only behind Access and inside a constrained workspace.', ['CF Access protected', 'Tracked workspace']],
-        et: ['OpenClaw', 'Kaitstud tööruum', 'OpenClaw on saadaval ainult Accessi taga ja piiratud tööruumis.', ['CF Access kaitseb', 'Jälgitav tööruum']],
-      }, 'core'),
-      node('socketProxy', 720, 332, 'SOX', {
-        en: ['Socket proxy', 'Scoped Docker', 'OpenClaw and Dockge use proxy endpoints instead of mounting the raw Docker socket.', ['Limited API', 'Reduced blast radius']],
-        et: ['Socket proxy', 'Piiratud Docker', 'OpenClaw ja Dockge kasutavad proxy endpoint’e, mitte otse Docker socketit.', ['Kitsas API', 'Väiksem mõjuulatus']],
+      node('socketProxy', 603, 332, 'SOX', {
+        en: ['Socket proxy', 'Scoped Docker', 'Dockge, autoheal and Alloy use proxy endpoints instead of the raw Docker socket.', ['Limited API', 'Reduced blast radius']],
+        et: ['Socket proxy', 'Piiratud Docker', 'Dockge, autoheal ja Alloy kasutavad proxy endpoint’e, mitte otse Docker socketit.', ['Kitsas API', 'Väiksem mõjuulatus']],
       }, 'core'),
       node('runtimeOps', 900, 210, 'VM', {
-        en: ['Docker VM', 'Operations target', 'Admin actions reach the runtime only through protected and scoped paths.', ['Compose stacks', 'No broad controls']],
-        et: ['Docker VM', 'Haldussiht', 'Admini tegevused jõuavad runtime’i ainult kaitstud ja piiratud teede kaudu.', ['Compose stackid', 'Laia juhtpinda pole']],
+        en: ['Docker VM', 'Operations target', 'Admin tools reach the runtime from behind Access or from the LAN, and the three proxy clients get a scoped Docker API.', ['Compose stacks', 'No public controls']],
+        et: ['Docker VM', 'Haldussiht', 'Adminitööriistad jõuavad runtime’i Accessi tagant või kohtvõrgust ning kolm proxy klienti saavad piiratud Docker API.', ['Compose stackid', 'Avalikku juhtpinda pole']],
       }),
       node('n8n', 230, 520, 'n8n', {
         en: ['n8n', 'Operations automation', 'Internal reports and workflows can run without publishing raw operational data.', ['Weekly report', 'Protected workflow']],
         et: ['n8n', 'Haldusautomaatika', 'Sisemised raportid ja workflow’d saavad joosta ilma halduse toorandmeid avaldamata.', ['Nädalaraport', 'Kaitstud workflow']],
       }, 'quiet'),
       node('dockge', 420, 520, 'DG', {
-        en: ['Dockge', 'Stack UI', 'Manual stack management stays behind protected admin access.', ['CF Access', 'Docker via proxy']],
-        et: ['Dockge', 'Stack UI', 'Stackide käsihaldus jääb kaitstud adminiligipääsu taha.', ['CF Access', 'Docker proxy kaudu']],
+        en: ['Dockge', 'Stack UI', 'Manual stack management is reachable only from the LAN, not through the tunnel.', ['LAN only', 'Docker via proxy']],
+        et: ['Dockge', 'Stack UI', 'Stackide käsihaldus on kättesaadav ainult kohtvõrgust, mitte tunneli kaudu.', ['Ainult LAN', 'Docker proxy kaudu']],
       }, 'quiet'),
       node('repoClean', 620, 520, 'ENV', {
         en: ['Clean metadata', 'No secrets', 'The public atlas is generated from sanitized facts.', ['No .env values', 'No tokens']],
@@ -332,8 +328,8 @@ const SCENES = [
       }, 'quiet'),
     ],
     logs: {
-      en: ['Admin opens a protected hostname', 'Cloudflare Access checks identity', 'OpenClaw runs inside a constrained workspace', 'Docker actions route through socket proxy', 'Public atlas exposes facts, not controls'],
-      et: ['Admin avab kaitstud hosti', 'Cloudflare Access kontrollib identiteeti', 'OpenClaw töötab piiratud tööruumis', 'Dockeri tegevused liiguvad socket proxy kaudu', 'Avalik atlas näitab fakte, mitte juhtnuppe'],
+      en: ['Admin opens a protected hostname', 'Cloudflare Access checks identity', 'Dockge answers only on the LAN', 'Dockge, autoheal and Alloy reach Docker through socket proxies', 'Public atlas exposes facts, not controls'],
+      et: ['Admin avab kaitstud hosti', 'Cloudflare Access kontrollib identiteeti', 'Dockge vastab ainult kohtvõrgus', 'Dockge, autoheal ja Alloy jõuavad Dockerini socket proxy kaudu', 'Avalik atlas näitab fakte, mitte juhtnuppe'],
     },
   },
   {
@@ -638,8 +634,8 @@ function metricItems() {
 
   if (activeSceneId === 'trust') {
     return [
-      ['1', labels.trustWorkspace],
-      ['2', labels.trustProxyClients],
+      ['4', labels.trustAccessApps],
+      ['3', labels.trustProxyClients],
       ['0', labels.trustControlSurfaces],
     ];
   }

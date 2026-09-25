@@ -1,21 +1,20 @@
 {
-  "generatedAt": "2026-09-25T19:06:10.365Z",
+  "generatedAt": "2026-09-25T20:37:09.922Z",
   "source": {
     "repo": "khe-homelab",
-    "composeFiles": 27,
-    "composeServiceDefinitions": 43
+    "composeFiles": 26,
+    "composeServiceDefinitions": 41
   },
   "metrics": {
     "routerPorts": 0,
-    "services": 27,
-    "containers": 43,
+    "services": 26,
+    "containers": 41,
     "recoveryLayers": 5
   },
   "categories": {
     "ai": [
       "n8n",
-      "ollama",
-      "openclaw"
+      "ollama"
     ],
     "apps": [
       "games",
