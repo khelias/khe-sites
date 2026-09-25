@@ -58,7 +58,7 @@ bind-mounts at `/study/` and `/adventure/`.
   (`src/shared/analytics-consent.js`).
 - `generate-lab-data.mjs` counts compose files, services and containers from
   `HOMELAB_ROOT` (deploy sets `/home/khe/homelab`) or `../khe-homelab/`,
-  which in the `khe` workspace is `repos/khe-homelab`, and recovery layers
+  which in the `khe` workspace is `repos/khe-homelab`, and resilience layers
   from the numbered list under `## Resilience` in its README. With neither
   checkout present it keeps the committed `lab-data.json`; a checkout whose
   README has no such list fails the build.
