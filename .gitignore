@@ -2,3 +2,4 @@ dist/
 node_modules/
 tmp-screens/
 .DS_Store
+.claude/worktrees/

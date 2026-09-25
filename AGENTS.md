@@ -1,18 +1,12 @@
 # khe-sites
 
-Multi-site static repo - one repo, two independently deployed sites:
+Static source for two independently deployed sites: `khe.ee` from
+`src/landing/` (with the Lab Atlas at `/lab/`) and `games.khe.ee` from
+`src/games/`, the launcher shell. The game apps (`khe-study`,
+`khe-ai-adventure`) live and deploy in their own repos.
 
-- `khe.ee` from `src/landing/` (with `/lab/` Lab Atlas inside it)
-- `games.khe.ee` from `src/games/` (launcher shell into game apps)
-
-Individual game apps (`khe-study`, `khe-ai-adventure`) live in their own
-repos and deploy separately; this repo only owns the launcher shell.
-
-## Tech stack
-
-- Plain HTML, vanilla JS, CSS. No framework, no bundler.
-- Custom Node.js build scripts (`scripts/build.mjs`, `scripts/check.mjs`).
-- Node 24+.
+Plain HTML, CSS and vanilla JS, built by Node 24 scripts. No framework, no
+bundler.
 
 ## Commands
 
@@ -23,64 +17,47 @@ repos and deploy separately; this repo only owns the launcher shell.
 
 ```
 src/
-  landing/   Site #1: khe.ee, including:
-    lab/     KHE Lab Atlas - public systems map of the homelab
-             (public path, ship path, private ops, signals, recovery,
-             the house). Renders lab-data.json via lab/atlas.js.
-  games/     Site #2: games.khe.ee launcher shell
-  shared/    Cross-site assets - copied into each site's /assets/ at
-             build time. Currently: site.css, site-footer.js,
-             site-locale.js, analytics-consent.js, fonts/.
+  landing/   khe.ee
+    lab/     Lab Atlas, a public systems map of the homelab; renders
+             lab-data.json via lab/atlas.js
+  games/     games.khe.ee launcher shell
+  shared/    cross-site assets, copied into each site's /assets/ at build
 scripts/
   build.mjs              build dist/
   check.mjs              static checks
   generate-lab-data.mjs  generates src/landing/lab/lab-data.json
 ```
 
-## Architectural rules (HARD)
+## Rules
 
-1. **Adding a third site is a structural change.** `scripts/build.mjs`
-   has a hardcoded `apps = ['landing', 'games']` array; adding `src/foo/`
-   alone does nothing until the array, the deploy workflow, and the
-   homelab nginx routing are updated together.
-
-2. **`src/shared/` is for cross-site assets only.** A file there must be
-   used by 2+ sites. If it is single-site, it belongs in that site's own
-   directory. The build copies a hardcoded list of files from `shared/`
-   into each site's `/assets/` - new shared files require a matching
-   `copyFile` call in `build.mjs`.
-
-3. **Each `src/<site>/` directory is its own deployable root.** Site
-   internals do not cross over: no relative paths from `landing/` into
-   `games/` or vice versa. Both sites consume `shared/` only via the
-   build-time copy, never via direct path references.
-
-4. **No bundler, no framework.** Vanilla HTML/CSS/JS. Adding any build
-   tool or framework needs an ADR - it would invalidate the whole
-   "static, no surprises" model that justifies this repo existing
-   alongside the React app repos.
+1. **A third site is a structural change.** `scripts/build.mjs` has a
+   hardcoded `apps = ['landing', 'games']`; a new `src/foo/` does nothing
+   until that array, `deploy.yml` and the homelab nginx routing change
+   together.
+2. **`src/shared/` holds only files used by both sites.** The build copies
+   a hardcoded list from it, so a new shared file needs its own `copyFile`
+   line in `build.mjs`.
+3. **Each `src/<site>/` is its own deployable root.** No relative paths
+   between `landing/` and `games/`; both reach `shared/` only through the
+   build-time copy.
+4. **No bundler, no framework** without an ADR. The "static, no surprises"
+   model is why this repo exists beside the React app repos.
 
 ## Deployment
 
-GitHub Actions on push to main.
-
-- `dist/landing` -> `/srv/data/sites/khe`
-- `dist/games` -> `/srv/data/games/launcher`
-
-Individual game apps deploy separately to `/srv/data/games/{study,adventure}/`
-on the homelab VM and are mounted into the launcher at `/study/` and
-`/adventure/`.
+`deploy.yml` runs on push to main on the self-hosted homelab runner:
+`dist/landing` goes to `/srv/data/sites/khe`, `dist/games` to
+`/srv/data/games/launcher`. The game apps deploy to
+`/srv/data/games/{study,adventure}/`, which the homelab nginx stack
+bind-mounts at `/study/` and `/adventure/`.
 
 ## Gotchas
 
-- Cloudflare Web Analytics tokens are placeholders in HTML, not secrets.
-  Replace with site tokens before deploy. Beacon loads only after visitor
-  allows analytics (consent-gated via `src/shared/analytics-consent.js`).
-- The launcher hosts no game code itself. Game directories on the VM are
-  bind-mounted into nginx by the homelab compose stack.
-- `scripts/generate-lab-data.mjs` reads `HOMELAB_ROOT` (deploy sets it to
-  `/home/khe/homelab`) or `../khe-homelab/` to count compose files, services,
-  and containers. With neither present it silently keeps the committed
-  `lab-data.json`, so a stale snapshot is the failure mode, not a build
-  error. For local generation:
-  `git clone https://github.com/khelias/khe-homelab ../khe-homelab`
+- The Cloudflare Web Analytics tokens in the HTML are public beacon tokens,
+  not secrets. The beacon loads only after the visitor consents
+  (`src/shared/analytics-consent.js`).
+- `generate-lab-data.mjs` counts compose files, services and containers from
+  `HOMELAB_ROOT` (deploy sets `/home/khe/homelab`) or `../khe-homelab/`,
+  which in the `khe` workspace is `repos/khe-homelab`. With neither present
+  it keeps the committed `lab-data.json`: a stale snapshot is the failure
+  mode, not a build error.
