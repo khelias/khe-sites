@@ -59,14 +59,15 @@ function extractServiceNames(composeText) {
   return names;
 }
 
-function extractReadmeMetrics(readme) {
-  const serviceSummary = readme.match(/(\d+)\s+services\s+·\s+(\d+)\s+containers/i);
-  return {
-    routerPorts: 0,
-    services: serviceSummary ? Number(serviceSummary[1]) : null,
-    containers: serviceSummary ? Number(serviceSummary[2]) : null,
-    recoveryLayers: 4,
-  };
+function countResilienceLayers(readme) {
+  const section = readme.split(/^## /m).find((part) => /^Resilience\s*\n/.test(part));
+  const layers = section ? section.match(/^\d+\.\s/gm) : null;
+  // Failing the build beats silently publishing a stale count, which is how
+  // the old README service-summary parse went wrong unnoticed.
+  if (!layers) {
+    throw new Error('No numbered list under "## Resilience" in khe-homelab/README.md');
+  }
+  return layers.length;
 }
 
 function byCategory(composeFiles) {
@@ -91,7 +92,6 @@ if (await pathExists(servicesRoot)) {
   }
 
   const readme = await readFile(join(homelabRoot, 'README.md'), 'utf8');
-  const metrics = extractReadmeMetrics(readme);
   const categories = byCategory(composeFiles);
 
   const snapshot = {
@@ -100,13 +100,12 @@ if (await pathExists(servicesRoot)) {
       repo: 'khe-homelab',
       composeFiles: composeFiles.length,
       composeServiceDefinitions,
-      publicMetrics: 'khe-homelab/README.md service summary',
     },
     metrics: {
-      routerPorts: metrics.routerPorts,
-      services: metrics.services ?? composeFiles.length,
-      containers: metrics.containers ?? composeServiceDefinitions,
-      recoveryLayers: metrics.recoveryLayers,
+      routerPorts: 0,
+      services: composeFiles.length,
+      containers: composeServiceDefinitions,
+      recoveryLayers: countResilienceLayers(readme),
     },
     categories,
   };

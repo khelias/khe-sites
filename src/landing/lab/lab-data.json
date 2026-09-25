@@ -1,16 +1,15 @@
 {
-  "generatedAt": "2026-09-14T12:46:36.557Z",
+  "generatedAt": "2026-09-25T19:06:10.365Z",
   "source": {
     "repo": "khe-homelab",
-    "composeFiles": 25,
-    "composeServiceDefinitions": 41,
-    "publicMetrics": "khe-homelab/README.md service summary"
+    "composeFiles": 27,
+    "composeServiceDefinitions": 43
   },
   "metrics": {
     "routerPorts": 0,
-    "services": 25,
-    "containers": 41,
-    "recoveryLayers": 4
+    "services": 27,
+    "containers": 43,
+    "recoveryLayers": 5
   },
   "categories": {
     "ai": [
@@ -35,7 +34,9 @@
       "vaultwarden"
     ],
     "home": [
-      "homeassistant"
+      "homeassistant",
+      "mosquitto",
+      "pai"
     ],
     "media": [
       "audiobookshelf",

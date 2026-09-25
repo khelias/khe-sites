@@ -103,7 +103,7 @@ const FALLBACK_DATA = {
     routerPorts: 0,
     services: 25,
     containers: 41,
-    recoveryLayers: 4,
+    recoveryLayers: 5,
   },
   categories: {
     apps: ['games', 'landing', 'pages', 'trips'],
