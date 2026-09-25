@@ -273,7 +273,7 @@ const SCENES = [
         tab: 'Private operations',
         kicker: 'Private operations',
         title: 'Admin tools open only after an identity check or from the home LAN.',
-        lead: 'The dashboard, n8n, trips and the pages editor sit behind Access, and Dockge answers only on the LAN. Dockge, autoheal and Alloy reach Docker through scoped socket proxies, and the public page exposes facts instead of controls.',
+        lead: 'The dashboard, n8n, trips and the pages editor sit behind Access, and the NPM, AdGuard and Proxmox admin UIs answer only on the LAN. Autoheal and Alloy reach Docker through scoped socket proxies, and the public page exposes facts instead of controls.',
         state: 'identity - scoped docker',
         proofTitle: 'Private operations boundary',
         run: 'Trace private operations',
@@ -284,7 +284,7 @@ const SCENES = [
         tab: 'Privaatne haldus',
         kicker: 'Privaatne haldus',
         title: 'Adminitööriistadeni pääseb ainult identiteedikontrolli või koduvõrgu kaudu.',
-        lead: 'Juhtpaneel, n8n, trips ja lehtede toimetaja on Accessi taga, Dockge on kättesaadav ainult kohtvõrgus. Dockge, autoheal ja Alloy jõuavad Dockerini piiratud socket proxy kaudu ning avalik leht näitab fakte, mitte juhtnuppe.',
+        lead: 'Juhtpaneel, n8n, trips ja lehtede toimetaja on Accessi taga, NPM-i, AdGuardi ja Proxmoxi haldusliidesed on kättesaadavad ainult kohtvõrgus. Autoheal ja Alloy jõuavad Dockerini piiratud socket proxy kaudu ning avalik leht näitab fakte, mitte juhtnuppe.',
         state: 'identiteet - piiratud docker',
         proofTitle: 'Privaatse halduse piir',
         run: 'Jälgi haldusrada',
@@ -292,7 +292,7 @@ const SCENES = [
       },
     },
     path: ['admin', 'access', 'socketProxy', 'runtimeOps'],
-    ghostPath: ['n8n', 'dockge', 'repoClean', 'operatorChannel'],
+    ghostPath: ['n8n', 'repoClean', 'operatorChannel'],
     nodes: [
       node('admin', 104, 348, 'ADM', {
         en: ['Admin', 'Private operator', 'Admin work starts from an authenticated human, not a public dashboard.', ['No public admin', 'Private session']],
@@ -303,22 +303,18 @@ const SCENES = [
         et: ['Cloudflare Access', 'Identiteedikontroll', 'Tundlikud tööriistad nõuavad identiteeti enne homelabini jõudmist.', ['Email OTP', 'Kaitstud hostid']],
       }),
       node('socketProxy', 603, 332, 'SOX', {
-        en: ['Socket proxy', 'Scoped Docker', 'Dockge, autoheal and Alloy use proxy endpoints instead of the raw Docker socket.', ['Limited API', 'Reduced blast radius']],
-        et: ['Socket proxy', 'Piiratud Docker', 'Dockge, autoheal ja Alloy kasutavad proxy endpoint’e, mitte otse Docker socketit.', ['Kitsas API', 'Väiksem mõjuulatus']],
+        en: ['Socket proxy', 'Scoped Docker', 'Autoheal and Alloy use proxy endpoints instead of the raw Docker socket.', ['Limited API', 'Reduced blast radius']],
+        et: ['Socket proxy', 'Piiratud Docker', 'Autoheal ja Alloy kasutavad proxy endpoint’e, mitte otse Docker socketit.', ['Kitsas API', 'Väiksem mõjuulatus']],
       }, 'core'),
       node('runtimeOps', 900, 210, 'VM', {
-        en: ['Docker VM', 'Operations target', 'Admin tools reach the runtime from behind Access or from the LAN, and the three proxy clients get a scoped Docker API.', ['Compose stacks', 'No public controls']],
-        et: ['Docker VM', 'Haldussiht', 'Adminitööriistad jõuavad runtime’i Accessi tagant või kohtvõrgust ning kolm proxy klienti saavad piiratud Docker API.', ['Compose stackid', 'Avalikku juhtpinda pole']],
+        en: ['Docker VM', 'Operations target', 'Admin tools reach the runtime from behind Access or from the LAN, and the two proxy clients get a scoped Docker API.', ['Compose stacks', 'No public controls']],
+        et: ['Docker VM', 'Haldussiht', 'Adminitööriistad jõuavad runtime’i Accessi tagant või kohtvõrgust ning kaks proxy klienti saavad piiratud Docker API.', ['Compose stackid', 'Avalikku juhtpinda pole']],
       }),
       node('n8n', 230, 520, 'n8n', {
         en: ['n8n', 'Operations automation', 'Internal reports and workflows can run without publishing raw operational data.', ['Weekly report', 'Protected workflow']],
         et: ['n8n', 'Haldusautomaatika', 'Sisemised raportid ja workflow’d saavad joosta ilma halduse toorandmeid avaldamata.', ['Nädalaraport', 'Kaitstud workflow']],
       }, 'quiet'),
-      node('dockge', 420, 520, 'DG', {
-        en: ['Dockge', 'Stack UI', 'Manual stack management is reachable only from the LAN, not through the tunnel.', ['LAN only', 'Docker via proxy']],
-        et: ['Dockge', 'Stack UI', 'Stackide käsihaldus on kättesaadav ainult kohtvõrgust, mitte tunneli kaudu.', ['Ainult LAN', 'Docker proxy kaudu']],
-      }, 'quiet'),
-      node('repoClean', 620, 520, 'ENV', {
+      node('repoClean', 525, 520, 'ENV', {
         en: ['Clean metadata', 'No secrets', 'The public atlas is generated from sanitized facts.', ['No .env values', 'No tokens']],
         et: ['Puhas metadata', 'Ilma saladusteta', 'Avalik atlas tekib puhastatud faktidest.', ['.env väärtusi pole', 'Tokeneid pole']],
       }, 'quiet'),
@@ -328,8 +324,8 @@ const SCENES = [
       }, 'quiet'),
     ],
     logs: {
-      en: ['Admin opens a protected hostname', 'Cloudflare Access checks identity', 'Dockge answers only on the LAN', 'Dockge, autoheal and Alloy reach Docker through socket proxies', 'Public atlas exposes facts, not controls'],
-      et: ['Admin avab kaitstud hosti', 'Cloudflare Access kontrollib identiteeti', 'Dockge vastab ainult kohtvõrgus', 'Dockge, autoheal ja Alloy jõuavad Dockerini socket proxy kaudu', 'Avalik atlas näitab fakte, mitte juhtnuppe'],
+      en: ['Admin opens a protected hostname', 'Cloudflare Access checks identity', 'LAN-only admin tools stay off the tunnel', 'Autoheal and Alloy reach Docker through socket proxies', 'Public atlas exposes facts, not controls'],
+      et: ['Admin avab kaitstud hosti', 'Cloudflare Access kontrollib identiteeti', 'Kohtvõrgu haldustööriistad jäävad tunnelist välja', 'Autoheal ja Alloy jõuavad Dockerini socket proxy kaudu', 'Avalik atlas näitab fakte, mitte juhtnuppe'],
     },
   },
   {
@@ -635,7 +631,7 @@ function metricItems() {
   if (activeSceneId === 'trust') {
     return [
       ['4', labels.trustAccessApps],
-      ['3', labels.trustProxyClients],
+      ['2', labels.trustProxyClients],
       ['0', labels.trustControlSurfaces],
     ];
   }

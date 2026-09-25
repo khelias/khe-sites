@@ -1,14 +1,14 @@
 {
-  "generatedAt": "2026-09-25T20:37:09.922Z",
+  "generatedAt": "2026-09-25T20:54:34.056Z",
   "source": {
     "repo": "khe-homelab",
-    "composeFiles": 26,
-    "composeServiceDefinitions": 41
+    "composeFiles": 25,
+    "composeServiceDefinitions": 39
   },
   "metrics": {
     "routerPorts": 0,
-    "services": 26,
-    "containers": 41,
+    "services": 25,
+    "containers": 39,
     "recoveryLayers": 5
   },
   "categories": {
@@ -26,7 +26,6 @@
       "adguard",
       "autoheal",
       "cloudflare-tunnel",
-      "dockge",
       "homepage",
       "nginx-proxy-manager",
       "uptime-kuma",
