@@ -32,31 +32,61 @@
 
 <main>
   <h1 data-i18n="heading">Privacy</h1>
-  <p class="updated" data-i18n="updated">Last updated: 2026-04-26</p>
+  <p class="updated" data-i18n="updated">Last updated: 2026-09-29</p>
 
-  <p data-i18n="intro">This site (khe.ee) is a personal page. If you allow analytics, it uses Cloudflare Web Analytics for aggregate page-view and performance statistics. It does not use advertising, profiling, analytics cookies, or cross-site tracking.</p>
+  <p data-i18n="intro">This notice explains what personal data khe.ee handles, why, and what your rights are. khe.ee is a personal page. It has no advertising and no user accounts, and it does no profiling or cross-site tracking.</p>
+
+  <h2 data-i18n="controllerHeading">Controller and contact</h2>
+  <p data-i18n-html="controllerBody">The controller is Kaido Henrik Elias, who runs khe.ee as a private person. For questions about your data or to use your rights, write to <a href="mailto:kaidoelias@gmail.com">kaidoelias@gmail.com</a>.</p>
 
   <h2 data-i18n="analyticsHeading">Analytics</h2>
-  <p data-i18n-html="analyticsBody">If you allow analytics, Cloudflare Web Analytics collects aggregate usage and performance metrics such as visits, page views, top paths, referrers, countries, browser/device types, and page load timing. It is not used for advertising. Your choice is stored in this browser's <code>localStorage</code> under <code>khe.analyticsConsent.v1</code>.</p>
+  <p data-i18n="analyticsBody">If you allow analytics, Cloudflare Web Analytics collects aggregate usage and performance metrics such as visits, page views, top paths, referrers, countries, browser and device types, and page load timing. It sets no cookies and is not used for advertising. You can withdraw your consent at any time with the button below; withdrawing does not affect measurement made before then.</p>
   <button type="button" class="privacy-action" data-analytics-preferences data-i18n="analyticsButton">Analytics choices</button>
 
-  <h2 data-i18n="cookiesHeading">Cookies</h2>
-  <p data-i18n-html="cookiesBody">The only cookie set on this domain is Cloudflare's bot management cookie <code>_cf_bm</code>, issued automatically by the CDN to tell humans from automated traffic. It is considered strictly necessary under EU ePrivacy rules and expires within 30 minutes. No consent banner is required for this kind of cookie.</p>
+  <h2 data-i18n="cookiesHeading">Cookies and bot protection</h2>
+  <p data-i18n-html="cookiesBody">These public pages (the home page, the Lab Atlas and this notice) set no cookies themselves. Public traffic passes through Cloudflare, whose bot protection, including JavaScript Detections, checks requests to tell people from automated traffic. For this, Cloudflare may set the <code>__cf_bm</code> cookie, which expires after about 30 minutes. Such a security cookie is strictly necessary and needs no consent.</p>
 
-  <h2 data-i18n="requestsHeading">Third-party requests</h2>
-  <p data-i18n="requestsBody">Fonts and the analytics consent script are served from this server. If analytics is allowed, the Cloudflare Web Analytics beacon loads from static.cloudflareinsights.com and sends measurement data to Cloudflare.</p>
-
-  <h2 data-i18n="hostingHeading">Hosting and network</h2>
+  <h2 data-i18n="storageHeading">Browser storage</h2>
   <ul>
-    <li data-i18n="hostingServer">Hosted on a private server in Estonia.</li>
-    <li data-i18n="hostingCloudflare">Public access goes through Cloudflare's edge network (DNS, tunnel, TLS termination). Cloudflare can see request metadata such as IP address, URL, and user agent, and operates as the TLS endpoint for the public route.</li>
+    <li data-i18n-html="storageLocale"><code>app_locale</code> keeps your language choice, so the site opens in the language you picked.</li>
+    <li data-i18n-html="storageConsent"><code>khe.analyticsConsent.v1</code> keeps your analytics choice.</li>
+    <li data-i18n-html="storageLocal">Both stay in your browser's <code>localStorage</code> until you clear it. The site does not receive them.</li>
   </ul>
 
-  <h2 data-i18n="servicesHeading">Other services on this domain</h2>
-  <p data-i18n="servicesBody">Subdomains (cloud.khe.ee, photos.khe.ee, vault.khe.ee, etc.) host self-hosted applications used by the site owner and immediate family. They are not open to public registration. Each application has its own data handling.</p>
+  <h2 data-i18n="requestsHeading">Third-party requests</h2>
+  <p data-i18n="requestsBody">Fonts and scripts are served from this server. If analytics is allowed, the Cloudflare Web Analytics beacon loads from static.cloudflareinsights.com and sends measurement data to Cloudflare.</p>
 
-  <h2 data-i18n="contactHeading">Contact</h2>
-  <p data-i18n-html="contactBody">For questions: <a href="https://github.com/khelias" target="_blank" rel="noopener">github.com/khelias</a>.</p>
+  <h2 data-i18n="hostingHeading">Hosting, recipients and transfers</h2>
+  <ul>
+    <li data-i18n="hostingServer">The site runs on a private server in Estonia.</li>
+    <li data-i18n="hostingCloudflare">Public access goes through Cloudflare, Inc. (DNS, tunnel, TLS endpoint, bot protection and, with your consent, analytics). Cloudflare sees request data such as IP address, URL and browser user agent. Cloudflare is based in the United States; the transfer relies on its certification under the EU-U.S. Data Privacy Framework.</li>
+    <li data-i18n="hostingLogs">The server's access and error logs record requests, such as the time, requested address, response status and browser details, and may include the IP address. They are kept centrally for 30 days and then deleted.</li>
+  </ul>
+
+  <h2 data-i18n="sharesHeading">Trip pages and other services</h2>
+  <p data-i18n-html="sharesBody">Pages under <code>khe.ee/r/</code> are private trip pages, shared only by direct link and hidden from search engines. Their maps may load tiles from an external map service (OpenFreeMap), which then sees your IP address.</p>
+  <p data-i18n="servicesBody">Other khe.ee subdomains host private self-hosted applications for the site owner and family. They are not open to public registration, and this notice does not cover them.</p>
+
+  <h2 data-i18n="basisHeading">Legal bases</h2>
+  <ul>
+    <li data-i18n="basisAnalytics">Analytics: your consent (GDPR Art. 6(1)(a)).</li>
+    <li data-i18n="basisHosting">Hosting, Cloudflare's security features and server logs: legitimate interest in running the site securely and keeping it available (GDPR Art. 6(1)(f)).</li>
+  </ul>
+
+  <h2 data-i18n="retentionHeading">How long data is kept</h2>
+  <ul>
+    <li data-i18n-html="retentionCookie"><code>__cf_bm</code> cookie: about 30 minutes.</li>
+    <li data-i18n="retentionLogs">Server logs: 30 days.</li>
+    <li data-i18n-html="retentionStorage">Browser storage (<code>app_locale</code>, <code>khe.analyticsConsent.v1</code>): until you clear it.</li>
+    <li data-i18n="retentionAnalytics">Analytics: the site owner sees only aggregate statistics in Cloudflare.</li>
+  </ul>
+
+  <h2 data-i18n="automatedHeading">Automated decisions</h2>
+  <p data-i18n="automatedBody">There is no automated decision-making or profiling.</p>
+
+  <h2 data-i18n="rightsHeading">Your rights</h2>
+  <p data-i18n="rightsBody">You have the right to access your personal data, to have it rectified or erased, to restrict its processing, and to object to processing based on legitimate interest. You can withdraw your analytics consent at any time with the Analytics choices button. To use these rights, write to the contact address above.</p>
+  <p data-i18n-html="complaintBody">You also have the right to lodge a complaint with the Estonian Data Protection Inspectorate (Andmekaitse Inspektsioon, <a href="https://www.aki.ee" target="_blank" rel="noopener">aki.ee</a>).</p>
 </main>
 
 <footer class="site-footer" data-site-footer></footer>
@@ -75,22 +105,41 @@
       siteTitle: 'Privaatsus',
       languageLabel: 'Keel',
       heading: 'Privaatsus',
-      updated: 'Uuendatud: 2026-04-26',
-      intro: 'khe.ee on isiklik avaleht. Kui lubad analüütika, kasutab leht Cloudflare Web Analyticsit koondatud lehevaatamiste ja jõudluse statistika jaoks. See ei kasuta reklaame, profileerimist, analüütikaküpsiseid ega saitideülest jälitamist.',
+      updated: 'Uuendatud: 2026-09-29',
+      intro: 'Siin on kirjas, milliseid isikuandmeid khe.ee töötleb, miks ja millised õigused sul on. khe.ee on isiklik avaleht. Sellel ei ole reklaame ega kasutajakontosid ning see ei profileeri sind ega jälgi sind teistel saitidel.',
+      controllerHeading: 'Vastutav töötleja ja kontakt',
+      controllerBody: 'Vastutav töötleja on Kaido Henrik Elias, kes peab saiti khe.ee eraisikuna. Andmeid puudutavate küsimuste ja oma õiguste kasutamiseks kirjuta aadressil <a href="mailto:kaidoelias@gmail.com">kaidoelias@gmail.com</a>.',
       analyticsHeading: 'Analüütika',
-      analyticsBody: 'Kui lubad analüütika, kogub Cloudflare Web Analytics koondatud kasutus- ja jõudlusstatistikat, näiteks külastusi, lehevaatamisi, populaarseid aadresse, viitajaid, riike, brauseri/seadme tüüpe ja lehe laadimisaega. Seda ei kasutata reklaamimiseks. Sinu valik salvestatakse selles brauseris <code>localStorage</code> väljal <code>khe.analyticsConsent.v1</code>.',
+      analyticsBody: 'Kui lubad analüütika, kogub Cloudflare Web Analytics koondatud kasutus- ja jõudlusstatistikat, näiteks külastusi, lehevaatamisi, populaarseid aadresse, viitajaid, riike, brauseri- ja seadmetüüpe ning lehe laadimisaega. See ei sea küpsiseid ja seda ei kasutata reklaamiks. Nõusoleku saad igal ajal alloleva nupuga tagasi võtta; see ei mõjuta varem tehtud mõõtmist.',
       analyticsButton: 'Analüütika valikud',
-      cookiesHeading: 'Küpsised',
-      cookiesBody: 'Selle domeeni ainus küpsis on Cloudflare\'i botihalduse küpsis <code>_cf_bm</code>, mille CDN väljastab automaatselt inimeste ja automaatse liikluse eristamiseks. ELi ePrivacy reeglite järgi on see rangelt vajalik küpsis, aegub umbes 30 minuti jooksul ega vaja nõusolekubännerit.',
+      cookiesHeading: 'Küpsised ja botikaitse',
+      cookiesBody: 'Need avalikud lehed (avaleht, Lab Atlas ja see teade) ise küpsiseid ei sea. Avalik liiklus käib läbi Cloudflare\'i, mille botikaitse, sealhulgas JavaScript Detections, kontrollib päringuid, et eristada inimesi automaatsest liiklusest. Selleks võib Cloudflare seada küpsise <code>__cf_bm</code>, mis aegub umbes 30 minuti pärast. Selline turvaküpsis on rangelt vajalik ega nõua nõusolekut.',
+      storageHeading: 'Brauseri salvestus',
+      storageLocale: '<code>app_locale</code> hoiab sinu keelevalikut, et sait avaneks sinu valitud keeles.',
+      storageConsent: '<code>khe.analyticsConsent.v1</code> hoiab sinu analüütikavalikut.',
+      storageLocal: 'Mõlemad väärtused jäävad sinu brauseri kohalikku salvestusruumi (<code>localStorage</code>), kuni sa need kustutad. Sait neid ei saa.',
       requestsHeading: 'Kolmanda osapoole päringud',
-      requestsBody: 'Fondid ja analüütika nõusoleku skript tulevad samast serverist. Kui analüütika on lubatud, laaditakse Cloudflare Web Analyticsi beacon aadressilt static.cloudflareinsights.com ja mõõteandmed saadetakse Cloudflare\'i.',
-      hostingHeading: 'Majutus ja võrk',
-      hostingServer: 'Majutatud eraserveris Eestis.',
-      hostingCloudflare: 'Avalik ligipääs käib Cloudflare\'i võrgu kaudu (DNS, tunnel, TLS). Cloudflare näeb päringu metaandmeid, näiteks IP-aadressi, URL-i ja user agentit, ning on avaliku marsruudi TLS-lõpp-punkt.',
-      servicesHeading: 'Teised teenused sellel domeenil',
-      servicesBody: 'Alamdomeenid (cloud.khe.ee, photos.khe.ee, vault.khe.ee jne) majutavad saidi omaniku ja lähima pere kasutuses olevaid self-hosted rakendusi. Need ei ole avalikuks registreerimiseks avatud. Igal rakendusel on oma andmekäitlus.',
-      contactHeading: 'Kontakt',
-      contactBody: 'Küsimused: <a href="https://github.com/khelias" target="_blank" rel="noopener">github.com/khelias</a>.',
+      requestsBody: 'Fondid ja skriptid tulevad samast serverist. Kui analüütika on lubatud, laaditakse Cloudflare Web Analyticsi beacon aadressilt static.cloudflareinsights.com ja mõõteandmed saadetakse Cloudflare\'ile.',
+      hostingHeading: 'Majutus, vastuvõtjad ja edastamine',
+      hostingServer: 'Sait töötab eraserveris Eestis.',
+      hostingCloudflare: 'Avalik ligipääs käib läbi ettevõtte Cloudflare, Inc. teenuste (DNS, tunnel, TLS-ühenduse lõpp-punkt, botikaitse ja sinu nõusolekul analüütika). Cloudflare näeb päringu andmeid, näiteks IP-aadressi, URL-i ja brauseri tunnust (user agent). Cloudflare asub Ameerika Ühendriikides; andmete edastamine sinna põhineb Cloudflare\'i sertifitseeringul ELi-USA andmekaitseraamistikus (EU-U.S. Data Privacy Framework).',
+      hostingLogs: 'Serveri juurdepääsu- ja vealogid talletavad päringute andmeid, näiteks aega, küsitud aadressi, vastuse olekut ja brauseri andmeid, ning võivad sisaldada IP-aadressi. Neid hoitakse keskselt 30 päeva, seejärel need kustutatakse.',
+      sharesHeading: 'Reisilehed ja muud teenused',
+      sharesBody: 'Aadressi <code>khe.ee/r/</code> all on privaatsed reisilehed, mida jagatakse ainult otselingiga ja mis on otsingumootorite eest peidetud. Nende kaardid võivad laadida kaardipilte välisest kaarditeenusest (OpenFreeMap), mis näeb siis sinu IP-aadressi.',
+      servicesBody: 'Teistel khe.ee alamdomeenidel on saidi omaniku ja tema pere privaatsed rakendused. Need ei ole avalikuks registreerimiseks avatud ja see teade neid ei hõlma.',
+      basisHeading: 'Õiguslikud alused',
+      basisAnalytics: 'Analüütika: sinu nõusolek (isikuandmete kaitse üldmääruse ehk IKÜM art 6 lg 1 punkt a).',
+      basisHosting: 'Majutus, Cloudflare\'i turvafunktsioonid ja serveri logid: õigustatud huvi hoida sait turvaline ja kättesaadav (IKÜM art 6 lg 1 punkt f).',
+      retentionHeading: 'Kui kaua andmeid hoitakse',
+      retentionCookie: 'Küpsis <code>__cf_bm</code>: umbes 30 minutit.',
+      retentionLogs: 'Serveri logid: 30 päeva.',
+      retentionStorage: 'Brauseri salvestus (<code>app_locale</code>, <code>khe.analyticsConsent.v1</code>): kuni sa selle kustutad.',
+      retentionAnalytics: 'Analüütika: saidi omanik näeb Cloudflare\'is ainult koondstatistikat.',
+      automatedHeading: 'Automatiseeritud otsused',
+      automatedBody: 'Automatiseeritud otsuseid ega profileerimist ei tehta.',
+      rightsHeading: 'Sinu õigused',
+      rightsBody: 'Sul on õigus tutvuda oma isikuandmetega, nõuda nende parandamist, kustutamist või töötlemise piiramist ning esitada vastuväide õigustatud huvi alusel toimuva töötlemise suhtes. Analüütika nõusoleku saad igal ajal tagasi võtta nupuga „Analüütika valikud“. Õiguste kasutamiseks kirjuta ülal toodud aadressil.',
+      complaintBody: 'Samuti on sul õigus esitada kaebus Andmekaitse Inspektsioonile (<a href="https://www.aki.ee" target="_blank" rel="noopener">aki.ee</a>).',
     },
     en: {
       title: 'Privacy - Kaido Henrik Elias',
@@ -101,22 +150,41 @@
       siteTitle: 'Privacy',
       languageLabel: 'Language',
       heading: 'Privacy',
-      updated: 'Last updated: 2026-04-26',
-      intro: 'This site (khe.ee) is a personal page. If you allow analytics, it uses Cloudflare Web Analytics for aggregate page-view and performance statistics. It does not use advertising, profiling, analytics cookies, or cross-site tracking.',
+      updated: 'Last updated: 2026-09-29',
+      intro: 'This notice explains what personal data khe.ee handles, why, and what your rights are. khe.ee is a personal page. It has no advertising and no user accounts, and it does no profiling or cross-site tracking.',
+      controllerHeading: 'Controller and contact',
+      controllerBody: 'The controller is Kaido Henrik Elias, who runs khe.ee as a private person. For questions about your data or to use your rights, write to <a href="mailto:kaidoelias@gmail.com">kaidoelias@gmail.com</a>.',
       analyticsHeading: 'Analytics',
-      analyticsBody: 'If you allow analytics, Cloudflare Web Analytics collects aggregate usage and performance metrics such as visits, page views, top paths, referrers, countries, browser/device types, and page load timing. It is not used for advertising. Your choice is stored in this browser\'s <code>localStorage</code> under <code>khe.analyticsConsent.v1</code>.',
+      analyticsBody: 'If you allow analytics, Cloudflare Web Analytics collects aggregate usage and performance metrics such as visits, page views, top paths, referrers, countries, browser and device types, and page load timing. It sets no cookies and is not used for advertising. You can withdraw your consent at any time with the button below; withdrawing does not affect measurement made before then.',
       analyticsButton: 'Analytics choices',
-      cookiesHeading: 'Cookies',
-      cookiesBody: 'The only cookie set on this domain is Cloudflare\'s bot management cookie <code>_cf_bm</code>, issued automatically by the CDN to tell humans from automated traffic. It is considered strictly necessary under EU ePrivacy rules and expires within 30 minutes. No consent banner is required for this kind of cookie.',
+      cookiesHeading: 'Cookies and bot protection',
+      cookiesBody: 'These public pages (the home page, the Lab Atlas and this notice) set no cookies themselves. Public traffic passes through Cloudflare, whose bot protection, including JavaScript Detections, checks requests to tell people from automated traffic. For this, Cloudflare may set the <code>__cf_bm</code> cookie, which expires after about 30 minutes. Such a security cookie is strictly necessary and needs no consent.',
+      storageHeading: 'Browser storage',
+      storageLocale: '<code>app_locale</code> keeps your language choice, so the site opens in the language you picked.',
+      storageConsent: '<code>khe.analyticsConsent.v1</code> keeps your analytics choice.',
+      storageLocal: 'Both stay in your browser\'s <code>localStorage</code> until you clear it. The site does not receive them.',
       requestsHeading: 'Third-party requests',
-      requestsBody: 'Fonts and the analytics consent script are served from this server. If analytics is allowed, the Cloudflare Web Analytics beacon loads from static.cloudflareinsights.com and sends measurement data to Cloudflare.',
-      hostingHeading: 'Hosting and network',
-      hostingServer: 'Hosted on a private server in Estonia.',
-      hostingCloudflare: 'Public access goes through Cloudflare\'s edge network (DNS, tunnel, TLS termination). Cloudflare can see request metadata such as IP address, URL, and user agent, and operates as the TLS endpoint for the public route.',
-      servicesHeading: 'Other services on this domain',
-      servicesBody: 'Subdomains (cloud.khe.ee, photos.khe.ee, vault.khe.ee, etc.) host self-hosted applications used by the site owner and immediate family. They are not open to public registration. Each application has its own data handling.',
-      contactHeading: 'Contact',
-      contactBody: 'For questions: <a href="https://github.com/khelias" target="_blank" rel="noopener">github.com/khelias</a>.',
+      requestsBody: 'Fonts and scripts are served from this server. If analytics is allowed, the Cloudflare Web Analytics beacon loads from static.cloudflareinsights.com and sends measurement data to Cloudflare.',
+      hostingHeading: 'Hosting, recipients and transfers',
+      hostingServer: 'The site runs on a private server in Estonia.',
+      hostingCloudflare: 'Public access goes through Cloudflare, Inc. (DNS, tunnel, TLS endpoint, bot protection and, with your consent, analytics). Cloudflare sees request data such as IP address, URL and browser user agent. Cloudflare is based in the United States; the transfer relies on its certification under the EU-U.S. Data Privacy Framework.',
+      hostingLogs: 'The server\'s access and error logs record requests, such as the time, requested address, response status and browser details, and may include the IP address. They are kept centrally for 30 days and then deleted.',
+      sharesHeading: 'Trip pages and other services',
+      sharesBody: 'Pages under <code>khe.ee/r/</code> are private trip pages, shared only by direct link and hidden from search engines. Their maps may load tiles from an external map service (OpenFreeMap), which then sees your IP address.',
+      servicesBody: 'Other khe.ee subdomains host private self-hosted applications for the site owner and family. They are not open to public registration, and this notice does not cover them.',
+      basisHeading: 'Legal bases',
+      basisAnalytics: 'Analytics: your consent (GDPR Art. 6(1)(a)).',
+      basisHosting: 'Hosting, Cloudflare\'s security features and server logs: legitimate interest in running the site securely and keeping it available (GDPR Art. 6(1)(f)).',
+      retentionHeading: 'How long data is kept',
+      retentionCookie: '<code>__cf_bm</code> cookie: about 30 minutes.',
+      retentionLogs: 'Server logs: 30 days.',
+      retentionStorage: 'Browser storage (<code>app_locale</code>, <code>khe.analyticsConsent.v1</code>): until you clear it.',
+      retentionAnalytics: 'Analytics: the site owner sees only aggregate statistics in Cloudflare.',
+      automatedHeading: 'Automated decisions',
+      automatedBody: 'There is no automated decision-making or profiling.',
+      rightsHeading: 'Your rights',
+      rightsBody: 'You have the right to access your personal data, to have it rectified or erased, to restrict its processing, and to object to processing based on legitimate interest. You can withdraw your analytics consent at any time with the Analytics choices button. To use these rights, write to the contact address above.',
+      complaintBody: 'You also have the right to lodge a complaint with the Estonian Data Protection Inspectorate (Andmekaitse Inspektsioon, <a href="https://www.aki.ee" target="_blank" rel="noopener">aki.ee</a>).',
     },
   };
 

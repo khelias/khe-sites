@@ -50,42 +50,70 @@
 
 <main>
   <h1 data-i18n="heading">Privacy</h1>
-  <p class="updated" data-i18n="updated">Last updated: 2026-04-26</p>
+  <p class="updated" data-i18n="updated">Last updated: 2026-09-29</p>
 
-  <p data-i18n="intro">games.khe.ee is a public personal home-server page. It has no advertising, no user accounts, and no tracking for advertising or profiling.</p>
+  <p data-i18n="intro">This notice explains what personal data games.khe.ee handles, why, and what your rights are. The site has no advertising and no user accounts, and it does no profiling or tracking for advertising.</p>
+
+  <h2 data-i18n="controllerHeading">Controller and contact</h2>
+  <p data-i18n-html="controllerBody">The controller is Kaido Henrik Elias, who runs games.khe.ee as a private person. For questions about your data or to use your rights, write to <a href="mailto:kaidoelias@gmail.com">kaidoelias@gmail.com</a>.</p>
 
   <h2 data-i18n="analyticsHeading">Analytics</h2>
-  <p data-i18n-html="analyticsBody">If you allow analytics, Cloudflare Web Analytics collects aggregate usage and performance metrics such as visits, page views, top paths, referrers, countries, browser/device types, and page load timing. It is not used for advertising. Your choice is stored in this browser's <code>localStorage</code> under <code>khe.analyticsConsent.v1</code>.</p>
+  <p data-i18n="analyticsBody">If you allow analytics, Cloudflare Web Analytics collects aggregate usage and performance metrics such as visits, page views, top paths, referrers, countries, browser and device types, and page load timing. It sets no cookies and is not used for advertising. You can withdraw your consent at any time with the button below; withdrawing does not affect measurement made before then.</p>
   <button type="button" class="privacy-action" data-analytics-preferences data-i18n="analyticsButton">Analytics choices</button>
 
-  <h2 data-i18n="cookiesHeading">Cookies</h2>
-  <p data-i18n-html="cookiesBody">The page itself sets no cookies. Cloudflare's CDN may set its bot management cookie <code>_cf_bm</code>, with a lifetime of about 30 minutes. It is considered strictly necessary under EU ePrivacy rules and requires no consent banner.</p>
+  <h2 data-i18n="cookiesHeading">Cookies and bot protection</h2>
+  <p data-i18n-html="cookiesBody">The games pages set no cookies themselves. Public traffic passes through Cloudflare, whose bot protection, including JavaScript Detections, checks requests to tell people from automated traffic. For this, Cloudflare may set the <code>__cf_bm</code> cookie, which expires after about 30 minutes. Such a security cookie is strictly necessary and needs no consent.</p>
 
-  <h2 data-i18n="storageHeading">Browser local storage</h2>
+  <h2 data-i18n="storageHeading">Browser storage</h2>
   <ul>
-    <li data-i18n-html="storageLocale">The language preference is stored in browser <code>localStorage</code> under <code>app_locale</code>, so the selected language can carry between khe.ee, the launcher, and the games.</li>
-    <li data-i18n-html="storageStudy"><strong>Smart Games (/study/)</strong> stores game state, such as level progress, in browser <code>localStorage</code>. The server never sees it.</li>
-    <li data-i18n-html="storageAdventure"><strong>AI Adventure (/adventure/)</strong> stores game state in browser <code>localStorage</code>.</li>
+    <li data-i18n-html="storageLocale">The language choice is stored under <code>app_locale</code>, so it carries between the launcher and the games.</li>
+    <li data-i18n-html="storageConsent">The analytics choice is stored under <code>khe.analyticsConsent.v1</code>.</li>
+    <li data-i18n-html="storageStudy"><strong>Smart Games (/study/)</strong> stores game state, such as level progress, in the browser. The server never receives it.</li>
+    <li data-i18n-html="storageAdventure"><strong>AI Adventure (/adventure/)</strong> stores game settings and state in the browser.</li>
+    <li data-i18n-html="storageLocal">All of it stays in your browser's <code>localStorage</code> until you clear it.</li>
   </ul>
 
   <h2 data-i18n="adventureHeading">AI Adventure</h2>
-  <p data-i18n="adventureBody">AI Adventure sends player-entered text and selected game settings through a server-side proxy to an AI provider to generate the next part of the story.</p>
-  <p data-i18n-html="providersBody">The providers used may be <strong>US-based</strong> and process request content under their own terms:</p>
+  <p data-i18n="adventureAge">AI Adventure is for adults only (18+).</p>
+  <p data-i18n="adventureBody">To write the story, AI Adventure sends what the players enter through this site's server to an AI provider: the group description with any names in it, the place, the detail, the choices and free text of each turn, and your own premise if you write one, together with the game settings.</p>
+  <p data-i18n="providersBody">The text goes to one of these providers:</p>
   <ul>
-    <li data-i18n-html="anthropicLink">Anthropic - <a href="https://www.anthropic.com/legal/privacy" target="_blank" rel="noopener">privacy policy</a></li>
-    <li data-i18n-html="geminiLink">Google Gemini - <a href="https://ai.google.dev/gemini-api/terms" target="_blank" rel="noopener">terms</a></li>
+    <li data-i18n-html="geminiProvider"><strong>Google</strong> (Gemini API, the default). Because the game is run from the EEA, the <a href="https://ai.google.dev/gemini-api/terms" target="_blank" rel="noopener">Gemini API terms</a> apply their paid-service data terms: Google does not use prompts and responses to improve its products, and logs them for a limited period only to detect abuse. Data may be processed in the United States and other countries; Google's <a href="https://business.safety.google/processorterms/" target="_blank" rel="noopener">data processing addendum</a> relies on the EU-U.S. Data Privacy Framework and Standard Contractual Clauses.</li>
+    <li data-i18n-html="anthropicProvider"><strong>Anthropic</strong> (Claude, used only if chosen in the game settings). Under its <a href="https://www.anthropic.com/legal/commercial-terms" target="_blank" rel="noopener">commercial terms</a>, Anthropic does not train models on API content. Anthropic is based in the United States; its <a href="https://www.anthropic.com/legal/data-processing-addendum" target="_blank" rel="noopener">data processing addendum</a> relies on Standard Contractual Clauses.</li>
   </ul>
-  <p data-i18n-html="advice"><strong>Advice:</strong> do not enter real names, addresses, national ID numbers, or other personal data you would not want to send to a third party.</p>
+  <p data-i18n="proxyBody">The server does not log what players enter. Its error logs may contain short fragments of the AI's response. To limit usage, it keeps request and token counters per IP address in memory for up to 24 hours.</p>
+  <p data-i18n-html="advice"><strong>Tip:</strong> entering names or other personal details is not required, and the game works with made-up names too. Enter only what everyone at the table is fine sending to the AI provider.</p>
 
-  <h2 data-i18n="hostingHeading">Hosting and network</h2>
+  <h2 data-i18n="hostingHeading">Hosting, recipients and transfers</h2>
   <ul>
-    <li data-i18n="hostingServer">The server runs on a home LAN in Estonia.</li>
-    <li data-i18n="hostingCloudflare">Public access goes through Cloudflare (DNS, tunnel, TLS). Cloudflare can see request metadata such as IP address, URL, and user agent, and acts as the TLS endpoint.</li>
-    <li data-i18n="hostingFonts">Launcher fonts are served from this server. Some game apps may load fonts from Google Fonts.</li>
+    <li data-i18n="hostingServer">The site runs on a home server in Estonia. Fonts and scripts are served from it.</li>
+    <li data-i18n="hostingCloudflare">Public access goes through Cloudflare, Inc. (DNS, tunnel, TLS endpoint, bot protection and, with your consent, analytics). Cloudflare sees request data such as IP address, URL and browser user agent. Cloudflare is based in the United States; the transfer relies on its certification under the EU-U.S. Data Privacy Framework.</li>
+    <li data-i18n="hostingLogs">The server's access and error logs record requests, such as the time, requested address, response status and browser details, and may include the IP address. They are kept centrally for 30 days and then deleted.</li>
   </ul>
 
-  <h2 data-i18n="contactHeading">Contact</h2>
-  <p data-i18n-html="contactBody">Questions: <a href="https://github.com/khelias" target="_blank" rel="noopener">github.com/khelias</a>.</p>
+  <h2 data-i18n="basisHeading">Legal bases</h2>
+  <ul>
+    <li data-i18n="basisAnalytics">Analytics: your consent (GDPR Art. 6(1)(a)).</li>
+    <li data-i18n="basisHosting">Hosting, Cloudflare's security features, server logs and usage limits: legitimate interest in running the site securely, keeping it available and preventing abuse (GDPR Art. 6(1)(f)).</li>
+    <li data-i18n="basisAdventure">AI Adventure: legitimate interest in providing the game that the players start (GDPR Art. 6(1)(f)). Text is sent only when you start or continue a story.</li>
+  </ul>
+
+  <h2 data-i18n="retentionHeading">How long data is kept</h2>
+  <ul>
+    <li data-i18n-html="retentionCookie"><code>__cf_bm</code> cookie: about 30 minutes.</li>
+    <li data-i18n="retentionLogs">Server logs: 30 days.</li>
+    <li data-i18n="retentionCounters">Usage counters: up to 24 hours, in memory only.</li>
+    <li data-i18n="retentionProviders">AI providers: under their own terms linked above.</li>
+    <li data-i18n="retentionStorage">Browser storage: until you clear it.</li>
+    <li data-i18n="retentionAnalytics">Analytics: the site owner sees only aggregate statistics in Cloudflare.</li>
+  </ul>
+
+  <h2 data-i18n="automatedHeading">Automated decisions</h2>
+  <p data-i18n="automatedBody">There is no automated decision-making or profiling.</p>
+
+  <h2 data-i18n="rightsHeading">Your rights</h2>
+  <p data-i18n="rightsBody">You have the right to access your personal data, to have it rectified or erased, to restrict its processing, and to object to processing based on legitimate interest. You can withdraw your analytics consent at any time with the Analytics choices button. To use these rights, write to the contact address above.</p>
+  <p data-i18n-html="complaintBody">You also have the right to lodge a complaint with the Estonian Data Protection Inspectorate (Andmekaitse Inspektsioon, <a href="https://www.aki.ee" target="_blank" rel="noopener">aki.ee</a>).</p>
 </main>
 
 <footer class="site-footer" data-site-footer></footer>
@@ -104,29 +132,49 @@
       siteTitle: 'Privaatsus',
       languageLabel: 'Keel',
       heading: 'Privaatsus',
-      updated: 'Uuendatud: 2026-04-26',
-      intro: 'games.khe.ee on avalik isiklik leht, mida majutan koduserveris. Siin ei ole reklaame, kasutajakontosid ega reklaamiks või profileerimiseks mõeldud jälitamist.',
+      updated: 'Uuendatud: 2026-09-29',
+      intro: 'Siin on kirjas, milliseid isikuandmeid games.khe.ee töötleb, miks ja millised õigused sul on. Saidil ei ole reklaame ega kasutajakontosid ning see ei profileeri sind ega jälgi sind reklaami eesmärgil.',
+      controllerHeading: 'Vastutav töötleja ja kontakt',
+      controllerBody: 'Vastutav töötleja on Kaido Henrik Elias, kes peab saiti games.khe.ee eraisikuna. Andmeid puudutavate küsimuste ja oma õiguste kasutamiseks kirjuta aadressil <a href="mailto:kaidoelias@gmail.com">kaidoelias@gmail.com</a>.',
       analyticsHeading: 'Analüütika',
-      analyticsBody: 'Kui lubad analüütika, kogub Cloudflare Web Analytics koondatud kasutus- ja jõudlusstatistikat, näiteks külastusi, lehevaatamisi, populaarseid aadresse, viitajaid, riike, brauseri/seadme tüüpe ja lehe laadimisaega. Seda ei kasutata reklaamimiseks. Sinu valik salvestatakse selles brauseris <code>localStorage</code> väljal <code>khe.analyticsConsent.v1</code>.',
+      analyticsBody: 'Kui lubad analüütika, kogub Cloudflare Web Analytics koondatud kasutus- ja jõudlusstatistikat, näiteks külastusi, lehevaatamisi, populaarseid aadresse, viitajaid, riike, brauseri- ja seadmetüüpe ning lehe laadimisaega. See ei sea küpsiseid ja seda ei kasutata reklaamiks. Nõusoleku saad igal ajal alloleva nupuga tagasi võtta; see ei mõjuta varem tehtud mõõtmist.',
       analyticsButton: 'Analüütika valikud',
-      cookiesHeading: 'Küpsised',
-      cookiesBody: 'Leht ise küpsiseid ei sea. Cloudflare\'i CDN võib seada botihalduse küpsise <code>_cf_bm</code>, mille eluiga on umbes 30 minutit. ELi ePrivacy reeglite järgi on see rangelt vajalik küpsis ega vaja nõusolekubännerit.',
-      storageHeading: 'Brauseri kohalik salvestus',
-      storageLocale: 'Keele-eelistus salvestatakse brauseri <code>localStorage</code> väljal <code>app_locale</code>, et keel liiguks khe.ee, launcher\'i ja mängude vahel kaasa.',
-      storageStudy: '<strong>Smart Games (/study/)</strong> salvestab mänguseisu, näiteks taseme edenemise, brauseri <code>localStorage</code> sisse. Server seda ei näe.',
-      storageAdventure: '<strong>AI Seiklus (/adventure/)</strong> salvestab mänguseisu brauseri <code>localStorage</code> sisse.',
+      cookiesHeading: 'Küpsised ja botikaitse',
+      cookiesBody: 'Mängulehed ise küpsiseid ei sea. Avalik liiklus käib läbi Cloudflare\'i, mille botikaitse, sealhulgas JavaScript Detections, kontrollib päringuid, et eristada inimesi automaatsest liiklusest. Selleks võib Cloudflare seada küpsise <code>__cf_bm</code>, mis aegub umbes 30 minuti pärast. Selline turvaküpsis on rangelt vajalik ega nõua nõusolekut.',
+      storageHeading: 'Brauseri salvestus',
+      storageLocale: 'Keelevalik salvestatakse väljale <code>app_locale</code>, et see kanduks mängude avalehe ja mängude vahel üle.',
+      storageConsent: 'Analüütikavalik salvestatakse väljale <code>khe.analyticsConsent.v1</code>.',
+      storageStudy: '<strong>Tarkade Mängud (/study/)</strong> salvestavad mänguseisu, näiteks taseme edenemise, brauserisse. Server seda ei saa.',
+      storageAdventure: '<strong>AI Seiklus (/adventure/)</strong> salvestab mänguseaded ja mänguseisu brauserisse.',
+      storageLocal: 'Kõik see jääb sinu brauseri kohalikku salvestusruumi (<code>localStorage</code>), kuni sa selle kustutad.',
       adventureHeading: 'AI Seiklus',
-      adventureBody: 'AI Seiklus saadab mängijate sisestatud teksti ja valitud mänguseaded serveripoolse proxy kaudu AI teenusepakkujale, et luua järgmine loo osa.',
-      providersBody: 'Kasutatavad teenusepakkujad võivad olla <strong>USA-põhised</strong> ning töötlevad päringu sisu oma tingimuste järgi:',
-      anthropicLink: 'Anthropic - <a href="https://www.anthropic.com/legal/privacy" target="_blank" rel="noopener">privacy policy</a>',
-      geminiLink: 'Google Gemini - <a href="https://ai.google.dev/gemini-api/terms" target="_blank" rel="noopener">terms</a>',
-      advice: '<strong>Soovitus:</strong> ära sisesta päris nimesid, aadresse, isikukoode ega muud isikuinfot, mida sa ei taha kolmandale osapoolele saata.',
-      hostingHeading: 'Majutus ja võrk',
-      hostingServer: 'Server töötab Eesti koduvõrgus.',
-      hostingCloudflare: 'Avalik ligipääs käib Cloudflare\'i kaudu (DNS, tunnel, TLS). Cloudflare näeb päringu metaandmeid, näiteks IP-aadressi, URL-i ja user agentit, ning on avaliku marsruudi TLS-lõpp-punkt.',
-      hostingFonts: 'Launcheri fondid tulevad samast serverist. Mõned mängurakendused võivad laadida fonte Google Fontsist.',
-      contactHeading: 'Kontakt',
-      contactBody: 'Küsimused: <a href="https://github.com/khelias" target="_blank" rel="noopener">github.com/khelias</a>.',
+      adventureAge: 'AI Seiklus on mõeldud ainult täiskasvanutele (18+).',
+      adventureBody: 'Loo kirjutamiseks saadab AI Seiklus mängijate sisestatud teksti selle saidi serveri kaudu tehisintellekti teenusepakkujale. Saadetakse seltskonna kirjeldus koos selles olevate nimedega, koht, detail, iga käigu valikud ja vaba tekst, enda kirjutatud algus (kui see on olemas) ning mänguseaded.',
+      providersBody: 'Tekst läheb ühele neist teenusepakkujatest:',
+      geminiProvider: '<strong>Google</strong> (Gemini API, vaikimisi). Kuna mängu pakutakse Euroopa Majanduspiirkonnast, kehtivad <a href="https://ai.google.dev/gemini-api/terms" target="_blank" rel="noopener">Gemini API tingimuste</a> järgi tasulise teenuse andmetingimused: Google ei kasuta päringuid ega vastuseid oma toodete arendamiseks ning logib neid piiratud aja jooksul ainult kuritarvituste avastamiseks. Andmeid võidakse töödelda Ameerika Ühendriikides ja teistes riikides; Google\'i <a href="https://business.safety.google/processorterms/" target="_blank" rel="noopener">andmetöötluse lisa</a> tugineb ELi-USA andmekaitseraamistikule ja andmekaitse tüüptingimustele (Standard Contractual Clauses).',
+      anthropicProvider: '<strong>Anthropic</strong> (Claude, ainult siis, kui see on mänguseadetes valitud). <a href="https://www.anthropic.com/legal/commercial-terms" target="_blank" rel="noopener">Ärikasutuse tingimuste</a> järgi ei kasuta Anthropic API kaudu saadetud sisu mudelite treenimiseks. Anthropic asub Ameerika Ühendriikides; Anthropicu <a href="https://www.anthropic.com/legal/data-processing-addendum" target="_blank" rel="noopener">andmetöötluse lisa</a> tugineb andmekaitse tüüptingimustele (Standard Contractual Clauses).',
+      proxyBody: 'Server ei logi mängijate sisestatud teksti. Selle vealogid võivad sisaldada lühikesi katkendeid tehisintellekti vastusest. Kasutuse piiramiseks hoiab server iga IP-aadressi päringute ja tokenite loendureid mälus kuni 24 tundi.',
+      advice: '<strong>Soovitus:</strong> nimede ega muude isikuandmete sisestamine ei ole kohustuslik, mäng töötab ka väljamõeldud nimedega. Sisesta ainult seda, mida kõik laua taga olijad on nõus tehisintellekti teenusepakkujale saatma.',
+      hostingHeading: 'Majutus, vastuvõtjad ja edastamine',
+      hostingServer: 'Sait töötab koduserveris Eestis. Fondid ja skriptid tulevad samast serverist.',
+      hostingCloudflare: 'Avalik ligipääs käib läbi ettevõtte Cloudflare, Inc. teenuste (DNS, tunnel, TLS-ühenduse lõpp-punkt, botikaitse ja sinu nõusolekul analüütika). Cloudflare näeb päringu andmeid, näiteks IP-aadressi, URL-i ja brauseri tunnust (user agent). Cloudflare asub Ameerika Ühendriikides; andmete edastamine sinna põhineb Cloudflare\'i sertifitseeringul ELi-USA andmekaitseraamistikus (EU-U.S. Data Privacy Framework).',
+      hostingLogs: 'Serveri juurdepääsu- ja vealogid talletavad päringute andmeid, näiteks aega, küsitud aadressi, vastuse olekut ja brauseri andmeid, ning võivad sisaldada IP-aadressi. Neid hoitakse keskselt 30 päeva, seejärel need kustutatakse.',
+      basisHeading: 'Õiguslikud alused',
+      basisAnalytics: 'Analüütika: sinu nõusolek (isikuandmete kaitse üldmääruse ehk IKÜM art 6 lg 1 punkt a).',
+      basisHosting: 'Majutus, Cloudflare\'i turvafunktsioonid, serveri logid ja kasutuspiirangud: õigustatud huvi hoida sait turvaline ja kättesaadav ning vältida kuritarvitamist (IKÜM art 6 lg 1 punkt f).',
+      basisAdventure: 'AI Seiklus: õigustatud huvi pakkuda mängu, mille mängijad ise käivitavad (IKÜM art 6 lg 1 punkt f). Tekst saadetakse ainult siis, kui alustate lugu või jätkate seda.',
+      retentionHeading: 'Kui kaua andmeid hoitakse',
+      retentionCookie: 'Küpsis <code>__cf_bm</code>: umbes 30 minutit.',
+      retentionLogs: 'Serveri logid: 30 päeva.',
+      retentionCounters: 'Kasutusloendurid: kuni 24 tundi, ainult mälus.',
+      retentionProviders: 'Tehisintellekti teenusepakkujad: nende endi ülal viidatud tingimuste järgi.',
+      retentionStorage: 'Brauseri salvestus: kuni sa selle kustutad.',
+      retentionAnalytics: 'Analüütika: saidi omanik näeb Cloudflare\'is ainult koondstatistikat.',
+      automatedHeading: 'Automatiseeritud otsused',
+      automatedBody: 'Automatiseeritud otsuseid ega profileerimist ei tehta.',
+      rightsHeading: 'Sinu õigused',
+      rightsBody: 'Sul on õigus tutvuda oma isikuandmetega, nõuda nende parandamist, kustutamist või töötlemise piiramist ning esitada vastuväide õigustatud huvi alusel toimuva töötlemise suhtes. Analüütika nõusoleku saad igal ajal tagasi võtta nupuga „Analüütika valikud“. Õiguste kasutamiseks kirjuta ülal toodud aadressil.',
+      complaintBody: 'Samuti on sul õigus esitada kaebus Andmekaitse Inspektsioonile (<a href="https://www.aki.ee" target="_blank" rel="noopener">aki.ee</a>).',
     },
     en: {
       title: 'Privacy - KHE Games',
@@ -137,29 +185,49 @@
       siteTitle: 'Privacy',
       languageLabel: 'Language',
       heading: 'Privacy',
-      updated: 'Last updated: 2026-04-26',
-      intro: 'games.khe.ee is a public personal home-server page. It has no advertising, no user accounts, and no tracking for advertising or profiling.',
+      updated: 'Last updated: 2026-09-29',
+      intro: 'This notice explains what personal data games.khe.ee handles, why, and what your rights are. The site has no advertising and no user accounts, and it does no profiling or tracking for advertising.',
+      controllerHeading: 'Controller and contact',
+      controllerBody: 'The controller is Kaido Henrik Elias, who runs games.khe.ee as a private person. For questions about your data or to use your rights, write to <a href="mailto:kaidoelias@gmail.com">kaidoelias@gmail.com</a>.',
       analyticsHeading: 'Analytics',
-      analyticsBody: 'If you allow analytics, Cloudflare Web Analytics collects aggregate usage and performance metrics such as visits, page views, top paths, referrers, countries, browser/device types, and page load timing. It is not used for advertising. Your choice is stored in this browser\'s <code>localStorage</code> under <code>khe.analyticsConsent.v1</code>.',
+      analyticsBody: 'If you allow analytics, Cloudflare Web Analytics collects aggregate usage and performance metrics such as visits, page views, top paths, referrers, countries, browser and device types, and page load timing. It sets no cookies and is not used for advertising. You can withdraw your consent at any time with the button below; withdrawing does not affect measurement made before then.',
       analyticsButton: 'Analytics choices',
-      cookiesHeading: 'Cookies',
-      cookiesBody: 'The page itself sets no cookies. Cloudflare\'s CDN may set its bot management cookie <code>_cf_bm</code>, with a lifetime of about 30 minutes. It is considered strictly necessary under EU ePrivacy rules and requires no consent banner.',
-      storageHeading: 'Browser local storage',
-      storageLocale: 'The language preference is stored in browser <code>localStorage</code> under <code>app_locale</code>, so the selected language can carry between khe.ee, the launcher, and the games.',
-      storageStudy: '<strong>Smart Games (/study/)</strong> stores game state, such as level progress, in browser <code>localStorage</code>. The server never sees it.',
-      storageAdventure: '<strong>AI Adventure (/adventure/)</strong> stores game state in browser <code>localStorage</code>.',
+      cookiesHeading: 'Cookies and bot protection',
+      cookiesBody: 'The games pages set no cookies themselves. Public traffic passes through Cloudflare, whose bot protection, including JavaScript Detections, checks requests to tell people from automated traffic. For this, Cloudflare may set the <code>__cf_bm</code> cookie, which expires after about 30 minutes. Such a security cookie is strictly necessary and needs no consent.',
+      storageHeading: 'Browser storage',
+      storageLocale: 'The language choice is stored under <code>app_locale</code>, so it carries between the launcher and the games.',
+      storageConsent: 'The analytics choice is stored under <code>khe.analyticsConsent.v1</code>.',
+      storageStudy: '<strong>Smart Games (/study/)</strong> stores game state, such as level progress, in the browser. The server never receives it.',
+      storageAdventure: '<strong>AI Adventure (/adventure/)</strong> stores game settings and state in the browser.',
+      storageLocal: 'All of it stays in your browser\'s <code>localStorage</code> until you clear it.',
       adventureHeading: 'AI Adventure',
-      adventureBody: 'AI Adventure sends player-entered text and selected game settings through a server-side proxy to an AI provider to generate the next part of the story.',
-      providersBody: 'The providers used may be <strong>US-based</strong> and process request content under their own terms:',
-      anthropicLink: 'Anthropic - <a href="https://www.anthropic.com/legal/privacy" target="_blank" rel="noopener">privacy policy</a>',
-      geminiLink: 'Google Gemini - <a href="https://ai.google.dev/gemini-api/terms" target="_blank" rel="noopener">terms</a>',
-      advice: '<strong>Advice:</strong> do not enter real names, addresses, national ID numbers, or other personal data you would not want to send to a third party.',
-      hostingHeading: 'Hosting and network',
-      hostingServer: 'The server runs on a home LAN in Estonia.',
-      hostingCloudflare: 'Public access goes through Cloudflare (DNS, tunnel, TLS). Cloudflare can see request metadata such as IP address, URL, and user agent, and acts as the TLS endpoint.',
-      hostingFonts: 'Launcher fonts are served from this server. Some game apps may load fonts from Google Fonts.',
-      contactHeading: 'Contact',
-      contactBody: 'Questions: <a href="https://github.com/khelias" target="_blank" rel="noopener">github.com/khelias</a>.',
+      adventureAge: 'AI Adventure is for adults only (18+).',
+      adventureBody: 'To write the story, AI Adventure sends what the players enter through this site\'s server to an AI provider: the group description with any names in it, the place, the detail, the choices and free text of each turn, and your own premise if you write one, together with the game settings.',
+      providersBody: 'The text goes to one of these providers:',
+      geminiProvider: '<strong>Google</strong> (Gemini API, the default). Because the game is run from the EEA, the <a href="https://ai.google.dev/gemini-api/terms" target="_blank" rel="noopener">Gemini API terms</a> apply their paid-service data terms: Google does not use prompts and responses to improve its products, and logs them for a limited period only to detect abuse. Data may be processed in the United States and other countries; Google\'s <a href="https://business.safety.google/processorterms/" target="_blank" rel="noopener">data processing addendum</a> relies on the EU-U.S. Data Privacy Framework and Standard Contractual Clauses.',
+      anthropicProvider: '<strong>Anthropic</strong> (Claude, used only if chosen in the game settings). Under its <a href="https://www.anthropic.com/legal/commercial-terms" target="_blank" rel="noopener">commercial terms</a>, Anthropic does not train models on API content. Anthropic is based in the United States; its <a href="https://www.anthropic.com/legal/data-processing-addendum" target="_blank" rel="noopener">data processing addendum</a> relies on Standard Contractual Clauses.',
+      proxyBody: 'The server does not log what players enter. Its error logs may contain short fragments of the AI\'s response. To limit usage, it keeps request and token counters per IP address in memory for up to 24 hours.',
+      advice: '<strong>Tip:</strong> entering names or other personal details is not required, and the game works with made-up names too. Enter only what everyone at the table is fine sending to the AI provider.',
+      hostingHeading: 'Hosting, recipients and transfers',
+      hostingServer: 'The site runs on a home server in Estonia. Fonts and scripts are served from it.',
+      hostingCloudflare: 'Public access goes through Cloudflare, Inc. (DNS, tunnel, TLS endpoint, bot protection and, with your consent, analytics). Cloudflare sees request data such as IP address, URL and browser user agent. Cloudflare is based in the United States; the transfer relies on its certification under the EU-U.S. Data Privacy Framework.',
+      hostingLogs: 'The server\'s access and error logs record requests, such as the time, requested address, response status and browser details, and may include the IP address. They are kept centrally for 30 days and then deleted.',
+      basisHeading: 'Legal bases',
+      basisAnalytics: 'Analytics: your consent (GDPR Art. 6(1)(a)).',
+      basisHosting: 'Hosting, Cloudflare\'s security features, server logs and usage limits: legitimate interest in running the site securely, keeping it available and preventing abuse (GDPR Art. 6(1)(f)).',
+      basisAdventure: 'AI Adventure: legitimate interest in providing the game that the players start (GDPR Art. 6(1)(f)). Text is sent only when you start or continue a story.',
+      retentionHeading: 'How long data is kept',
+      retentionCookie: '<code>__cf_bm</code> cookie: about 30 minutes.',
+      retentionLogs: 'Server logs: 30 days.',
+      retentionCounters: 'Usage counters: up to 24 hours, in memory only.',
+      retentionProviders: 'AI providers: under their own terms linked above.',
+      retentionStorage: 'Browser storage: until you clear it.',
+      retentionAnalytics: 'Analytics: the site owner sees only aggregate statistics in Cloudflare.',
+      automatedHeading: 'Automated decisions',
+      automatedBody: 'There is no automated decision-making or profiling.',
+      rightsHeading: 'Your rights',
+      rightsBody: 'You have the right to access your personal data, to have it rectified or erased, to restrict its processing, and to object to processing based on legitimate interest. You can withdraw your analytics consent at any time with the Analytics choices button. To use these rights, write to the contact address above.',
+      complaintBody: 'You also have the right to lodge a complaint with the Estonian Data Protection Inspectorate (Andmekaitse Inspektsioon, <a href="https://www.aki.ee" target="_blank" rel="noopener">aki.ee</a>).',
     },
   };
 
