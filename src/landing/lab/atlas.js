@@ -96,13 +96,13 @@ const COPY = {
 
 const FALLBACK_DATA = {
   source: {
-    composeFiles: 25,
-    composeServiceDefinitions: 41,
+    composeFiles: 19,
+    composeServiceDefinitions: 27,
   },
   metrics: {
     routerPorts: 0,
-    services: 25,
-    containers: 41,
+    services: 19,
+    containers: 27,
     recoveryLayers: 5,
   },
   categories: {
