@@ -1,19 +1,18 @@
 {
-  "generatedAt": "2026-09-25T20:54:34.056Z",
+  "generatedAt": "2026-10-01T18:26:21.257Z",
   "source": {
     "repo": "khe-homelab",
-    "composeFiles": 25,
-    "composeServiceDefinitions": 39
+    "composeFiles": 24,
+    "composeServiceDefinitions": 38
   },
   "metrics": {
     "routerPorts": 0,
-    "services": 25,
-    "containers": 39,
+    "services": 24,
+    "containers": 38,
     "recoveryLayers": 5
   },
   "categories": {
     "ai": [
-      "n8n",
       "ollama"
     ],
     "apps": [

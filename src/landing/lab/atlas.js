@@ -273,7 +273,7 @@ const SCENES = [
         tab: 'Private operations',
         kicker: 'Private operations',
         title: 'Admin tools open only after an identity check or from the home LAN.',
-        lead: 'The dashboard, n8n, trips and the pages editor sit behind Access, and the NPM, AdGuard and Proxmox admin UIs answer only on the LAN. Autoheal and Alloy reach Docker through scoped socket proxies, and the public page exposes facts instead of controls.',
+        lead: 'The dashboard, trips and the pages editor sit behind Access, and the NPM, AdGuard and Proxmox admin UIs answer only on the LAN. Autoheal and Alloy reach Docker through scoped socket proxies, and the public page exposes facts instead of controls.',
         state: 'identity - scoped docker',
         proofTitle: 'Private operations boundary',
         run: 'Trace private operations',
@@ -284,7 +284,7 @@ const SCENES = [
         tab: 'Privaatne haldus',
         kicker: 'Privaatne haldus',
         title: 'Adminitööriistadeni pääseb ainult identiteedikontrolli või koduvõrgu kaudu.',
-        lead: 'Juhtpaneel, n8n, trips ja lehtede toimetaja on Accessi taga, NPM-i, AdGuardi ja Proxmoxi haldusliidesed on kättesaadavad ainult kohtvõrgus. Autoheal ja Alloy jõuavad Dockerini piiratud socket proxy kaudu ning avalik leht näitab fakte, mitte juhtnuppe.',
+        lead: 'Juhtpaneel, trips ja lehtede toimetaja on Accessi taga, NPM-i, AdGuardi ja Proxmoxi haldusliidesed on kättesaadavad ainult kohtvõrgus. Autoheal ja Alloy jõuavad Dockerini piiratud socket proxy kaudu ning avalik leht näitab fakte, mitte juhtnuppe.',
         state: 'identiteet - piiratud docker',
         proofTitle: 'Privaatse halduse piir',
         run: 'Jälgi haldusrada',
@@ -292,7 +292,7 @@ const SCENES = [
       },
     },
     path: ['admin', 'access', 'socketProxy', 'runtimeOps'],
-    ghostPath: ['n8n', 'repoClean', 'operatorChannel'],
+    ghostPath: ['opsStatus', 'repoClean', 'operatorChannel'],
     nodes: [
       node('admin', 104, 348, 'ADM', {
         en: ['Admin', 'Private operator', 'Admin work starts from an authenticated human, not a public dashboard.', ['No public admin', 'Private session']],
@@ -310,17 +310,17 @@ const SCENES = [
         en: ['Docker VM', 'Operations target', 'Admin tools reach the runtime from behind Access or from the LAN, and the two proxy clients get a scoped Docker API.', ['Compose stacks', 'No public controls']],
         et: ['Docker VM', 'Haldussiht', 'Adminitööriistad jõuavad runtime’i Accessi tagant või kohtvõrgust ning kaks proxy klienti saavad piiratud Docker API.', ['Compose stackid', 'Avalikku juhtpinda pole']],
       }),
-      node('n8n', 230, 520, 'n8n', {
-        en: ['n8n', 'Operations automation', 'Internal reports and workflows can run without publishing raw operational data.', ['Weekly report', 'Protected workflow']],
-        et: ['n8n', 'Haldusautomaatika', 'Sisemised raportid ja workflow’d saavad joosta ilma halduse toorandmeid avaldamata.', ['Nädalaraport', 'Kaitstud workflow']],
+      node('opsStatus', 230, 520, 'OPS', {
+        en: ['Ops status', 'Read-only diagnostics', 'A pre-written Actions workflow reports the VM’s health without a shell.', ['No SSH', 'Read-only']],
+        et: ['Ops status', 'Diagnostika ainult lugemiseks', 'Valmis kirjutatud Actionsi töövoog annab VM-i seisust ülevaate ilma shellita.', ['SSH-d pole', 'Ainult lugemine']],
       }, 'quiet'),
       node('repoClean', 525, 520, 'ENV', {
         en: ['Clean metadata', 'No secrets', 'The public atlas is generated from sanitized facts.', ['No .env values', 'No tokens']],
         et: ['Puhas metadata', 'Ilma saladusteta', 'Avalik atlas tekib puhastatud faktidest.', ['.env väärtusi pole', 'Tokeneid pole']],
       }, 'quiet'),
       node('operatorChannel', 820, 520, 'TG', {
-        en: ['Operator channel', 'Private alerts', 'Telegram is an owner channel for alerts and reports, not a public feed.', ['Owner notification', 'No public feed']],
-        et: ['Operaatori kanal', 'Privaatsed teavitused', 'Telegram on omaniku teavituste ja raportite kanal, mitte avalik voog.', ['Omaniku teavitus', 'Avalikku voogu pole']],
+        en: ['Operator channel', 'Private alerts', 'Telegram is an owner channel for alerts and reminders, not a public feed.', ['Owner notification', 'No public feed']],
+        et: ['Operaatori kanal', 'Privaatsed teavitused', 'Telegram on omaniku teavituste ja meeldetuletuste kanal, mitte avalik voog.', ['Omaniku teavitus', 'Avalikku voogu pole']],
       }, 'quiet'),
     ],
     logs: {
@@ -630,7 +630,7 @@ function metricItems() {
 
   if (activeSceneId === 'trust') {
     return [
-      ['4', labels.trustAccessApps],
+      ['3', labels.trustAccessApps],
       ['2', labels.trustProxyClients],
       ['0', labels.trustControlSurfaces],
     ];
