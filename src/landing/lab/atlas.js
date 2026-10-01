@@ -311,8 +311,8 @@ const SCENES = [
         et: ['Docker VM', 'Haldussiht', 'Adminitööriistad jõuavad runtime’i Accessi tagant või kohtvõrgust ning kaks proxy klienti saavad piiratud Docker API.', ['Compose stackid', 'Avalikku juhtpinda pole']],
       }),
       node('opsStatus', 230, 520, 'OPS', {
-        en: ['Ops status', 'Read-only diagnostics', 'A pre-written Actions workflow reports the VM’s health without a shell.', ['No SSH', 'Read-only']],
-        et: ['Ops status', 'Diagnostika ainult lugemiseks', 'Valmis kirjutatud Actionsi töövoog annab VM-i seisust ülevaate ilma shellita.', ['SSH-d pole', 'Ainult lugemine']],
+        en: ['Status snapshot', 'Read-only diagnostics', 'A timer on the VM writes a health snapshot to Loki every five minutes, where an agent reads it without a shell.', ['No SSH', 'Read-only']],
+        et: ['Seisu ülevaade', 'Diagnostika ainult lugemiseks', 'VM-i taimer kirjutab iga viie minuti järel seisu ülevaate Lokisse, kust agent loeb seda ilma shellita.', ['SSH-d pole', 'Ainult lugemine']],
       }, 'quiet'),
       node('repoClean', 525, 520, 'ENV', {
         en: ['Clean metadata', 'No secrets', 'The public atlas is generated from sanitized facts.', ['No .env values', 'No tokens']],
