@@ -47,9 +47,11 @@ scripts/
 
 `deploy.yml` runs on push to main on the self-hosted homelab runner:
 `dist/landing` goes to `/srv/data/sites/khe`, `dist/games` to
-`/srv/data/games/launcher`. The game apps deploy to
-`/srv/data/games/{study,adventure}/`, which the homelab nginx stack
-bind-mounts at `/study/` and `/adventure/`.
+`/srv/data/games/launcher`. khe-study deploys to `/srv/data/games/study/`,
+which the homelab nginx stack bind-mounts at `/study/`. khe-ai-adventure is
+not a static deploy: the same nginx proxies `/adventure/` to the
+`adventure-web` and `adventure-proxy` containers, pulled from GHCR
+(khe-homelab `services/apps/games/`).
 
 ## Gotchas
 
