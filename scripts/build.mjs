@@ -1,6 +1,7 @@
 import { copyFile, mkdir, readdir, rm } from 'node:fs/promises';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { runReportingSourceErrors } from './architecture-sources.mjs';
 
 const root = dirname(dirname(fileURLToPath(import.meta.url)));
 const dist = join(root, 'dist');
@@ -21,18 +22,20 @@ async function copyDirectory(from, to) {
   }
 }
 
-await import('./generate-lab-data.mjs');
-await rm(dist, { recursive: true, force: true });
+await runReportingSourceErrors(async () => {
+  await import('./generate-lab-data.mjs');
+  await rm(dist, { recursive: true, force: true });
 
-for (const app of apps) {
-  const outputDir = join(dist, app);
-  await mkdir(join(outputDir, 'assets'), { recursive: true });
-  await copyDirectory(join(root, 'src', app), outputDir);
-  await copyFile(join(root, 'src', 'shared', 'site-locale.js'), join(outputDir, 'assets', 'site-locale.js'));
-  await copyFile(join(root, 'src', 'shared', 'site-footer.js'), join(outputDir, 'assets', 'site-footer.js'));
-  await copyFile(join(root, 'src', 'shared', 'analytics-consent.js'), join(outputDir, 'assets', 'analytics-consent.js'));
-  await copyFile(join(root, 'src', 'shared', 'site.css'), join(outputDir, 'assets', 'site.css'));
-  await copyDirectory(join(root, 'src', 'shared', 'fonts'), join(outputDir, 'assets', 'fonts'));
-}
+  for (const app of apps) {
+    const outputDir = join(dist, app);
+    await mkdir(join(outputDir, 'assets'), { recursive: true });
+    await copyDirectory(join(root, 'src', app), outputDir);
+    await copyFile(join(root, 'src', 'shared', 'site-locale.js'), join(outputDir, 'assets', 'site-locale.js'));
+    await copyFile(join(root, 'src', 'shared', 'site-footer.js'), join(outputDir, 'assets', 'site-footer.js'));
+    await copyFile(join(root, 'src', 'shared', 'analytics-consent.js'), join(outputDir, 'assets', 'analytics-consent.js'));
+    await copyFile(join(root, 'src', 'shared', 'site.css'), join(outputDir, 'assets', 'site.css'));
+    await copyDirectory(join(root, 'src', 'shared', 'fonts'), join(outputDir, 'assets', 'fonts'));
+  }
 
-console.log(`Built ${apps.join(' and ')} sites into dist/`);
+  console.log(`Built ${apps.join(' and ')} sites into dist/`);
+});

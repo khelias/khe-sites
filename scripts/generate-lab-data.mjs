@@ -1,123 +1,45 @@
-import { access, mkdir, readdir, readFile, writeFile } from 'node:fs/promises';
-import { dirname, join, relative, resolve } from 'node:path';
+import { mkdir, readFile, writeFile } from 'node:fs/promises';
+import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { loadHomelab, resolveSourceRoot } from './architecture-sources.mjs';
 
 const root = dirname(dirname(fileURLToPath(import.meta.url)));
-// HOMELAB_ROOT lets the deploy runner point at its own khe-homelab checkout;
-// without it the snapshot silently freezes at whatever was last committed.
-const homelabRoot = process.env.HOMELAB_ROOT
-  ? resolve(process.env.HOMELAB_ROOT)
-  : join(root, '..', 'khe-homelab');
-const servicesRoot = join(homelabRoot, 'services');
 const outputPath = join(root, 'src', 'landing', 'lab', 'lab-data.json');
 
-async function pathExists(path) {
-  try {
-    await access(path);
-    return true;
-  } catch {
-    return false;
-  }
+const homelab = await loadHomelab(resolveSourceRoot('HOMELAB_ROOT', 'khe-homelab'));
+
+const snapshot = {
+  generatedAt: new Date().toISOString(),
+  source: {
+    repo: 'khe-homelab',
+    composeFiles: homelab.composeFiles,
+    composeServiceDefinitions: homelab.containers,
+  },
+  metrics: {
+    routerPorts: 0,
+    services: homelab.composeFiles,
+    containers: homelab.containers,
+    recoveryLayers: homelab.resilienceLayers.length,
+  },
+  categories: homelab.groups,
+};
+
+// check builds too, so rewriting only a fresh timestamp would leave the
+// tracked file modified after every gate run.
+const withoutTimestamp = ({ generatedAt, ...rest }) => JSON.stringify(rest);
+let previous = null;
+try {
+  previous = JSON.parse(await readFile(outputPath, 'utf8'));
+} catch {
+  previous = null;
 }
 
-async function findComposeFiles(directory) {
-  const found = [];
-  const entries = await readdir(directory, { withFileTypes: true });
-
-  for (const entry of entries) {
-    const fullPath = join(directory, entry.name);
-    if (entry.isDirectory()) {
-      found.push(...await findComposeFiles(fullPath));
-    } else if (entry.isFile() && entry.name === 'docker-compose.yml') {
-      found.push(fullPath);
-    }
-  }
-
-  return found.sort();
-}
-
-function extractServiceNames(composeText) {
-  const names = [];
-  let inServices = false;
-
-  for (const line of composeText.split('\n')) {
-    if (/^services:\s*$/.test(line)) {
-      inServices = true;
-      continue;
-    }
-
-    if (inServices && /^[A-Za-z0-9_-]+:\s*$/.test(line)) {
-      break;
-    }
-
-    const match = line.match(/^  ([A-Za-z0-9._-]+):\s*$/);
-    if (inServices && match) {
-      names.push(match[1]);
-    }
-  }
-
-  return names;
-}
-
-function countResilienceLayers(readme) {
-  const section = readme.split(/^## /m).find((part) => /^Resilience\s*\n/.test(part));
-  const layers = section ? section.match(/^\d+\.\s/gm) : null;
-  // Failing the build beats silently publishing a stale count, which is how
-  // the old README service-summary parse went wrong unnoticed.
-  if (!layers) {
-    throw new Error('No numbered list under "## Resilience" in khe-homelab/README.md');
-  }
-  return layers.length;
-}
-
-function byCategory(composeFiles) {
-  return composeFiles.reduce((acc, file) => {
-    const parts = relative(servicesRoot, file).split('/');
-    const category = parts[0] || 'other';
-    const stack = parts[1] || 'unknown';
-    if (!acc[category]) acc[category] = [];
-    if (!acc[category].includes(stack)) acc[category].push(stack);
-    return acc;
-  }, {});
-}
-
-if (await pathExists(servicesRoot)) {
-  const composeFiles = await findComposeFiles(servicesRoot);
-  let composeServiceDefinitions = 0;
-
-  for (const file of composeFiles) {
-    const text = await readFile(file, 'utf8');
-    const serviceNames = extractServiceNames(text);
-    composeServiceDefinitions += serviceNames.length;
-  }
-
-  const readme = await readFile(join(homelabRoot, 'README.md'), 'utf8');
-  const categories = byCategory(composeFiles);
-
-  const snapshot = {
-    generatedAt: new Date().toISOString(),
-    source: {
-      repo: 'khe-homelab',
-      composeFiles: composeFiles.length,
-      composeServiceDefinitions,
-    },
-    metrics: {
-      routerPorts: 0,
-      services: composeFiles.length,
-      containers: composeServiceDefinitions,
-      recoveryLayers: countResilienceLayers(readme),
-    },
-    categories,
-  };
-
+if (previous && withoutTimestamp(previous) === withoutTimestamp(snapshot)) {
+  console.log('lab-data.json is current');
+} else {
   await mkdir(dirname(outputPath), { recursive: true });
   await writeFile(outputPath, `${JSON.stringify(snapshot, null, 2)}\n`);
-
   console.log(
-    `Generated lab-data.json from ${composeFiles.length} compose files and ${composeServiceDefinitions} service definitions`,
-  );
-} else {
-  console.log(
-    `Using committed lab-data.json; no services directory at ${servicesRoot}. Set HOMELAB_ROOT to regenerate.`,
+    `Generated lab-data.json from ${homelab.composeFiles} compose files and ${homelab.containers} service definitions`,
   );
 }

@@ -1,14 +1,14 @@
 {
-  "generatedAt": "2026-10-01T19:05:45.030Z",
+  "generatedAt": "2026-10-07T12:38:27.172Z",
   "source": {
     "repo": "khe-homelab",
     "composeFiles": 19,
-    "composeServiceDefinitions": 27
+    "composeServiceDefinitions": 28
   },
   "metrics": {
     "routerPorts": 0,
     "services": 19,
-    "containers": 27,
+    "containers": 28,
     "recoveryLayers": 5
   },
   "categories": {
