@@ -2782,149 +2782,322 @@ body.games-home {
 }
 
 /* Architecture */
+/* An editorial document in its own light and dark palette, following the
+   system setting; the rest of khe.ee stays dark. The tokens live on the body
+   so the page keeps its colours where :has() is missing; html only borrows
+   the background to paint past the body. */
+body.architecture-page {
+  --a-bg: #f6f5f1;
+  --a-surface: #ffffff;
+  --a-sunken: #eeece6;
+  --a-text: #17191a;
+  --a-text-2: #3d4241;
+  --a-muted: #6b716f;
+  --a-rule: #dedbd3;
+  --a-rule-strong: #bdb9af;
+  --a-node: #8d918e;
+  --a-accent: #0f766e;
+  --a-accent-ink: #0b5c56;
+  --a-accent-soft: #e2efec;
+  --a-proposed: #a16207;
+  --a-code: #ebe8e1;
+  color-scheme: light;
+}
+
+html:has(body.architecture-page) {
+  background: #f6f5f1;
+}
+
+@media (prefers-color-scheme: dark) {
+  body.architecture-page {
+    --a-bg: #0b0d0d;
+    --a-surface: #121615;
+    --a-sunken: #0f1211;
+    --a-text: #eef1f0;
+    --a-text-2: #c4cac7;
+    --a-muted: #8a928f;
+    --a-rule: #232827;
+    --a-rule-strong: #3a413f;
+    --a-node: #5d6562;
+    --a-accent: #5eead4;
+    --a-accent-ink: #a7f3e6;
+    --a-accent-soft: rgba(94, 234, 212, 0.1);
+    --a-proposed: #f2b84b;
+    --a-code: #1a1f1e;
+    color-scheme: dark;
+  }
+
+  html:has(body.architecture-page) {
+    background: #0b0d0d;
+  }
+}
+
+body.architecture-page {
+  background: var(--a-bg);
+  color: var(--a-text);
+}
+
 body.architecture-page::before {
   display: none;
 }
 
-.arch {
-  width: min(1080px, 100%);
-  margin: 0 auto;
-  padding: 3rem max(1.25rem, env(safe-area-inset-right)) 4rem max(1.25rem, env(safe-area-inset-left));
+.architecture-page .site-header {
+  border-bottom-color: var(--a-rule);
+  background: color-mix(in srgb, var(--a-bg) 90%, transparent);
+}
+
+.architecture-page .site-header__brand {
+  border-color: var(--a-rule-strong);
+  background: var(--a-surface);
+  color: var(--a-text);
+  box-shadow: none;
+}
+
+.architecture-page .site-header__brand:hover {
+  border-color: var(--a-accent);
+  color: var(--a-text);
+}
+
+.architecture-page .site-header__context span {
+  color: var(--a-muted);
+}
+
+.architecture-page .site-header__context strong {
+  color: var(--a-text);
+}
+
+.architecture-page .language-switcher {
+  border-color: var(--a-rule);
+  background: var(--a-surface);
+}
+
+.architecture-page .language-switcher button {
+  color: var(--a-muted);
+}
+
+.architecture-page .language-switcher button[aria-pressed="true"] {
+  border-color: var(--a-rule-strong);
+  background: var(--a-sunken);
+  color: var(--a-text);
+}
+
+.architecture-page .site-footer,
+.architecture-page .site-footer a {
+  color: var(--a-muted);
+}
+
+.architecture-page .site-footer a:hover {
+  color: var(--a-text);
+}
+
+.architecture-page .site-footer {
+  padding: 0 1.5rem 3rem;
   position: relative;
   z-index: 1;
-  color: var(--text-dim);
-  font-size: 0.95rem;
-  line-height: 1.6;
+}
+
+.arch {
+  width: min(1240px, 100%);
+  margin: 0 auto;
+  padding: 5rem max(1.5rem, env(safe-area-inset-right)) 7rem max(1.5rem, env(safe-area-inset-left));
+  display: grid;
+  grid-template-columns: 13rem minmax(0, 1fr);
+  column-gap: 4.5rem;
+  color: var(--a-text-2);
+  font-size: 1.0625rem;
+  line-height: 1.7;
+}
+
+.arch-hero {
+  grid-column: 2;
+  grid-row: 1;
+  max-width: 54rem;
+}
+
+.arch-rail {
+  grid-column: 1;
+  grid-row: 1 / span 2;
+  align-self: start;
+  position: sticky;
+  top: 6rem;
+  font-size: 0.85rem;
+  line-height: 1.4;
+}
+
+.arch-body {
+  grid-column: 2;
+  grid-row: 2;
+  min-width: 0;
+  max-width: 54rem;
 }
 
 .arch a {
-  color: var(--text);
-  text-decoration-color: rgba(255, 255, 255, 0.28);
-  text-underline-offset: 3px;
+  color: var(--a-text);
+  text-decoration-line: underline;
+  text-decoration-color: var(--a-rule-strong);
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.2em;
 }
 
 .arch a:hover {
-  text-decoration-color: var(--accent);
+  text-decoration-color: var(--a-accent);
 }
 
 .arch a:focus-visible {
-  outline: 2px solid var(--accent-border);
+  outline: 2px solid var(--a-accent);
   outline-offset: 2px;
   border-radius: 2px;
 }
 
-.arch-kicker {
-  color: var(--text-muted);
-  font-size: 0.72rem;
+.arch strong {
+  color: var(--a-text);
   font-weight: 600;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
+}
+
+.arch code {
+  padding: 0.08em 0.35em;
+  border-radius: 4px;
+  background: var(--a-code);
+  color: var(--a-text);
+  font-size: 0.86em;
+  overflow-wrap: anywhere;
+}
+
+.arch-kicker {
+  color: var(--a-accent-ink);
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
 }
 
 .arch h1 {
-  max-width: 24ch;
-  margin: 0.5rem 0 1rem;
-  color: var(--text);
-  font-size: clamp(1.9rem, 4.5vw, 2.6rem);
+  max-width: 17ch;
+  margin: 0.75rem 0 1.5rem;
+  color: var(--a-text);
+  font-size: clamp(2.3rem, 4.6vw, 3.6rem);
   font-weight: 600;
-  line-height: 1.15;
-  letter-spacing: -0.01em;
-}
-
-.arch h2 {
-  margin-bottom: 0.75rem;
-  color: var(--text);
-  font-size: 1.45rem;
-  font-weight: 600;
-  line-height: 1.25;
-}
-
-.arch h3 {
-  margin: 2rem 0 0.5rem;
-  color: var(--text);
-  font-size: 1.05rem;
-  font-weight: 600;
-  line-height: 1.35;
+  line-height: 1.05;
+  letter-spacing: -0.028em;
 }
 
 .arch-lead {
-  max-width: 70ch;
-  font-size: 1.05rem;
-}
-
-.arch-prose {
-  max-width: 72ch;
-  margin-bottom: 0.75rem;
+  max-width: 40rem;
+  color: var(--a-text-2);
+  font-size: 1.22rem;
+  line-height: 1.6;
 }
 
 .arch-facts {
   display: grid;
   grid-template-columns: repeat(5, minmax(0, 1fr));
-  gap: 0.75rem;
-  margin: 2rem 0 0.5rem;
+  margin-top: 3.25rem;
+  border-top: 1px solid var(--a-rule-strong);
 }
 
 .arch-facts div {
   display: flex;
   flex-direction: column-reverse;
   justify-content: flex-end;
-  gap: 0.15rem;
-  padding: 0.85rem 1rem;
-  border: 1px solid var(--border-hover);
-  border-radius: 6px;
+  gap: 0.3rem;
+  padding: 1.1rem 1.25rem 0 0;
 }
 
 .arch-facts dd {
-  color: var(--text);
-  font-size: 1.6rem;
+  color: var(--a-text);
+  font-size: 2.6rem;
   font-weight: 600;
-  line-height: 1.1;
+  line-height: 1;
+  letter-spacing: -0.03em;
+  font-variant-numeric: tabular-nums;
 }
 
 .arch-facts dt {
-  color: var(--text-muted);
-  font-size: 0.78rem;
+  color: var(--a-muted);
+  font-size: 0.84rem;
   line-height: 1.35;
 }
 
 .arch-facts-note {
-  color: var(--text-faint);
+  margin-top: 1.25rem;
+  color: var(--a-muted);
+  font-size: 0.8rem;
+}
+
+.arch-rail__title {
+  margin-bottom: 0.9rem;
+  color: var(--a-muted);
   font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
 }
 
-.arch-toc {
+.arch-rail ol {
+  list-style: none;
+  border-left: 1px solid var(--a-rule);
+}
+
+.arch .arch-rail a {
   display: flex;
-  flex-wrap: wrap;
-  gap: 0.4rem 1.25rem;
-  margin-top: 2rem;
-  font-size: 0.85rem;
-}
-
-.arch .arch-toc a {
-  color: var(--text-dim);
+  gap: 0.7rem;
+  margin-left: -1px;
+  padding: 0.42rem 0 0.42rem 0.9rem;
+  border-left: 1px solid transparent;
+  color: var(--a-muted);
   text-decoration: none;
 }
 
-.arch .arch-toc a:hover {
-  color: var(--text);
+.arch .arch-rail a:hover,
+.arch .arch-rail a[aria-current="true"] {
+  border-left-color: var(--a-text);
+  color: var(--a-text);
+}
+
+.arch-num {
+  color: var(--a-muted);
+  font-size: 0.8rem;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
 }
 
 .arch-section {
-  margin-top: 3.5rem;
-  padding-top: 2.5rem;
-  border-top: 1px solid var(--border);
-  scroll-margin-top: 4rem;
+  margin-top: 7rem;
+  scroll-margin-top: 5.5rem;
+}
+
+.arch-section > .arch-num {
+  margin-bottom: 0.5rem;
+  color: var(--a-accent-ink);
+}
+
+.arch h2 {
+  margin-bottom: 1.25rem;
+  color: var(--a-text);
+  font-size: clamp(1.7rem, 2.6vw, 2.15rem);
+  font-weight: 600;
+  line-height: 1.15;
+  letter-spacing: -0.02em;
+}
+
+.arch h3 {
+  margin: 3.25rem 0 0.75rem;
+  color: var(--a-text);
+  font-size: 1.2rem;
+  font-weight: 600;
+  line-height: 1.3;
+  letter-spacing: -0.01em;
+}
+
+.arch-prose {
+  max-width: 40rem;
+  margin-bottom: 1rem;
 }
 
 .arch-figure {
-  margin: 1.5rem 0 1rem;
+  margin: 2.5rem 0 0;
 }
 
 .arch-diagram {
   overflow-x: auto;
-  padding: 1rem;
-  border: 1px solid var(--border);
-  border-radius: 6px;
 }
 
 .arch-svg {
@@ -2936,273 +3109,318 @@ body.architecture-page::before {
 }
 
 .arch-node rect {
-  fill: var(--bg);
-  stroke: rgba(255, 255, 255, 0.24);
+  fill: var(--a-surface);
+  stroke: var(--a-node);
   stroke-width: 1;
 }
 
-.arch-node--product rect,
-.arch-node--person rect {
-  stroke: rgba(255, 255, 255, 0.36);
-}
-
-.arch-node--repo rect {
-  stroke: rgba(255, 255, 255, 0.18);
-}
-
+.arch-node--person rect,
 .arch-node--external rect {
-  stroke-dasharray: 4 3;
+  fill: var(--a-sunken);
+  stroke: var(--a-rule-strong);
 }
 
 .arch-node--boundary rect {
   fill: none;
-  stroke: rgba(255, 255, 255, 0.12);
-  stroke-dasharray: 2 4;
+  stroke: var(--a-rule);
 }
 
 .arch-node--focus rect {
-  fill: rgba(94, 234, 212, 0.08);
-  stroke: var(--accent);
-  stroke-dasharray: none;
+  fill: var(--a-accent-soft);
+  stroke: var(--a-accent);
+  stroke-width: 1.5;
 }
 
 .arch-node-label {
-  fill: var(--text);
-  font-size: 13px;
+  fill: var(--a-text);
+  font-size: 15px;
   font-weight: 500;
 }
 
+.arch-node--focus .arch-node-label {
+  fill: var(--a-accent-ink);
+}
+
 .arch-node-sub {
-  fill: var(--text-muted);
-  font-size: 11px;
+  fill: var(--a-muted);
+  font-size: 12.5px;
 }
 
 .arch-group-label {
-  fill: var(--text-muted);
-  font-size: 11px;
+  fill: var(--a-muted);
+  font-size: 12px;
   font-weight: 600;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
+  letter-spacing: 0.03em;
 }
 
 .arch-edge {
-  stroke: rgba(255, 255, 255, 0.34);
-  stroke-width: 1;
-}
-
-.arch-edge--dashed {
-  stroke-dasharray: 4 3;
-}
-
-.arch-arrow {
-  fill: rgba(255, 255, 255, 0.5);
-}
-
-.arch-edge-label {
-  fill: var(--text-dim);
-  font-size: 11px;
-  paint-order: stroke;
-  stroke: var(--bg);
-  stroke-width: 4px;
+  fill: none;
+  stroke: var(--a-node);
+  stroke-width: 1.25;
   stroke-linejoin: round;
 }
 
-.arch-legend {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.35rem 1.1rem;
-  margin-top: 0.6rem;
-  list-style: none;
-  color: var(--text-muted);
-  font-size: 0.75rem;
+.arch-edge--dashed {
+  stroke-dasharray: 5 4;
 }
 
-.arch-legend li {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.4rem;
+.arch-arrow {
+  fill: var(--a-node);
 }
 
-.arch-swatch {
-  width: 1.1rem;
-  height: 0.7rem;
-  border: 1px solid rgba(255, 255, 255, 0.24);
-  border-radius: 3px;
-}
-
-.arch-swatch--person,
-.arch-swatch--product {
-  border-color: rgba(255, 255, 255, 0.36);
-}
-
-.arch-swatch--person {
-  border-radius: 999px;
-}
-
-.arch-swatch--repo {
-  border-color: rgba(255, 255, 255, 0.18);
-}
-
-.arch-swatch--external {
-  border-style: dashed;
-}
-
-.arch-swatch--focus {
-  border-color: var(--accent);
-  background: rgba(94, 234, 212, 0.08);
+.arch-edge-label {
+  fill: var(--a-text-2);
+  font-size: 12px;
+  paint-order: stroke;
+  stroke: var(--a-bg);
+  stroke-width: 5px;
+  stroke-linejoin: round;
 }
 
 .arch-view-list {
   display: none;
   list-style: none;
+  border-top: 1px solid var(--a-rule);
 }
 
 .arch-view-list li {
-  padding: 0.55rem 0;
-  border-bottom: 1px solid var(--border);
+  padding: 0.7rem 0;
+  border-bottom: 1px solid var(--a-rule);
+  font-size: 0.95rem;
 }
 
 .arch-view-list strong {
-  color: var(--text);
-}
-
-.arch-view-list__group {
-  padding-top: 1rem;
-}
-
-.arch-view-list__group strong {
-  color: var(--text-muted);
-  font-size: 0.72rem;
   font-weight: 600;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
+}
+
+.arch-view-list ol {
+  list-style: none;
+  margin-top: 0.4rem;
+  border-top: 1px solid var(--a-rule);
+}
+
+.arch-view-list .arch-view-list__group {
+  padding: 1.4rem 0 0;
+  border-bottom: 0;
+}
+
+.arch-view-list__group > strong {
+  color: var(--a-muted);
+  font-size: 0.8rem;
 }
 
 .arch-view-list__sub {
-  color: var(--text-muted);
+  color: var(--a-muted);
 }
 
 .arch-view-list__to {
   display: block;
-  color: var(--text-muted);
-  font-size: 0.85rem;
-}
-
-.arch-table-wrap {
-  overflow-x: auto;
-  margin: 1.25rem 0;
-}
-
-.arch-table {
-  width: 100%;
-  border-collapse: collapse;
-  font-size: 0.9rem;
-}
-
-.arch-table th,
-.arch-table td {
-  padding: 0.75rem 0.9rem 0.75rem 0;
-  border-bottom: 1px solid var(--border);
-  text-align: left;
-  vertical-align: top;
-}
-
-.arch-table thead th {
-  color: var(--text-muted);
-  font-size: 0.72rem;
-  font-weight: 600;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-}
-
-.arch-quality tbody th {
-  width: 26%;
-  font-weight: 400;
-}
-
-.arch-quality tbody th strong {
-  display: block;
-  font-weight: 600;
-}
-
-.arch-quality td:last-child {
-  width: 18%;
-}
-
-.arch-register td:first-child,
-.arch-register td:last-child {
-  white-space: nowrap;
-}
-
-.arch-status--superseded,
-.arch-status--deprecated,
-.arch-successor {
-  color: var(--text-muted);
-}
-
-.arch-layers {
-  margin: 0.4rem 0 0.4rem 1.2rem;
+  color: var(--a-muted);
+  font-size: 0.88rem;
 }
 
 .arch-block-group h3 {
   display: flex;
   flex-wrap: wrap;
   align-items: baseline;
-  gap: 0.25rem 0.75rem;
+  gap: 0.25rem 1rem;
 }
 
 .arch-block-group__repo {
-  font-size: 0.8rem;
+  font-size: 0.85rem;
   font-weight: 400;
+  letter-spacing: 0;
 }
 
-.arch-cards {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(15rem, 1fr));
-  gap: 0.75rem;
+.arch-rows {
   list-style: none;
+  border-top: 1px solid var(--a-rule-strong);
 }
 
-.arch-card {
-  padding: 0.9rem 1rem;
-  border: 1px solid var(--border-hover);
-  border-radius: 6px;
-  font-size: 0.88rem;
+.arch-row {
+  display: grid;
+  grid-template-columns: 13rem minmax(0, 1fr);
+  gap: 0.25rem 2rem;
+  padding: 1.1rem 0;
+  border-bottom: 1px solid var(--a-rule);
 }
 
-.arch-card h4 {
-  margin-bottom: 0.3rem;
-  color: var(--text);
-  font-size: 0.95rem;
+.arch-row h4 {
+  color: var(--a-text);
+  font-size: 1rem;
   font-weight: 600;
+  line-height: 1.5;
 }
 
-.arch-card__meta {
-  margin-top: 0.45rem;
-  color: var(--text-muted);
-  font-size: 0.8rem;
+.arch-row p {
+  font-size: 0.98rem;
+  line-height: 1.6;
+}
+
+.arch-row__meta {
+  margin-top: 0.3rem;
+  color: var(--a-muted);
+  font-size: 0.85rem;
   overflow-wrap: anywhere;
 }
 
+.arch .arch-row__meta a {
+  color: var(--a-muted);
+}
+
+.arch-stacks {
+  color: var(--a-text-2);
+}
+
 .arch-private {
-  color: var(--text-muted);
+  color: var(--a-muted);
+  font-style: italic;
+}
+
+.arch-table-wrap {
+  overflow-x: auto;
+  margin: 2rem 0 1rem;
+}
+
+.arch-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.97rem;
+  line-height: 1.55;
+}
+
+.arch-table th,
+.arch-table td {
+  padding: 1rem 1.5rem 1rem 0;
+  border-bottom: 1px solid var(--a-rule);
+  text-align: left;
+  vertical-align: top;
+}
+
+.arch-table thead th {
+  padding-top: 0;
+  padding-bottom: 0.7rem;
+  border-bottom-color: var(--a-rule-strong);
+  color: var(--a-muted);
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+
+.arch-quality tbody th {
+  width: 28%;
+  font-weight: 400;
+}
+
+.arch-quality tbody th strong {
+  display: block;
+  margin-bottom: 0.15rem;
+}
+
+.arch-quality td:last-child {
+  width: 17%;
+  padding-right: 0;
+  font-size: 0.9rem;
+}
+
+.arch-register td {
+  padding-top: 0.8rem;
+  padding-bottom: 0.8rem;
+}
+
+.arch-register td:first-child,
+.arch-register td:nth-child(3),
+.arch-register td:last-child {
+  white-space: nowrap;
+}
+
+.arch-register td:first-child,
+.arch-register td:last-child {
+  color: var(--a-muted);
+  font-variant-numeric: tabular-nums;
+}
+
+.arch .arch-register td:first-child a {
+  color: var(--a-muted);
+  text-decoration: none;
+}
+
+.arch .arch-register td:nth-child(2) a {
+  text-decoration-color: transparent;
+}
+
+.arch .arch-register td:nth-child(2) a:hover {
+  text-decoration-color: var(--a-accent);
+}
+
+.arch-register td:last-child,
+.arch-register th:last-child {
+  padding-right: 0;
+  text-align: right;
+}
+
+.arch-status {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  font-size: 0.9rem;
+}
+
+.arch-status::before {
+  content: "";
+  width: 0.5rem;
+  height: 0.5rem;
+  border-radius: 50%;
+  background: var(--a-accent);
+}
+
+.arch-status--proposed::before {
+  background: var(--a-proposed);
+}
+
+.arch-status--superseded,
+.arch-status--deprecated,
+.arch-successor {
+  color: var(--a-muted);
+}
+
+.arch-status--superseded::before,
+.arch-status--deprecated::before {
+  border: 1px solid var(--a-muted);
+  background: none;
+}
+
+.arch-successor {
+  margin-left: 0.35rem;
+  font-size: 0.9rem;
+}
+
+.arch-layers {
+  margin: 0.5rem 0 0.6rem 1.25rem;
+}
+
+.arch-layers li {
+  margin-bottom: 0.15rem;
 }
 
 .arch-inline-list {
   display: flex;
   flex-wrap: wrap;
-  gap: 0.4rem 1.25rem;
+  gap: 0.4rem 1.5rem;
   list-style: none;
 }
 
 .arch-columns {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 0 2.5rem;
+  gap: 0 3rem;
 }
 
 .arch-columns h3 {
-  margin-top: 0.5rem;
+  margin-top: 0.75rem;
+  margin-bottom: 0;
+  padding-bottom: 0.75rem;
+  border-bottom: 1px solid var(--a-rule-strong);
+  font-size: 1rem;
 }
 
 .arch-list {
@@ -3210,16 +3428,10 @@ body.architecture-page::before {
 }
 
 .arch-list li {
-  position: relative;
-  margin-bottom: 0.6rem;
-  padding-left: 1rem;
-}
-
-.arch-list li::before {
-  content: "-";
-  position: absolute;
-  left: 0;
-  color: var(--text-faint);
+  padding: 0.9rem 0;
+  border-bottom: 1px solid var(--a-rule);
+  font-size: 0.98rem;
+  line-height: 1.6;
 }
 
 html:not([lang="et"]) .arch-lang-note {
@@ -3227,128 +3439,181 @@ html:not([lang="et"]) .arch-lang-note {
 }
 
 .arch-lang-note {
-  color: var(--text-muted);
-  font-size: 0.85rem;
+  color: var(--a-muted);
+  font-size: 0.9rem;
 }
 
-.arch-decision {
-  width: min(820px, 100%);
+.arch.arch-decision {
+  display: block;
+  width: min(48rem, 100%);
 }
 
 .arch-decision h1 {
   max-width: none;
-  font-size: clamp(1.5rem, 3.6vw, 2rem);
+  margin-bottom: 1.75rem;
+  font-size: clamp(1.9rem, 3.6vw, 2.6rem);
+  line-height: 1.12;
 }
 
 .arch-breadcrumb {
-  margin-bottom: 1.5rem;
-  font-size: 0.85rem;
+  margin-bottom: 2.5rem;
+  font-size: 0.9rem;
 }
 
 .arch .arch-breadcrumb a {
-  color: var(--text-dim);
+  color: var(--a-muted);
   text-decoration: none;
+}
+
+.arch .arch-breadcrumb a:hover {
+  color: var(--a-text);
 }
 
 .arch-meta {
   display: flex;
   flex-wrap: wrap;
-  gap: 0.75rem 2rem;
-  margin-bottom: 1.25rem;
-  font-size: 0.85rem;
+  gap: 1rem 2.5rem;
+  margin-bottom: 1.75rem;
+  padding: 1rem 0;
+  border-top: 1px solid var(--a-rule-strong);
+  border-bottom: 1px solid var(--a-rule);
+  font-size: 0.92rem;
+  line-height: 1.5;
 }
 
 .arch-meta dt {
-  color: var(--text-muted);
-  font-size: 0.72rem;
+  margin-bottom: 0.15rem;
+  color: var(--a-muted);
+  font-size: 0.78rem;
   font-weight: 600;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
 }
 
 .arch-meta dd {
-  color: var(--text);
+  color: var(--a-text);
 }
 
 .arch-notice {
-  margin-bottom: 1.25rem;
-  padding: 0.6rem 0.9rem;
-  border-left: 2px solid var(--accent);
-  color: var(--text);
+  margin-bottom: 1.75rem;
+  padding: 0.9rem 1.1rem;
+  border-left: 2px solid var(--a-accent);
+  border-radius: 0 6px 6px 0;
+  background: var(--a-accent-soft);
+  color: var(--a-text);
+  font-size: 0.98rem;
 }
 
 .arch-adr {
-  max-width: 72ch;
-  margin-top: 1.5rem;
+  margin-top: 2.5rem;
 }
 
 .arch-adr h2 {
-  margin: 2.25rem 0 0.6rem;
-  font-size: 1.2rem;
+  margin: 3rem 0 0.9rem;
+  font-size: 1.45rem;
 }
 
 .arch-adr h3 {
-  margin: 1.5rem 0 0.5rem;
-  font-size: 1rem;
+  margin: 2rem 0 0.6rem;
+  font-size: 1.1rem;
 }
 
 .arch-adr p {
-  margin-bottom: 0.85rem;
+  margin-bottom: 1.1rem;
 }
 
 .arch-adr ul,
 .arch-adr ol {
-  margin: 0 0 0.85rem 1.4rem;
+  margin: 0 0 1.1rem 1.35rem;
 }
 
 .arch-adr li {
-  margin-bottom: 0.4rem;
+  margin-bottom: 0.5rem;
+  padding-left: 0.2rem;
+}
+
+.arch-adr li::marker {
+  color: var(--a-muted);
 }
 
 .arch-adr li > ul,
 .arch-adr li > ol {
-  margin-top: 0.4rem;
+  margin-top: 0.5rem;
   margin-bottom: 0;
 }
 
-.arch code {
-  overflow-wrap: anywhere;
-}
-
 .arch-source {
-  margin-top: 2.5rem;
-  padding-top: 1rem;
-  border-top: 1px solid var(--border);
-  font-size: 0.85rem;
+  margin-top: 3.5rem;
+  padding-top: 1.25rem;
+  border-top: 1px solid var(--a-rule);
+  font-size: 0.9rem;
 }
 
-.architecture-page .site-footer {
-  padding: 0 1.5rem 2.5rem;
-  position: relative;
-  z-index: 1;
+@media (max-width: 1040px) {
+  .arch {
+    display: block;
+    width: min(46rem, 100%);
+    padding-top: 3.5rem;
+  }
+
+  .arch-rail {
+    position: static;
+    margin-top: 3rem;
+    padding: 1.25rem 0;
+    border-top: 1px solid var(--a-rule);
+    border-bottom: 1px solid var(--a-rule);
+  }
+
+  .arch-rail ol {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.2rem 1.4rem;
+    border-left: 0;
+  }
+
+  .arch .arch-rail a {
+    margin-left: 0;
+    padding: 0.2rem 0;
+    border-left: 0;
+  }
+
+  .arch-section {
+    margin-top: 5rem;
+  }
 }
 
-@media (max-width: 860px) {
+@media (max-width: 760px) {
   .arch-facts {
     grid-template-columns: repeat(3, minmax(0, 1fr));
+    row-gap: 1.25rem;
   }
 
   .arch-columns {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .arch-row {
     grid-template-columns: minmax(0, 1fr);
   }
 }
 
 @media (max-width: 640px) {
   .arch {
-    padding-top: 2rem;
+    padding-top: 2.5rem;
+    font-size: 1rem;
+  }
+
+  .arch-lead {
+    font-size: 1.1rem;
   }
 
   .arch-facts {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
-  .arch-diagram,
-  .arch-legend {
+  .arch-facts dd {
+    font-size: 2.1rem;
+  }
+
+  .arch-diagram {
     display: none;
   }
 
@@ -3362,8 +3627,8 @@ html:not([lang="et"]) .arch-lang-note {
 
   .arch-quality tr {
     display: block;
-    padding: 0.75rem 0;
-    border-bottom: 1px solid var(--border);
+    padding: 1rem 0;
+    border-bottom: 1px solid var(--a-rule);
   }
 
   .arch-quality th,
@@ -3372,8 +3637,12 @@ html:not([lang="et"]) .arch-lang-note {
   .arch-quality td:last-child {
     display: block;
     width: auto;
-    padding: 0.2rem 0;
+    padding: 0.25rem 0;
     border-bottom: 0;
+  }
+
+  .arch-register td:nth-child(3) {
+    white-space: normal;
   }
 }
 /* End architecture */

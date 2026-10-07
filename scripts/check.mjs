@@ -111,6 +111,7 @@ await runReportingSourceErrors(async () => {
   expectThrow('unknown ADR', 'See [ADR-099](099-nothing.md).', 'ADR-099');
   expectThrow('raw HTML', 'A <b>bold</b> claim.', 'raw HTML');
   expectThrow('line number', 'one\n\n> quote', 'line number:12');
+  expectThrow('inline line number', 'one\ntwo <b>three</b>', 'inline line number:11');
 
   const sources = await loadSources();
   const knownIds = new Set(sources.decisions.map((decision) => decision.id));
@@ -138,7 +139,8 @@ await runReportingSourceErrors(async () => {
   }
 
   const css = await readFile(join(root, 'src/shared/site.css'), 'utf8');
-  const archCss = css.slice(css.indexOf('/* Architecture */'), css.indexOf('/* End architecture */'));
+  // The section turns off the shared header's shadow; any other shadow is out.
+  const archCss = css.slice(css.indexOf('/* Architecture */'), css.indexOf('/* End architecture */')).replace(/box-shadow: none;/g, '');
   if (!archCss || css.indexOf('/* End architecture */') < 0) throw new Error('site.css has no Architecture section markers');
   for (const banned of ['animation', 'drop-shadow', 'box-shadow', 'gradient']) {
     if (archCss.includes(banned)) throw new Error(`site.css Architecture section uses ${banned}`);

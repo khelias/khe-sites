@@ -10,7 +10,8 @@
   <link rel="alternate" hreflang="et" href="https://khe.ee/architecture/?lang=et">
   <link rel="alternate" hreflang="x-default" href="https://khe.ee/architecture/">
   <link rel="icon" href="/logo.svg" type="image/svg+xml" sizes="any">
-  <meta name="theme-color" content="#09090b">
+  <meta name="theme-color" content="#f6f5f1" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#0b0d0d" media="(prefers-color-scheme: dark)">
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://khe.ee/architecture/">
   <meta property="og:site_name" content="Kaido Henrik Elias">
@@ -27,7 +28,7 @@
   <link rel="preload" href="/assets/fonts/inter-500.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="modulepreload" href="/assets/site-locale.js?v=20260427e">
   <link rel="modulepreload" href="/assets/site-footer.js?v=20260427e">
-  <link rel="stylesheet" href="/assets/site.css?v=20261007a">
+  <link rel="stylesheet" href="/assets/site.css?v=20261007b">
   <script defer src="/assets/analytics-consent.js?v=20260428a" data-analytics-token="58734ed4ae1e4b4e8a8f8f7d50ff74f2" data-analytics-privacy-url="/privacy?lang=en"></script>
   <script type="application/ld+json">
     {
@@ -76,128 +77,142 @@
 </header>
 
 <main class="arch">
-  <section class="arch-summary" aria-labelledby="arch-title">
+  <header class="arch-hero">
     <p class="arch-kicker" data-i18n="kicker"></p>
     <h1 id="arch-title" data-i18n="headline"></h1>
     <p class="arch-lead" data-i18n="lead"></p>
     <!-- facts -->
-    <nav class="arch-toc" aria-label="On this page" data-i18n-aria="tocLabel">
-      <a href="#context" data-i18n="contextTitle"></a>
-      <a href="#building-blocks" data-i18n="blocksTitle"></a>
-      <a href="#flows" data-i18n="flowsTitle"></a>
-      <a href="#quality" data-i18n="qualityTitle"></a>
-      <a href="#decisions" data-i18n="decisionsTitle"></a>
-      <a href="#operating-model" data-i18n="operatingTitle"></a>
-      <a href="#limits" data-i18n="limitsTitle"></a>
-    </nav>
-  </section>
+  </header>
 
-  <section class="arch-section" id="context" aria-labelledby="context-title">
-    <h2 id="context-title" data-i18n="contextTitle"></h2>
-    <p class="arch-prose" data-i18n="contextBody"></p>
-    <!-- view:context -->
-  </section>
+  <nav class="arch-rail" aria-label="On this page" data-i18n-aria="tocLabel">
+    <p class="arch-rail__title" data-i18n="tocLabel"></p>
+    <ol>
+      <li><a href="#context"><span class="arch-num">01</span><span data-i18n="contextTitle"></span></a></li>
+      <li><a href="#building-blocks"><span class="arch-num">02</span><span data-i18n="blocksTitle"></span></a></li>
+      <li><a href="#flows"><span class="arch-num">03</span><span data-i18n="flowsTitle"></span></a></li>
+      <li><a href="#quality"><span class="arch-num">04</span><span data-i18n="qualityTitle"></span></a></li>
+      <li><a href="#decisions"><span class="arch-num">05</span><span data-i18n="decisionsTitle"></span></a></li>
+      <li><a href="#operating-model"><span class="arch-num">06</span><span data-i18n="operatingTitle"></span></a></li>
+      <li><a href="#limits"><span class="arch-num">07</span><span data-i18n="limitsTitle"></span></a></li>
+    </ol>
+  </nav>
 
-  <section class="arch-section" id="building-blocks" aria-labelledby="blocks-title">
-    <h2 id="blocks-title" data-i18n="blocksTitle"></h2>
-    <p class="arch-prose" data-i18n="blocksBody"></p>
-    <!-- view:blocks -->
-    <!-- blocks -->
-  </section>
+  <div class="arch-body">
 
-  <section class="arch-section" id="flows" aria-labelledby="flows-title">
-    <h2 id="flows-title" data-i18n="flowsTitle"></h2>
-    <h3 data-i18n="requestTitle"></h3>
-    <p class="arch-prose" data-i18n="requestBody"></p>
-    <!-- view:request -->
-    <h3 data-i18n="deliveryTitle"></h3>
-    <p class="arch-prose" data-i18n="deliveryBody"></p>
-    <!-- view:delivery -->
-  </section>
+    <section class="arch-section" id="context" aria-labelledby="context-title">
+      <p class="arch-num" aria-hidden="true">01</p>
+      <h2 id="context-title" data-i18n="contextTitle"></h2>
+      <p class="arch-prose" data-i18n="contextBody"></p>
+      <!-- view:context -->
+    </section>
 
-  <section class="arch-section" id="quality" aria-labelledby="quality-title">
-    <h2 id="quality-title" data-i18n="qualityTitle"></h2>
-    <p class="arch-prose" data-i18n="qualityIntro"></p>
-    <div class="arch-table-wrap">
-      <table class="arch-table arch-quality">
-        <thead>
-          <tr>
-            <th scope="col" data-i18n="qGoal"></th>
-            <th scope="col" data-i18n="qMechanism"></th>
-            <th scope="col" data-i18n="qEvidence"></th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <th scope="row"><strong data-i18n="qSecurity"></strong><span data-i18n="qSecurityGoal"></span></th>
-            <td data-i18n="qSecurityHow"></td>
-            <td><a href="/architecture/decisions/011/">ADR-011</a>, <a href="/architecture/decisions/008/">ADR-008</a></td>
-          </tr>
-          <tr>
-            <th scope="row"><strong data-i18n="qResilience"></strong><span data-i18n="qResilienceGoal"></span></th>
-            <td><span data-i18n="qResilienceHow"></span><!-- resilience --><span data-i18n="qResilienceRestore"></span></td>
-            <td><a href="https://github.com/khelias/khe-homelab#resilience" data-i18n="readmeResilience"></a>, <a href="https://github.com/khelias/khe-homelab/blob/main/.github/workflows/restore-verify.yml" data-i18n="restoreWorkflow"></a></td>
-          </tr>
-          <tr>
-            <th scope="row"><strong data-i18n="qDelivery"></strong><span data-i18n="qDeliveryGoal"></span></th>
-            <td data-i18n="qDeliveryHow"></td>
-            <td><a href="/architecture/decisions/008/">ADR-008</a>, <a href="/architecture/decisions/006/">ADR-006</a></td>
-          </tr>
-          <tr>
-            <th scope="row"><strong data-i18n="qOperability"></strong><span data-i18n="qOperabilityGoal"></span></th>
-            <td data-i18n="qOperabilityHow"></td>
-            <td><a href="/architecture/decisions/010/">ADR-010</a></td>
-          </tr>
-          <tr>
-            <th scope="row"><strong data-i18n="qCost"></strong><span data-i18n="qCostGoal"></span></th>
-            <td data-i18n="qCostHow"></td>
-            <td><a href="/architecture/decisions/003/">ADR-003</a>, <a href="/architecture/decisions/011/">ADR-011</a></td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-  </section>
+    <section class="arch-section" id="building-blocks" aria-labelledby="blocks-title">
+      <p class="arch-num" aria-hidden="true">02</p>
+      <h2 id="blocks-title" data-i18n="blocksTitle"></h2>
+      <p class="arch-prose" data-i18n="blocksBody"></p>
+      <!-- view:blocks -->
+      <!-- blocks -->
+    </section>
 
-  <section class="arch-section" id="decisions" aria-labelledby="decisions-title">
-    <h2 id="decisions-title" data-i18n="decisionsTitle"></h2>
-    <p class="arch-prose" data-i18n-html="decisionsIntro"></p>
-    <p class="arch-prose arch-lang-note" data-i18n="decisionsInEnglish"></p>
-    <!-- register -->
-    <!-- product-decisions -->
-  </section>
+    <section class="arch-section" id="flows" aria-labelledby="flows-title">
+      <p class="arch-num" aria-hidden="true">03</p>
+      <h2 id="flows-title" data-i18n="flowsTitle"></h2>
+      <h3 data-i18n="requestTitle"></h3>
+      <p class="arch-prose" data-i18n="requestBody"></p>
+      <!-- view:request -->
+      <h3 data-i18n="deliveryTitle"></h3>
+      <p class="arch-prose" data-i18n="deliveryBody"></p>
+      <!-- view:delivery -->
+    </section>
 
-  <section class="arch-section" id="operating-model" aria-labelledby="operating-title">
-    <h2 id="operating-title" data-i18n="operatingTitle"></h2>
-    <p class="arch-prose" data-i18n="operatingBody"></p>
-    <!-- view:operating -->
-  </section>
-
-  <section class="arch-section" id="limits" aria-labelledby="limits-title">
-    <h2 id="limits-title" data-i18n="limitsTitle"></h2>
-    <div class="arch-columns">
-      <div>
-        <h3 data-i18n="limitsIntro"></h3>
-        <ul class="arch-list">
-          <li data-i18n="limit1"></li>
-          <li data-i18n="limit2"></li>
-          <li data-i18n="limit3"></li>
-        </ul>
+    <section class="arch-section" id="quality" aria-labelledby="quality-title">
+      <p class="arch-num" aria-hidden="true">04</p>
+      <h2 id="quality-title" data-i18n="qualityTitle"></h2>
+      <p class="arch-prose" data-i18n="qualityIntro"></p>
+      <div class="arch-table-wrap">
+        <table class="arch-table arch-quality">
+          <thead>
+            <tr>
+              <th scope="col" data-i18n="qGoal"></th>
+              <th scope="col" data-i18n="qMechanism"></th>
+              <th scope="col" data-i18n="qEvidence"></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <th scope="row"><strong data-i18n="qSecurity"></strong><span data-i18n="qSecurityGoal"></span></th>
+              <td data-i18n="qSecurityHow"></td>
+              <td><a href="/architecture/decisions/011/">ADR-011</a>, <a href="/architecture/decisions/008/">ADR-008</a></td>
+            </tr>
+            <tr>
+              <th scope="row"><strong data-i18n="qResilience"></strong><span data-i18n="qResilienceGoal"></span></th>
+              <td><span data-i18n="qResilienceHow"></span><!-- resilience --><span data-i18n="qResilienceRestore"></span></td>
+              <td><a href="https://github.com/khelias/khe-homelab#resilience" data-i18n="readmeResilience"></a>, <a href="https://github.com/khelias/khe-homelab/blob/main/.github/workflows/restore-verify.yml" data-i18n="restoreWorkflow"></a></td>
+            </tr>
+            <tr>
+              <th scope="row"><strong data-i18n="qDelivery"></strong><span data-i18n="qDeliveryGoal"></span></th>
+              <td data-i18n="qDeliveryHow"></td>
+              <td><a href="/architecture/decisions/008/">ADR-008</a>, <a href="/architecture/decisions/006/">ADR-006</a></td>
+            </tr>
+            <tr>
+              <th scope="row"><strong data-i18n="qOperability"></strong><span data-i18n="qOperabilityGoal"></span></th>
+              <td data-i18n="qOperabilityHow"></td>
+              <td><a href="/architecture/decisions/010/">ADR-010</a></td>
+            </tr>
+            <tr>
+              <th scope="row"><strong data-i18n="qCost"></strong><span data-i18n="qCostGoal"></span></th>
+              <td data-i18n="qCostHow"></td>
+              <td><a href="/architecture/decisions/003/">ADR-003</a>, <a href="/architecture/decisions/011/">ADR-011</a></td>
+            </tr>
+          </tbody>
+        </table>
       </div>
-      <div>
-        <h3 data-i18n="directionIntro"></h3>
-        <ul class="arch-list">
-          <li data-i18n="next1"></li>
-          <li data-i18n="next2"></li>
-          <li data-i18n-html="next3"></li>
-          <li data-i18n="next4"></li>
-        </ul>
+    </section>
+
+    <section class="arch-section" id="decisions" aria-labelledby="decisions-title">
+      <p class="arch-num" aria-hidden="true">05</p>
+      <h2 id="decisions-title" data-i18n="decisionsTitle"></h2>
+      <p class="arch-prose" data-i18n-html="decisionsIntro"></p>
+      <p class="arch-prose arch-lang-note" data-i18n="decisionsInEnglish"></p>
+      <!-- register -->
+      <!-- product-decisions -->
+    </section>
+
+    <section class="arch-section" id="operating-model" aria-labelledby="operating-title">
+      <p class="arch-num" aria-hidden="true">06</p>
+      <h2 id="operating-title" data-i18n="operatingTitle"></h2>
+      <p class="arch-prose" data-i18n="operatingBody"></p>
+      <!-- view:operating -->
+    </section>
+
+    <section class="arch-section" id="limits" aria-labelledby="limits-title">
+      <p class="arch-num" aria-hidden="true">07</p>
+      <h2 id="limits-title" data-i18n="limitsTitle"></h2>
+      <div class="arch-columns">
+        <div>
+          <h3 data-i18n="limitsIntro"></h3>
+          <ul class="arch-list">
+            <li data-i18n="limit1"></li>
+            <li data-i18n="limit2"></li>
+            <li data-i18n="limit3"></li>
+          </ul>
+        </div>
+        <div>
+          <h3 data-i18n="directionIntro"></h3>
+          <ul class="arch-list">
+            <li data-i18n="next1"></li>
+            <li data-i18n="next2"></li>
+            <li data-i18n-html="next3"></li>
+            <li data-i18n="next4"></li>
+          </ul>
+        </div>
       </div>
-    </div>
-  </section>
+    </section>
+  </div>
 </main>
 
 <footer class="site-footer" data-site-footer></footer>
 
-<script type="module" src="/architecture/architecture.js?v=20261007a"></script>
+<script type="module" src="/architecture/architecture.js?v=20261007b"></script>
 </body>
 </html>

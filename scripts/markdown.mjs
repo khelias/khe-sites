@@ -44,9 +44,11 @@ function findClosing(text, start, delimiter) {
   return -1;
 }
 
-function renderInline(text, context) {
-  const fail = (what) => {
-    throw new MarkdownError(`${context.file}:${context.line}: ${what} is outside the supported Markdown subset`);
+// `base` is where `text` starts in the block, so an error names the source
+// line of the offending character, not the first line of its paragraph.
+function renderInline(text, context, base = 0) {
+  const fail = (what, at) => {
+    throw new MarkdownError(`${context.file}:${context.lineAt(base + at)}: ${what} is outside the supported Markdown subset`);
   };
   let out = '';
   let i = 0;
@@ -54,11 +56,11 @@ function renderInline(text, context) {
     const char = text[i];
     if (char === '`') {
       const end = text.indexOf('`', i + 1);
-      if (end < 0) fail('an unclosed code span');
+      if (end < 0) fail('an unclosed code span', i);
       out += `<code>${escapeHtml(text.slice(i + 1, end))}</code>`;
       i = end + 1;
     } else if (char === '!' && text[i + 1] === '[') {
-      fail('an image');
+      fail('an image', i);
     } else if (char === '[') {
       const close = findClosing(text, i + 1, ']');
       const target = close >= 0 && text[close + 1] === '(' ? text.indexOf(')', close + 2) : -1;
@@ -67,8 +69,8 @@ function renderInline(text, context) {
         i += 1;
         continue;
       }
-      const href = context.rewriteLink(text.slice(close + 2, target), context);
-      out += `<a href="${escapeHtml(href)}">${renderInline(text.slice(i + 1, close), context)}</a>`;
+      const href = context.rewriteLink(text.slice(close + 2, target), { ...context, line: context.lineAt(base + i) });
+      out += `<a href="${escapeHtml(href)}">${renderInline(text.slice(i + 1, close), context, base + i + 1)}</a>`;
       i = target + 1;
     } else if (char === '*') {
       const delimiter = text[i + 1] === '*' ? '**' : '*';
@@ -79,10 +81,10 @@ function renderInline(text, context) {
         continue;
       }
       const tag = delimiter === '**' ? 'strong' : 'em';
-      out += `<${tag}>${renderInline(text.slice(i + delimiter.length, close), context)}</${tag}>`;
+      out += `<${tag}>${renderInline(text.slice(i + delimiter.length, close), context, base + i + delimiter.length)}</${tag}>`;
       i = close + delimiter.length;
     } else if (char === '<') {
-      fail('raw HTML');
+      fail('raw HTML', i);
     } else {
       out += escapeHtml(char);
       i += 1;
@@ -124,7 +126,7 @@ function parseBlocks(source, file, firstLine) {
     const heading = line.match(/^(#+) (.+)$/);
     if (heading) {
       if (heading[1].length < 2 || heading[1].length > 3) fail(offset, `a level-${heading[1].length} heading`);
-      blocks.push({ type: 'heading', level: heading[1].length, text: heading[2], line: lineNumber });
+      blocks.push({ type: 'heading', level: heading[1].length, text: heading[2], lines: [lineNumber], line: lineNumber });
       paragraph = null;
       list = null;
       return;
@@ -134,7 +136,7 @@ function parseBlocks(source, file, firstLine) {
     if (marker) {
       const [, indent, symbol, text] = marker;
       const ordered = symbol !== '-';
-      const item = { text: [text], line: lineNumber, children: null };
+      const item = { text: [text], lines: [lineNumber], line: lineNumber, children: null };
       if (indent.length === 0) {
         if (!list || list.ordered !== ordered) {
           list = { type: 'list', ordered, start: ordered ? Number.parseInt(symbol, 10) : 1, items: [], line: lineNumber };
@@ -167,9 +169,12 @@ function parseBlocks(source, file, firstLine) {
         const indent = line.match(/^ */)[0].length;
         if (nested && list.nestedIndent !== null) {
           if (indent <= list.nestedIndent) fail(offset, 'text after a nested list');
-          nested.items[nested.items.length - 1].text.push(line.trim());
+          const last = nested.items[nested.items.length - 1];
+          last.text.push(line.trim());
+          last.lines.push(lineNumber);
         } else {
           list.current.text.push(line.trim());
+          list.current.lines.push(lineNumber);
         }
         return;
       }
@@ -178,8 +183,9 @@ function parseBlocks(source, file, firstLine) {
     if (/^ {4}/.test(line) && !paragraph) fail(offset, 'an indented code block');
     if (paragraph) {
       paragraph.text.push(line.trim());
+      paragraph.lines.push(lineNumber);
     } else {
-      paragraph = { type: 'paragraph', text: [line.trim()], line: lineNumber };
+      paragraph = { type: 'paragraph', text: [line.trim()], lines: [lineNumber], line: lineNumber };
       blocks.push(paragraph);
     }
   });
@@ -187,11 +193,28 @@ function parseBlocks(source, file, firstLine) {
   return blocks;
 }
 
+// Joins a block's source lines with spaces and maps a position in the joined
+// text back to its source line.
+function renderLines(block, context) {
+  const starts = [];
+  let offset = 0;
+  for (const part of block.text) {
+    starts.push(offset);
+    offset += part.length + 1;
+  }
+  const lineAt = (position) => {
+    let index = 0;
+    while (index + 1 < starts.length && starts[index + 1] <= position) index += 1;
+    return block.lines[index];
+  };
+  return renderInline(block.text.join(' '), { ...context, lineAt });
+}
+
 function renderList(list, context) {
   const tag = list.ordered ? 'ol' : 'ul';
   const start = list.ordered ? ` start="${list.start}"` : '';
   const items = list.items.map((item) => {
-    const inner = renderInline(item.text.join(' '), { ...context, line: item.line });
+    const inner = renderLines(item, context);
     const children = item.children ? renderList(item.children, context) : '';
     return `<li>${inner}${children}</li>`;
   });
@@ -213,10 +236,10 @@ export function renderMarkdown(source, { file = 'markdown', firstLine = 1, rewri
         const seen = ids.get(id) || 0;
         ids.set(id, seen + 1);
         if (seen) id = `${id}-${seen + 1}`;
-        return `<h${block.level} id="${id}">${renderInline(block.text, { ...context, line: block.line })}</h${block.level}>`;
+        return `<h${block.level} id="${id}">${renderLines({ text: [block.text], lines: block.lines }, context)}</h${block.level}>`;
       }
       if (block.type === 'paragraph') {
-        return `<p>${renderInline(block.text.join(' '), { ...context, line: block.line })}</p>`;
+        return `<p>${renderLines(block, context)}</p>`;
       }
       return renderList(block, context);
     })

@@ -70,16 +70,28 @@ const ESTATE_SECTIONS = {
   'Meta layer': 'meta',
 };
 
+// Every repo table counts, whatever its heading, so a new section in
+// ESTATE.md cannot slip past the model check.
 export function parseEstate(text) {
   const repos = [];
   let section = null;
+  let inRepoTable = false;
   for (const line of text.split('\n')) {
     const heading = line.match(/^## (.+?)\s*$/);
     if (heading) {
-      section = ESTATE_SECTIONS[heading[1]] || null;
+      section = ESTATE_SECTIONS[heading[1]] || 'other';
+      inRepoTable = false;
       continue;
     }
-    if (!section) continue;
+    if (/^\|\s*Repo\s*\|/.test(line)) {
+      inRepoTable = true;
+      continue;
+    }
+    if (!line.startsWith('|')) {
+      inRepoTable = false;
+      continue;
+    }
+    if (!inRepoTable || !section) continue;
     const row = line.match(/^\|\s*\[([^\]]+)\]\(([^)]+)\)\s*\|\s*([^|]+?)\s*\|/);
     if (!row) continue;
     const [, name, url, visibilityCell] = row;
@@ -87,7 +99,7 @@ export function parseEstate(text) {
     repos.push({ name, url, visibility, fork: visibilityCell.includes('fork'), section });
   }
   if (repos.length === 0) {
-    throw new SourceError('ESTATE.md has no repo rows under Product apps, Foundations or Meta layer.');
+    throw new SourceError('ESTATE.md has no repo tables.');
   }
   return repos;
 }

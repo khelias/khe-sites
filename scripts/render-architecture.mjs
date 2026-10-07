@@ -10,16 +10,6 @@ const root = dirname(dirname(fileURLToPath(import.meta.url)));
 const SITE = 'https://khe.ee';
 const SOURCE_BASE = 'https://github.com/khelias/khe-architecture/blob/main/';
 
-const KIND_LEGEND = {
-  person: 'kindPerson',
-  system: 'kindSystem',
-  product: 'kindProduct',
-  platform: 'kindPlatform',
-  external: 'kindExternal',
-  repo: 'kindRepo',
-  step: 'kindStep',
-};
-
 function copyText(key) {
   const text = COPY.en[key];
   if (typeof text !== 'string') throw new SourceError(`copy.js has no COPY.en.${key}`);
@@ -42,11 +32,11 @@ export function fillI18n(html) {
   );
 }
 
-// Inter is narrower than this on average; the margin keeps an Estonian label
-// from touching its border when the estimate is off.
+// A deliberately wide estimate of Inter's advance (about 0.55em for lowercase
+// at these weights), so a label that passes has room to spare in its box.
 function textWidth(text, size, weight) {
-  const factor = weight >= 500 ? 0.56 : 0.53;
-  return [...text].reduce((sum, char) => sum + (/[A-ZÕÄÖÜŠŽ]/.test(char) ? 1.2 : 1) * size * factor, 0);
+  const factor = weight >= 500 ? 0.6 : 0.57;
+  return [...text].reduce((sum, char) => sum + (/[A-ZÕÄÖÜŠŽmwMW]/.test(char) ? 1.25 : 1) * size * factor, 0);
 }
 
 function labelsOf(element) {
@@ -57,8 +47,8 @@ function labelsOf(element) {
 function assertFits(id, view, width) {
   const element = elements[id];
   const lines = [
-    ...labelsOf(element).map((line) => ({ ...line, size: 13, weight: 500 })),
-    ...(element.sub || []).map((key) => ({ key, size: 11, weight: 400 })),
+    ...labelsOf(element).map((line) => ({ ...line, size: LABEL_SIZE, weight: 500 })),
+    ...(element.sub || []).map((key) => ({ key, size: SUB_SIZE, weight: 400 })),
   ];
   for (const locale of Object.keys(COPY)) {
     for (const line of lines) {
@@ -78,59 +68,103 @@ function svgText(line, x, y, className, anchor = 'middle') {
   return `<text x="${x}" y="${y}" text-anchor="${anchor}" class="${className}"${i18nAttribute}>${content}</text>`;
 }
 
-function center([x, y, w, h]) {
-  return [x + w / 2, y + h / 2];
-}
-
-// Where the segment from the box centre towards `target` leaves the box.
-function borderPoint(box, target) {
-  const [cx, cy] = center(box);
-  const dx = target[0] - cx;
-  const dy = target[1] - cy;
-  const scale = Math.min(
-    dx === 0 ? Infinity : box[2] / 2 / Math.abs(dx),
-    dy === 0 ? Infinity : box[3] / 2 / Math.abs(dy),
-  );
-  return [cx + dx * scale, cy + dy * scale];
-}
-
 const round = (value) => Math.round(value * 10) / 10;
+const LABEL_SIZE = 15;
+const SUB_SIZE = 12.5;
 
 function renderNode(id, box, view) {
   const element = elements[id];
   const [x, y, w, h] = box;
   if (element.kind === 'boundary') {
-    return `<g class="arch-node arch-node--boundary"><rect x="${x}" y="${y}" width="${w}" height="${h}" rx="6"/>${svgText({ key: element.label }, x + 14, y + 22, 'arch-group-label', 'start')}</g>`;
+    return `<g class="arch-node arch-node--boundary"><rect x="${x + 0.5}" y="${y + 0.5}" width="${w - 1}" height="${h - 1}" rx="8"/>${svgText({ key: element.label }, x + 14, element.labelBelow ? y + h - 12 : y + 22, 'arch-group-label', 'start')}</g>`;
   }
   assertFits(id, view, w);
   const focus = view.focus === id ? ' arch-node--focus' : '';
-  const radius = element.kind === 'person' ? 18 : 6;
   const subs = element.sub || [];
-  const blockHeight = 16 + subs.length * 15;
-  const top = y + (h - blockHeight) / 2 + 12;
+  const blockHeight = LABEL_SIZE + 3 + subs.length * (SUB_SIZE + 4);
+  const top = y + (h - blockHeight) / 2 + LABEL_SIZE - 2;
   const cx = x + w / 2;
   const texts = [
-    ...labelsOf(element).map((line) => svgText(line, cx, top, 'arch-node-label')),
-    ...subs.map((key, index) => svgText({ key }, cx, top + 17 + index * 15, 'arch-node-sub')),
+    ...labelsOf(element).map((line) => svgText(line, cx, round(top), 'arch-node-label')),
+    ...subs.map((key, index) => svgText({ key }, cx, round(top + LABEL_SIZE + 4 + index * (SUB_SIZE + 4)), 'arch-node-sub')),
   ];
-  return `<g class="arch-node arch-node--${element.kind}${focus}"><rect x="${x}" y="${y}" width="${w}" height="${h}" rx="${radius}"/>${texts.join('')}</g>`;
+  return `<g class="arch-node arch-node--${element.kind}${focus}"><rect x="${x + 0.5}" y="${y + 0.5}" width="${w - 1}" height="${h - 1}" rx="5"/>${texts.join('')}</g>`;
+}
+
+const clamp = (value, min, max) => Math.min(Math.max(value, min), max);
+
+function span(start, size) {
+  return [start, start + size];
+}
+
+// The point on the shared stretch of two ranges where a straight connector
+// runs: the source's centre if it lies inside the target, and so on.
+function sharedAxis([a1, a2], [b1, b2]) {
+  const lo = Math.max(a1, b1);
+  const hi = Math.min(a2, b2);
+  if (hi - lo < 24) return null;
+  if (a1 >= b1 && a2 <= b2) return (a1 + a2) / 2;
+  if (b1 >= a1 && b2 <= a2) return (b1 + b2) / 2;
+  return (lo + hi) / 2;
+}
+
+// Orthogonal routing: a straight line where the boxes face each other,
+// otherwise one elbow pair through the gap between them.
+function routeEdge(edge, a, b) {
+  const [ax, ay, aw, ah] = a;
+  const [bx, by, bw, bh] = b;
+  const below = by + bh / 2 > ay + ah / 2;
+  const right = bx + bw / 2 > ax + aw / 2;
+  if (edge.route === 'tree') {
+    const sx = ax + aw / 2;
+    const ex = bx + bw / 2;
+    const sy = below ? ay + ah : ay;
+    const ey = below ? by : by + bh;
+    const mid = (sy + ey) / 2;
+    return { points: [[sx, sy], [sx, mid], [ex, mid], [ex, ey]], labelAt: [sx, mid], vertical: true };
+  }
+  const x = sharedAxis(span(ax, aw), span(bx, bw));
+  if (x !== null) {
+    const sy = below ? ay + ah : ay;
+    const ey = below ? by : by + bh;
+    return { points: [[x, sy], [x, ey]], labelAt: [x, (sy + ey) / 2], vertical: true };
+  }
+  const y = sharedAxis(span(ay, ah), span(by, bh));
+  if (y !== null) {
+    const sx = right ? ax + aw : ax;
+    const ex = right ? bx : bx + bw;
+    return { points: [[sx, y], [ex, y]], labelAt: [(sx + ex) / 2, y], vertical: false };
+  }
+  const acx = ax + aw / 2;
+  const acy = ay + ah / 2;
+  const bcx = bx + bw / 2;
+  const bcy = by + bh / 2;
+  if (Math.abs(bcx - acx) >= Math.abs(bcy - acy)) {
+    const sx = right ? ax + aw : ax;
+    const ex = right ? bx : bx + bw;
+    const mid = (sx + ex) / 2;
+    return { points: [[sx, acy], [mid, acy], [mid, bcy], [ex, bcy]], labelAt: [mid, (acy + bcy) / 2], vertical: true };
+  }
+  const sy = below ? ay + ah : ay;
+  const ey = below ? by : by + bh;
+  const mid = (sy + ey) / 2;
+  const sx = clamp(bcx, ax + 16, ax + aw - 16);
+  return { points: [[sx, sy], [sx, mid], [bcx, mid], [bcx, ey]], labelAt: [(sx + bcx) / 2, mid], vertical: false };
 }
 
 function renderEdge(edge, view) {
   const fromBox = view.nodes[edge.from];
   const toBox = view.nodes[edge.to];
   if (!fromBox || !toBox) throw new SourceError(`Diagram ${view.id}: edge ${edge.from} -> ${edge.to} names a node it lacks`);
-  const [x1, y1] = edge.points ? edge.points[0] : borderPoint(fromBox, center(toBox));
-  const [x2, y2] = edge.points ? edge.points[1] : borderPoint(toBox, center(fromBox));
+  const route = routeEdge(edge, fromBox, toBox);
   const dashed = edge.dashed ? ' arch-edge--dashed' : '';
-  const line = `<line x1="${round(x1)}" y1="${round(y1)}" x2="${round(x2)}" y2="${round(y2)}" class="arch-edge${dashed}" marker-end="url(#arrow-${view.id})"/>`;
+  const points = route.points.map(([px, py]) => `${round(px)},${round(py)}`).join(' ');
+  const line = `<polyline points="${points}" class="arch-edge${dashed}" marker-end="url(#arrow-${view.id})"/>`;
   if (!edge.label) return { line, label: '' };
-  const mx = (x1 + x2) / 2;
-  const my = (y1 + y2) / 2;
-  const vertical = Math.abs(x2 - x1) < Math.abs(y2 - y1);
-  const label = vertical
+  const [mx, my] = route.labelAt;
+  const label = route.vertical
     ? svgText({ key: edge.label }, round(mx + 8), round(my + 4), 'arch-edge-label', 'start')
-    : svgText({ key: edge.label }, round(mx), round(my - 7), 'arch-edge-label');
+    : svgText({ key: edge.label }, round(mx), round(my - 8), 'arch-edge-label');
   return { line, label };
 }
 
@@ -139,29 +173,44 @@ function elementName(id) {
   return element.name ? `<strong>${escapeHtml(element.name)}</strong>` : i18n(element.label, 'strong');
 }
 
-function renderViewList(view) {
-  const items = Object.keys(view.nodes).map((id) => {
-    const element = elements[id];
-    if (element.kind === 'boundary') return `<li class="arch-view-list__group">${i18n(element.label, 'strong')}</li>`;
-    const subs = (element.sub || []).map((key) => i18n(key)).join(' ');
-    const outgoing = view.edges
-      .filter((edge) => edge.from === id && elements[edge.to].kind !== 'boundary')
-      .map((edge) => `<span class="arch-view-list__to">&rarr; ${elementName(edge.to)}${edge.label ? ` (${i18n(edge.label)})` : ''}</span>`)
-      .join('');
-    return `<li>${elementName(id)} <span class="arch-view-list__sub">${subs}</span>${outgoing}</li>`;
-  });
-  return `<ol class="arch-view-list">${items.join('')}</ol>`;
+function contains([gx, gy, gw, gh], [x, y, w, h]) {
+  return x >= gx && y >= gy && x + w <= gx + gw && y + h <= gy + gh;
 }
 
-function renderLegend(view) {
-  const kinds = new Set();
-  for (const id of Object.keys(view.nodes)) {
-    const { kind } = elements[id];
-    if (kind !== 'boundary' && id !== view.focus) kinds.add(kind);
+function renderViewItem(view, id) {
+  const element = elements[id];
+  const subs = (element.sub || []).map((key) => i18n(key)).join(' ');
+  const outgoing = view.edges
+    .filter((edge) => edge.from === id && elements[edge.to].kind !== 'boundary')
+    .map((edge) => `<span class="arch-view-list__to">&rarr; ${elementName(edge.to)}${edge.label ? ` (${i18n(edge.label)})` : ''}</span>`)
+    .join('');
+  return `<li>${elementName(id)} <span class="arch-view-list__sub">${subs}</span>${outgoing}</li>`;
+}
+
+// Each element goes under the group whose box holds it, so the list says what
+// the diagram shows rather than following the order nodes are declared in.
+function renderViewList(view) {
+  const ids = Object.keys(view.nodes);
+  const groups = ids.filter((id) => elements[id].kind === 'boundary');
+  const entries = [];
+  const groupEntries = new Map();
+  for (const id of ids) {
+    if (elements[id].kind === 'boundary') {
+      const entry = { group: id, members: [] };
+      groupEntries.set(id, entry);
+      entries.push(entry);
+      continue;
+    }
+    const owner = groups.find((group) => contains(view.nodes[group], view.nodes[id]));
+    if (owner) groupEntries.get(owner).members.push(id);
+    else entries.push({ id });
   }
-  const items = [...kinds].map((kind) => `<li><span class="arch-swatch arch-swatch--${kind}" aria-hidden="true"></span>${i18n(KIND_LEGEND[kind])}</li>`);
-  if (view.focus) items.push(`<li><span class="arch-swatch arch-swatch--focus" aria-hidden="true"></span>${i18n('kindSystem')}</li>`);
-  return `<ul class="arch-legend" aria-label="${escapeHtml(copyText('legendLabel'))}" data-i18n-aria="legendLabel">${items.join('')}</ul>`;
+  const items = entries.map((entry) => {
+    if (!entry.group) return renderViewItem(view, entry.id);
+    const members = entry.members.map((id) => renderViewItem(view, id)).join('');
+    return `<li class="arch-view-list__group">${i18n(elements[entry.group].label, 'strong')}<ol>${members}</ol></li>`;
+  });
+  return `<ol class="arch-view-list">${items.join('')}</ol>`;
 }
 
 export function renderView(view) {
@@ -178,14 +227,14 @@ export function renderView(view) {
     `<svg class="arch-svg" viewBox="0 0 ${view.width} ${view.height}" role="img" aria-labelledby="${titleId} ${descId}">`,
     `<title id="${titleId}" data-i18n="${view.title}">${escapeHtml(copyText(view.title))}</title>`,
     `<desc id="${descId}" data-i18n="${view.desc}">${escapeHtml(copyText(view.desc))}</desc>`,
-    `<defs><marker id="arrow-${view.id}" viewBox="0 0 8 8" refX="7.5" refY="4" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0.8 L7.5,4 L0,7.2 z" class="arch-arrow"/></marker></defs>`,
+    `<defs><marker id="arrow-${view.id}" viewBox="0 0 10 10" refX="9.5" refY="5" markerWidth="8" markerHeight="8" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,1 L10,5 L0,9 z" class="arch-arrow"/></marker></defs>`,
     ...boundaries.map((id) => renderNode(id, view.nodes[id], view)),
     ...edges.map((edge) => edge.line),
     ...others.map((id) => renderNode(id, view.nodes[id], view)),
     ...edges.map((edge) => edge.label),
     '</svg>',
   ].join('');
-  return `<figure class="arch-figure" data-view="${view.id}"><div class="arch-diagram">${svg}</div>${renderViewList(view)}<figcaption>${renderLegend(view)}</figcaption></figure>`;
+  return `<figure class="arch-figure" data-view="${view.id}"><div class="arch-diagram">${svg}</div>${renderViewList(view)}</figure>`;
 }
 
 export function modelMismatches(sources) {
@@ -224,18 +273,17 @@ function repoLink(repo) {
 function renderBlocks(sources) {
   const repoByName = new Map(sources.repos.map((repo) => [repo.name, repo]));
   const groups = blockCards.map((group) => {
-    const cards = group.ids.map((id) => {
+    const rows = group.ids.map((id) => {
       const element = elements[id];
-      const lines = [];
-      if (element.repo) lines.push(`<p class="arch-card__meta">${repoLink(repoByName.get(element.repo))}</p>`);
+      const meta = [];
+      if (element.repo) meta.push(repoLink(repoByName.get(element.repo)));
       const stacks = (element.groups || []).flatMap((name) => sources.homelab.groups[name] || []);
-      if (stacks.length) {
-        lines.push(`<p class="arch-card__meta">${i18n('stacksLabel')}: ${stacks.map((stack) => `<code>${escapeHtml(stack)}</code>`).join(' ')}</p>`);
-      }
-      return `<li class="arch-card"><h4>${element.name ? escapeHtml(element.name) : i18n(element.label)}</h4>${i18n(purposeKey(id), 'p')}${lines.join('')}</li>`;
+      if (stacks.length) meta.push(`${i18n('stacksLabel')}: <span class="arch-stacks">${stacks.map(escapeHtml).join(', ')}</span>`);
+      const metaLine = meta.length ? `<p class="arch-row__meta">${meta.join('<span class="arch-row__sep" aria-hidden="true"> · </span>')}</p>` : '';
+      return `<li class="arch-row"><h4>${element.name ? escapeHtml(element.name) : i18n(element.label)}</h4><div>${i18n(purposeKey(id), 'p')}${metaLine}</div></li>`;
     });
     const repo = group.repo ? ` <span class="arch-block-group__repo">${repoLink(repoByName.get(group.repo))}</span>` : '';
-    return `<div class="arch-block-group"><h3>${i18n(group.group)}${repo}</h3><ul class="arch-cards">${cards.join('')}</ul></div>`;
+    return `<div class="arch-block-group"><h3>${i18n(group.group)}${repo}</h3><ul class="arch-rows">${rows.join('')}</ul></div>`;
   });
   return groups.join('');
 }

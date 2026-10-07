@@ -81,6 +81,9 @@ not a static deploy: the same nginx proxies `/adventure/` to the
   renderer and its fixtures in `check.mjs` together.
 - Every copy key used on the architecture pages lives in `copy.js`, in both
   languages; the build fills the HTML from `COPY.en`.
+- The architecture pages have their own light and dark palette (the `--a-*`
+  tokens in the Architecture section of `site.css`, following the system
+  setting); the rest of the site is dark only.
 - The Cloudflare Web Analytics tokens in the HTML are public beacon tokens,
   not secrets. The beacon loads only after the visitor consents
   (`src/shared/analytics-consent.js`).
