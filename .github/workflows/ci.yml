@@ -20,10 +20,29 @@ jobs:
     timeout-minutes: 10
     env:
       FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+      # The architecture page reads the ADRs and the estate index from
+      # khe-architecture and the service groups from khe-homelab.
+      ARCHITECTURE_ROOT: ${{ github.workspace }}/.sources/khe-architecture
+      HOMELAB_ROOT: ${{ github.workspace }}/.sources/khe-homelab
 
     steps:
       - name: Checkout
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+
+      # After the main checkout, whose clean would remove them.
+      - name: Checkout khe-architecture
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          repository: khelias/khe-architecture
+          path: .sources/khe-architecture
+          persist-credentials: false
+
+      - name: Checkout khe-homelab
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          repository: khelias/khe-homelab
+          path: .sources/khe-homelab
+          persist-credentials: false
 
       - name: Dependency review
         if: github.event_name == 'pull_request'

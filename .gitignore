@@ -1,4 +1,5 @@
 dist/
+.sources/
 node_modules/
 tmp-screens/
 .DS_Store

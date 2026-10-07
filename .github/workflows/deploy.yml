@@ -3,6 +3,11 @@ name: Deploy to Homelab
 on:
   push:
     branches: [main]
+  # A new ADR or a homelab change reaches the page within a week without a
+  # push. GitHub disables schedules after 60 days without repo activity;
+  # workflow_dispatch publishes at once either way.
+  schedule:
+    - cron: '17 4 * * 1'
   workflow_dispatch:
 
 jobs:
@@ -11,10 +16,23 @@ jobs:
     timeout-minutes: 10
     env:
       FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+      ARCHITECTURE_ROOT: ${{ github.workspace }}/.sources/khe-architecture
+      # The homelab checkout the runner deploys from, so the architecture page
+      # and the Lab Atlas count the stacks that actually run. Job level, since
+      # Check builds too.
+      HOMELAB_ROOT: /home/khe/homelab
 
     steps:
       - name: Checkout
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+
+      # After the main checkout, whose clean would remove it.
+      - name: Checkout khe-architecture
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          repository: khelias/khe-architecture
+          path: .sources/khe-architecture
+          persist-credentials: false
 
       - name: Setup Node.js
         uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7
@@ -32,10 +50,6 @@ jobs:
 
       - name: Build
         run: npm run build
-        env:
-          # The homelab checkout the runner deploys from; keeps the Lab Atlas
-          # snapshot in step with the stacks instead of the committed copy.
-          HOMELAB_ROOT: /home/khe/homelab
 
       - name: Deploy landing
         run: |
