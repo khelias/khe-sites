@@ -1,7 +1,8 @@
 # khe-sites
 
 Static source for two independently deployed sites: `khe.ee` from
-`src/landing/` (with the Lab Atlas at `/lab/`) and `games.khe.ee` from
+`src/landing/` (with the estate architecture page at `/architecture/` and,
+until its removal, the Lab Atlas at `/lab/`) and `games.khe.ee` from
 `src/games/`, the launcher shell. The game apps (`khe-study`,
 `khe-ai-adventure`) live and deploy in their own repos.
 
@@ -10,7 +11,8 @@ bundler.
 
 ## Commands
 
-- `npm run check` - static validation
+- `npm run check` - build, then static validation of the sources and the
+  built architecture pages
 - `npm run build` - build `dist/landing` and `dist/games`
 
 ## Layout
@@ -18,14 +20,22 @@ bundler.
 ```
 src/
   landing/   khe.ee
+    architecture/  estate architecture page: copy.js (en/et strings),
+             architecture.js; diagrams, register and ADR pages are
+             rendered into it at build time
     lab/     Lab Atlas, a public systems map of the homelab; renders
              lab-data.json via lab/atlas.js
   games/     games.khe.ee launcher shell
   shared/    cross-site assets, copied into each site's /assets/ at build
 scripts/
-  build.mjs              build dist/
-  check.mjs              static checks
-  generate-lab-data.mjs  generates src/landing/lab/lab-data.json
+  build.mjs                build dist/
+  check.mjs                static checks
+  architecture-sources.mjs reads khe-architecture and khe-homelab
+  architecture-model.mjs   diagram elements, edges and layout
+  render-architecture.mjs  renders the page, ADR pages and sitemap entries
+  markdown.mjs             strict Markdown subset for the ADRs
+  templates/decision.html  the ADR page
+  generate-lab-data.mjs    generates src/landing/lab/lab-data.json
 ```
 
 ## Rules
@@ -55,12 +65,26 @@ not a static deploy: the same nginx proxies `/adventure/` to the
 
 ## Gotchas
 
+- Build and check read their sources at build time: `ARCHITECTURE_ROOT`
+  (khe-architecture: `ESTATE.md`, `decisions/`) and `HOMELAB_ROOT`
+  (khe-homelab: compose files, the `## Resilience` list), else the sibling
+  checkouts next to the main checkout (found through the git common dir, so
+  a worktree works). A missing source fails the build naming the variable;
+  there is no committed snapshot. CI and deploy check khe-architecture out
+  into `.sources/`.
+- `scripts/architecture-model.mjs` must name every repo in `ESTATE.md` and
+  every khe-homelab service group, and nothing else; check fails otherwise.
+  Diagram labels are width-checked in both languages at build.
+- ADRs render through `scripts/markdown.mjs`, which throws with file and line
+  on anything outside its subset (tables, fences, quotes, raw HTML, images,
+  deeper nesting, relative links other than `NNN-slug.md`). Extend the
+  renderer and its fixtures in `check.mjs` together.
+- Every copy key used on the architecture pages lives in `copy.js`, in both
+  languages; the build fills the HTML from `COPY.en`.
 - The Cloudflare Web Analytics tokens in the HTML are public beacon tokens,
   not secrets. The beacon loads only after the visitor consents
   (`src/shared/analytics-consent.js`).
-- `generate-lab-data.mjs` counts compose files, services and containers from
-  `HOMELAB_ROOT` (deploy sets `/home/khe/homelab`) or `../khe-homelab/`,
-  which in the workspace (`khe-workspace`) is `repos/khe-homelab`, and resilience layers
-  from the numbered list under `## Resilience` in its README. With neither
-  checkout present it keeps the committed `lab-data.json`; a checkout whose
-  README has no such list fails the build.
+- `generate-lab-data.mjs` counts compose files, services, containers and
+  resilience layers from the same khe-homelab source (deploy sets
+  `HOMELAB_ROOT=/home/khe/homelab`), and rewrites `lab-data.json` only when
+  more than its timestamp changed, so a gate run leaves the tree clean.
