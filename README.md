@@ -27,7 +27,8 @@ npm run build     # dist/landing and dist/games
 ```
 
 Both need `khe-architecture` and `khe-homelab` checked out next to this repo,
-or their paths in `ARCHITECTURE_ROOT` and `HOMELAB_ROOT`. Every push to `main` deploys both sites to the homelab. The rules
+or their paths in `ARCHITECTURE_ROOT` and `HOMELAB_ROOT`. Every push to
+`main` deploys both sites to the homelab. The rules
 for working on the code are in [AGENTS.md](AGENTS.md).
 
 MIT licensed.

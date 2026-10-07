@@ -24,7 +24,6 @@ async function copyDirectory(from, to) {
 }
 
 await runReportingSourceErrors(async () => {
-  await import('./generate-lab-data.mjs');
   await rm(dist, { recursive: true, force: true });
 
   for (const app of apps) {

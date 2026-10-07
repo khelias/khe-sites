@@ -160,28 +160,6 @@
           max-width: 34ch;
         }
       }
-      @media (max-width: 520px) {
-        body.lab-atlas-v4 .khe-analytics-consent {
-          position: static;
-          width: auto;
-          max-height: none;
-          margin: 0.72rem;
-          overflow: visible;
-          padding: 0.56rem;
-        }
-        body.lab-atlas-v4 .khe-analytics-consent strong {
-          font-size: 0.84rem;
-        }
-        body.lab-atlas-v4 .khe-analytics-consent p {
-          margin-bottom: 0.44rem;
-        }
-        body.lab-atlas-v4 .khe-analytics-actions {
-          gap: 0.36rem;
-        }
-        body.lab-atlas-v4 .khe-analytics-status {
-          display: none;
-        }
-      }
     `;
     document.head.appendChild(style);
   }

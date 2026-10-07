@@ -1,10 +1,9 @@
 # khe-sites
 
 Static source for two independently deployed sites: `khe.ee` from
-`src/landing/` (with the estate architecture page at `/architecture/` and,
-until its removal, the Lab Atlas at `/lab/`) and `games.khe.ee` from
-`src/games/`, the launcher shell. The game apps (`khe-study`,
-`khe-ai-adventure`) live and deploy in their own repos.
+`src/landing/` (with the estate architecture page at `/architecture/`) and
+`games.khe.ee` from `src/games/`, the launcher shell. The game apps
+(`khe-study`, `khe-ai-adventure`) live and deploy in their own repos.
 
 Plain HTML, CSS and vanilla JS, built by Node 24 scripts. No framework, no
 bundler.
@@ -23,8 +22,6 @@ src/
     architecture/  estate architecture page: copy.js (en/et strings),
              architecture.js; diagrams, register and ADR pages are
              rendered into it at build time
-    lab/     Lab Atlas, a public systems map of the homelab; renders
-             lab-data.json via lab/atlas.js
   games/     games.khe.ee launcher shell
   shared/    cross-site assets, copied into each site's /assets/ at build
 scripts/
@@ -35,7 +32,6 @@ scripts/
   render-architecture.mjs  renders the page, ADR pages and sitemap entries
   markdown.mjs             strict Markdown subset for the ADRs
   templates/decision.html  the ADR page
-  generate-lab-data.mjs    generates src/landing/lab/lab-data.json
 ```
 
 ## Rules
@@ -87,7 +83,3 @@ not a static deploy: the same nginx proxies `/adventure/` to the
 - The Cloudflare Web Analytics tokens in the HTML are public beacon tokens,
   not secrets. The beacon loads only after the visitor consents
   (`src/shared/analytics-consent.js`).
-- `generate-lab-data.mjs` counts compose files, services, containers and
-  resilience layers from the same khe-homelab source (deploy sets
-  `HOMELAB_ROOT=/home/khe/homelab`), and rewrites `lab-data.json` only when
-  more than its timestamp changed, so a gate run leaves the tree clean.

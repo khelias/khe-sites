@@ -18,8 +18,7 @@ jobs:
       FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
       ARCHITECTURE_ROOT: ${{ github.workspace }}/.sources/khe-architecture
       # The homelab checkout the runner deploys from, so the architecture page
-      # and the Lab Atlas count the stacks that actually run. Job level, since
-      # Check builds too.
+      # counts the stacks that actually run. Job level, since Check builds too.
       HOMELAB_ROOT: /home/khe/homelab
 
     steps:

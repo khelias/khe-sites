@@ -178,7 +178,7 @@ export async function loadDecisions(architectureRoot) {
   return decisions;
 }
 
-export async function findComposeFiles(directory) {
+async function findComposeFiles(directory) {
   const found = [];
   const entries = await readdir(directory, { withFileTypes: true });
 
@@ -194,29 +194,6 @@ export async function findComposeFiles(directory) {
   return found.sort();
 }
 
-export function extractServiceNames(composeText) {
-  const names = [];
-  let inServices = false;
-
-  for (const line of composeText.split('\n')) {
-    if (/^services:\s*$/.test(line)) {
-      inServices = true;
-      continue;
-    }
-
-    if (inServices && /^[A-Za-z0-9_-]+:\s*$/.test(line)) {
-      break;
-    }
-
-    const match = line.match(/^  ([A-Za-z0-9._-]+):\s*$/);
-    if (inServices && match) {
-      names.push(match[1]);
-    }
-  }
-
-  return names;
-}
-
 function resilienceSection(readme) {
   const section = readme.split(/^## /m).find((part) => /^Resilience\s*\n/.test(part));
   const layers = section ? section.match(/^\d+\.\s.*$/gm) : null;
@@ -228,10 +205,6 @@ function resilienceSection(readme) {
   return layers;
 }
 
-export function countResilienceLayers(readme) {
-  return resilienceSection(readme).length;
-}
-
 export function resilienceLayerTitles(readme) {
   return resilienceSection(readme).map((line) => {
     const title = line.match(/^\d+\.\s+\*\*(.+?)\.?\*\*/);
@@ -240,7 +213,7 @@ export function resilienceLayerTitles(readme) {
   });
 }
 
-export function byCategory(servicesRoot, composeFiles) {
+function byCategory(servicesRoot, composeFiles) {
   return composeFiles.reduce((acc, file) => {
     const parts = relative(servicesRoot, file).split('/');
     const category = parts[0] || 'other';
@@ -257,14 +230,9 @@ export async function loadHomelab(homelabRoot) {
     throw new SourceError(`No services directory at ${servicesRoot}. Check HOMELAB_ROOT.`);
   }
   const composeFiles = await findComposeFiles(servicesRoot);
-  let containers = 0;
-  for (const file of composeFiles) {
-    containers += extractServiceNames(await readFile(file, 'utf8')).length;
-  }
   const readme = await readSource(join(homelabRoot, 'README.md'), 'HOMELAB_ROOT');
   return {
     composeFiles: composeFiles.length,
-    containers,
     groups: byCategory(servicesRoot, composeFiles),
     resilienceLayers: resilienceLayerTitles(readme),
   };

@@ -14,7 +14,6 @@ const root = dirname(dirname(fileURLToPath(import.meta.url)));
 await runReportingSourceErrors(async () => {
   const htmlFiles = [
     'src/landing/index.html',
-    'src/landing/lab/index.html',
     'src/landing/architecture/index.html',
     'scripts/templates/decision.html',
     'src/landing/privacy/index.html',
