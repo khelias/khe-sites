@@ -85,11 +85,11 @@
 
   <section class="portfolio-panel" aria-label="Projects" data-i18n-aria="projectsLabel">
     <div class="project-list">
-      <a class="project-item project-lab" href="/lab/?lang=en" data-link="lab">
+      <a class="project-item project-architecture" href="/architecture/?lang=en" data-link="architecture">
         <span class="project-index">01</span>
         <div class="project-copy">
-          <h3 data-i18n="labTitle">Lab Atlas</h3>
-          <p data-i18n="labDesc">A public map of the home lab: services, boundaries, and operating model in one inspectable interface.</p>
+          <h3 data-i18n="architectureTitle">Architecture</h3>
+          <p data-i18n="architectureDesc">How the estate is built, and why: diagrams, decisions and known limits.</p>
         </div>
         <span class="project-arrow" aria-hidden="true">→</span>
       </a>
@@ -128,8 +128,8 @@
       languageLabel: 'Keel',
       projectsLabel: 'Projektid',
       tagline: 'Ametilt tarkvaraarhitekt. Loomult nokitseja.',
-      labTitle: 'Lab Atlas',
-      labDesc: 'Kodulabori teenused ja piirid ühes vaates.',
+      architectureTitle: 'Arhitektuur',
+      architectureDesc: 'Kuidas süsteemid on üles ehitatud ja miks: diagrammid, otsused ja teadaolevad piirangud.',
       gamesTitle: 'Mängud',
       gamesDesc: 'Õppemängud ja AI seiklus ühel mänguriiulil.',
       contactTitle: 'Koostöö',
@@ -141,8 +141,8 @@
       languageLabel: 'Language',
       projectsLabel: 'Projects',
       tagline: 'Software architect by trade. Tinkerer by nature.',
-      labTitle: 'Lab Atlas',
-      labDesc: 'Home lab services and boundaries in one view.',
+      architectureTitle: 'Architecture',
+      architectureDesc: 'How the estate is built, and why: diagrams, decisions and known limits.',
       gamesTitle: 'Games',
       gamesDesc: 'A games shelf for learning, logic, and AI-narrated group adventures.',
       contactTitle: 'Work with me',
@@ -161,7 +161,7 @@
     copy: withSiteFooterCopy(COPY),
     defaultLocale: 'en',
     links: {
-      lab: (locale) => `/lab/?lang=${locale}`,
+      architecture: (locale) => `/architecture/?lang=${locale}`,
       games: (locale) => `${gamesOrigin}/?lang=${locale}`,
       contact: () => 'mailto:kaidoelias@gmail.com?subject=KHE.ee%20project%20inquiry',
       privacy: (locale) => `/privacy?lang=${locale}`,

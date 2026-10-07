@@ -8,11 +8,6 @@
     <xhtml:link rel="alternate" hreflang="x-default" href="https://khe.ee/"/>
   </url>
   <url>
-    <loc>https://khe.ee/lab/</loc>
-    <xhtml:link rel="alternate" hreflang="en" href="https://khe.ee/lab/?lang=en"/>
-    <xhtml:link rel="alternate" hreflang="et" href="https://khe.ee/lab/?lang=et"/>
-  </url>
-  <url>
     <loc>https://khe.ee/architecture/</loc>
     <xhtml:link rel="alternate" hreflang="en" href="https://khe.ee/architecture/?lang=en"/>
     <xhtml:link rel="alternate" hreflang="et" href="https://khe.ee/architecture/?lang=et"/>
