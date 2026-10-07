@@ -2781,6 +2781,603 @@ body.games-home {
   --game-accent: var(--accent-warm);
 }
 
+/* Architecture */
+body.architecture-page::before {
+  display: none;
+}
+
+.arch {
+  width: min(1080px, 100%);
+  margin: 0 auto;
+  padding: 3rem max(1.25rem, env(safe-area-inset-right)) 4rem max(1.25rem, env(safe-area-inset-left));
+  position: relative;
+  z-index: 1;
+  color: var(--text-dim);
+  font-size: 0.95rem;
+  line-height: 1.6;
+}
+
+.arch a {
+  color: var(--text);
+  text-decoration-color: rgba(255, 255, 255, 0.28);
+  text-underline-offset: 3px;
+}
+
+.arch a:hover {
+  text-decoration-color: var(--accent);
+}
+
+.arch a:focus-visible {
+  outline: 2px solid var(--accent-border);
+  outline-offset: 2px;
+  border-radius: 2px;
+}
+
+.arch-kicker {
+  color: var(--text-muted);
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.arch h1 {
+  max-width: 24ch;
+  margin: 0.5rem 0 1rem;
+  color: var(--text);
+  font-size: clamp(1.9rem, 4.5vw, 2.6rem);
+  font-weight: 600;
+  line-height: 1.15;
+  letter-spacing: -0.01em;
+}
+
+.arch h2 {
+  margin-bottom: 0.75rem;
+  color: var(--text);
+  font-size: 1.45rem;
+  font-weight: 600;
+  line-height: 1.25;
+}
+
+.arch h3 {
+  margin: 2rem 0 0.5rem;
+  color: var(--text);
+  font-size: 1.05rem;
+  font-weight: 600;
+  line-height: 1.35;
+}
+
+.arch-lead {
+  max-width: 70ch;
+  font-size: 1.05rem;
+}
+
+.arch-prose {
+  max-width: 72ch;
+  margin-bottom: 0.75rem;
+}
+
+.arch-facts {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 0.75rem;
+  margin: 2rem 0 0.5rem;
+}
+
+.arch-facts div {
+  display: flex;
+  flex-direction: column-reverse;
+  justify-content: flex-end;
+  gap: 0.15rem;
+  padding: 0.85rem 1rem;
+  border: 1px solid var(--border-hover);
+  border-radius: 6px;
+}
+
+.arch-facts dd {
+  color: var(--text);
+  font-size: 1.6rem;
+  font-weight: 600;
+  line-height: 1.1;
+}
+
+.arch-facts dt {
+  color: var(--text-muted);
+  font-size: 0.78rem;
+  line-height: 1.35;
+}
+
+.arch-facts-note {
+  color: var(--text-faint);
+  font-size: 0.75rem;
+}
+
+.arch-toc {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem 1.25rem;
+  margin-top: 2rem;
+  font-size: 0.85rem;
+}
+
+.arch .arch-toc a {
+  color: var(--text-dim);
+  text-decoration: none;
+}
+
+.arch .arch-toc a:hover {
+  color: var(--text);
+}
+
+.arch-section {
+  margin-top: 3.5rem;
+  padding-top: 2.5rem;
+  border-top: 1px solid var(--border);
+  scroll-margin-top: 4rem;
+}
+
+.arch-figure {
+  margin: 1.5rem 0 1rem;
+}
+
+.arch-diagram {
+  overflow-x: auto;
+  padding: 1rem;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+}
+
+.arch-svg {
+  display: block;
+  width: 100%;
+  min-width: 720px;
+  height: auto;
+  font-family: 'Inter', system-ui, sans-serif;
+}
+
+.arch-node rect {
+  fill: var(--bg);
+  stroke: rgba(255, 255, 255, 0.24);
+  stroke-width: 1;
+}
+
+.arch-node--product rect,
+.arch-node--person rect {
+  stroke: rgba(255, 255, 255, 0.36);
+}
+
+.arch-node--repo rect {
+  stroke: rgba(255, 255, 255, 0.18);
+}
+
+.arch-node--external rect {
+  stroke-dasharray: 4 3;
+}
+
+.arch-node--boundary rect {
+  fill: none;
+  stroke: rgba(255, 255, 255, 0.12);
+  stroke-dasharray: 2 4;
+}
+
+.arch-node--focus rect {
+  fill: rgba(94, 234, 212, 0.08);
+  stroke: var(--accent);
+  stroke-dasharray: none;
+}
+
+.arch-node-label {
+  fill: var(--text);
+  font-size: 13px;
+  font-weight: 500;
+}
+
+.arch-node-sub {
+  fill: var(--text-muted);
+  font-size: 11px;
+}
+
+.arch-group-label {
+  fill: var(--text-muted);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.arch-edge {
+  stroke: rgba(255, 255, 255, 0.34);
+  stroke-width: 1;
+}
+
+.arch-edge--dashed {
+  stroke-dasharray: 4 3;
+}
+
+.arch-arrow {
+  fill: rgba(255, 255, 255, 0.5);
+}
+
+.arch-edge-label {
+  fill: var(--text-dim);
+  font-size: 11px;
+  paint-order: stroke;
+  stroke: var(--bg);
+  stroke-width: 4px;
+  stroke-linejoin: round;
+}
+
+.arch-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem 1.1rem;
+  margin-top: 0.6rem;
+  list-style: none;
+  color: var(--text-muted);
+  font-size: 0.75rem;
+}
+
+.arch-legend li {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.arch-swatch {
+  width: 1.1rem;
+  height: 0.7rem;
+  border: 1px solid rgba(255, 255, 255, 0.24);
+  border-radius: 3px;
+}
+
+.arch-swatch--person,
+.arch-swatch--product {
+  border-color: rgba(255, 255, 255, 0.36);
+}
+
+.arch-swatch--person {
+  border-radius: 999px;
+}
+
+.arch-swatch--repo {
+  border-color: rgba(255, 255, 255, 0.18);
+}
+
+.arch-swatch--external {
+  border-style: dashed;
+}
+
+.arch-swatch--focus {
+  border-color: var(--accent);
+  background: rgba(94, 234, 212, 0.08);
+}
+
+.arch-view-list {
+  display: none;
+  list-style: none;
+}
+
+.arch-view-list li {
+  padding: 0.55rem 0;
+  border-bottom: 1px solid var(--border);
+}
+
+.arch-view-list strong {
+  color: var(--text);
+}
+
+.arch-view-list__group {
+  padding-top: 1rem;
+}
+
+.arch-view-list__group strong {
+  color: var(--text-muted);
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.arch-view-list__sub {
+  color: var(--text-muted);
+}
+
+.arch-view-list__to {
+  display: block;
+  color: var(--text-muted);
+  font-size: 0.85rem;
+}
+
+.arch-table-wrap {
+  overflow-x: auto;
+  margin: 1.25rem 0;
+}
+
+.arch-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9rem;
+}
+
+.arch-table th,
+.arch-table td {
+  padding: 0.75rem 0.9rem 0.75rem 0;
+  border-bottom: 1px solid var(--border);
+  text-align: left;
+  vertical-align: top;
+}
+
+.arch-table thead th {
+  color: var(--text-muted);
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.arch-quality tbody th {
+  width: 26%;
+  font-weight: 400;
+}
+
+.arch-quality tbody th strong {
+  display: block;
+  font-weight: 600;
+}
+
+.arch-quality td:last-child {
+  width: 18%;
+}
+
+.arch-register td:first-child,
+.arch-register td:last-child {
+  white-space: nowrap;
+}
+
+.arch-status--superseded,
+.arch-status--deprecated,
+.arch-successor {
+  color: var(--text-muted);
+}
+
+.arch-layers {
+  margin: 0.4rem 0 0.4rem 1.2rem;
+}
+
+.arch-block-group h3 {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.25rem 0.75rem;
+}
+
+.arch-block-group__repo {
+  font-size: 0.8rem;
+  font-weight: 400;
+}
+
+.arch-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(15rem, 1fr));
+  gap: 0.75rem;
+  list-style: none;
+}
+
+.arch-card {
+  padding: 0.9rem 1rem;
+  border: 1px solid var(--border-hover);
+  border-radius: 6px;
+  font-size: 0.88rem;
+}
+
+.arch-card h4 {
+  margin-bottom: 0.3rem;
+  color: var(--text);
+  font-size: 0.95rem;
+  font-weight: 600;
+}
+
+.arch-card__meta {
+  margin-top: 0.45rem;
+  color: var(--text-muted);
+  font-size: 0.8rem;
+  overflow-wrap: anywhere;
+}
+
+.arch-private {
+  color: var(--text-muted);
+}
+
+.arch-inline-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem 1.25rem;
+  list-style: none;
+}
+
+.arch-columns {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0 2.5rem;
+}
+
+.arch-columns h3 {
+  margin-top: 0.5rem;
+}
+
+.arch-list {
+  list-style: none;
+}
+
+.arch-list li {
+  position: relative;
+  margin-bottom: 0.6rem;
+  padding-left: 1rem;
+}
+
+.arch-list li::before {
+  content: "-";
+  position: absolute;
+  left: 0;
+  color: var(--text-faint);
+}
+
+html:not([lang="et"]) .arch-lang-note {
+  display: none;
+}
+
+.arch-lang-note {
+  color: var(--text-muted);
+  font-size: 0.85rem;
+}
+
+.arch-decision {
+  width: min(820px, 100%);
+}
+
+.arch-decision h1 {
+  max-width: none;
+  font-size: clamp(1.5rem, 3.6vw, 2rem);
+}
+
+.arch-breadcrumb {
+  margin-bottom: 1.5rem;
+  font-size: 0.85rem;
+}
+
+.arch .arch-breadcrumb a {
+  color: var(--text-dim);
+  text-decoration: none;
+}
+
+.arch-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem 2rem;
+  margin-bottom: 1.25rem;
+  font-size: 0.85rem;
+}
+
+.arch-meta dt {
+  color: var(--text-muted);
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.arch-meta dd {
+  color: var(--text);
+}
+
+.arch-notice {
+  margin-bottom: 1.25rem;
+  padding: 0.6rem 0.9rem;
+  border-left: 2px solid var(--accent);
+  color: var(--text);
+}
+
+.arch-adr {
+  max-width: 72ch;
+  margin-top: 1.5rem;
+}
+
+.arch-adr h2 {
+  margin: 2.25rem 0 0.6rem;
+  font-size: 1.2rem;
+}
+
+.arch-adr h3 {
+  margin: 1.5rem 0 0.5rem;
+  font-size: 1rem;
+}
+
+.arch-adr p {
+  margin-bottom: 0.85rem;
+}
+
+.arch-adr ul,
+.arch-adr ol {
+  margin: 0 0 0.85rem 1.4rem;
+}
+
+.arch-adr li {
+  margin-bottom: 0.4rem;
+}
+
+.arch-adr li > ul,
+.arch-adr li > ol {
+  margin-top: 0.4rem;
+  margin-bottom: 0;
+}
+
+.arch code {
+  overflow-wrap: anywhere;
+}
+
+.arch-source {
+  margin-top: 2.5rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--border);
+  font-size: 0.85rem;
+}
+
+.architecture-page .site-footer {
+  padding: 0 1.5rem 2.5rem;
+  position: relative;
+  z-index: 1;
+}
+
+@media (max-width: 860px) {
+  .arch-facts {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .arch-columns {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+@media (max-width: 640px) {
+  .arch {
+    padding-top: 2rem;
+  }
+
+  .arch-facts {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .arch-diagram,
+  .arch-legend {
+    display: none;
+  }
+
+  .arch-view-list {
+    display: block;
+  }
+
+  .arch-quality thead {
+    display: none;
+  }
+
+  .arch-quality tr {
+    display: block;
+    padding: 0.75rem 0;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .arch-quality th,
+  .arch-quality td,
+  .arch-quality tbody th,
+  .arch-quality td:last-child {
+    display: block;
+    width: auto;
+    padding: 0.2rem 0;
+    border-bottom: 0;
+  }
+}
+/* End architecture */
+
 /* Privacy pages */
 body.privacy-page {
   color: var(--text-dim);

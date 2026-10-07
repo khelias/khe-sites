@@ -1,7 +1,8 @@
 import { copyFile, mkdir, readdir, rm } from 'node:fs/promises';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { runReportingSourceErrors } from './architecture-sources.mjs';
+import { loadSources, runReportingSourceErrors } from './architecture-sources.mjs';
+import { renderArchitecture } from './render-architecture.mjs';
 
 const root = dirname(dirname(fileURLToPath(import.meta.url)));
 const dist = join(root, 'dist');
@@ -36,6 +37,8 @@ await runReportingSourceErrors(async () => {
     await copyFile(join(root, 'src', 'shared', 'site.css'), join(outputDir, 'assets', 'site.css'));
     await copyDirectory(join(root, 'src', 'shared', 'fonts'), join(outputDir, 'assets', 'fonts'));
   }
+
+  await renderArchitecture(join(dist, 'landing'), await loadSources());
 
   console.log(`Built ${apps.join(' and ')} sites into dist/`);
 });

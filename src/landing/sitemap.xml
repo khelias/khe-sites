@@ -13,6 +13,13 @@
     <xhtml:link rel="alternate" hreflang="et" href="https://khe.ee/lab/?lang=et"/>
   </url>
   <url>
+    <loc>https://khe.ee/architecture/</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://khe.ee/architecture/?lang=en"/>
+    <xhtml:link rel="alternate" hreflang="et" href="https://khe.ee/architecture/?lang=et"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://khe.ee/architecture/"/>
+  </url>
+<!-- decisions -->
+  <url>
     <loc>https://khe.ee/privacy</loc>
     <xhtml:link rel="alternate" hreflang="en" href="https://khe.ee/privacy?lang=en"/>
     <xhtml:link rel="alternate" hreflang="et" href="https://khe.ee/privacy?lang=et"/>

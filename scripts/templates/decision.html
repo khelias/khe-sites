@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{{pageTitle}}</title>
+  <meta name="description" content="{{description}}">
+  <link rel="canonical" href="{{url}}">
+  <link rel="alternate" hreflang="en" href="{{url}}?lang=en">
+  <link rel="alternate" hreflang="et" href="{{url}}?lang=et">
+  <link rel="alternate" hreflang="x-default" href="{{url}}">
+  <link rel="icon" href="/logo.svg" type="image/svg+xml" sizes="any">
+  <meta name="theme-color" content="#09090b">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="{{url}}">
+  <meta property="og:site_name" content="Kaido Henrik Elias">
+  <meta property="og:title" content="{{pageTitle}}">
+  <meta property="og:description" content="{{description}}">
+  <meta property="og:image" content="https://khe.ee/og-image.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="{{pageTitle}}">
+  <meta name="twitter:description" content="{{description}}">
+  <meta name="twitter:image" content="https://khe.ee/og-image.png">
+  <link rel="preload" href="/assets/fonts/inter-400.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/assets/fonts/inter-500.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="modulepreload" href="/assets/site-locale.js?v=20260427e">
+  <link rel="modulepreload" href="/assets/site-footer.js?v=20260427e">
+  <link rel="stylesheet" href="/assets/site.css?v=20261007a">
+  <script defer src="/assets/analytics-consent.js?v=20260428a" data-analytics-token="58734ed4ae1e4b4e8a8f8f7d50ff74f2" data-analytics-privacy-url="/privacy?lang=en"></script>
+  <script type="application/ld+json">{{jsonLd}}</script>
+</head>
+<body class="architecture-page architecture-decision" data-page="decision">
+
+<header class="site-header" aria-label="Site navigation" data-i18n-aria="siteNavAria">
+  <div class="site-header__inner">
+    <a class="site-header__brand brand-mark" href="/?lang=en" data-link="home" data-i18n-aria="homeLabel" aria-label="KHE home">
+      <span>KHE</span><span class="brand-mark__suffix">.ee</span>
+    </a>
+    <a class="site-header__context" href="/architecture/?lang=en" data-link="architecture">
+      <span data-i18n="siteTitle"></span>
+      <strong data-i18n="decisionSiteTitle"></strong>
+    </a>
+    <div class="site-header__actions">
+      <div class="language-switcher" role="group" aria-label="Language" data-i18n-aria="languageLabel">
+        <button type="button" data-lang-option="et" aria-pressed="false">ET</button>
+        <button type="button" data-lang-option="en" aria-pressed="true">EN</button>
+      </div>
+    </div>
+  </div>
+</header>
+
+<main class="arch arch-decision">
+  <p class="arch-breadcrumb"><a href="/architecture/?lang=en#decisions" data-link="register">&larr; <span data-i18n="backToRegister"></span></a></p>
+  <p class="arch-kicker" data-i18n="decisionKicker"></p>
+  <h1 lang="en">ADR-{{id}}: {{title}}</h1>
+  <dl class="arch-meta">
+{{meta}}
+  </dl>
+{{notice}}
+  <p class="arch-lang-note" data-i18n="decisionsInEnglish"></p>
+  <article class="arch-adr" lang="en">
+{{body}}
+  </article>
+  <p class="arch-source"><a href="{{sourceUrl}}" data-i18n="sourceOnGithub"></a></p>
+</main>
+
+<footer class="site-footer" data-site-footer></footer>
+
+<script type="module" src="/architecture/architecture.js?v=20261007a"></script>
+</body>
+</html>

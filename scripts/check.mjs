@@ -1,8 +1,13 @@
+import { execFileSync } from 'node:child_process';
+import { existsSync } from 'node:fs';
 import { readFile } from 'node:fs/promises';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { loadSources, runReportingSourceErrors } from './architecture-sources.mjs';
 import { adrLinkRewriter, MarkdownError, renderMarkdown } from './markdown.mjs';
+import { views } from './architecture-model.mjs';
+import { modelMismatches } from './render-architecture.mjs';
+import { COPY } from '../src/landing/architecture/copy.js';
 
 const root = dirname(dirname(fileURLToPath(import.meta.url)));
 
@@ -10,6 +15,8 @@ await runReportingSourceErrors(async () => {
   const htmlFiles = [
     'src/landing/index.html',
     'src/landing/lab/index.html',
+    'src/landing/architecture/index.html',
+    'scripts/templates/decision.html',
     'src/landing/privacy/index.html',
     'src/games/index.html',
     'src/games/privacy/index.html',
@@ -49,6 +56,8 @@ await runReportingSourceErrors(async () => {
     'src/shared/site-footer.js',
     'src/shared/site-locale.js',
     'src/shared/site.css',
+    'src/landing/architecture/architecture.js',
+    'src/landing/architecture/copy.js',
   ];
   const bannedText = [
     'Tarkvaraarhitekt töö poolest',
@@ -111,6 +120,64 @@ await runReportingSourceErrors(async () => {
       firstLine: decision.bodyStartLine,
       rewriteLink: adrLinkRewriter(knownIds),
     });
+  }
+
+  const mismatches = modelMismatches(sources);
+  if (mismatches.length) throw new Error(mismatches.join('\n'));
+
+  for (const locale of Object.keys(COPY)) {
+    for (const key of Object.keys(COPY.en)) {
+      if (typeof COPY[locale][key] !== 'string') throw new Error(`copy.js: COPY.${locale} has no ${key}`);
+    }
+    for (const key of Object.keys(COPY[locale])) {
+      if (!(key in COPY.en)) throw new Error(`copy.js: COPY.${locale}.${key} has no COPY.en counterpart`);
+    }
+  }
+  for (const script of ['src/landing/architecture/architecture.js', 'src/landing/architecture/copy.js']) {
+    execFileSync(process.execPath, ['--check', join(root, script)], { stdio: 'inherit' });
+  }
+
+  const css = await readFile(join(root, 'src/shared/site.css'), 'utf8');
+  const archCss = css.slice(css.indexOf('/* Architecture */'), css.indexOf('/* End architecture */'));
+  if (!archCss || css.indexOf('/* End architecture */') < 0) throw new Error('site.css has no Architecture section markers');
+  for (const banned of ['animation', 'drop-shadow', 'box-shadow', 'gradient']) {
+    if (archCss.includes(banned)) throw new Error(`site.css Architecture section uses ${banned}`);
+  }
+
+  // The rest checks the build output; npm run check builds first.
+  const landing = join(root, 'dist/landing');
+  const builtPages = [
+    'architecture/index.html',
+    ...sources.decisions.map((decision) => `architecture/decisions/${decision.id}/index.html`),
+  ];
+  const footerKeys = new Set(['footerLinksLabel', 'footer', 'privacyLink']);
+  for (const page of builtPages) {
+    if (!existsSync(join(landing, page))) throw new Error(`dist/landing/${page} was not built`);
+    const html = await readFile(join(landing, page), 'utf8');
+    const ipv4 = html.match(/\b(?:\d{1,3}\.){3}\d{1,3}\b/);
+    if (ipv4) throw new Error(`dist/landing/${page} contains an IPv4 address: ${ipv4[0]}`);
+    const hostPort = html.match(/\b(?:localhost|[a-z0-9-]+(?:\.[a-z0-9-]+)*\.[a-z]{2,}):\d{2,5}\b/i);
+    if (hostPort) throw new Error(`dist/landing/${page} contains a host:port: ${hostPort[0]}`);
+    const empty = html.match(/<([a-z][a-z0-9]*)\b[^>]*\sdata-i18n(?:-html)?="([^"]+)"[^>]*><\/\1>/);
+    if (empty) throw new Error(`dist/landing/${page} leaves ${empty[2]} empty`);
+    for (const match of html.matchAll(/data-i18n(?:-html|-aria)?="([^"]+)"/g)) {
+      if (!(match[1] in COPY.en) && !footerKeys.has(match[1])) throw new Error(`dist/landing/${page} uses ${match[1]}, which copy.js lacks`);
+    }
+    for (const match of html.matchAll(/href="\/architecture\/decisions\/(\d{3})\//g)) {
+      if (!existsSync(join(landing, 'architecture/decisions', match[1], 'index.html'))) {
+        throw new Error(`dist/landing/${page} links ADR-${match[1]}, which has no page`);
+      }
+    }
+  }
+  const mainPage = await readFile(join(landing, 'architecture/index.html'), 'utf8');
+  const svgCount = (mainPage.match(/<svg\b/g) || []).length;
+  if (svgCount !== views.length) throw new Error(`architecture page has ${svgCount} <svg>, expected ${views.length}`);
+  if (mainPage.includes('<!--')) throw new Error('architecture page still has an unfilled placeholder');
+  const sitemap = await readFile(join(landing, 'sitemap.xml'), 'utf8');
+  for (const decision of sources.decisions) {
+    if (!sitemap.includes(`<loc>https://khe.ee/architecture/decisions/${decision.id}/</loc>`)) {
+      throw new Error(`sitemap.xml does not list ADR-${decision.id}`);
+    }
   }
 
   console.log(`Static site checks passed (${sources.decisions.length} decisions, ${sources.repos.length} repos)`);
