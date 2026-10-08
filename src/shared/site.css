@@ -1046,7 +1046,9 @@ body.architecture-page::before {
   margin: 0 auto;
 }
 
-@media (min-width: 1080px) {
+/* The wide layouts are up to 1192 units wide; on a narrower column they would
+   scale their 11px labels below 11px. */
+@media (min-width: 1240px) {
   .arch-svg--wide {
     display: block;
   }

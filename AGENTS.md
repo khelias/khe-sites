@@ -76,10 +76,11 @@ not a static deploy: the same nginx proxies `/adventure/` to the
 - Each view (`estate`, `shipping`) has two layouts, `wide` and `narrow`,
   each with its own geometry and edges, and both naming the same nodes
   (check enforces it). The build draws one SVG per layout; CSS shows the wide
-  one from 1080px and the narrow one, at most 420px, below. Diagram text is
-  drawn once per language in a `<g lang>` and word-wrapped at build, and the
-  build fails when a wrapped label overflows its box in either language. The
-  text equivalent is a visually hidden list built from the narrow layout.
+  one from 1240px (where the column fits the 1192-unit layout unscaled) and
+  the narrow one, at most 420px, below. Diagram text is drawn once per
+  language in a `<g lang>` and word-wrapped at build, and the build fails
+  when a wrapped label overflows its box in either language. The text
+  equivalent is a visually hidden list built from the narrow layout.
 - The page sections, in order: hero with three static facts, `#estate`,
   `#key-decisions` (from `keyDecisions` in the model), `#shipping`, `#uptime`
   (one row per khe-homelab README resilience layer; check compares the
