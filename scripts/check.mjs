@@ -137,12 +137,29 @@ await runReportingSourceErrors(async () => {
     execFileSync(process.execPath, ['--check', join(root, script)], { stdio: 'inherit' });
   }
 
+  for (const view of views) {
+    const [wide, narrow] = ['wide', 'narrow'].map((name) => view.layouts[name]);
+    const wideIds = Object.keys(wide.nodes).sort().join(' ');
+    const narrowIds = Object.keys(narrow.nodes).sort().join(' ');
+    if (wideIds !== narrowIds) throw new Error(`Diagram ${view.id}: the wide layout names ${wideIds}, the narrow one ${narrowIds}`);
+    for (const [name, layout] of Object.entries(view.layouts)) {
+      for (const [id, [x, y, w, h]] of Object.entries(layout.nodes)) {
+        if (x < 0 || y < 0 || x + w > layout.width || y + h > layout.height) {
+          throw new Error(`Diagram ${view.id} (${name}): ${id} at [${x}, ${y}, ${w}, ${h}] leaves the ${layout.width}x${layout.height} layout`);
+        }
+      }
+    }
+  }
+
   const css = await readFile(join(root, 'src/shared/site.css'), 'utf8');
   // The section turns off the shared header's shadow; any other shadow is out.
   const archCss = css.slice(css.indexOf('/* Architecture */'), css.indexOf('/* End architecture */')).replace(/box-shadow: none;/g, '');
   if (!archCss || css.indexOf('/* End architecture */') < 0) throw new Error('site.css has no Architecture section markers');
   for (const banned of ['animation', 'drop-shadow', 'box-shadow', 'gradient']) {
     if (archCss.includes(banned)) throw new Error(`site.css Architecture section uses ${banned}`);
+  }
+  for (const match of css.matchAll(/url\(\s*['"]?\/assets\/fonts\/([^'")\s]+)['"]?\s*\)/g)) {
+    if (!existsSync(join(root, 'src/shared/fonts', match[1]))) throw new Error(`site.css loads /assets/fonts/${match[1]}, which src/shared/fonts lacks`);
   }
 
   // The rest checks the build output; npm run check builds first.
@@ -172,8 +189,25 @@ await runReportingSourceErrors(async () => {
   }
   const mainPage = await readFile(join(landing, 'architecture/index.html'), 'utf8');
   const svgCount = (mainPage.match(/<svg\b/g) || []).length;
-  if (svgCount !== views.length) throw new Error(`architecture page has ${svgCount} <svg>, expected ${views.length}`);
+  if (svgCount !== 2 * views.length) throw new Error(`architecture page has ${svgCount} <svg>, expected ${2 * views.length}`);
   if (mainPage.includes('<!--')) throw new Error('architecture page still has an unfilled placeholder');
+  for (const view of views) {
+    const start = mainPage.indexOf(`<figure class="arch-figure" data-view="${view.id}"`);
+    const figure = start < 0 ? '' : mainPage.slice(start, mainPage.indexOf('</figure>', start));
+    const textStart = figure.indexOf('class="visually-hidden"');
+    const text = textStart < 0 ? '' : figure.slice(textStart);
+    if (!text) throw new Error(`architecture page has no text list for the ${view.id} diagram`);
+    for (const edge of view.layouts.narrow.edges) {
+      if (!text.includes(`data-edge="${edge.from}:${edge.to}"`)) throw new Error(`The ${view.id} text list lacks the edge ${edge.from} -> ${edge.to}`);
+    }
+  }
+  const uptime = mainPage.slice(mainPage.indexOf('id="uptime"'), mainPage.indexOf('</section>', mainPage.indexOf('id="uptime"')));
+  const layerList = uptime.match(/<ol class="arch-layers">([\s\S]*?)<\/ol>/);
+  const layerRows = layerList ? (layerList[1].match(/<li\b/g) || []).length : 0;
+  const readmeLayers = sources.homelab.resilienceLayers.length;
+  if (layerRows !== readmeLayers) {
+    throw new Error(`#uptime lists ${layerRows} resilience layers, the khe-homelab README has ${readmeLayers}`);
+  }
   const sitemap = await readFile(join(landing, 'sitemap.xml'), 'utf8');
   for (const decision of sources.decisions) {
     if (!sitemap.includes(`<loc>https://khe.ee/architecture/decisions/${decision.id}/</loc>`)) {

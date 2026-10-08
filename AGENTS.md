@@ -20,8 +20,9 @@ bundler.
 src/
   landing/   khe.ee
     architecture/  estate architecture page: copy.js (en/et strings),
-             architecture.js; diagrams, register and ADR pages are
-             rendered into it at build time
+             architecture.js; diagrams, building blocks, the five key
+             decisions, register and ADR pages are rendered into it at
+             build time
   games/     games.khe.ee launcher shell
   shared/    cross-site assets, copied into each site's /assets/ at build
 scripts/
@@ -70,7 +71,24 @@ not a static deploy: the same nginx proxies `/adventure/` to the
   into `.sources/`.
 - `scripts/architecture-model.mjs` must name every repo in `ESTATE.md` and
   every khe-homelab service group, and nothing else; check fails otherwise.
-  Diagram labels are width-checked in both languages at build.
+  The repo elements appear in no diagram; they feed the building-block rows
+  in the estate section's `<details>`.
+- Each view (`estate`, `shipping`) has two layouts, `wide` and `narrow`,
+  each with its own geometry and edges, and both naming the same nodes
+  (check enforces it). The build draws one SVG per layout; CSS shows the wide
+  one from 1080px and the narrow one, at most 420px, below. Diagram text is
+  drawn once per language in a `<g lang>` and word-wrapped at build, and the
+  build fails when a wrapped label overflows its box in either language. The
+  text equivalent is a visually hidden list built from the narrow layout.
+- The page sections, in order: hero with three static facts, `#estate`,
+  `#key-decisions` (from `keyDecisions` in the model), `#shipping`, `#uptime`
+  (one row per khe-homelab README resilience layer; check compares the
+  counts) and `#decisions`, the register. Keep the register at
+  `id="decisions"`: the homelab nginx redirects `/architecture/decisions/`
+  to `/architecture/#decisions`, and the ADR pages link back to it.
+- Headings use Source Serif 4 (weight 600, latin and latin-ext subsets in
+  `src/shared/fonts/`), body text Inter, mono labels the system mono stack.
+  Check fails when `site.css` loads a font file that is not there.
 - ADRs render through `scripts/markdown.mjs`, which throws with file and line
   on anything outside its subset (tables, fences, quotes, raw HTML, images,
   deeper nesting, relative links other than `NNN-slug.md`). Extend the

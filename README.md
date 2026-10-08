@@ -8,8 +8,9 @@ Static source for the public KHE web presence, in plain HTML, CSS and
 JavaScript:
 
 - [khe.ee](https://khe.ee) - the landing page and the
-  [estate architecture](https://khe.ee/architecture/): diagrams, quality
-  goals, known limits and every estate decision on its own page
+  [estate architecture](https://khe.ee/architecture/): the estate in one
+  diagram, the decisions that shape it, how a change ships, how it stays up
+  and where it is weak, and every estate decision on its own page
 - [games.khe.ee](https://games.khe.ee) - the launcher that links into the
   game apps, which deploy from their own repos
 

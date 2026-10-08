@@ -1,6 +1,6 @@
-import { createLocaleController } from '/assets/site-locale.js?v=20260427e';
-import { renderSiteFooter, withSiteFooterCopy } from '/assets/site-footer.js?v=20260427e';
-import { COPY } from '/architecture/copy.js?v=20261007b';
+import { createLocaleController } from '/assets/site-locale.js?v=20261008a';
+import { renderSiteFooter, withSiteFooterCopy } from '/assets/site-footer.js?v=20261008a';
+import { COPY } from '/architecture/copy.js?v=20261008a';
 
 renderSiteFooter();
 
@@ -25,25 +25,3 @@ createLocaleController({
     register: (locale) => `/architecture/?lang=${locale}#decisions`,
   },
 });
-
-// Marks the section being read in the contents rail: the last one whose top
-// has passed a line a third of the way down the viewport.
-const railLinks = [...document.querySelectorAll('.arch-rail a[href^="#"]')]
-  .map((link) => ({ link, section: document.getElementById(link.getAttribute('href').slice(1)) }))
-  .filter(({ section }) => section);
-let railFrame = 0;
-function markCurrentSection() {
-  railFrame = 0;
-  const line = window.innerHeight / 3;
-  let current = null;
-  for (const entry of railLinks) {
-    if (entry.section.getBoundingClientRect().top <= line) current = entry;
-  }
-  for (const entry of railLinks) entry.link.setAttribute('aria-current', entry === current ? 'true' : 'false');
-}
-if (railLinks.length) {
-  window.addEventListener('scroll', () => {
-    if (!railFrame) railFrame = window.requestAnimationFrame(markCurrentSection);
-  }, { passive: true });
-  markCurrentSection();
-}

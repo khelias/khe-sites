@@ -1,7 +1,7 @@
 import { mkdir, readFile, writeFile } from 'node:fs/promises';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { blockCards, elements, productDecisionDirs, views } from './architecture-model.mjs';
+import { blockCards, elements, keyDecisions, productDecisionDirs, views } from './architecture-model.mjs';
 import { SourceError } from './architecture-sources.mjs';
 import { adrLinkRewriter, escapeHtml, renderMarkdown } from './markdown.mjs';
 import { COPY } from '../src/landing/architecture/copy.js';
@@ -32,63 +32,116 @@ export function fillI18n(html) {
   );
 }
 
-// A deliberately wide estimate of Inter's advance (about 0.55em for lowercase
-// at these weights), so a label that passes has room to spare in its box.
-function textWidth(text, size, weight) {
-  const factor = weight >= 500 ? 0.6 : 0.57;
-  return [...text].reduce((sum, char) => sum + (/[A-ZÕÄÖÜŠŽmwMW]/.test(char) ? 1.25 : 1) * size * factor, 0);
+const LOCALES = Object.keys(COPY);
+
+const TEXT = {
+  tag: { size: 11, line: 15, mono: true },
+  label: { size: 15, line: 19, weight: 600 },
+  sub: { size: 12.5, line: 16, weight: 400 },
+  group: { size: 11, line: 14, mono: true },
+  edge: { size: 12.5, line: 15, weight: 400 },
+};
+const PAD_X = 8;
+const PAD_Y = 6;
+
+// An estimate of Inter's advance. Measured in a browser it comes within 1% of
+// the real width at worst, which the 8px box padding absorbs; it is not a
+// safety margin in itself. The mono labels carry 0.08em letter spacing on a
+// 0.6em advance.
+function textWidth(text, style) {
+  if (style.mono) return [...text].length * style.size * 0.7;
+  const factor = style.weight >= 500 ? 0.6 : 0.57;
+  return [...text].reduce((sum, char) => sum + (/[A-ZÕÄÖÜŠŽmwMW]/.test(char) ? 1.25 : 1) * style.size * factor, 0);
 }
 
-function labelsOf(element) {
-  if (element.name) return [{ literal: element.name }];
-  return [{ key: element.label }];
+function localeText(key, locale) {
+  const text = COPY[locale][key];
+  if (typeof text !== 'string') throw new SourceError(`copy.js has no COPY.${locale}.${key}`);
+  return text;
 }
 
-function assertFits(id, view, width) {
-  const element = elements[id];
-  const lines = [
-    ...labelsOf(element).map((line) => ({ ...line, size: LABEL_SIZE, weight: 500 })),
-    ...(element.sub || []).map((key) => ({ key, size: SUB_SIZE, weight: 400 })),
-  ];
-  for (const locale of Object.keys(COPY)) {
-    for (const line of lines) {
-      const text = line.literal || COPY[locale][line.key];
-      if (textWidth(text, line.size, line.weight) > width - 16) {
-        throw new SourceError(`Diagram ${view.id}: "${text}" (${locale}) does not fit the ${width}px box of ${id}`);
-      }
-    }
+// Greedy word wrap at build time, per locale: Estonian and English break in
+// different places, so each language gets its own lines.
+function wrap(text, style, width, where) {
+  const lines = [];
+  for (const word of text.trim().split(/\s+/)) {
+    if (textWidth(word, style) > width) throw new SourceError(`${where}: "${word}" does not fit ${Math.floor(width)}px`);
+    const last = lines.at(-1);
+    if (last !== undefined && textWidth(`${last} ${word}`, style) <= width) lines[lines.length - 1] = `${last} ${word}`;
+    else lines.push(word);
   }
-}
-
-function svgText(line, x, y, className, anchor = 'middle') {
-  const content = line.literal
-    ? escapeHtml(line.literal)
-    : escapeHtml(copyText(line.key));
-  const i18nAttribute = line.key ? ` data-i18n="${line.key}"` : '';
-  return `<text x="${x}" y="${y}" text-anchor="${anchor}" class="${className}"${i18nAttribute}>${content}</text>`;
+  return lines;
 }
 
 const round = (value) => Math.round(value * 10) / 10;
-const LABEL_SIZE = 15;
-const SUB_SIZE = 12.5;
 
-function renderNode(id, box, view) {
+function svgLine(text, x, y, className, anchor = 'start') {
+  return `<text x="${round(x)}" y="${round(y)}" text-anchor="${anchor}" class="${className}">${escapeHtml(text)}</text>`;
+}
+
+function perLocale(render) {
+  return LOCALES.map((locale) => `<g lang="${locale}">${render(locale)}</g>`).join('');
+}
+
+function nodeLines(element, locale, width, where) {
+  const lines = [];
+  if (element.tag) {
+    const tag = localeText(element.tag, locale);
+    if (textWidth(tag, TEXT.tag) > width) throw new SourceError(`${where}: tag "${tag}" (${locale}) does not fit ${width}px`);
+    lines.push({ text: tag, style: TEXT.tag, className: 'arch-node-tag' });
+  }
+  const label = element.name || localeText(element.label, locale);
+  for (const text of wrap(label, TEXT.label, width, `${where} (${locale})`)) lines.push({ text, style: TEXT.label, className: 'arch-node-label' });
+  if (element.sub) {
+    for (const text of wrap(localeText(element.sub, locale), TEXT.sub, width, `${where} (${locale})`)) lines.push({ text, style: TEXT.sub, className: 'arch-node-sub' });
+  }
+  return lines;
+}
+
+// Wraps a node's lines to its box in every locale, and throws when they
+// overflow it in any of them.
+function assertFits(id, box, where) {
+  const [, , w, h] = box;
+  return Object.fromEntries(LOCALES.map((locale) => {
+    const lines = nodeLines(elements[id], locale, w - 2 * PAD_X, `${where}: ${id}`);
+    const height = lines.reduce((sum, line) => sum + line.style.line, 0);
+    if (height > h - 2 * PAD_Y) throw new SourceError(`${where}: ${id} needs ${height}px of text in ${locale}, its box has ${h - 2 * PAD_Y}px`);
+    return [locale, { lines, height }];
+  }));
+}
+
+function renderBoundary(id, box, where) {
   const element = elements[id];
   const [x, y, w, h] = box;
-  if (element.kind === 'boundary') {
-    return `<g class="arch-node arch-node--boundary"><rect x="${x + 0.5}" y="${y + 0.5}" width="${w - 1}" height="${h - 1}" rx="8"/>${svgText({ key: element.label }, x + 14, element.labelBelow ? y + h - 12 : y + 22, 'arch-group-label', 'start')}</g>`;
-  }
-  assertFits(id, view, w);
-  const focus = view.focus === id ? ' arch-node--focus' : '';
-  const subs = element.sub || [];
-  const blockHeight = LABEL_SIZE + 3 + subs.length * (SUB_SIZE + 4);
-  const top = y + (h - blockHeight) / 2 + LABEL_SIZE - 2;
-  const cx = x + w / 2;
-  const texts = [
-    ...labelsOf(element).map((line) => svgText(line, cx, round(top), 'arch-node-label')),
-    ...subs.map((key, index) => svgText({ key }, cx, round(top + LABEL_SIZE + 4 + index * (SUB_SIZE + 4)), 'arch-node-sub')),
-  ];
-  return `<g class="arch-node arch-node--${element.kind}${focus}"><rect x="${x + 0.5}" y="${y + 0.5}" width="${w - 1}" height="${h - 1}" rx="5"/>${texts.join('')}</g>`;
+  const labelX = element.style === 'rule' ? x : x + 14;
+  const shape = element.style === 'rule'
+    ? `<line x1="${x}" y1="${y + 0.5}" x2="${x + w}" y2="${y + 0.5}"/>`
+    : `<rect x="${x + 0.5}" y="${y + 0.5}" width="${w - 1}" height="${h - 1}" rx="10"/>`;
+  const label = perLocale((locale) => {
+    const text = localeText(element.label, locale).toLocaleUpperCase(locale);
+    if (labelX - x + textWidth(text, TEXT.group) > w - 8) throw new SourceError(`${where}: boundary label "${text}" does not fit ${id}`);
+    return svgLine(text, labelX, y + 22, 'arch-group-label');
+  });
+  return `<g class="arch-boundary arch-boundary--${element.style}">${shape}${label}</g>`;
+}
+
+function renderNode(id, box, view, where) {
+  const element = elements[id];
+  const [x, y, w, h] = box;
+  const fitted = assertFits(id, box, where);
+  const classes = ['arch-node', `arch-node--${element.kind}`];
+  if (element.owner) classes.push(`arch-node--owner-${element.owner}`);
+  if (view.focus === id) classes.push('arch-node--focus');
+  const texts = perLocale((locale) => {
+    const { lines, height } = fitted[locale];
+    let top = y + (h - height) / 2;
+    return lines.map((line) => {
+      const baseline = top + (line.style.line + line.style.size * 0.72) / 2;
+      top += line.style.line;
+      return svgLine(line.text, x + PAD_X, baseline, line.className);
+    }).join('');
+  });
+  return `<g class="${classes.join(' ')}"><rect x="${x + 0.5}" y="${y + 0.5}" width="${w - 1}" height="${h - 1}" rx="6"/>${texts}</g>`;
 }
 
 const clamp = (value, min, max) => Math.min(Math.max(value, min), max);
@@ -152,20 +205,70 @@ function routeEdge(edge, a, b) {
   return { points: [[sx, sy], [sx, mid], [bcx, mid], [bcx, ey]], labelAt: [(sx + bcx) / 2, mid], vertical: false };
 }
 
-function renderEdge(edge, view) {
-  const fromBox = view.nodes[edge.from];
-  const toBox = view.nodes[edge.to];
-  if (!fromBox || !toBox) throw new SourceError(`Diagram ${view.id}: edge ${edge.from} -> ${edge.to} names a node it lacks`);
+// The horizontal run a label sits above, so it can be wrapped to fit it.
+function horizontalRun(points, y) {
+  for (let i = 1; i < points.length; i += 1) {
+    const [x1, y1] = points[i - 1];
+    const [x2, y2] = points[i];
+    if (y1 === y && y2 === y) return Math.abs(x2 - x1);
+  }
+  return 0;
+}
+
+// Edge labels are wrapped to the room they have: a fixed `labelAt` to the
+// layout width around it, a label beside a vertical line to the layout edge,
+// a label above a horizontal line to that line's length.
+function renderEdgeLabel(edge, route, layout, where) {
+  const { size, line } = TEXT.edge;
+  return perLocale((locale) => {
+    const text = localeText(edge.label, locale);
+    const name = `${where}: edge ${edge.from} -> ${edge.to} (${locale})`;
+    if (edge.labelAt) {
+      const [x, y] = edge.labelAt;
+      const lines = wrap(text, TEXT.edge, 2 * Math.min(x, layout.width - x) - 8, name);
+      return lines.map((part, i) => svgLine(part, x, y - (lines.length - 1 - i) * line, 'arch-edge-label', 'middle')).join('');
+    }
+    const [mx, my] = route.labelAt;
+    if (route.vertical) {
+      const lines = wrap(text, TEXT.edge, layout.width - mx - 12, name);
+      const first = my + size * 0.36 - ((lines.length - 1) * line) / 2;
+      return lines.map((part, i) => svgLine(part, mx + 8, first + i * line, 'arch-edge-label')).join('');
+    }
+    const lines = wrap(text, TEXT.edge, horizontalRun(route.points, my) - 8, name);
+    return lines.map((part, i) => svgLine(part, mx, my - 7 - (lines.length - 1 - i) * line, 'arch-edge-label', 'middle')).join('');
+  });
+}
+
+function renderEdge(edge, layout, marker, where) {
+  const fromBox = layout.nodes[edge.from];
+  const toBox = layout.nodes[edge.to];
+  if (!fromBox || !toBox) throw new SourceError(`${where}: edge ${edge.from} -> ${edge.to} names a node it lacks`);
   const route = routeEdge(edge, fromBox, toBox);
-  const dashed = edge.dashed ? ' arch-edge--dashed' : '';
   const points = route.points.map(([px, py]) => `${round(px)},${round(py)}`).join(' ');
-  const line = `<polyline points="${points}" class="arch-edge${dashed}" marker-end="url(#arrow-${view.id})"/>`;
-  if (!edge.label) return { line, label: '' };
-  const [mx, my] = route.labelAt;
-  const label = route.vertical
-    ? svgText({ key: edge.label }, round(mx + 8), round(my + 4), 'arch-edge-label', 'start')
-    : svgText({ key: edge.label }, round(mx), round(my - 8), 'arch-edge-label');
-  return { line, label };
+  const lineSvg = `<polyline points="${points}" class="arch-edge${edge.dashed ? ' arch-edge--dashed' : ''}" marker-end="url(#${marker})"/>`;
+  return { line: lineSvg, label: edge.label ? renderEdgeLabel(edge, route, layout, where) : '' };
+}
+
+function renderLayout(view, name) {
+  const layout = view.layouts[name];
+  const where = `Diagram ${view.id} (${name})`;
+  const ids = Object.keys(layout.nodes);
+  for (const id of ids) {
+    if (!elements[id]) throw new SourceError(`${where}: node ${id} is not a model element`);
+  }
+  const marker = `arrow-${view.id}-${name}`;
+  const boundaries = ids.filter((id) => elements[id].kind === 'boundary');
+  const others = ids.filter((id) => elements[id].kind !== 'boundary');
+  const edges = layout.edges.map((edge) => renderEdge(edge, layout, marker, where));
+  return [
+    `<svg class="arch-svg arch-svg--${name}" viewBox="0 0 ${layout.width} ${layout.height}" aria-hidden="true" focusable="false">`,
+    `<defs><marker id="${marker}" viewBox="0 0 10 10" refX="9.5" refY="5" markerWidth="8" markerHeight="8" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,1 L10,5 L0,9 z" class="arch-arrow"/></marker></defs>`,
+    ...boundaries.map((id) => renderBoundary(id, layout.nodes[id], where)),
+    ...edges.map((edge) => edge.line),
+    ...others.map((id) => renderNode(id, layout.nodes[id], view, where)),
+    ...edges.map((edge) => edge.label),
+    '</svg>',
+  ].join('');
 }
 
 function elementName(id) {
@@ -177,20 +280,26 @@ function contains([gx, gy, gw, gh], [x, y, w, h]) {
   return x >= gx && y >= gy && x + w <= gx + gw && y + h <= gy + gh;
 }
 
-function renderViewItem(view, id) {
-  const element = elements[id];
-  const subs = (element.sub || []).map((key) => i18n(key)).join(' ');
-  const outgoing = view.edges
-    .filter((edge) => edge.from === id && elements[edge.to].kind !== 'boundary')
-    .map((edge) => `<span class="arch-view-list__to">&rarr; ${elementName(edge.to)}${edge.label ? ` (${i18n(edge.label)})` : ''}</span>`)
+// Outgoing edges, boundaries included: every estate edge starts or ends on a
+// group, so dropping them would leave the list without its connections.
+function renderOutgoing(layout, id) {
+  return layout.edges
+    .filter((edge) => edge.from === id)
+    .map((edge) => `<span class="arch-view-list__to" data-edge="${edge.from}:${edge.to}">&rarr; ${elementName(edge.to)}${edge.label ? ` (${i18n(edge.label)})` : ''}</span>`)
     .join('');
-  return `<li>${elementName(id)} <span class="arch-view-list__sub">${subs}</span>${outgoing}</li>`;
+}
+
+function renderViewItem(layout, id) {
+  const element = elements[id];
+  const tag = element.tag ? ` (${i18n(element.tag)})` : '';
+  const sub = element.sub ? ` <span class="arch-view-list__sub">${i18n(element.sub)}</span>` : '';
+  return `<li>${elementName(id)}${tag}${sub}${renderOutgoing(layout, id)}</li>`;
 }
 
 // Each element goes under the group whose box holds it, so the list says what
 // the diagram shows rather than following the order nodes are declared in.
-function renderViewList(view) {
-  const ids = Object.keys(view.nodes);
+export function renderViewList(layout) {
+  const ids = Object.keys(layout.nodes);
   const groups = ids.filter((id) => elements[id].kind === 'boundary');
   const entries = [];
   const groupEntries = new Map();
@@ -201,40 +310,24 @@ function renderViewList(view) {
       entries.push(entry);
       continue;
     }
-    const owner = groups.find((group) => contains(view.nodes[group], view.nodes[id]));
+    const owner = groups.find((group) => contains(layout.nodes[group], layout.nodes[id]));
     if (owner) groupEntries.get(owner).members.push(id);
     else entries.push({ id });
   }
   const items = entries.map((entry) => {
-    if (!entry.group) return renderViewItem(view, entry.id);
-    const members = entry.members.map((id) => renderViewItem(view, id)).join('');
-    return `<li class="arch-view-list__group">${i18n(elements[entry.group].label, 'strong')}<ol>${members}</ol></li>`;
+    if (!entry.group) return renderViewItem(layout, entry.id);
+    const members = entry.members.map((id) => renderViewItem(layout, id)).join('');
+    return `<li class="arch-view-list__group">${i18n(elements[entry.group].label, 'strong')}${renderOutgoing(layout, entry.group)}<ol>${members}</ol></li>`;
   });
   return `<ol class="arch-view-list">${items.join('')}</ol>`;
 }
 
+// Two drawings per view, wide and narrow, which CSS swaps by width. Both are
+// hidden from assistive tech; the visually hidden list is their text.
 export function renderView(view) {
-  const ids = Object.keys(view.nodes);
-  for (const id of ids) {
-    if (!elements[id]) throw new SourceError(`Diagram ${view.id}: node ${id} is not a model element`);
-  }
-  const boundaries = ids.filter((id) => elements[id].kind === 'boundary');
-  const others = ids.filter((id) => elements[id].kind !== 'boundary');
-  const edges = view.edges.map((edge) => renderEdge(edge, view));
-  const titleId = `view-${view.id}-title`;
-  const descId = `view-${view.id}-desc`;
-  const svg = [
-    `<svg class="arch-svg" viewBox="0 0 ${view.width} ${view.height}" role="img" aria-labelledby="${titleId} ${descId}">`,
-    `<title id="${titleId}" data-i18n="${view.title}">${escapeHtml(copyText(view.title))}</title>`,
-    `<desc id="${descId}" data-i18n="${view.desc}">${escapeHtml(copyText(view.desc))}</desc>`,
-    `<defs><marker id="arrow-${view.id}" viewBox="0 0 10 10" refX="9.5" refY="5" markerWidth="8" markerHeight="8" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,1 L10,5 L0,9 z" class="arch-arrow"/></marker></defs>`,
-    ...boundaries.map((id) => renderNode(id, view.nodes[id], view)),
-    ...edges.map((edge) => edge.line),
-    ...others.map((id) => renderNode(id, view.nodes[id], view)),
-    ...edges.map((edge) => edge.label),
-    '</svg>',
-  ].join('');
-  return `<figure class="arch-figure" data-view="${view.id}"><div class="arch-diagram">${svg}</div>${renderViewList(view)}</figure>`;
+  const svgs = Object.keys(view.layouts).map((name) => renderLayout(view, name)).join('');
+  const text = `<div class="visually-hidden">${i18n(view.title, 'p')}${i18n(view.desc, 'p')}${renderViewList(view.layouts.narrow)}</div>`;
+  return `<figure class="arch-figure" data-view="${view.id}"><div class="arch-diagram">${svgs}</div>${text}</figure>`;
 }
 
 export function modelMismatches(sources) {
@@ -248,18 +341,6 @@ export function modelMismatches(sources) {
   for (const group of sourceGroups) if (!modelGroups.has(group)) problems.push(`khe-homelab has the service group ${group}, which the architecture model lacks`);
   for (const group of modelGroups) if (!sourceGroups.has(group)) problems.push(`The architecture model names the service group ${group}, which khe-homelab lacks`);
   return problems;
-}
-
-function renderFacts(sources) {
-  const facts = [
-    [sources.repos.length, 'factRepos'],
-    [sources.repos.filter((repo) => repo.section === 'product').length, 'factProducts'],
-    [sources.homelab.composeFiles, 'factServices'],
-    [sources.decisions.length, 'factDecisions'],
-    [0, 'factPorts'],
-  ];
-  const items = facts.map(([value, key]) => `<div>${i18n(key, 'dt')}<dd>${value}</dd></div>`).join('');
-  return `<dl class="arch-facts" aria-label="${escapeHtml(copyText('factsLabel'))}" data-i18n-aria="factsLabel">${items}</dl>${i18n('factsNote', 'p', ' class="arch-facts-note"')}`;
 }
 
 const purposeKey = (id) => `purpose${id.replace(/(^|-)([a-z])/g, (match, dash, char) => char.toUpperCase())}`;
@@ -288,12 +369,26 @@ function renderBlocks(sources) {
   return groups.join('');
 }
 
-function renderResilience(sources) {
-  return `<ol class="arch-layers" lang="en">${sources.homelab.resilienceLayers.map((title) => `<li>${escapeHtml(title)}</li>`).join('')}</ol>`;
-}
-
 const statusKey = (status) => `status${status}`;
 const decisionUrl = (id) => `/architecture/decisions/${id}/`;
+
+// The five decisions: what each buys and costs, then a cell that counts the
+// rest of the register so the number cannot go stale.
+function renderKeyDecisions(decisions) {
+  const known = new Set(decisions.map((decision) => decision.id));
+  const shown = new Set();
+  const cards = keyDecisions.map(({ ids, key }) => {
+    for (const id of ids) {
+      if (!known.has(id)) throw new SourceError(`The key decisions name ADR-${id}, which khe-architecture lacks`);
+      shown.add(id);
+    }
+    const tag = ids.map((id) => `ADR-${id}`).join(' · ');
+    return `<article class="arch-pick"><p class="arch-tag">${tag}</p>${i18n(`${key}Title`, 'h3')}<p>${i18n('buysLabel', 'span', ' class="arch-tag arch-tag--buys"')}${i18n(`${key}Buys`)}</p><p>${i18n('costsLabel', 'span', ' class="arch-tag arch-tag--costs"')}${i18n(`${key}Costs`)}</p><a href="${decisionUrl(ids[0])}">${i18n('readAdr')} ADR-${ids[0]}</a></article>`;
+  });
+  const rest = decisions.length - shown.size;
+  const more = `<a class="arch-pick arch-pick--more" href="#decisions">${i18n('registerTag', 'span', ' class="arch-tag"')}<span class="arch-pick__title">${rest} ${i18n('moreDecisions')}</span>${i18n('moreDecisionsBody')}</a>`;
+  return `<div class="arch-picks">${cards.join('')}${more}</div>`;
+}
 
 function renderRegister(decisions) {
   const byId = new Map(decisions.map((decision) => [decision.id, decision]));
@@ -376,9 +471,8 @@ export async function renderArchitecture(landingDist, sources) {
   const pagePath = join(landingDist, 'architecture', 'index.html');
   let page = await readFile(pagePath, 'utf8');
   for (const view of views) page = replaceMarker(page, `view:${view.id}`, renderView(view), pagePath);
-  page = replaceMarker(page, 'facts', renderFacts(sources), pagePath);
   page = replaceMarker(page, 'blocks', renderBlocks(sources), pagePath);
-  page = replaceMarker(page, 'resilience', renderResilience(sources), pagePath);
+  page = replaceMarker(page, 'key-decisions', renderKeyDecisions(sources.decisions), pagePath);
   page = replaceMarker(page, 'register', renderRegister(sources.decisions), pagePath);
   page = replaceMarker(page, 'product-decisions', renderProductDecisions(), pagePath);
   await writeFile(pagePath, fillI18n(page));
