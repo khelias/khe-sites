@@ -65,6 +65,19 @@
 
 html {
   background: var(--bg);
+  -webkit-tap-highlight-color: transparent;
+}
+
+a,
+button,
+summary {
+  touch-action: manipulation;
+}
+
+/* With the tap highlight gone, a pressed link or summary dims the way iOS
+   text buttons do; controls with their own press state opt out. */
+:where(a, summary):active {
+  opacity: 0.6;
 }
 
 body {
@@ -72,6 +85,7 @@ body {
   background: var(--bg);
   color: var(--text);
   min-height: 100vh;
+  min-height: 100svh;
   -webkit-font-smoothing: antialiased;
   position: relative;
   overflow-x: hidden;
@@ -92,7 +106,9 @@ body::before {
 }
 
 a { color: var(--text-dim); }
-a:hover { color: var(--text); }
+@media (hover: hover) and (pointer: fine) {
+  a:hover { color: var(--text); }
+}
 
 .language-switcher {
   display: inline-flex;
@@ -106,13 +122,14 @@ a:hover { color: var(--text); }
 .landing-home .language-switcher,
 .privacy-page .language-switcher {
   position: fixed;
-  top: 1.5rem;
-  right: 1.5rem;
+  top: max(1.5rem, env(safe-area-inset-top));
+  right: max(1.5rem, env(safe-area-inset-right));
   z-index: 2;
   backdrop-filter: blur(6px);
 }
 
 .language-switcher button {
+  position: relative;
   min-width: 2.25rem;
   min-height: 2rem;
   border: 1px solid transparent;
@@ -123,7 +140,24 @@ a:hover { color: var(--text); }
   font: 600 0.66rem/1 'Inter', system-ui;
   letter-spacing: 0;
   text-transform: uppercase;
-  transition: background 0.15s, border-color 0.15s, color 0.15s;
+  user-select: none;
+  -webkit-user-select: none;
+  transition: background 0.15s, border-color 0.15s, color 0.15s, transform 0.1s ease-out;
+}
+
+/* The pill stays compact; the hit area reaches 44px, growing outward only
+   so neither button takes taps from the other. */
+.language-switcher button::after {
+  content: '';
+  position: absolute;
+  inset: -6px 0;
+}
+
+.language-switcher button:first-child::after { left: -8px; }
+.language-switcher button:last-child::after { right: -8px; }
+
+.language-switcher button:active {
+  transform: scale(0.94);
 }
 
 .language-switcher button[aria-pressed="true"] {
@@ -178,7 +212,15 @@ a:hover { color: var(--text); }
   letter-spacing: 0;
   text-decoration: none;
   box-shadow: 0 16px 38px rgba(0, 0, 0, 0.24);
+  user-select: none;
+  -webkit-user-select: none;
   transition: border-color 0.16s, transform 0.16s, color 0.16s;
+}
+
+.site-header__brand:active {
+  transform: scale(0.96);
+  transition-duration: 0.1s;
+  opacity: 1;
 }
 
 .brand-mark {
@@ -204,10 +246,12 @@ a:hover { color: var(--text); }
   transform: translateY(0.26em);
 }
 
-.site-header__brand:hover {
-  transform: translateY(-1px);
-  border-color: rgba(94, 234, 212, 0.48);
-  color: var(--text);
+@media (hover: hover) and (pointer: fine) {
+  .site-header__brand:hover {
+    transform: translateY(-1px);
+    border-color: rgba(94, 234, 212, 0.48);
+    color: var(--text);
+  }
 }
 
 .site-header__context {
@@ -273,12 +317,13 @@ body.landing-home {
   flex: 1;
   width: min(760px, 100%);
   min-height: 100vh;
+  min-height: 100svh;
   display: flex;
   flex-direction: column;
   justify-content: center;
   gap: clamp(2.2rem, 7vh, 4rem);
   margin: 0 auto;
-  padding: clamp(6rem, 13vh, 8.5rem) 1.35rem 4rem;
+  padding: clamp(6rem, 13vh, 8.5rem) max(1.35rem, env(safe-area-inset-right)) 4rem max(1.35rem, env(safe-area-inset-left));
   position: relative;
   z-index: 1;
 }
@@ -312,7 +357,7 @@ body.landing-home {
   font-family: var(--display-font);
   font-size: clamp(3rem, 7.5vw, 4.65rem);
   font-weight: 600;
-  letter-spacing: 0;
+  letter-spacing: -0.02em;
   line-height: 1.03;
 }
 
@@ -345,15 +390,17 @@ body.landing-home {
   border-top: 1px solid transparent;
   color: var(--text);
   text-decoration: none;
-  transition: border-color 0.18s, color 0.18s;
+  transition: border-color 0.18s, color 0.18s, transform 0.1s ease-out;
 }
 
 .project-item + .project-item {
   border-top-color: rgba(255, 255, 255, 0.055);
 }
 
-.project-item:hover + .project-item {
-  border-top-color: rgba(255, 255, 255, 0.075);
+@media (hover: hover) and (pointer: fine) {
+  .project-item:hover + .project-item {
+    border-top-color: rgba(255, 255, 255, 0.075);
+  }
 }
 
 .project-games { --project-accent: var(--accent-warm); }
@@ -382,6 +429,7 @@ body.landing-home {
   font-family: var(--display-font);
   font-size: 1.38rem;
   font-weight: 600;
+  letter-spacing: -0.01em;
   line-height: 1.1;
 }
 
@@ -407,17 +455,37 @@ body.landing-home {
   transition: transform 0.18s, color 0.18s;
 }
 
-.project-item:hover .project-index,
-.project-item:hover .project-arrow {
+@media (hover: hover) and (pointer: fine) {
+  .project-item:hover .project-index,
+  .project-item:hover .project-arrow {
+    color: var(--project-accent);
+  }
+
+  .project-item:hover .project-arrow {
+    transform: translateX(0.25rem);
+  }
+
+  .project-item:hover .project-copy p {
+    color: var(--text-dim);
+  }
+}
+
+/* Touch has no hover: the press shows the same state, at once, and lets go
+   with the normal transition. */
+.project-item:active {
+  transform: scale(0.985);
+  opacity: 1;
+}
+
+.project-item:active .project-index,
+.project-item:active .project-arrow {
   color: var(--project-accent);
+  transition-duration: 0s;
 }
 
-.project-item:hover .project-arrow {
-  transform: translateX(0.25rem);
-}
-
-.project-item:hover .project-copy p {
+.project-item:active .project-copy p {
   color: var(--text-dim);
+  transition-duration: 0s;
 }
 
 .project-item:focus-visible,
@@ -454,7 +522,9 @@ body.landing-home {
   transition: color 0.15s;
 }
 
-.site-footer a:hover { color: var(--text-dim); }
+@media (hover: hover) and (pointer: fine) {
+  .site-footer a:hover { color: var(--text-dim); }
+}
 
 .landing-home .site-footer {
   padding: 0 1.5rem 2rem;
@@ -464,7 +534,7 @@ body.landing-home {
 
 /* Games launcher */
 body.games-home {
-  padding: 0 1.35rem 2rem;
+  padding: 0 max(1.35rem, env(safe-area-inset-right)) 2rem max(1.35rem, env(safe-area-inset-left));
 }
 
 .games-home .container {
@@ -522,9 +592,11 @@ body.games-home {
   transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.2s;
 }
 
-.games-home .monogram:hover {
-  transform: translateY(-2px);
-  border-color: var(--accent-border);
+@media (hover: hover) and (pointer: fine) {
+  .games-home .monogram:hover {
+    transform: translateY(-2px);
+    border-color: var(--accent-border);
+  }
 }
 
 .games-home .monogram:focus-visible,
@@ -538,7 +610,7 @@ body.games-home {
   font-family: var(--display-font);
   font-size: clamp(3rem, 7.5vw, 4.65rem);
   font-weight: 600;
-  letter-spacing: 0;
+  letter-spacing: -0.02em;
   margin-bottom: 0.85rem;
   line-height: 1.03;
 }
@@ -578,6 +650,7 @@ body.games-home {
   align-items: center;
   color: var(--text);
   text-decoration: none;
+  transition: transform 0.1s ease-out;
 }
 
 .game-number {
@@ -625,7 +698,7 @@ body.games-home {
   font-family: var(--display-font);
   font-size: clamp(1.9rem, 5vw, 2.8rem);
   font-weight: 600;
-  letter-spacing: 0;
+  letter-spacing: -0.015em;
   line-height: 1.02;
 }
 
@@ -651,17 +724,35 @@ body.games-home {
   transition: transform 0.18s, color 0.18s;
 }
 
-.game-main-link:hover .game-number,
-.game-main-link:hover .game-arrow {
+@media (hover: hover) and (pointer: fine) {
+  .game-main-link:hover .game-number,
+  .game-main-link:hover .game-arrow {
+    color: var(--game-accent);
+  }
+
+  .game-main-link:hover .game-arrow {
+    transform: translateX(0.25rem);
+  }
+
+  .game-main-link:hover .game-desc {
+    color: var(--text-dim);
+  }
+}
+
+.game-main-link:active {
+  transform: scale(0.985);
+  opacity: 1;
+}
+
+.game-main-link:active .game-number,
+.game-main-link:active .game-arrow {
   color: var(--game-accent);
+  transition-duration: 0s;
 }
 
-.game-main-link:hover .game-arrow {
-  transform: translateX(0.25rem);
-}
-
-.game-main-link:hover .game-desc {
+.game-main-link:active .game-desc {
   color: var(--text-dim);
+  transition-duration: 0s;
 }
 
 .game-source-link {
@@ -675,11 +766,27 @@ body.games-home {
   font-weight: 600;
   line-height: 1;
   text-decoration: none;
+  position: relative;
   transition: color 0.16s;
 }
 
-.game-source-link:hover {
+/* The label is 14px tall; the hit area reaches 44px without moving the row,
+   growing mostly downward to stay clear of the card link above. */
+.game-source-link::after {
+  content: '';
+  position: absolute;
+  inset: -0.65rem -0.5rem -1.2rem;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .game-source-link:hover {
+    color: var(--text-dim);
+  }
+}
+
+.game-source-link:active {
   color: var(--text-dim);
+  transition-duration: 0s;
 }
 
 .game-source-link svg {
@@ -778,9 +885,11 @@ body.architecture-page::before {
   box-shadow: none;
 }
 
-.architecture-page .site-header__brand:hover {
-  border-color: var(--a-accent);
-  color: var(--a-text);
+@media (hover: hover) and (pointer: fine) {
+  .architecture-page .site-header__brand:hover {
+    border-color: var(--a-accent);
+    color: var(--a-text);
+  }
 }
 
 .architecture-page .site-header__context span {
@@ -811,8 +920,10 @@ body.architecture-page::before {
   color: var(--a-muted);
 }
 
-.architecture-page .site-footer a:hover {
-  color: var(--a-text);
+@media (hover: hover) and (pointer: fine) {
+  .architecture-page .site-footer a:hover {
+    color: var(--a-text);
+  }
 }
 
 .architecture-page .site-footer {
@@ -840,8 +951,10 @@ body.architecture-page::before {
   text-underline-offset: 0.2em;
 }
 
-.arch a:hover {
-  text-decoration-color: var(--a-accent);
+@media (hover: hover) and (pointer: fine) {
+  .arch a:hover {
+    text-decoration-color: var(--a-accent);
+  }
 }
 
 .arch a:focus-visible,
@@ -1012,9 +1125,11 @@ body.architecture-page::before {
   text-decoration: none;
 }
 
-.arch .arch-nav a:hover {
-  text-decoration: underline;
-  text-decoration-color: var(--a-accent);
+@media (hover: hover) and (pointer: fine) {
+  .arch .arch-nav a:hover {
+    text-decoration: underline;
+    text-decoration-color: var(--a-accent);
+  }
 }
 
 .arch-section {
@@ -1257,9 +1372,11 @@ html[lang="et"] .arch-svg [lang="en"] {
   line-height: 1.25;
 }
 
-.arch .arch-pick--more:hover .arch-pick__title {
-  text-decoration: underline;
-  text-decoration-color: var(--a-accent);
+@media (hover: hover) and (pointer: fine) {
+  .arch .arch-pick--more:hover .arch-pick__title {
+    text-decoration: underline;
+    text-decoration-color: var(--a-accent);
+  }
 }
 
 .arch-columns {
@@ -1450,8 +1567,10 @@ html[lang="et"] .arch-svg [lang="en"] {
   text-decoration-color: transparent;
 }
 
-.arch .arch-register td:nth-child(2) a:hover {
-  text-decoration-color: var(--a-accent);
+@media (hover: hover) and (pointer: fine) {
+  .arch .arch-register td:nth-child(2) a:hover {
+    text-decoration-color: var(--a-accent);
+  }
 }
 
 .arch-register td:last-child,
@@ -1534,8 +1653,10 @@ html:not([lang="et"]) .arch-lang-note {
   text-decoration: none;
 }
 
-.arch .arch-breadcrumb a:hover {
-  color: var(--a-text);
+@media (hover: hover) and (pointer: fine) {
+  .arch .arch-breadcrumb a:hover {
+    color: var(--a-text);
+  }
 }
 
 .arch-meta {
@@ -1667,7 +1788,7 @@ body.privacy-page {
 .privacy-page main {
   max-width: 640px;
   margin: 0 auto;
-  padding: 3rem 2rem 3rem;
+  padding: 3rem max(2rem, env(safe-area-inset-right)) 3rem max(2rem, env(safe-area-inset-left));
   position: relative;
   z-index: 1;
 }
@@ -1675,7 +1796,7 @@ body.privacy-page {
 .privacy-page .site-footer {
   max-width: 640px;
   margin: 0 auto;
-  padding: 0 2rem 3rem;
+  padding: 0 max(2rem, env(safe-area-inset-right)) 3rem max(2rem, env(safe-area-inset-left));
   position: relative;
   z-index: 1;
 }
@@ -1708,7 +1829,7 @@ body.privacy-page {
 }
 
 .privacy-action {
-  min-height: 2.35rem;
+  min-height: 2.75rem;
   margin: 0.15rem 0 0.4rem;
   padding: 0 0.85rem;
   border: 1px solid var(--border-hover);
@@ -1717,10 +1838,19 @@ body.privacy-page {
   color: var(--text);
   cursor: pointer;
   font: 600 0.82rem/1 'Inter', system-ui, sans-serif;
+  user-select: none;
+  -webkit-user-select: none;
+  transition: border-color 0.15s, transform 0.1s ease-out;
 }
 
-.privacy-action:hover {
-  border-color: var(--accent-border);
+.privacy-action:active {
+  transform: scale(0.97);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .privacy-action:hover {
+    border-color: var(--accent-border);
+  }
 }
 
 .privacy-action:focus-visible {
@@ -1788,8 +1918,8 @@ strong {
 
   .landing-home .language-switcher,
   .privacy-page .language-switcher {
-    top: 1rem;
-    right: 1rem;
+    top: max(1rem, env(safe-area-inset-top));
+    right: max(1rem, env(safe-area-inset-right));
   }
 
   .privacy-page main { padding-top: 2.6rem; }
@@ -1814,7 +1944,8 @@ strong {
 
 @media (max-width: 560px) {
   .landing-home main {
-    padding-inline: 1rem;
+    padding-left: max(1rem, env(safe-area-inset-left));
+    padding-right: max(1rem, env(safe-area-inset-right));
     padding-bottom: 3rem;
   }
 
@@ -1840,7 +1971,7 @@ strong {
   }
 
   body.games-home {
-    padding: 0 1rem 1.5rem;
+    padding: 0 max(1rem, env(safe-area-inset-right)) 1.5rem max(1rem, env(safe-area-inset-left));
   }
 
   .games-home .language-switcher {

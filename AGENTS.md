@@ -96,6 +96,13 @@ not a static deploy: the same nginx proxies `/adventure/` to the
   renderer and its fixtures in `check.mjs` together.
 - Every copy key used on the architecture pages lives in `copy.js`, in both
   languages; the build fills the HTML from `COPY.en`.
+- Touch: `:hover` rules sit inside `@media (hover: hover) and (pointer: fine)`
+  so they do not stick after a tap; the press state is `:active` (a row
+  mirrors its hover state, plain links and summaries dim through a
+  zero-specificity rule). iOS applies `:active` only because
+  `createLocaleController` in `site-locale.js` adds a `touchstart` listener.
+  Every page has `viewport-fit=cover`, so edge-hugging elements pad with
+  `max(<gap>, env(safe-area-inset-*))`.
 - The architecture pages have their own light and dark palette (the `--a-*`
   tokens in the Architecture section of `site.css`, following the system
   setting); the rest of the site is dark only.

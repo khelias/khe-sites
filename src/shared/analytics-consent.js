@@ -91,8 +91,8 @@
     style.textContent = `
       .khe-analytics-consent {
         position: fixed;
-        right: 0.75rem;
-        bottom: 0.75rem;
+        right: max(0.75rem, env(safe-area-inset-right));
+        bottom: max(0.75rem, env(safe-area-inset-bottom));
         z-index: 10000;
         width: min(20.5rem, calc(100vw - 1.5rem));
         padding: 0.7rem;
@@ -125,7 +125,7 @@
         gap: 0.4rem;
       }
       .khe-analytics-actions button {
-        min-height: 2rem;
+        min-height: 2.75rem;
         border: 1px solid rgba(255,255,255,0.16);
         border-radius: 8px;
         padding: 0 0.62rem;
@@ -133,6 +133,13 @@
         color: #fafafa;
         cursor: pointer;
         font: 650 0.76rem/1 Inter, system-ui, sans-serif;
+        touch-action: manipulation;
+        user-select: none;
+        -webkit-user-select: none;
+        transition: transform 0.1s ease-out;
+      }
+      .khe-analytics-actions button:active {
+        transform: scale(0.97);
       }
       .khe-analytics-actions button[data-consent-choice="granted"] {
         border-color: #f8fafc;
@@ -151,7 +158,7 @@
       }
       @media (max-width: 520px) {
         .khe-analytics-consent {
-          right: 0.5rem;
+          right: max(0.5rem, env(safe-area-inset-right));
           bottom: max(0.5rem, env(safe-area-inset-bottom));
           width: min(20.5rem, calc(100vw - 1rem));
           padding: 0.62rem;

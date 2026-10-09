@@ -53,6 +53,11 @@ export function createLocaleController({
   useBrowserDefault = false,
   links = {},
 }) {
+  // iOS Safari applies :active only once the page listens for touchstart.
+  // Every page starts a locale controller, so the press states in site.css
+  // hang on this.
+  document.addEventListener('touchstart', () => {}, { passive: true });
+
   const supported = Object.keys(copy);
   const fallbackLocale = supported.includes(defaultLocale) ? defaultLocale : supported[0];
 
