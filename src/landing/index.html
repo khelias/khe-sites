@@ -25,7 +25,7 @@
   <meta name="twitter:image" content="https://khe.ee/og-image.png">
   <link rel="preload" href="/assets/fonts/inter-400.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="/assets/fonts/inter-500.woff2" as="font" type="font/woff2" crossorigin>
-  <link rel="stylesheet" href="/assets/site.css?v=20261009a">
+  <link rel="stylesheet" href="/assets/site.css?v=20261009b">
   <script defer src="/assets/analytics-consent.js?v=20261009a" data-analytics-token="58734ed4ae1e4b4e8a8f8f7d50ff74f2" data-analytics-privacy-url="/privacy?lang=en"></script>
   <script type="application/ld+json">
     {
@@ -85,26 +85,23 @@
 
   <section class="portfolio-panel" aria-label="Projects" data-i18n-aria="projectsLabel">
     <div class="project-list">
-      <a class="project-item project-architecture" href="/architecture/?lang=en" data-link="architecture">
-        <span class="project-index">01</span>
+      <a class="project-item project-games" href="https://games.khe.ee/?lang=en" data-link="games">
         <div class="project-copy">
-          <h3 data-i18n="architectureTitle">Architecture</h3>
-          <p data-i18n="architectureDesc">How the estate is built, and why: diagrams, decisions and known limits.</p>
+          <h3 data-i18n="gamesTitle">Games</h3>
+          <p data-i18n="gamesDesc">Learning games for kids and an AI-narrated party game for adults.</p>
         </div>
         <span class="project-arrow" aria-hidden="true">→</span>
       </a>
 
-      <a class="project-item project-games" href="https://games.khe.ee/?lang=en" data-link="games">
-        <span class="project-index">02</span>
+      <a class="project-item project-architecture" href="/architecture/?lang=en" data-link="architecture">
         <div class="project-copy">
-          <h3 data-i18n="gamesTitle">Games</h3>
-          <p data-i18n="gamesDesc">A games shelf for learning, logic, and AI-narrated group adventures.</p>
+          <h3 data-i18n="architectureTitle">How it all runs</h3>
+          <p data-i18n="architectureDesc">The games and other apps run on one server at home. Diagrams, decisions and weak spots.</p>
         </div>
         <span class="project-arrow" aria-hidden="true">→</span>
       </a>
 
       <a class="project-item project-contact" href="mailto:kaidoelias@gmail.com?subject=KHE.ee%20project%20inquiry" data-link="contact">
-        <span class="project-index">03</span>
         <div class="project-copy">
           <h3 data-i18n="contactTitle">Work with me</h3>
           <p data-i18n="contactDesc">Need a website, application, automation, or AI-enabled workflow? Send me a note.</p>
@@ -124,16 +121,16 @@
   const COPY = {
     et: {
       title: 'Kaido Henrik Elias | Tarkvaraarhitekt',
-      description: 'Tarkvaraarhitekt Eestis. Veebirakendused, kodulabor, automatsioon ja mängud.',
+      description: 'Tarkvaraarhitekt Eestis. Veebirakendused, koduserver, automatiseerimine ja mängud.',
       languageLabel: 'Keel',
       projectsLabel: 'Projektid',
       tagline: 'Ametilt tarkvaraarhitekt. Loomult nokitseja.',
-      architectureTitle: 'Arhitektuur',
-      architectureDesc: 'Kuidas süsteemid on üles ehitatud ja miks: diagrammid, otsused ja teadaolevad piirangud.',
+      architectureTitle: 'Kuidas see kõik töötab',
+      architectureDesc: 'Mängud ja muud rakendused töötavad ühes koduserveris. Joonised, otsused ja nõrgad kohad.',
       gamesTitle: 'Mängud',
-      gamesDesc: 'Õppemängud ja AI seiklus ühel mänguriiulil.',
+      gamesDesc: 'Õppemängud lastele ja AI-seiklus täiskasvanutele.',
       contactTitle: 'Koostöö',
-      contactDesc: 'Kui vajad veebilehte, rakendust, automatsiooni või AI-põhist lahendust, kirjuta mulle.',
+      contactDesc: 'Kui vajad veebilehte, rakendust, automatiseerimist või AI-põhist lahendust, kirjuta mulle.',
     },
     en: {
       title: 'Kaido Henrik Elias | Software Architect',
@@ -141,10 +138,10 @@
       languageLabel: 'Language',
       projectsLabel: 'Projects',
       tagline: 'Software architect by trade. Tinkerer by nature.',
-      architectureTitle: 'Architecture',
-      architectureDesc: 'How the estate is built, and why: diagrams, decisions and known limits.',
+      architectureTitle: 'How it all runs',
+      architectureDesc: 'The games and other apps run on one server at home. Diagrams, decisions and weak spots.',
       gamesTitle: 'Games',
-      gamesDesc: 'A games shelf for learning, logic, and AI-narrated group adventures.',
+      gamesDesc: 'Learning games for kids and an AI-narrated party game for adults.',
       contactTitle: 'Work with me',
       contactDesc: 'Need a website, application, automation, or AI-enabled workflow? Send me a note.',
     },

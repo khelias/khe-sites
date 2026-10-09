@@ -383,7 +383,7 @@ body.landing-home {
 .project-item {
   --project-accent: var(--accent);
   display: grid;
-  grid-template-columns: 2.4rem minmax(0, 1fr) 2rem;
+  grid-template-columns: minmax(0, 1fr) 2rem;
   gap: clamp(0.85rem, 2vw, 1.35rem);
   align-items: center;
   padding: 1.25rem 0;
@@ -405,18 +405,6 @@ body.landing-home {
 
 .project-games { --project-accent: var(--accent-warm); }
 .project-contact { --project-accent: #86efac; }
-
-.project-index {
-  align-self: start;
-  padding-top: 0.15rem;
-  color: var(--text-faint);
-  font-size: 0.72rem;
-  font-weight: 650;
-  letter-spacing: 0;
-  line-height: 1;
-  font-variant-numeric: tabular-nums;
-  transition: color 0.18s;
-}
 
 .project-copy {
   display: grid;
@@ -456,7 +444,6 @@ body.landing-home {
 }
 
 @media (hover: hover) and (pointer: fine) {
-  .project-item:hover .project-index,
   .project-item:hover .project-arrow {
     color: var(--project-accent);
   }
@@ -477,7 +464,6 @@ body.landing-home {
   opacity: 1;
 }
 
-.project-item:active .project-index,
 .project-item:active .project-arrow {
   color: var(--project-accent);
   transition-duration: 0s;
@@ -1965,7 +1951,7 @@ strong {
   }
 
   .project-item {
-    grid-template-columns: 2rem minmax(0, 1fr) 1.6rem;
+    grid-template-columns: minmax(0, 1fr) 1.6rem;
     gap: 0.7rem;
     padding: 1.2rem 0;
   }
