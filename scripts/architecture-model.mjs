@@ -35,6 +35,7 @@ export const elements = {
   'khe-meta': { kind: 'repo', name: 'khe-meta', repo: 'khe-meta' },
   khelias: { kind: 'repo', name: 'khelias', repo: 'khelias' },
   'ha-estfeed': { kind: 'repo', name: 'ha-estfeed', repo: 'ha-estfeed' },
+  'khe-home-assistant': { kind: 'repo', name: 'khe-home-assistant', repo: 'khe-home-assistant' },
 
   beforePush: { kind: 'boundary', label: 'groupBeforePush', style: 'rule' },
   afterPush: { kind: 'boundary', label: 'groupAfterPush', style: 'rule' },
@@ -172,7 +173,7 @@ export const views = [
 export const blockCards = [
   { group: 'groupProducts', ids: ['khe-study', 'khe-ai-adventure', 'khe-trips', 'khe-sites'] },
   { group: 'groupPlatform', repo: 'khe-homelab', ids: ['edge', 'runtime', 'family', 'observability', 'backup', 'runner'] },
-  { group: 'groupHouse', ids: ['house'] },
+  { group: 'groupHouse', ids: ['house', 'khe-home-assistant'] },
   { group: 'groupMeta', ids: ['khe-workspace', 'khe-architecture', 'khe-meta', 'khelias', 'ha-estfeed'] },
 ];
 
