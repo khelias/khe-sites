@@ -404,6 +404,7 @@ body.landing-home {
 }
 
 .project-games { --project-accent: var(--accent-warm); }
+.project-house3d { --project-accent: var(--accent-cool); }
 .project-contact { --project-accent: #86efac; }
 
 .project-copy {

@@ -215,5 +215,13 @@ await runReportingSourceErrors(async () => {
     }
   }
 
+  // the 3D house demo, built from khe-home-assistant's test house
+  for (const file of ['index.html', 'demo.js', 'house3d-card.js', 'model.json']) {
+    if (!existsSync(join(landing, 'house3d', file))) throw new Error(`dist/landing/house3d/${file} was not built`);
+  }
+  const demoModel = JSON.parse(await readFile(join(landing, 'house3d/model.json'), 'utf8'));
+  if (!Array.isArray(demoModel.walls) || !demoModel.walls.length) throw new Error('dist/landing/house3d/model.json has no walls');
+  if (!sitemap.includes('<loc>https://khe.ee/house3d/</loc>')) throw new Error('sitemap.xml does not list /house3d/');
+
   console.log(`Static site checks passed (${sources.decisions.length} decisions, ${sources.repos.length} repos)`);
 });

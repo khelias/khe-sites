@@ -29,6 +29,8 @@ scripts/
   build.mjs                build dist/
   check.mjs                static checks
   architecture-sources.mjs reads khe-architecture and khe-homelab
+  house3d-demo.mjs         runs khe-home-assistant's demo build into
+                           dist/landing/house3d/
   architecture-model.mjs   diagram elements, edges and layout
   render-architecture.mjs  renders the page, ADR pages and sitemap entries
   markdown.mjs             strict Markdown subset for the ADRs
@@ -69,6 +71,12 @@ not a static deploy: the same nginx proxies `/adventure/` to the
   a worktree works). A missing source fails the build naming the variable;
   there is no committed snapshot. CI and deploy check khe-architecture out
   into `.sources/`.
+- `/house3d/` is the Home Assistant 3D view on khe-home-assistant's made-up
+  test house: the build runs that repo's `python3 -I
+  scripts/house3d-build.py --demo` (so the build needs `python3`) from
+  `HOME_ASSISTANT_ROOT`, else the sibling checkout, which CI and deploy
+  check out into `.sources/` too. A change there reaches khe.ee at the next
+  deploy here: a push, the weekly schedule or `gh workflow run deploy.yml`.
 - `scripts/architecture-model.mjs` must name every repo in `ESTATE.md` and
   every khe-homelab service group, and nothing else; check fails otherwise.
   The repo elements appear in no diagram; they feed the building-block rows

@@ -15,6 +15,9 @@
   </url>
 <!-- decisions -->
   <url>
+    <loc>https://khe.ee/house3d/</loc>
+  </url>
+  <url>
     <loc>https://khe.ee/privacy</loc>
     <xhtml:link rel="alternate" hreflang="en" href="https://khe.ee/privacy?lang=en"/>
     <xhtml:link rel="alternate" hreflang="et" href="https://khe.ee/privacy?lang=et"/>

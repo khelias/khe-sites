@@ -3,6 +3,7 @@ import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { loadSources, runReportingSourceErrors } from './architecture-sources.mjs';
 import { renderArchitecture } from './render-architecture.mjs';
+import { buildHouse3dDemo } from './house3d-demo.mjs';
 
 const root = dirname(dirname(fileURLToPath(import.meta.url)));
 const dist = join(root, 'dist');
@@ -38,6 +39,7 @@ await runReportingSourceErrors(async () => {
   }
 
   await renderArchitecture(join(dist, 'landing'), await loadSources());
+  buildHouse3dDemo(join(dist, 'landing', 'house3d'));
 
   console.log(`Built ${apps.join(' and ')} sites into dist/`);
 });
