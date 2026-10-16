@@ -215,9 +215,17 @@ await runReportingSourceErrors(async () => {
     }
   }
 
-  // the 3D house demo, built from khe-home-assistant's test house
-  for (const file of ['index.html', 'demo.js', 'dashboard.js', 'cards.js', 'house3d-card.js', 'model.json']) {
+  // the house demo, built from khe-home-assistant's test house; its dashboard is either the
+  // hand-written dashboard.js of the old demo or the generated dashboard.json of the new one
+  for (const file of ['index.html', 'demo.js', 'cards.js', 'house3d-card.js', 'model.json']) {
     if (!existsSync(join(landing, 'house3d', file))) throw new Error(`dist/landing/house3d/${file} was not built`);
+  }
+  const dashboardJson = join(landing, 'house3d/dashboard.json');
+  if (existsSync(dashboardJson)) {
+    const dashboard = JSON.parse(await readFile(dashboardJson, 'utf8'));
+    if (!Array.isArray(dashboard.views) || !dashboard.views.length) throw new Error('dist/landing/house3d/dashboard.json has no views');
+  } else if (!existsSync(join(landing, 'house3d/dashboard.js'))) {
+    throw new Error('dist/landing/house3d has neither dashboard.json nor dashboard.js');
   }
   const demoModel = JSON.parse(await readFile(join(landing, 'house3d/model.json'), 'utf8'));
   if (!Array.isArray(demoModel.walls) || !demoModel.walls.length) throw new Error('dist/landing/house3d/model.json has no walls');
