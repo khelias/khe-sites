@@ -54,7 +54,7 @@ export function createLocaleController({
   links = {},
 }) {
   // iOS Safari applies :active only once the page listens for touchstart.
-  // Every page starts a locale controller, so the press states in site.css
+  // Every page starts a locale controller, so the press states in site.css and site-header.css
   // hang on this.
   document.addEventListener('touchstart', () => {}, { passive: true });
 

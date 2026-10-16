@@ -35,6 +35,7 @@ scripts/
   render-architecture.mjs  renders the page, ADR pages and sitemap entries
   markdown.mjs             strict Markdown subset for the ADRs
   templates/decision.html  the ADR page
+  templates/house3d-header.html  the site header the build puts on /house3d/
 ```
 
 ## Rules
@@ -77,6 +78,14 @@ not a static deploy: the same nginx proxies `/adventure/` to the
   `HOME_ASSISTANT_ROOT`, else the sibling checkout, which CI and deploy
   check out into `.sources/` too. A change there reaches khe.ee at the next
   deploy here: a push, the weekly schedule or `gh workflow run deploy.yml`.
+  The build then puts the site header (`scripts/templates/house3d-header.html`)
+  on the page. The demo starts its fixed bars and views below `--host-h`,
+  which the header's script sets to its height, and the build fails on a
+  demo without it. The switcher translates only the header and the title;
+  the demo stays Estonian and keeps `lang="et"`.
+- `src/shared/site-header.css` holds the Inter faces, the colour tokens and
+  the site header with its language switcher. Every page links it before
+  `site.css`; `/house3d/`, with Home Assistant's own styles, links only it.
 - `scripts/architecture-model.mjs` must name every repo in `ESTATE.md` and
   every khe-homelab service group, and nothing else; check fails otherwise.
   The repo elements appear in no diagram; they feed the building-block rows
@@ -97,7 +106,8 @@ not a static deploy: the same nginx proxies `/adventure/` to the
   to `/architecture/#decisions`, and the ADR pages link back to it.
 - Headings use Source Serif 4 (weight 600, latin and latin-ext subsets in
   `src/shared/fonts/`), body text Inter, mono labels the system mono stack.
-  Check fails when `site.css` loads a font file that is not there.
+  Check fails when `site-header.css` or `site.css` loads a font file that is
+  not there.
 - ADRs render through `scripts/markdown.mjs`, which throws with file and line
   on anything outside its subset (tables, fences, quotes, raw HTML, images,
   deeper nesting, relative links other than `NNN-slug.md`). Extend the

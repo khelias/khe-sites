@@ -1,0 +1,60 @@
+<header class="site-header site-header--fixed" aria-label="Lehe navigeerimine" data-i18n-aria="siteNavAria">
+  <div class="site-header__inner">
+    <a class="site-header__brand brand-mark" href="/?lang=et" data-link="home" data-i18n-aria="homeLabel" aria-label="KHE avaleht">
+      <span>KHE</span><span class="brand-mark__suffix">.ee</span>
+    </a>
+    <div class="site-header__context" aria-current="page">
+      <span data-i18n="siteKicker">KHE</span>
+      <strong data-i18n="siteTitle">Koduautomaatika</strong>
+    </div>
+    <div class="site-header__actions">
+      <div class="language-switcher" role="group" aria-label="Keel" data-i18n-aria="languageLabel">
+        <button type="button" data-lang-option="et" aria-pressed="true">ET</button>
+        <button type="button" data-lang-option="en" aria-pressed="false">EN</button>
+      </div>
+    </div>
+  </div>
+</header>
+<script type="module">
+  import { createLocaleController } from '/assets/site-locale.js?v=20261009a';
+
+  const header = document.querySelector('.site-header');
+  // The demo's bars and views are position: fixed and start below --host-h.
+  new ResizeObserver(() => {
+    document.documentElement.style.setProperty('--host-h', `${header.getBoundingClientRect().height}px`);
+  }).observe(header);
+  // The demo itself is Estonian only: its title and description stay khe-home-assistant's,
+  // and its content keeps lang="et" when the header switches the page to English.
+  const description = document.querySelector('meta[name="description"]');
+  for (const node of document.body.children) {
+    if (node !== header && !node.lang) node.lang = 'et';
+  }
+
+  const COPY = {
+    et: {
+      title: document.title,
+      description: description ? description.content : '',
+      siteNavAria: 'Lehe navigeerimine',
+      homeLabel: 'KHE avaleht',
+      languageLabel: 'Keel',
+      siteKicker: 'KHE',
+      siteTitle: 'Koduautomaatika',
+    },
+    en: {
+      title: 'Home · Home Assistant demo',
+      description: 'A made-up house on a Home Assistant dashboard: a 3D view and simulated devices.',
+      siteNavAria: 'Site navigation',
+      homeLabel: 'KHE home',
+      languageLabel: 'Language',
+      siteKicker: 'KHE',
+      siteTitle: 'Home automation',
+    },
+  };
+
+  createLocaleController({
+    copy: COPY,
+    defaultLocale: 'en',
+    links: { home: (locale) => `/?lang=${locale}` },
+  });
+
+</script>

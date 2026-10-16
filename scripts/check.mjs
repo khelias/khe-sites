@@ -24,6 +24,7 @@ await runReportingSourceErrors(async () => {
   const requiredMarkers = [
     '/assets/site-locale.js',
     '/assets/analytics-consent.js',
+    '/assets/site-header.css',
     '/assets/site.css',
     'data-lang-option="et"',
     'data-lang-option="en"',
@@ -54,7 +55,9 @@ await runReportingSourceErrors(async () => {
     'src/shared/analytics-consent.js',
     'src/shared/site-footer.js',
     'src/shared/site-locale.js',
+    'src/shared/site-header.css',
     'src/shared/site.css',
+    'scripts/templates/house3d-header.html',
     'src/landing/architecture/architecture.js',
     'src/landing/architecture/copy.js',
   ];
@@ -158,8 +161,11 @@ await runReportingSourceErrors(async () => {
   for (const banned of ['animation', 'drop-shadow', 'box-shadow', 'gradient']) {
     if (archCss.includes(banned)) throw new Error(`site.css Architecture section uses ${banned}`);
   }
-  for (const match of css.matchAll(/url\(\s*['"]?\/assets\/fonts\/([^'")\s]+)['"]?\s*\)/g)) {
-    if (!existsSync(join(root, 'src/shared/fonts', match[1]))) throw new Error(`site.css loads /assets/fonts/${match[1]}, which src/shared/fonts lacks`);
+  for (const name of ['site-header.css', 'site.css']) {
+    const sheet = await readFile(join(root, 'src/shared', name), 'utf8');
+    for (const match of sheet.matchAll(/url\(\s*['"]?\/assets\/fonts\/([^'")\s]+)['"]?\s*\)/g)) {
+      if (!existsSync(join(root, 'src/shared/fonts', match[1]))) throw new Error(`${name} loads /assets/fonts/${match[1]}, which src/shared/fonts lacks`);
+    }
   }
 
   // The rest checks the build output; npm run check builds first.
@@ -230,6 +236,13 @@ await runReportingSourceErrors(async () => {
   const demoModel = JSON.parse(await readFile(join(landing, 'house3d/model.json'), 'utf8'));
   if (!Array.isArray(demoModel.walls) || !demoModel.walls.length) throw new Error('dist/landing/house3d/model.json has no walls');
   if (!sitemap.includes('<loc>https://khe.ee/house3d/</loc>')) throw new Error('sitemap.xml does not list /house3d/');
+  const demoPage = await readFile(join(landing, 'house3d/index.html'), 'utf8');
+  for (const marker of ['/assets/site-header.css', 'class="site-header site-header--fixed"', 'data-lang-option="et"', 'data-lang-option="en"']) {
+    if (!demoPage.includes(marker)) throw new Error(`dist/landing/house3d/index.html is missing ${marker}`);
+  }
+  for (const match of demoPage.matchAll(/<script type="module">([\s\S]*?)<\/script>/g)) {
+    new Function(match[1].replace(/^\s*import\s.+;\s*$/gm, ''));
+  }
 
   console.log(`Static site checks passed (${sources.decisions.length} decisions, ${sources.repos.length} repos)`);
 });
