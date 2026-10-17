@@ -71,6 +71,17 @@ Because deploy runs on that runner, a fork PR's run is approved only after
 reading its `.github/workflows/` diff
 ([estate ADR-006](https://github.com/khelias/khe-architecture/blob/main/decisions/006-branch-protection.md)).
 
+Automated writers
+([estate ADR-007](https://github.com/khelias/khe-architecture/blob/main/decisions/007-automated-writers.md)): Renovate
+automerges npm patch and minor updates of stable packages, 0.x patches of
+devDependencies, GitHub Actions minor and patch updates, digests, pins and
+lock file maintenance (`renovate.json`); every merge to `main` deploys, and
+the weekly schedule redeploys from the current sources. The way back from a
+bad merge here is to revert its commit on `main` and push, which redeploys
+the previous state; a bad page from a source repo is reverted there and
+reaches khe.ee at the next deploy here. A new automated writer joins the
+estate's writer register in khe-meta in the same change.
+
 ## Gotchas
 
 - Build and check read their sources at build time: `ARCHITECTURE_ROOT`
