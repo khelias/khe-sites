@@ -24,7 +24,7 @@ jobs:
       # khe-architecture and the service groups from khe-homelab.
       ARCHITECTURE_ROOT: ${{ github.workspace }}/.sources/khe-architecture
       HOMELAB_ROOT: ${{ github.workspace }}/.sources/khe-homelab
-      # /house3d/ is built by khe-home-assistant's own script from its test house.
+      # /ha/ is built by khe-home-assistant's own script from its test house.
       HOME_ASSISTANT_ROOT: ${{ github.workspace }}/.sources/khe-home-assistant
 
     steps:
@@ -46,7 +46,7 @@ jobs:
           path: .sources/khe-homelab
           persist-credentials: false
 
-      # The 3D house demo at /house3d/, built by its own script from the test house.
+      # The 3D house demo at /ha/, built by its own script from the test house.
       - name: Checkout khe-home-assistant
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
         with:

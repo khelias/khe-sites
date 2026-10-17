@@ -230,22 +230,23 @@ await runReportingSourceErrors(async () => {
 
   // the house demo, built from khe-home-assistant's test house; its dashboard is either the
   // hand-written dashboard.js of the old demo or the generated dashboard.json of the new one
+  const demo = join(landing, 'ha');
   for (const file of ['index.html', 'demo.js', 'cards.js', 'house3d-card.js', 'model.json']) {
-    if (!existsSync(join(landing, 'house3d', file))) throw new Error(`dist/landing/house3d/${file} was not built`);
+    if (!existsSync(join(demo, file))) throw new Error(`dist/landing/ha/${file} was not built`);
   }
-  const dashboardJson = join(landing, 'house3d/dashboard.json');
+  const dashboardJson = join(demo, 'dashboard.json');
   if (existsSync(dashboardJson)) {
     const dashboard = JSON.parse(await readFile(dashboardJson, 'utf8'));
-    if (!Array.isArray(dashboard.views) || !dashboard.views.length) throw new Error('dist/landing/house3d/dashboard.json has no views');
-  } else if (!existsSync(join(landing, 'house3d/dashboard.js'))) {
-    throw new Error('dist/landing/house3d has neither dashboard.json nor dashboard.js');
+    if (!Array.isArray(dashboard.views) || !dashboard.views.length) throw new Error('dist/landing/ha/dashboard.json has no views');
+  } else if (!existsSync(join(demo, 'dashboard.js'))) {
+    throw new Error('dist/landing/ha has neither dashboard.json nor dashboard.js');
   }
-  const demoModel = JSON.parse(await readFile(join(landing, 'house3d/model.json'), 'utf8'));
-  if (!Array.isArray(demoModel.walls) || !demoModel.walls.length) throw new Error('dist/landing/house3d/model.json has no walls');
-  if (!sitemap.includes('<loc>https://khe.ee/house3d/</loc>')) throw new Error('sitemap.xml does not list /house3d/');
-  const demoPage = await readFile(join(landing, 'house3d/index.html'), 'utf8');
+  const demoModel = JSON.parse(await readFile(join(demo, 'model.json'), 'utf8'));
+  if (!Array.isArray(demoModel.walls) || !demoModel.walls.length) throw new Error('dist/landing/ha/model.json has no walls');
+  if (!sitemap.includes('<loc>https://khe.ee/ha/</loc>')) throw new Error('sitemap.xml does not list /ha/');
+  const demoPage = await readFile(join(demo, 'index.html'), 'utf8');
   for (const marker of ['/assets/site-header.css', 'class="site-header site-header--fixed"', 'data-lang-option="et"', 'data-lang-option="en"']) {
-    if (!demoPage.includes(marker)) throw new Error(`dist/landing/house3d/index.html is missing ${marker}`);
+    if (!demoPage.includes(marker)) throw new Error(`dist/landing/ha/index.html is missing ${marker}`);
   }
   for (const match of demoPage.matchAll(/<script type="module">([\s\S]*?)<\/script>/g)) {
     new Function(match[1].replace(/^\s*import\s.+;\s*$/gm, ''));

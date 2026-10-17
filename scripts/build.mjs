@@ -42,7 +42,7 @@ await runReportingSourceErrors(async () => {
   }
 
   await renderArchitecture(join(dist, 'landing'), await loadSources());
-  await buildHouse3dDemo(join(dist, 'landing', 'house3d'));
+  await buildHouse3dDemo(join(dist, 'landing', 'ha'));
 
   for (const app of apps) {
     const outputDir = join(dist, app);

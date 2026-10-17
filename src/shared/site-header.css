@@ -1,5 +1,5 @@
 /* The KHE site header: fonts, colour tokens and the header with its language switcher.
-   Every page loads it before site.css; /house3d/, a Home Assistant mock with its own
+   Every page loads it before site.css; /ha/, a Home Assistant mock with its own
    styles, loads only this file. */
 @font-face {
   font-family: 'Inter';
@@ -48,7 +48,7 @@
   --display-font: 'Inter', system-ui, sans-serif;
 }
 
-/* site.css resets every element; on /house3d/ only the header gets it. */
+/* site.css resets every element; on /ha/ only the header gets it. */
 :where(.site-header, .site-header *, .site-header *::before, .site-header *::after) { margin: 0; padding: 0; box-sizing: border-box; }
 
 .language-switcher {
@@ -116,7 +116,7 @@
   line-height: normal;
 }
 
-/* Over a page laid out with position: fixed (/house3d/), which starts below --host-h. Its
+/* Over a page laid out with position: fixed (/ha/), which starts below --host-h. Its
    script sets --host-h to the measured height; this is the height until then. */
 .site-header--fixed {
   position: fixed;

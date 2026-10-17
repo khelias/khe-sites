@@ -11,7 +11,7 @@ JavaScript:
   [estate architecture](https://khe.ee/architecture/): the estate in one
   diagram, the decisions that shape it, how a change ships, how it stays up
   and where it is weak, and every estate decision on its own page
-- [khe.ee/house3d](https://khe.ee/house3d/) - the Home Assistant 3D house
+- [khe.ee/ha](https://khe.ee/ha/) - the Home Assistant 3D house
   view on a made-up house, built from
   [khe-home-assistant](https://github.com/khelias/khe-home-assistant)
 - [games.khe.ee](https://games.khe.ee) - the launcher that links into the

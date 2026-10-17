@@ -30,7 +30,7 @@ scripts/
   check.mjs                static checks
   architecture-sources.mjs reads khe-architecture and khe-homelab
   house3d-demo.mjs         runs khe-home-assistant's demo build into
-                           dist/landing/house3d/
+                           dist/landing/ha/
   architecture-model.mjs   diagram elements, edges and layout
   render-architecture.mjs  renders the page, ADR pages and sitemap entries
   site-header.mjs          fills each page's site-header marker
@@ -38,7 +38,7 @@ scripts/
   markdown.mjs             strict Markdown subset for the ADRs
   templates/decision.html  the ADR page
   templates/house3d-header.html  the header marker and script the build puts
-                           on /house3d/
+                           on /ha/
 ```
 
 ## Rules
@@ -101,20 +101,21 @@ estate's writer register in khe-meta in the same change.
   a worktree works). A missing source fails the build naming the variable;
   there is no committed snapshot. CI and deploy check khe-architecture out
   into `.sources/`.
-- `/house3d/` is the Home Assistant 3D view on khe-home-assistant's made-up
+- `/ha/` is the Home Assistant 3D view on khe-home-assistant's made-up
   test house: the build runs that repo's `python3 -I
   scripts/house3d-build.py --demo` (so the build needs `python3`) from
   `HOME_ASSISTANT_ROOT`, else the sibling checkout, which CI and deploy
   check out into `.sources/` too. A change there reaches khe.ee at the next
   deploy here: a push, the weekly schedule or `gh workflow run deploy.yml`.
-  The build then puts the site header (`scripts/templates/house3d-header.html`)
+  The old `/house3d/` answers 301 to the same path under `/ha/` (khe-homelab's
+  landing nginx). The build then puts the site header (`scripts/templates/house3d-header.html`)
   on the page. The demo starts its fixed bars and views below `--host-h`,
   which the header's script sets to its height, and the build fails on a
   demo without it. The switcher translates only the header and the title;
   the demo stays Estonian and keeps `lang="et"`.
 - `src/shared/site-header.css` holds the Inter faces, the colour tokens and
   the site header with its language switcher. Every page links it before
-  `site.css`; `/house3d/`, with Home Assistant's own styles, links only it.
+  `site.css`; `/ha/`, with Home Assistant's own styles, links only it.
 - The site header markup exists once, in `scripts/site-header.mjs`. A page
   carries `<!-- site-header home=… title=… [parent=…] [fixed] -->` on a line
   of its own, and the build replaces it with the header in the page's
@@ -129,7 +130,7 @@ estate's writer register in khe-meta in the same change.
   those link, with the first 10 hex of the built file's SHA-256, so a change
   to `site.css` or `site-locale.js` needs no hand edit. Check fails on a
   hand-written `?v=` in a source and on a built link whose hash does not
-  match its file. Relative URLs (khe-home-assistant's `/house3d/` files) and
+  match its file. Relative URLs (khe-home-assistant's files under `/ha/`) and
   fonts are not stamped.
 - `scripts/architecture-model.mjs` must name every repo in `ESTATE.md` and
   every khe-homelab service group, and nothing else; check fails otherwise.
