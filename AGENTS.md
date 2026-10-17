@@ -66,6 +66,13 @@ scripts/
    ([estate ADR-013](https://github.com/khelias/khe-architecture/blob/main/decisions/013-trips-public-demo.md)).
    It is not in the sitemap and `robots.txt` does not disallow it, so a
    crawler reads its `noindex`.
+7. **Shared UI comes from versioned packages, never automerged.** The KHE
+   site header is moving to `@khelias/ui` from khe-ui; until it does,
+   `scripts/site-header.mjs` and `src/shared/site-header.css` build it
+   here, and a fix to either is made in khe-ui too. A shared package holds
+   presentation only, is pinned, and is merged here by hand: Renovate never
+   automerges it
+   ([estate ADR-014](https://github.com/khelias/khe-architecture/blob/main/decisions/014-shared-ui-packages.md)).
 
 ## Deployment
 

@@ -30,6 +30,7 @@ export const elements = {
   'khe-ai-adventure': { kind: 'product', name: 'khe-ai-adventure', repo: 'khe-ai-adventure' },
   'khe-trips': { kind: 'product', name: 'khe-trips', repo: 'khe-trips' },
   'khe-sites': { kind: 'product', name: 'khe-sites', repo: 'khe-sites' },
+  'khe-ui': { kind: 'repo', name: 'khe-ui', repo: 'khe-ui' },
   'khe-workspace': { kind: 'repo', name: 'khe-workspace', repo: 'khe-workspace' },
   'khe-architecture': { kind: 'repo', name: 'khe-architecture', repo: 'khe-architecture' },
   'khe-meta': { kind: 'repo', name: 'khe-meta', repo: 'khe-meta' },
@@ -171,7 +172,7 @@ export const views = [
 
 // The building-block rows under the estate diagram, in reading order.
 export const blockCards = [
-  { group: 'groupProducts', ids: ['khe-study', 'khe-ai-adventure', 'khe-trips', 'khe-sites'] },
+  { group: 'groupProducts', ids: ['khe-study', 'khe-ai-adventure', 'khe-trips', 'khe-sites', 'khe-ui'] },
   { group: 'groupPlatform', repo: 'khe-homelab', ids: ['edge', 'runtime', 'family', 'observability', 'backup', 'runner'] },
   { group: 'groupHouse', ids: ['house', 'khe-home-assistant'] },
   { group: 'groupMeta', ids: ['khe-workspace', 'khe-architecture', 'khe-meta', 'khelias', 'ha-estfeed'] },
@@ -183,7 +184,7 @@ export const keyDecisions = [
   { ids: ['011'], key: 'kd011' },
   { ids: ['010'], key: 'kd010' },
   { ids: ['008'], key: 'kd008' },
-  { ids: ['001', '002'], key: 'kd001' },
+  { ids: ['001', '014'], key: 'kd001' },
   { ids: ['006'], key: 'kd006' },
 ];
 
