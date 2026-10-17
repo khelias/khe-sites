@@ -1,6 +1,6 @@
-import { createLocaleController } from '/assets/site-locale.js?v=20261009a';
-import { renderSiteFooter, withSiteFooterCopy } from '/assets/site-footer.js?v=20261008a';
-import { COPY } from '/architecture/copy.js?v=20261008a';
+import { createLocaleController } from '/assets/site-locale.js';
+import { renderSiteFooter, withSiteFooterCopy } from '/assets/site-footer.js';
+import { COPY } from '/architecture/copy.js';
 
 renderSiteFooter();
 

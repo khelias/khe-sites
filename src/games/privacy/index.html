@@ -25,29 +25,13 @@
   <meta name="twitter:image" content="https://games.khe.ee/og-image.png">
   <link rel="preload" href="/assets/fonts/inter-400.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="/assets/fonts/inter-500.woff2" as="font" type="font/woff2" crossorigin>
-  <link rel="stylesheet" href="/assets/site-header.css?v=20261017a">
-  <link rel="stylesheet" href="/assets/site.css?v=20261017a">
-  <script defer src="/assets/analytics-consent.js?v=20261009a" data-analytics-token="81aecd30e30c4e97a4d733334d88775b" data-analytics-privacy-url="/privacy?lang=en"></script>
+  <link rel="stylesheet" href="/assets/site-header.css">
+  <link rel="stylesheet" href="/assets/site.css">
+  <script defer src="/assets/analytics-consent.js" data-analytics-token="81aecd30e30c4e97a4d733334d88775b" data-analytics-privacy-url="/privacy?lang=en"></script>
 </head>
 <body class="privacy-page games-privacy">
 
-<header class="site-header">
-  <div class="site-header__inner">
-    <a class="site-header__brand brand-mark" href="/?lang=en" data-link="home" data-i18n-aria="siteHomeAria" aria-label="KHE Games home">
-      <span>KHE</span><span class="brand-mark__suffix">.ee</span>
-    </a>
-    <div class="site-header__context">
-      <span data-i18n="siteKicker">KHE Games</span>
-      <strong data-i18n="siteTitle">Privacy</strong>
-    </div>
-    <div class="site-header__actions">
-      <div class="language-switcher" role="group" aria-label="Language" data-i18n-aria="languageLabel">
-        <button type="button" data-lang-option="et" aria-pressed="false">ET</button>
-        <button type="button" data-lang-option="en" aria-pressed="true">EN</button>
-      </div>
-    </div>
-  </div>
-</header>
+<!-- site-header home=games title=headerPrivacy parent=games -->
 
 <main>
   <h1 data-i18n="heading">Privacy</h1>
@@ -120,17 +104,13 @@
 <footer class="site-footer" data-site-footer></footer>
 
 <script type="module">
-  import { createLocaleController } from '/assets/site-locale.js?v=20261009a';
-  import { renderSiteFooter, withSiteFooterCopy } from '/assets/site-footer.js?v=20260427e';
+  import { createLocaleController } from '/assets/site-locale.js';
+  import { renderSiteFooter, withSiteFooterCopy } from '/assets/site-footer.js';
 
   const COPY = {
     et: {
       title: 'Privaatsus - KHE Games',
       description: 'KHE Games privaatsusteave analüütika, brauseri kohaliku salvestuse, AI Seikluse teenusepakkujate ja majutuse kohta.',
-      siteHomeAria: 'KHE Games avaleht',
-      siteKicker: 'KHE Games',
-      siteTitle: 'Privaatsus',
-      languageLabel: 'Keel',
       heading: 'Privaatsus',
       updated: 'Uuendatud: 2026-09-29',
       intro: 'Siin on kirjas, milliseid isikuandmeid games.khe.ee töötleb, miks ja millised õigused sul on. Saidil ei ole reklaame ega kasutajakontosid ning see ei profileeri sind ega jälgi sind reklaami eesmärgil.',
@@ -179,10 +159,6 @@
     en: {
       title: 'Privacy - KHE Games',
       description: 'Privacy notice for KHE Games, including analytics, browser local storage, AI Adventure providers, and hosting.',
-      siteHomeAria: 'KHE Games home',
-      siteKicker: 'KHE Games',
-      siteTitle: 'Privacy',
-      languageLabel: 'Language',
       heading: 'Privacy',
       updated: 'Last updated: 2026-09-29',
       intro: 'This notice explains what personal data games.khe.ee handles, why, and what your rights are. The site has no advertising and no user accounts, and it does no profiling or tracking for advertising.',

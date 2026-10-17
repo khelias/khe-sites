@@ -25,9 +25,9 @@
   <meta name="twitter:image" content="https://games.khe.ee/og-image.png">
   <link rel="preload" href="/assets/fonts/inter-400.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="/assets/fonts/inter-600.woff2" as="font" type="font/woff2" crossorigin>
-  <link rel="stylesheet" href="/assets/site-header.css?v=20261017a">
-  <link rel="stylesheet" href="/assets/site.css?v=20261017a">
-  <script defer src="/assets/analytics-consent.js?v=20261009a" data-analytics-token="81aecd30e30c4e97a4d733334d88775b" data-analytics-privacy-url="/privacy?lang=en"></script>
+  <link rel="stylesheet" href="/assets/site-header.css">
+  <link rel="stylesheet" href="/assets/site.css">
+  <script defer src="/assets/analytics-consent.js" data-analytics-token="81aecd30e30c4e97a4d733334d88775b" data-analytics-privacy-url="/privacy?lang=en"></script>
   <script type="application/ld+json">
     {
       "@context": "https://schema.org",
@@ -69,22 +69,7 @@
   </script>
 </head>
 <body class="games-home">
-  <header class="site-header">
-    <div class="site-header__inner">
-      <a href="https://khe.ee/?lang=en" class="site-header__brand brand-mark" aria-label="KHE.ee home" data-i18n-aria="siteHomeAria" data-link="home">
-        <span>KHE</span><span class="brand-mark__suffix">.ee</span>
-      </a>
-      <div class="site-header__context">
-        <strong data-i18n="siteTitle">Games</strong>
-      </div>
-      <div class="site-header__actions">
-        <div class="language-switcher" role="group" aria-label="Language" data-i18n-aria="languageLabel">
-          <button type="button" data-lang-option="et" aria-pressed="false">ET</button>
-          <button type="button" data-lang-option="en" aria-pressed="true">EN</button>
-        </div>
-      </div>
-    </div>
-  </header>
+  <!-- site-header home=khe.ee title=headerGames -->
 
   <div class="container">
     <header class="games-hero">
@@ -135,16 +120,13 @@
     <footer class="site-footer" data-site-footer></footer>
   </div>
   <script type="module">
-    import { createLocaleController } from '/assets/site-locale.js?v=20261009a';
-    import { renderSiteFooter, withSiteFooterCopy } from '/assets/site-footer.js?v=20260427e';
+    import { createLocaleController } from '/assets/site-locale.js';
+    import { renderSiteFooter, withSiteFooterCopy } from '/assets/site-footer.js';
 
     const COPY = {
       et: {
         title: 'KHE Games | Mängud ja õppeseiklused',
         description: 'KHE Games koondab veebimänge: AI Seiklus on jutustamismäng täiskasvanutele, Tarkade Mängud aitavad lastel harjutada lugemist, matemaatikat ja loogikat.',
-        siteHomeAria: 'KHE.ee avaleht',
-        siteTitle: 'Mängud',
-        languageLabel: 'Keel',
         heading: 'Mängud',
         subtitle: 'Väikesed veebimängud, mida saab mängida ja uurida.',
         studyTitle: 'Tarkade Mängud',
@@ -160,9 +142,6 @@
       en: {
         title: 'KHE Games | Browser Games and Learning Adventures',
         description: 'KHE Games collects browser games: AI Adventure is a storytelling game for adults, and Smart Games help kids practice reading, math, and logic.',
-        siteHomeAria: 'KHE.ee home',
-        siteTitle: 'Games',
-        languageLabel: 'Language',
         heading: 'Games',
         subtitle: 'Small web games you can play and inspect.',
         studyTitle: 'Smart Games',

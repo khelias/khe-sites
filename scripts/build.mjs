@@ -1,9 +1,11 @@
-import { copyFile, mkdir, readdir, rm } from 'node:fs/promises';
+import { copyFile, mkdir, readdir, readFile, rm, writeFile } from 'node:fs/promises';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { loadSources, runReportingSourceErrors } from './architecture-sources.mjs';
 import { renderArchitecture } from './render-architecture.mjs';
 import { buildHouse3dDemo } from './house3d-demo.mjs';
+import { fillSiteHeader } from './site-header.mjs';
+import { builtPages, createAssetStamper } from './asset-versions.mjs';
 
 const root = dirname(dirname(fileURLToPath(import.meta.url)));
 const dist = join(root, 'dist');
@@ -41,6 +43,14 @@ await runReportingSourceErrors(async () => {
 
   await renderArchitecture(join(dist, 'landing'), await loadSources());
   await buildHouse3dDemo(join(dist, 'landing', 'house3d'));
+
+  for (const app of apps) {
+    const outputDir = join(dist, app);
+    const stamp = createAssetStamper(outputDir);
+    for (const page of await builtPages(outputDir)) {
+      await writeFile(page, await stamp(fillSiteHeader(await readFile(page, 'utf8'), page), page));
+    }
+  }
 
   console.log(`Built ${apps.join(' and ')} sites into dist/`);
 });

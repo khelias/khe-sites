@@ -33,9 +33,12 @@ scripts/
                            dist/landing/house3d/
   architecture-model.mjs   diagram elements, edges and layout
   render-architecture.mjs  renders the page, ADR pages and sitemap entries
+  site-header.mjs          fills each page's site-header marker
+  asset-versions.mjs       stamps ?v=<content hash> on .css and .js links
   markdown.mjs             strict Markdown subset for the ADRs
   templates/decision.html  the ADR page
-  templates/house3d-header.html  the site header the build puts on /house3d/
+  templates/house3d-header.html  the header marker and script the build puts
+                           on /house3d/
 ```
 
 ## Rules
@@ -112,6 +115,22 @@ estate's writer register in khe-meta in the same change.
 - `src/shared/site-header.css` holds the Inter faces, the colour tokens and
   the site header with its language switcher. Every page links it before
   `site.css`; `/house3d/`, with Home Assistant's own styles, links only it.
+- The site header markup exists once, in `scripts/site-header.mjs`. A page
+  carries `<!-- site-header home=… title=… [parent=…] [fixed] -->` on a line
+  of its own, and the build replaces it with the header in the page's
+  `<html lang>`, at the marker's indent. Its strings are `SITE_HEADER_COPY`
+  in `src/shared/site-locale.js` (both languages, the `header*` keys), which
+  `createLocaleController` merges under every page's copy. A new title is a
+  key there; a new home or parent is also an entry in `site-header.mjs`.
+  Every built page but the landing home must have exactly one header
+  (check).
+- Nothing in the sources carries `?v=`: after the pages are built, the build
+  stamps every root-relative `.css` and `.js` URL in them, and in the files
+  those link, with the first 10 hex of the built file's SHA-256, so a change
+  to `site.css` or `site-locale.js` needs no hand edit. Check fails on a
+  hand-written `?v=` in a source and on a built link whose hash does not
+  match its file. Relative URLs (khe-home-assistant's `/house3d/` files) and
+  fonts are not stamped.
 - `scripts/architecture-model.mjs` must name every repo in `ESTATE.md` and
   every khe-homelab service group, and nothing else; check fails otherwise.
   The repo elements appear in no diagram; they feed the building-block rows
@@ -139,7 +158,7 @@ estate's writer register in khe-meta in the same change.
   deeper nesting, relative links other than `NNN-slug.md`). Extend the
   renderer and its fixtures in `check.mjs` together.
 - Every copy key used on the architecture pages lives in `copy.js`, in both
-  languages; the build fills the HTML from `COPY.en`.
+  languages, except the header's; the build fills the HTML from `COPY.en`.
 - Touch: `:hover` rules sit inside `@media (hover: hover) and (pointer: fine)`
   so they do not stick after a tap; the press state is `:active` (a row
   mirrors its hover state, plain links and summaries dim through a

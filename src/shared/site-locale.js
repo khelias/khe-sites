@@ -1,5 +1,34 @@
 const STORAGE_KEY = 'app_locale';
 
+// The site header's strings. The build renders the header from them in the page's language
+// (scripts/site-header.mjs), and every locale controller merges them under the page's copy.
+export const SITE_HEADER_COPY = {
+  et: {
+    headerLanguage: 'Keel',
+    headerHomeLanding: 'KHE avaleht',
+    headerHomeGames: 'KHE Games avaleht',
+    headerHomeKheEe: 'KHE.ee avaleht',
+    headerArchitecture: 'Arhitektuur',
+    headerDecision: 'Otsus',
+    headerGames: 'Mängud',
+    headerHomeAutomation: 'Koduautomaatika',
+    headerKheGames: 'KHE Games',
+    headerPrivacy: 'Privaatsus',
+  },
+  en: {
+    headerLanguage: 'Language',
+    headerHomeLanding: 'KHE home',
+    headerHomeGames: 'KHE Games home',
+    headerHomeKheEe: 'KHE.ee home',
+    headerArchitecture: 'Architecture',
+    headerDecision: 'Decision',
+    headerGames: 'Games',
+    headerHomeAutomation: 'Home automation',
+    headerKheGames: 'KHE Games',
+    headerPrivacy: 'Privacy',
+  },
+};
+
 function normalizeLocale(value, supported) {
   return supported.includes(value) ? value : null;
 }
@@ -48,7 +77,7 @@ function setMetaContent(selector, content) {
 }
 
 export function createLocaleController({
-  copy,
+  copy: pageCopy,
   defaultLocale = 'en',
   useBrowserDefault = false,
   links = {},
@@ -58,6 +87,10 @@ export function createLocaleController({
   // hang on this.
   document.addEventListener('touchstart', () => {}, { passive: true });
 
+  const copy = Object.fromEntries(Object.entries(pageCopy).map(([locale, values]) => [
+    locale,
+    { ...(SITE_HEADER_COPY[locale] || SITE_HEADER_COPY.en), ...values },
+  ]));
   const supported = Object.keys(copy);
   const fallbackLocale = supported.includes(defaultLocale) ? defaultLocale : supported[0];
 

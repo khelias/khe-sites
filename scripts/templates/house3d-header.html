@@ -1,21 +1,6 @@
-<header class="site-header site-header--fixed">
-  <div class="site-header__inner">
-    <a class="site-header__brand brand-mark" href="/?lang=et" data-link="home" data-i18n-aria="homeLabel" aria-label="KHE avaleht">
-      <span>KHE</span><span class="brand-mark__suffix">.ee</span>
-    </a>
-    <div class="site-header__context">
-      <strong data-i18n="siteTitle">Koduautomaatika</strong>
-    </div>
-    <div class="site-header__actions">
-      <div class="language-switcher" role="group" aria-label="Keel" data-i18n-aria="languageLabel">
-        <button type="button" data-lang-option="et" aria-pressed="true">ET</button>
-        <button type="button" data-lang-option="en" aria-pressed="false">EN</button>
-      </div>
-    </div>
-  </div>
-</header>
+<!-- site-header home=landing title=headerHomeAutomation fixed -->
 <script type="module">
-  import { createLocaleController } from '/assets/site-locale.js?v=20261009a';
+  import { createLocaleController } from '/assets/site-locale.js';
 
   const header = document.querySelector('.site-header');
   // The demo's bars and views are position: fixed and start below --host-h.
@@ -33,16 +18,10 @@
     et: {
       title: document.title,
       description: description ? description.content : '',
-      homeLabel: 'KHE avaleht',
-      languageLabel: 'Keel',
-      siteTitle: 'Koduautomaatika',
     },
     en: {
       title: 'Home · Home Assistant demo',
       description: 'A made-up house on a Home Assistant dashboard: a 3D view and simulated devices.',
-      homeLabel: 'KHE home',
-      languageLabel: 'Language',
-      siteTitle: 'Home automation',
     },
   };
 

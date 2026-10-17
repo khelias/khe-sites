@@ -7,7 +7,9 @@ import { loadSources, runReportingSourceErrors } from './architecture-sources.mj
 import { adrLinkRewriter, MarkdownError, renderMarkdown } from './markdown.mjs';
 import { views } from './architecture-model.mjs';
 import { modelMismatches } from './render-architecture.mjs';
+import { ASSET_REFERENCE, assetVersion, builtPages as listBuiltPages } from './asset-versions.mjs';
 import { COPY } from '../src/landing/architecture/copy.js';
+import { SITE_HEADER_COPY } from '../src/shared/site-locale.js';
 
 const root = dirname(dirname(fileURLToPath(import.meta.url)));
 
@@ -26,8 +28,6 @@ await runReportingSourceErrors(async () => {
     '/assets/analytics-consent.js',
     '/assets/site-header.css',
     '/assets/site.css',
-    'data-lang-option="et"',
-    'data-lang-option="en"',
   ];
 
   for (const relativePath of htmlFiles) {
@@ -58,6 +58,7 @@ await runReportingSourceErrors(async () => {
     'src/shared/site-header.css',
     'src/shared/site.css',
     'scripts/templates/house3d-header.html',
+    'scripts/house3d-demo.mjs',
     'src/landing/architecture/architecture.js',
     'src/landing/architecture/copy.js',
   ];
@@ -71,6 +72,8 @@ await runReportingSourceErrors(async () => {
 
   for (const relativePath of sourceFiles) {
     const content = await readFile(join(root, relativePath), 'utf8');
+    const versioned = [...content.matchAll(ASSET_REFERENCE)].find((match) => match[2] !== undefined);
+    if (versioned) throw new Error(`${relativePath} hand-versions ${versioned[0]}; the build stamps ?v= from the file's hash`);
     for (const text of bannedText) {
       if (content.includes(text)) {
         throw new Error(`${relativePath} contains stale copy: ${text}`);
@@ -128,12 +131,14 @@ await runReportingSourceErrors(async () => {
   const mismatches = modelMismatches(sources);
   if (mismatches.length) throw new Error(mismatches.join('\n'));
 
-  for (const locale of Object.keys(COPY)) {
-    for (const key of Object.keys(COPY.en)) {
-      if (typeof COPY[locale][key] !== 'string') throw new Error(`copy.js: COPY.${locale} has no ${key}`);
-    }
-    for (const key of Object.keys(COPY[locale])) {
-      if (!(key in COPY.en)) throw new Error(`copy.js: COPY.${locale}.${key} has no COPY.en counterpart`);
+  for (const [name, copy] of [['copy.js: COPY', COPY], ['site-locale.js: SITE_HEADER_COPY', SITE_HEADER_COPY]]) {
+    for (const locale of Object.keys(copy)) {
+      for (const key of Object.keys(copy.en)) {
+        if (typeof copy[locale][key] !== 'string') throw new Error(`${name}.${locale} has no ${key}`);
+      }
+      for (const key of Object.keys(copy[locale])) {
+        if (!(key in copy.en)) throw new Error(`${name}.${locale}.${key} has no ${name}.en counterpart`);
+      }
     }
   }
   for (const script of ['src/landing/architecture/architecture.js', 'src/landing/architecture/copy.js']) {
@@ -185,7 +190,9 @@ await runReportingSourceErrors(async () => {
     const empty = html.match(/<([a-z][a-z0-9]*)\b[^>]*\sdata-i18n(?:-html)?="([^"]+)"[^>]*><\/\1>/);
     if (empty) throw new Error(`dist/landing/${page} leaves ${empty[2]} empty`);
     for (const match of html.matchAll(/data-i18n(?:-html|-aria)?="([^"]+)"/g)) {
-      if (!(match[1] in COPY.en) && !footerKeys.has(match[1])) throw new Error(`dist/landing/${page} uses ${match[1]}, which copy.js lacks`);
+      if (!(match[1] in COPY.en) && !(match[1] in SITE_HEADER_COPY.en) && !footerKeys.has(match[1])) {
+        throw new Error(`dist/landing/${page} uses ${match[1]}, which copy.js and SITE_HEADER_COPY lack`);
+      }
     }
     for (const match of html.matchAll(/href="\/architecture\/decisions\/(\d{3})\//g)) {
       if (!existsSync(join(landing, 'architecture/decisions', match[1], 'index.html'))) {
@@ -242,6 +249,33 @@ await runReportingSourceErrors(async () => {
   }
   for (const match of demoPage.matchAll(/<script type="module">([\s\S]*?)<\/script>/g)) {
     new Function(match[1].replace(/^\s*import\s.+;\s*$/gm, ''));
+  }
+
+  // Every built page but the landing home carries the filled site header, and every .css and .js
+  // it links carries the hash of the built file.
+  for (const site of ['landing', 'games']) {
+    const siteDist = join(root, 'dist', site);
+    const versions = new Map();
+    for (const file of await listBuiltPages(siteDist)) {
+      const page = file.slice(siteDist.length + 1);
+      const html = await readFile(file, 'utf8');
+      const headers = (html.match(/<header class="site-header[ "]/g) || []).length;
+      const expected = site === 'landing' && page === 'index.html' ? 0 : 1;
+      if (headers !== expected) throw new Error(`dist/${site}/${page} has ${headers} site headers, expected ${expected}`);
+      if (!html.includes('data-lang-option="et"') || !html.includes('data-lang-option="en"')) {
+        throw new Error(`dist/${site}/${page} has no ET/EN language switcher`);
+      }
+      if (html.includes('<!-- site-header')) throw new Error(`dist/${site}/${page} has an unfilled site-header marker`);
+      for (const [reference, path, version] of html.matchAll(ASSET_REFERENCE)) {
+        if (!versions.has(path)) {
+          const asset = join(siteDist, path);
+          versions.set(path, existsSync(asset) ? assetVersion(await readFile(asset, 'utf8')) : 'missing');
+        }
+        if (version !== versions.get(path)) {
+          throw new Error(`dist/${site}/${page} links ${reference}, but the built file's hash is ${versions.get(path)}`);
+        }
+      }
+    }
   }
 
   console.log(`Static site checks passed (${sources.decisions.length} decisions, ${sources.repos.length} repos)`);
