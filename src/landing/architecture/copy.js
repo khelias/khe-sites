@@ -6,10 +6,8 @@ export const COPY = {
   en: {
     title: 'Estate architecture | KHE',
     description: 'A small software estate run from one machine at home: the estate in one picture, five decisions that shape it, how a change ships, how it stays up and where it is weak.',
-    siteNavAria: 'Site navigation',
     homeLabel: 'KHE home',
     languageLabel: 'Language',
-    siteKicker: 'KHE',
     siteTitle: 'Architecture',
     decisionSiteTitle: 'Decision',
     kicker: 'Estate architecture',
@@ -216,10 +214,8 @@ export const COPY = {
   et: {
     title: 'Arhitektuur | KHE',
     description: 'Väikesed tarkvarasüsteemid, mis töötavad ühes kodus asuvas serveris: süsteemid ühel pildil, viis neid kujundavat otsust, kuidas muudatus töösse jõuab, kuidas süsteemid töös püsivad ja kus on nõrgad kohad.',
-    siteNavAria: 'Lehe navigeerimine',
     homeLabel: 'KHE avaleht',
     languageLabel: 'Keel',
-    siteKicker: 'KHE',
     siteTitle: 'Arhitektuur',
     decisionSiteTitle: 'Otsus',
     kicker: 'Süsteemide arhitektuur',

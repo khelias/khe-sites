@@ -26,6 +26,6 @@ export async function buildHouse3dDemo(outputDir) {
   }
   const markup = await readFile(header, 'utf8');
   await writeFile(page, html
-    .replace('</head>', () => '<link rel="stylesheet" href="/assets/site-header.css?v=20261016a">\n</head>')
+    .replace('</head>', () => '<link rel="stylesheet" href="/assets/site-header.css?v=20261017a">\n</head>')
     .replace('<body>', () => `<body>\n${markup}`));
 }

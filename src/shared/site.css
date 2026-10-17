@@ -117,7 +117,7 @@ body.landing-home {
   background: rgba(255, 255, 255, 0.025);
   color: var(--text);
   font-size: 1rem;
-  font-weight: 700;
+  font-weight: 600;
   letter-spacing: 0;
   box-shadow: 0 18px 46px rgba(0, 0, 0, 0.22);
 }
@@ -342,7 +342,7 @@ body.games-home {
   border: 1px solid var(--accent-border);
   background: rgba(255, 255, 255, 0.025);
   font-size: 0.8rem;
-  font-weight: 700;
+  font-weight: 600;
   letter-spacing: 0;
   color: var(--text);
   text-decoration: none;
@@ -417,7 +417,7 @@ body.games-home {
   padding-top: 0.22rem;
   color: var(--text-faint);
   font-size: 0.72rem;
-  font-weight: 650;
+  font-weight: 600;
   line-height: 1;
   font-variant-numeric: tabular-nums;
   transition: color 0.18s;
@@ -446,7 +446,7 @@ body.games-home {
   background: rgba(255, 255, 255, 0.025);
   color: var(--text-muted);
   font-size: 0.6rem;
-  font-weight: 650;
+  font-weight: 600;
   letter-spacing: 0.11em;
   line-height: 1;
   text-transform: uppercase;
