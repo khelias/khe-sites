@@ -102,6 +102,14 @@
         <span class="project-arrow" aria-hidden="true">→</span>
       </a>
 
+      <a class="project-item project-trips" href="/trips/?lang=en" data-link="trips">
+        <div class="project-copy">
+          <h3 data-i18n="tripsTitle">Travel atlas</h3>
+          <p data-i18n="tripsDesc">Our trips on a map. The Sweden trip is open.</p>
+        </div>
+        <span class="project-arrow" aria-hidden="true">→</span>
+      </a>
+
       <a class="project-item project-architecture" href="/architecture/?lang=en" data-link="architecture">
         <div class="project-copy">
           <h3 data-i18n="architectureTitle">The home server</h3>
@@ -138,6 +146,8 @@
       architectureDesc: 'Kõik see töötab ühel serveril minu kodus. Kuidas ja miks.',
       house3dTitle: 'Koduautomaatika',
       house3dDesc: 'Maja juhtimine Home Assistantiga. Proovi demos järele.',
+      tripsTitle: 'Reisiatlas',
+      tripsDesc: 'Meie reisid kaardil. Rootsi reis on avatud.',
       gamesTitle: 'Mängud',
       gamesDesc: 'Õppemängud lastele ja AI-seiklus täiskasvanutele.',
       contactTitle: 'Koostöö',
@@ -153,6 +163,8 @@
       architectureDesc: 'All of this runs on one server in my home. How, and why.',
       house3dTitle: 'Home automation',
       house3dDesc: 'Running the house with Home Assistant. Try the demo.',
+      tripsTitle: 'Travel atlas',
+      tripsDesc: 'Our trips on a map. The Sweden trip is open.',
       gamesTitle: 'Games',
       gamesDesc: 'Learning games for kids and an AI-narrated party game for adults.',
       contactTitle: 'Work with me',
@@ -173,6 +185,7 @@
     links: {
       architecture: (locale) => `/architecture/?lang=${locale}`,
       house3d: () => '/house3d/',
+      trips: (locale) => `/trips/?lang=${locale}`,
       games: (locale) => `${gamesOrigin}/?lang=${locale}`,
       contact: () => 'mailto:kaidoelias@gmail.com?subject=KHE.ee%20project%20inquiry',
       privacy: (locale) => `/privacy?lang=${locale}`,

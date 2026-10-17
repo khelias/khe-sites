@@ -56,6 +56,13 @@ scripts/
    (`scripts/architecture-sources.mjs`) and keeps no copy of an ADR or of
    `ESTATE.md`
    ([estate ADR-012](https://github.com/khelias/khe-architecture/blob/main/decisions/012-estate-architecture-is-public.md)).
+6. **The landing links the khe-trips demo at `/trips/`, built and deployed
+   by khe-trips and served by khe-homelab's landing container.** It shows
+   only trips that are over, and only their short title, place and start
+   date for trips that do not open
+   ([estate ADR-013](https://github.com/khelias/khe-architecture/blob/main/decisions/013-trips-public-demo.md)).
+   It is not in the sitemap and `robots.txt` does not disallow it, so a
+   crawler reads its `noindex`.
 
 ## Deployment
 
