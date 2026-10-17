@@ -52,6 +52,10 @@ scripts/
    build-time copy.
 4. **No bundler, no framework** without an ADR. The "static, no surprises"
    model is why this repo exists beside the React app repos.
+5. **The architecture page reads `khe-architecture` at build**
+   (`scripts/architecture-sources.mjs`) and keeps no copy of an ADR or of
+   `ESTATE.md`
+   ([estate ADR-012](https://github.com/khelias/khe-architecture/blob/main/decisions/012-estate-architecture-is-public.md)).
 
 ## Deployment
 
@@ -62,6 +66,10 @@ which the homelab nginx stack bind-mounts at `/study/`. khe-ai-adventure is
 not a static deploy: the same nginx proxies `/adventure/` to the
 `adventure-web` and `adventure-proxy` containers, pulled from GHCR
 (khe-homelab `services/apps/games/`).
+
+Because deploy runs on that runner, a fork PR's run is approved only after
+reading its `.github/workflows/` diff
+([estate ADR-006](https://github.com/khelias/khe-architecture/blob/main/decisions/006-branch-protection.md)).
 
 ## Gotchas
 
