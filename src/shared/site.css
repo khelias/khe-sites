@@ -149,7 +149,7 @@ a { color: var(--ink-2); }
 
 
 .landing-projects {
-  margin-top: clamp(3.5rem, 9vh, 5.5rem);
+  margin-top: clamp(2.25rem, 5vh, 3rem);
   border-top: 1px solid var(--rule-strong);
 }
 
