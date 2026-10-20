@@ -135,8 +135,11 @@ estate's writer register in khe-meta in the same change.
   landing nginx). The build then puts the site header (`scripts/templates/house3d-header.html`)
   on the page. The demo starts its fixed bars and views below `--host-h`,
   which the header's script sets to its height, and the build fails on a
-  demo without it. The switcher translates only the header and the title;
-  the demo stays Estonian and keeps `lang="et"`.
+  demo without it. The switcher translates the header and the title and
+  reloads the page: the demo reads `?lang`, which the locale controller
+  keeps current, once at load and shows itself in that language
+  (khe-home-assistant ADR-003, its `*.en.json` files, which the check
+  requires); the hash keeps the open view.
 - The built `/assets/site-header.css` is `@khelias/ui`'s header CSS and its
   footer CSS from `node_modules`, followed by `src/shared/site-header.css`, which holds only
   khe-sites' fonts (Inter, Source Serif 4), the family tokens and the

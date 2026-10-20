@@ -7,12 +7,7 @@
   new ResizeObserver(() => {
     document.documentElement.style.setProperty('--host-h', `${header.getBoundingClientRect().height}px`);
   }).observe(header);
-  // The demo itself is Estonian only: its title and description stay khe-home-assistant's,
-  // and its content keeps lang="et" when the header switches the page to English.
   const description = document.querySelector('meta[name="description"]');
-  for (const node of document.body.children) {
-    if (node !== header && !node.lang) node.lang = 'et';
-  }
 
   const COPY = {
     et: {
@@ -29,6 +24,16 @@
     copy: COPY,
     defaultLocale: 'en',
     links: { home: (locale) => `/?lang=${locale}` },
+  });
+
+  // The demo takes its language from ?lang once, when it loads (khe-home-assistant ADR-003), so
+  // switching reloads the page. The controller has already written ?lang and the stored choice;
+  // the hash keeps the open view.
+  const loaded = document.documentElement.lang;
+  document.querySelectorAll('[data-lang-option]').forEach((button) => {
+    button.addEventListener('click', () => {
+      if (button.getAttribute('data-lang-option') !== loaded) window.location.reload();
+    });
   });
 
 </script>
