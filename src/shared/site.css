@@ -89,6 +89,10 @@ a { color: var(--ink-2); }
   margin-bottom: 0.75rem;
 }
 
+.landing-hero .hero-lead + .hero-lead {
+  margin-top: 0.75rem;
+}
+
 /* Below the project rows: the projects come first, contact after them. */
 .landing-work {
   display: grid;
