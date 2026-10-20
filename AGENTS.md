@@ -149,7 +149,8 @@ estate's writer register in khe-meta in the same change.
   in `src/shared/site-locale.js` (both languages, the `header*` keys), which
   `createLocaleController` merges under every page's copy. A new title is a
   key there; a new home or parent is also an entry in `site-header.mjs`.
-  The landing home has no title, only the mark and the switcher. Every
+  The landing and games homes have no title, only the mark and the
+  switcher. Every
   built page must have exactly one header (check).
 - Nothing in the sources carries `?v=`: after the pages are built, the build
   stamps every root-relative `.css` and `.js` URL in them, and in the files
