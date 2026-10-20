@@ -454,12 +454,17 @@ body.architecture-page {
   padding: 0 1.5rem 3rem;
 }
 
+/* The diagrams need the wider column, so the header widens with it and both edges line up. */
+[data-page="architecture"] .site-header {
+  --khe-header-max-width: 1240px;
+}
+
 .arch {
   --a-serif: var(--serif);
   --a-mono: var(--mono);
   width: min(1240px, 100%);
   margin: 0 auto;
-  padding: 4.5rem max(1.5rem, env(safe-area-inset-right)) 7rem max(1.5rem, env(safe-area-inset-left));
+  padding: 4.5rem max(1rem, env(safe-area-inset-right)) 7rem max(1rem, env(safe-area-inset-left));
   color: var(--a-text-2);
   font-size: 1.0625rem;
   line-height: 1.65;
@@ -510,7 +515,6 @@ body.architecture-page {
 
 .arch h1 {
   max-width: 18ch;
-  hyphens: auto;
   overflow-wrap: break-word;
   margin: 0.9rem 0 1.4rem;
   font-size: clamp(2.3rem, 5vw, 3.75rem);
@@ -581,13 +585,17 @@ body.architecture-page {
   display: grid;
   grid-template-columns: minmax(0, 1fr) minmax(18rem, 24rem);
   gap: 3.5rem;
-  align-items: end;
+  align-items: start;
 }
 
 .arch-lead {
   max-width: 40rem;
   font-size: 1.2rem;
   line-height: 1.55;
+}
+
+.arch-lead + .arch-lead {
+  margin-top: 0.75rem;
 }
 
 .arch-facts {
