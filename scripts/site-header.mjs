@@ -1,4 +1,4 @@
-import { escapeHtml } from './markdown.mjs';
+import { renderSiteHeader } from '@khelias/ui/site-header';
 import { SITE_HEADER_COPY } from '../src/shared/site-locale.js';
 
 // Where the brand mark leads: its own site's home, or khe.ee from the games site.
@@ -29,48 +29,44 @@ function parseOptions(text, file) {
   return options;
 }
 
-function renderHeader({ home, title, parent, fixed }, locale, file) {
+function renderHeader({ home, title, parent, fixed }, locale, indent, file) {
   const copy = SITE_HEADER_COPY[locale];
   const target = HOMES[home];
   const kicker = parent && PARENTS[parent];
   if (!copy) throw new Error(`${file}: site-header has no copy for <html lang="${locale}">`);
   if (!target) throw new Error(`${file}: site-header home=${home} is not one of ${Object.keys(HOMES).join(', ')}`);
   if (parent && !kicker) throw new Error(`${file}: site-header parent=${parent} is not one of ${Object.keys(PARENTS).join(', ')}`);
-  const text = (key) => {
+  const copyText = (key) => {
     if (typeof copy[key] !== 'string') throw new Error(`${file}: site-header uses ${key}, which SITE_HEADER_COPY.${locale} lacks`);
-    return escapeHtml(copy[key]);
+    return copy[key];
   };
-  const contextTag = kicker?.href ? 'a' : 'div';
-  const contextLink = kicker?.href ? ` href="${kicker.href}?lang=${locale}" data-link="${parent}"` : '';
-  const pressed = (option) => (option === locale ? 'true' : 'false');
 
-  return [
-    `<header class="site-header${fixed ? ' site-header--fixed' : ''}">`,
-    '  <div class="site-header__inner">',
-    `    <a class="site-header__brand brand-mark" href="${target.href}?lang=${locale}" data-link="home" data-i18n-aria="${target.label}" aria-label="${text(target.label)}">`,
-    '      <span>KHE</span><span class="brand-mark__suffix">.ee</span>',
-    '    </a>',
-    `    <${contextTag} class="site-header__context"${contextLink}>`,
-    ...(kicker ? [`      <span data-i18n="${kicker.title}">${text(kicker.title)}</span>`] : []),
-    `      <strong data-i18n="${title}">${text(title)}</strong>`,
-    `    </${contextTag}>`,
-    '    <div class="site-header__actions">',
-    `      <div class="language-switcher" role="group" aria-label="${text('headerLanguage')}" data-i18n-aria="headerLanguage">`,
-    `        <button type="button" data-lang-option="et" aria-pressed="${pressed('et')}">ET</button>`,
-    `        <button type="button" data-lang-option="en" aria-pressed="${pressed('en')}">EN</button>`,
-    '      </div>',
-    '    </div>',
-    '  </div>',
-    '</header>',
-  ];
+  return renderSiteHeader({
+    brand: { href: `${target.href}?lang=${locale}`, label: copyText(target.label) },
+    context: {
+      kicker: kicker ? copyText(kicker.title) : undefined,
+      title: copyText(title),
+      href: kicker?.href && `${kicker.href}?lang=${locale}`,
+    },
+    locales: [{ code: 'et', label: 'ET' }, { code: 'en', label: 'EN' }],
+    activeLocale: locale,
+    languageLabel: copyText('headerLanguage'),
+    fixed: Boolean(fixed),
+    indent,
+    attrs: {
+      brand: { 'data-link': 'home', 'data-i18n-aria': target.label },
+      context: kicker?.href ? { 'data-link': parent } : {},
+      kicker: kicker ? { 'data-i18n': kicker.title } : {},
+      title: { 'data-i18n': title },
+      switcher: { 'data-i18n-aria': 'headerLanguage' },
+    },
+  });
 }
 
 export function fillSiteHeader(html, file) {
   const locale = html.match(/<html\b[^>]*\slang="([^"]+)"/)?.[1];
   return html.replace(MARKER, (match, indent, options) => {
     if (!locale) throw new Error(`${file}: a page with a site-header marker needs <html lang="…">`);
-    return renderHeader(parseOptions(options, file), locale, file)
-      .map((line) => `${indent}${line}`)
-      .join('\n');
+    return renderHeader(parseOptions(options, file), locale, indent, file);
   });
 }

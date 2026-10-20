@@ -48,6 +48,11 @@
       "description": "Automerge digest and pin updates",
       "matchUpdateTypes": ["digest", "pin"],
       "automerge": true
+    },
+    {
+      "description": "@khelias/ui is never automerged: each header release is reviewed and merged here, on this site's own schedule (estate ADR-014).",
+      "matchPackageNames": ["@khelias/ui"],
+      "automerge": false
     }
   ],
   "lockFileMaintenance": {

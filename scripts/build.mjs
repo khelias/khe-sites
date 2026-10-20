@@ -29,6 +29,12 @@ async function copyDirectory(from, to) {
 await runReportingSourceErrors(async () => {
   await rm(dist, { recursive: true, force: true });
 
+  // The package's header, then khe-sites' fonts and the values it sets on it.
+  const siteHeaderCss = [
+    await readFile(fileURLToPath(import.meta.resolve('@khelias/ui/site-header.css')), 'utf8'),
+    await readFile(join(root, 'src', 'shared', 'site-header.css'), 'utf8'),
+  ].join('\n');
+
   for (const app of apps) {
     const outputDir = join(dist, app);
     await mkdir(join(outputDir, 'assets'), { recursive: true });
@@ -36,7 +42,7 @@ await runReportingSourceErrors(async () => {
     await copyFile(join(root, 'src', 'shared', 'site-locale.js'), join(outputDir, 'assets', 'site-locale.js'));
     await copyFile(join(root, 'src', 'shared', 'site-footer.js'), join(outputDir, 'assets', 'site-footer.js'));
     await copyFile(join(root, 'src', 'shared', 'analytics-consent.js'), join(outputDir, 'assets', 'analytics-consent.js'));
-    await copyFile(join(root, 'src', 'shared', 'site-header.css'), join(outputDir, 'assets', 'site-header.css'));
+    await writeFile(join(outputDir, 'assets', 'site-header.css'), siteHeaderCss);
     await copyFile(join(root, 'src', 'shared', 'site.css'), join(outputDir, 'assets', 'site.css'));
     await copyDirectory(join(root, 'src', 'shared', 'fonts'), join(outputDir, 'assets', 'fonts'));
   }

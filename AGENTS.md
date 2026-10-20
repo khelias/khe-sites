@@ -6,7 +6,8 @@ Static source for two independently deployed sites: `khe.ee` from
 (`khe-study`, `khe-ai-adventure`) live and deploy in their own repos.
 
 Plain HTML, CSS and vanilla JS, built by Node 24 scripts. No framework, no
-bundler.
+bundler. One devDependency, `@khelias/ui` (the KHE site header), pinned
+exactly; run `npm ci` before building.
 
 ## Commands
 
@@ -33,7 +34,8 @@ scripts/
                            dist/landing/ha/
   architecture-model.mjs   diagram elements, edges and layout
   render-architecture.mjs  renders the page, ADR pages and sitemap entries
-  site-header.mjs          fills each page's site-header marker
+  site-header.mjs          fills each page's site-header marker through
+                           @khelias/ui's renderSiteHeader
   asset-versions.mjs       stamps ?v=<content hash> on .css and .js links
   markdown.mjs             strict Markdown subset for the ADRs
   templates/decision.html  the ADR page
@@ -67,11 +69,11 @@ scripts/
    It is not in the sitemap and `robots.txt` does not disallow it, so a
    crawler reads its `noindex`.
 7. **Shared UI comes from versioned packages, never automerged.** The KHE
-   site header is moving to `@khelias/ui` from khe-ui; until it does,
-   `scripts/site-header.mjs` and `src/shared/site-header.css` build it
-   here, and a fix to either is made in khe-ui too. A shared package holds
-   presentation only, is pinned, and is merged here by hand: Renovate never
-   automerges it
+   site header is `@khelias/ui` from khe-ui, a devDependency pinned exactly:
+   its markup comes from `renderSiteHeader`, its CSS from the package, and
+   a fix to either is made in khe-ui. A shared package holds presentation
+   only, is pinned, and is merged here by hand: the last rule in
+   `renovate.json` turns automerge off for it
    ([estate ADR-014](https://github.com/khelias/khe-architecture/blob/main/decisions/014-shared-ui-packages.md)).
 
 ## Deployment
@@ -124,10 +126,15 @@ estate's writer register in khe-meta in the same change.
   which the header's script sets to its height, and the build fails on a
   demo without it. The switcher translates only the header and the title;
   the demo stays Estonian and keeps `lang="et"`.
-- `src/shared/site-header.css` holds the Inter faces, the colour tokens and
-  the site header with its language switcher. Every page links it before
-  `site.css`; `/ha/`, with Home Assistant's own styles, links only it.
-- The site header markup exists once, in `scripts/site-header.mjs`. A page
+- The built `/assets/site-header.css` is `@khelias/ui`'s header CSS from
+  `node_modules` followed by `src/shared/site-header.css`, which holds only
+  khe-sites' fonts, colour tokens and the `--khe-header-*` values it sets;
+  no rule here restyles a `.site-header__*` part. Every page links it
+  before `site.css`; `/ha/`, with Home Assistant's own styles, links only
+  it. The package sets its defaults on `.site-header`, so a value on
+  `:root` never reaches the header.
+- The site header markup comes from `@khelias/ui`'s `renderSiteHeader`, called
+  only by `scripts/site-header.mjs`. A page
   carries `<!-- site-header home=… title=… [parent=…] [fixed] -->` on a line
   of its own, and the build replaces it with the header in the page's
   `<html lang>`, at the marker's indent. Its strings are `SITE_HEADER_COPY`

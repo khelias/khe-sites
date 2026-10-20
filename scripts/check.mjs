@@ -160,8 +160,7 @@ await runReportingSourceErrors(async () => {
   }
 
   const css = await readFile(join(root, 'src/shared/site.css'), 'utf8');
-  // The section turns off the shared header's shadow; any other shadow is out.
-  const archCss = css.slice(css.indexOf('/* Architecture */'), css.indexOf('/* End architecture */')).replace(/box-shadow: none;/g, '');
+  const archCss = css.slice(css.indexOf('/* Architecture */'), css.indexOf('/* End architecture */'));
   if (!archCss || css.indexOf('/* End architecture */') < 0) throw new Error('site.css has no Architecture section markers');
   for (const banned of ['animation', 'drop-shadow', 'box-shadow', 'gradient']) {
     if (archCss.includes(banned)) throw new Error(`site.css Architecture section uses ${banned}`);

@@ -30,7 +30,7 @@ summary {
 
 /* With the tap highlight gone, a pressed link or summary dims the way iOS
    text buttons do; controls with their own press state opt out. */
-:where(a, summary):active {
+:where(a:not(.site-header a), summary):active {
   opacity: 0.6;
 }
 
@@ -64,18 +64,12 @@ a { color: var(--text-dim); }
   a:hover { color: var(--text); }
 }
 
-.landing-home .language-switcher,
-.privacy-page .language-switcher {
+.landing-home .language-switcher {
   position: fixed;
   top: max(1.5rem, env(safe-area-inset-top));
   right: max(1.5rem, env(safe-area-inset-right));
   z-index: 2;
   backdrop-filter: blur(6px);
-}
-
-.games-home .language-switcher button[aria-pressed="true"] {
-  border-color: rgba(94, 234, 212, 0.18);
-  background: rgba(94, 234, 212, 0.07);
 }
 
 /* Landing */
@@ -106,8 +100,12 @@ body.landing-home {
   text-align: center;
 }
 
+/* The mark outside the header; the package styles its suffix from the property. */
 .landing-home .monogram {
+  --khe-header-suffix: #fb4b57;
   display: inline-flex;
+  gap: 0.025em;
+  white-space: nowrap;
   align-items: center;
   justify-content: center;
   width: 4.6rem;
@@ -293,17 +291,17 @@ body.landing-home {
 
 /* Games launcher */
 body.games-home {
-  padding: 0 max(1.35rem, env(safe-area-inset-right)) 2rem max(1.35rem, env(safe-area-inset-left));
+  padding-bottom: 2rem;
 }
 
 .games-home .container {
-  max-width: 840px;
+  max-width: calc(840px + 2.7rem);
   min-height: calc(100vh - 3.5rem - 2rem);
   min-height: calc(100svh - 3.5rem - 2rem);
   display: flex;
   flex-direction: column;
   margin: 0 auto;
-  padding-top: clamp(2.4rem, 7vw, 4.6rem);
+  padding: clamp(2.4rem, 7vw, 4.6rem) max(1.35rem, env(safe-area-inset-right)) 0 max(1.35rem, env(safe-area-inset-left));
   position: relative;
   z-index: 1;
 }
@@ -318,14 +316,6 @@ body.games-home {
 
 .header-top {
   display: contents;
-}
-
-.games-home .language-switcher {
-  position: fixed;
-  top: 1.5rem;
-  right: 1.5rem;
-  z-index: 2;
-  backdrop-filter: blur(6px);
 }
 
 .games-home .monogram {
@@ -633,45 +623,18 @@ body.architecture-page::before {
 }
 
 .architecture-page .site-header {
-  border-bottom-color: var(--a-rule);
-  background: color-mix(in srgb, var(--a-bg) 90%, transparent);
-}
-
-.architecture-page .site-header__brand {
-  border-color: var(--a-rule-strong);
-  background: var(--a-surface);
-  color: var(--a-text);
-  box-shadow: none;
-}
-
-@media (hover: hover) and (pointer: fine) {
-  .architecture-page .site-header__brand:hover {
-    border-color: var(--a-accent);
-    color: var(--a-text);
-  }
-}
-
-.architecture-page .site-header__context span {
-  color: var(--a-muted);
-}
-
-.architecture-page .site-header__context strong {
-  color: var(--a-text);
-}
-
-.architecture-page .language-switcher {
-  border-color: var(--a-rule);
-  background: var(--a-surface);
-}
-
-.architecture-page .language-switcher button {
-  color: var(--a-muted);
-}
-
-.architecture-page .language-switcher button[aria-pressed="true"] {
-  border-color: var(--a-rule-strong);
-  background: var(--a-sunken);
-  color: var(--a-text);
+  --khe-header-bg: color-mix(in srgb, var(--a-bg) 90%, transparent);
+  --khe-header-border: var(--a-rule);
+  --khe-header-text: var(--a-text);
+  --khe-header-text-muted: var(--a-muted);
+  --khe-header-brand-border: var(--a-rule-strong);
+  --khe-header-brand-border-hover: var(--a-accent);
+  --khe-header-brand-bg: var(--a-surface);
+  --khe-header-brand-shadow: none;
+  --khe-header-switcher-border: var(--a-rule);
+  --khe-header-switcher-bg: var(--a-surface);
+  --khe-header-button-pressed-border: var(--a-rule-strong);
+  --khe-header-button-pressed-bg: var(--a-sunken);
 }
 
 .architecture-page .site-footer,
@@ -1650,8 +1613,7 @@ strong {
 }
 
 @media (max-width: 520px) {
-  .landing-home .language-switcher,
-  .privacy-page .language-switcher {
+  .landing-home .language-switcher {
     top: max(1rem, env(safe-area-inset-top));
     right: max(1rem, env(safe-area-inset-right));
   }
@@ -1705,12 +1667,12 @@ strong {
   }
 
   body.games-home {
-    padding: 0 max(1rem, env(safe-area-inset-right)) 1.5rem max(1rem, env(safe-area-inset-left));
+    padding-bottom: 1.5rem;
   }
 
-  .games-home .language-switcher {
-    top: 1rem;
-    right: 1rem;
+  .games-home .container {
+    padding-left: max(1rem, env(safe-area-inset-left));
+    padding-right: max(1rem, env(safe-area-inset-right));
   }
 
   .games-home .monogram {
