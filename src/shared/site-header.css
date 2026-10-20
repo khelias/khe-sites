@@ -160,3 +160,9 @@
   --khe-header-button-pressed-bg: var(--paper);
   --khe-header-button-pressed-border: var(--rule-strong);
 }
+
+/* A fixed header sits over a full-bleed app (/ha/), so it spans the width and its
+   1rem gutter lines up with the app's own toolbar. */
+.site-header--fixed {
+  --khe-header-max-width: 100%;
+}
