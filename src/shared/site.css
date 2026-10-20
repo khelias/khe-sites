@@ -85,12 +85,8 @@ a { color: var(--ink-2); }
   margin-bottom: 1rem;
 }
 
-.landing-intro {
-  max-width: 34rem;
-  margin-top: 1rem;
-  color: var(--ink-2);
-  font-size: 1rem;
-  line-height: 1.6;
+.hero-kicker {
+  margin-bottom: 0.75rem;
 }
 
 /* Below the project rows: the projects come first, contact after them. */
