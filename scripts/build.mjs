@@ -4,7 +4,7 @@ import { fileURLToPath } from 'node:url';
 import { loadSources, runReportingSourceErrors } from './architecture-sources.mjs';
 import { renderArchitecture } from './render-architecture.mjs';
 import { buildHouse3dDemo } from './house3d-demo.mjs';
-import { fillSiteHeader } from './site-header.mjs';
+import { fillSiteChrome } from './site-header.mjs';
 import { builtPages, createAssetStamper } from './asset-versions.mjs';
 
 const root = dirname(dirname(fileURLToPath(import.meta.url)));
@@ -29,9 +29,11 @@ async function copyDirectory(from, to) {
 await runReportingSourceErrors(async () => {
   await rm(dist, { recursive: true, force: true });
 
-  // The package's header, then khe-sites' fonts and the values it sets on it.
+  // The package's header and footer, then khe-sites' fonts, tokens and header values.
+  const packageFile = (entry) => fileURLToPath(import.meta.resolve(`@khelias/ui/${entry}`));
   const siteHeaderCss = [
-    await readFile(fileURLToPath(import.meta.resolve('@khelias/ui/site-header.css')), 'utf8'),
+    await readFile(packageFile('site-header.css'), 'utf8'),
+    await readFile(packageFile('site-footer.css'), 'utf8'),
     await readFile(join(root, 'src', 'shared', 'site-header.css'), 'utf8'),
   ].join('\n');
 
@@ -40,7 +42,7 @@ await runReportingSourceErrors(async () => {
     await mkdir(join(outputDir, 'assets'), { recursive: true });
     await copyDirectory(join(root, 'src', app), outputDir);
     await copyFile(join(root, 'src', 'shared', 'site-locale.js'), join(outputDir, 'assets', 'site-locale.js'));
-    await copyFile(join(root, 'src', 'shared', 'site-footer.js'), join(outputDir, 'assets', 'site-footer.js'));
+    await copyFile(packageFile('theme'), join(outputDir, 'assets', 'theme.js'));
     await copyFile(join(root, 'src', 'shared', 'analytics-consent.js'), join(outputDir, 'assets', 'analytics-consent.js'));
     await writeFile(join(outputDir, 'assets', 'site-header.css'), siteHeaderCss);
     await copyFile(join(root, 'src', 'shared', 'site.css'), join(outputDir, 'assets', 'site.css'));
@@ -54,7 +56,7 @@ await runReportingSourceErrors(async () => {
     const outputDir = join(dist, app);
     const stamp = createAssetStamper(outputDir);
     for (const page of await builtPages(outputDir)) {
-      await writeFile(page, await stamp(fillSiteHeader(await readFile(page, 'utf8'), page), page));
+      await writeFile(page, await stamp(fillSiteChrome(await readFile(page, 'utf8'), page), page));
     }
   }
 

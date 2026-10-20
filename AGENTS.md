@@ -6,8 +6,9 @@ Static source for two independently deployed sites: `khe.ee` from
 (`khe-study`, `khe-ai-adventure`) live and deploy in their own repos.
 
 Plain HTML, CSS and vanilla JS, built by Node 24 scripts. No framework, no
-bundler. One devDependency, `@khelias/ui` (the KHE site header), pinned
-exactly; run `npm ci` before building.
+bundler. One devDependency, `@khelias/ui` (the KHE site header with its
+theme toggle, and the site footer), pinned exactly; run `npm ci` before
+building.
 
 The look is the KHE family layer
 ([estate ADR-015](https://github.com/khelias/khe-architecture/blob/main/decisions/015-family-design-layer.md)):
@@ -41,8 +42,8 @@ scripts/
                            dist/landing/ha/
   architecture-model.mjs   diagram elements, edges and layout
   render-architecture.mjs  renders the page, ADR pages and sitemap entries
-  site-header.mjs          fills each page's site-header marker through
-                           @khelias/ui's renderSiteHeader
+  site-header.mjs          fills each page's site-header, site-theme and
+                           site-footer markers through @khelias/ui
   asset-versions.mjs       stamps ?v=<content hash> on .css and .js links
   markdown.mjs             strict Markdown subset for the ADRs
   templates/decision.html  the ADR page
@@ -76,9 +77,12 @@ scripts/
    It is not in the sitemap and `robots.txt` does not disallow it, so a
    crawler reads its `noindex`.
 7. **Shared UI comes from versioned packages, never automerged.** The KHE
-   site header is `@khelias/ui` from khe-ui, a devDependency pinned exactly:
-   its markup comes from `renderSiteHeader`, its CSS from the package, and
-   a fix to either is made in khe-ui. A shared package holds presentation
+   site header, its theme toggle and the site footer are `@khelias/ui` from
+   khe-ui, a devDependency pinned exactly: their markup comes from
+   `renderSiteHeader` and `renderSiteFooter`, the theme rules from
+   `@khelias/ui/theme`, the CSS from the package, and a fix to any of them
+   is made in khe-ui
+   ([estate ADR-017](https://github.com/khelias/khe-architecture/blob/main/decisions/017-shared-theme-toggle-and-footer.md)). A shared package holds presentation
    only, is pinned, and is merged here by hand: the last rule in
    `renovate.json` turns automerge off for it
    ([estate ADR-014](https://github.com/khelias/khe-architecture/blob/main/decisions/014-shared-ui-packages.md)).
@@ -133,8 +137,8 @@ estate's writer register in khe-meta in the same change.
   which the header's script sets to its height, and the build fails on a
   demo without it. The switcher translates only the header and the title;
   the demo stays Estonian and keeps `lang="et"`.
-- The built `/assets/site-header.css` is `@khelias/ui`'s header CSS from
-  `node_modules` followed by `src/shared/site-header.css`, which holds only
+- The built `/assets/site-header.css` is `@khelias/ui`'s header CSS and its
+  footer CSS from `node_modules`, followed by `src/shared/site-header.css`, which holds only
   khe-sites' fonts (Inter, Source Serif 4), the family tokens and the
   `--khe-header-*` values it sets on `.site-header`;
   no rule here restyles a `.site-header__*` part. Every page links it
@@ -152,6 +156,29 @@ estate's writer register in khe-meta in the same change.
   The landing and games homes have no title, only the mark and the
   switcher. Every
   built page must have exactly one header (check).
+- Theme (estate ADR-017): every page but `/ha/` follows the system setting
+  until the visitor presses the header's toggle (`theme` on the marker,
+  label `headerTheme`). The choice is stored under `THEME_STORAGE_KEY`
+  (`khe-theme`, in `site-locale.js`) per origin, so khe.ee and games.khe.ee
+  keep their own, and a choice equal to the system clears it. A
+  `<!-- site-theme -->` marker in `<head>`, after the `theme-color` metas and
+  before the first stylesheet, becomes the package's inline
+  `themeInitScript`, which sets `data-theme` on `<html>` before first paint;
+  the CSP allows it through `'unsafe-inline'`. `createLocaleController`
+  loads `/assets/theme.js` (the package's `dist/theme.js`, copied by the
+  build) only on a page with the toggle, which also has a `modulepreload` for
+  it, and calls `wireThemeToggle`. A dark
+  rule in `site-header.css` or `site.css` follows the family pattern, under
+  the media query on `:root:not([data-theme="light"])` and again on
+  `:root[data-theme="dark"]`, or the override misses it (check).
+  `/ha/` has neither the toggle nor the script: it stays dark. The favicon
+  follows the system only.
+- The footer is a `<!-- site-footer -->` marker filled at build by
+  `renderSiteFooter` in the page's language: GitHub and LinkedIn with their
+  marks, Privacy (`data-link="privacy"`), and the hosting line. Its strings
+  are `SITE_FOOTER_COPY` in `site-locale.js`, merged like the header's;
+  `site.css` sets its `--khe-footer-*` values from the family tokens and
+  places it per page. Every page but `/ha/` has exactly one (check).
 - Nothing in the sources carries `?v=`: after the pages are built, the build
   stamps every root-relative `.css` and `.js` URL in them, and in the files
   those link, with the first 10 hex of the built file's SHA-256, so a change
@@ -197,8 +224,8 @@ estate's writer register in khe-meta in the same change.
 - The family tokens (`--paper`, `--ink`, `--muted`, the room accents and the
   rest in `DESIGN.md`) sit in `site-header.css` in three blocks: light on
   `:root`, dark under `prefers-color-scheme` on
-  `:root:not([data-theme="light"])`, and again on `:root[data-theme="dark"]`.
-  Check fails when `DESIGN.md`'s frontmatter colours differ from the light
+  `:root:not([data-theme="light"])`, and again on `:root[data-theme="dark"]`;
+  `:root[data-theme="light"]` sets only `color-scheme: light`. Check fails when `DESIGN.md`'s frontmatter colours differ from the light
   block or the two dark blocks differ. The pre-family tokens (`--bg`,
   `--text*`, `--border*`, `--card-bg`, `--accent*`, `--display-font`) are
   gone, and check fails when one comes back in a source file. The
@@ -211,7 +238,7 @@ estate's writer register in khe-meta in the same change.
   `data-room="house" data-theme="dark"` from `house3d-demo.mjs`: the house
   view has no light theme yet, so its header stays dark (check).
 - The landing and games pages, and their privacy pages, keep their copy in an
-  inline `COPY`; check fails when a `data-i18n`, `data-i18n-html` or
+  inline `COPY` (the header and footer strings come from `site-locale.js`); check fails when a `data-i18n`, `data-i18n-html` or
   `data-i18n-aria` key of the source page is missing from its `et` or `en`.
 - The favicon and share images draw their text as paths
   (`logo.svg`, `og-image.svg`), so `rsvg-convert -w 1200 -h 630` renders the

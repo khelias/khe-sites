@@ -275,43 +275,10 @@ a { color: var(--ink-2); }
 .t-study { fill: var(--study); }
 
 .site-footer {
-  display: grid;
-  gap: 0.45rem;
-  color: var(--muted);
-  font-size: 0.75rem;
-  text-align: center;
-}
-
-.site-footer nav {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.site-footer .divider {
-  margin: 0 0.5rem;
-}
-
-.site-footer a {
-  min-width: 2.75rem;
-  min-height: 2.75rem;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.4rem;
-  color: var(--muted);
-  text-decoration: none;
-  transition: color 0.15s;
-}
-
-.site-footer svg {
-  width: 0.875rem;
-  height: 0.875rem;
-  fill: currentColor;
-}
-
-@media (hover: hover) and (pointer: fine) {
-  .site-footer a:hover { color: var(--ink); }
+  --khe-footer-font: var(--sans);
+  --khe-footer-text: var(--muted);
+  --khe-footer-text-hover: var(--ink);
+  --khe-footer-focus: var(--room-text);
 }
 
 .landing-home .site-footer {
@@ -434,7 +401,7 @@ body.architecture-page {
 
 /* The diagram's own tokens; the rest follow the family. */
 @media (prefers-color-scheme: dark) {
-  body.architecture-page {
+  :root:not([data-theme="light"]) body.architecture-page {
     --a-node: #5d6562;
     --a-accent-ink: #a7f3e6;
     --a-accent-soft: rgba(94, 234, 212, 0.1);
@@ -443,6 +410,16 @@ body.architecture-page {
     --a-person: #fbbf77;
     --a-machine: #a5b4fc;
   }
+}
+
+:root[data-theme="dark"] body.architecture-page {
+  --a-node: #5d6562;
+  --a-accent-ink: #a7f3e6;
+  --a-accent-soft: rgba(94, 234, 212, 0.1);
+  --a-proposed: #f2b84b;
+  --a-code: #1a1f1e;
+  --a-person: #fbbf77;
+  --a-machine: #a5b4fc;
 }
 
 body.architecture-page {

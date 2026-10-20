@@ -157,8 +157,20 @@ light on `:root`, dark under `@media (prefers-color-scheme: dark)` on
 room may commit its content to one theme when the subject asks for it, and
 its header then takes that theme through `data-theme` on `<html>`: `/ha/` is
 dark until the 3D house view has a light theme, AI Seiklus is dark by design.
-A room may offer its own override control (trips' header toggle). Each page
-carries two `theme-color` metas, `paper` light and dark.
+A room that offers both themes may let the visitor override the system
+setting, and then does it with the shared header's toggle from
+`@khelias/ui`, next to the language switcher: khe.ee, KHE Games and Trips do
+([estate ADR-017](https://github.com/khelias/khe-architecture/blob/main/decisions/017-shared-theme-toggle-and-footer.md)).
+The choice is `data-theme` on `<html>`, set before first paint and stored per
+site. Each page carries two `theme-color` metas, `paper` light and dark.
+
+## Footer
+
+Every room with a footer uses `@khelias/ui`'s: GitHub and LinkedIn with
+their marks, Privacy as text, then the room's lines, ending with "Ise
+majutatud Eestis" / "Self-hosted in Estonia" in the page's language. Its
+text is `muted`, `ink` on hover, the focus ring the room's text accent;
+each room places it on its own page. Trips has none for now.
 
 ## The `.ee` rule
 

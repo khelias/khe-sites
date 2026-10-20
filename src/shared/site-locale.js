@@ -1,5 +1,9 @@
 const STORAGE_KEY = 'app_locale';
 
+// The visitor's light or dark choice over the system setting (estate ADR-017); the same key on
+// khe.ee and games.khe.ee, which are separate origins and so keep separate choices.
+export const THEME_STORAGE_KEY = 'khe-theme';
+
 // The site header's strings. The build renders the header from them in the page's language
 // (scripts/site-header.mjs), and every locale controller merges them under the page's copy.
 export const SITE_HEADER_COPY = {
@@ -13,6 +17,7 @@ export const SITE_HEADER_COPY = {
     headerHomeAutomation: 'Koduautomaatika',
     headerKheGames: 'KHE Games',
     headerPrivacy: 'Privaatsus',
+    headerTheme: 'Tume teema',
   },
   en: {
     headerLanguage: 'Language',
@@ -24,6 +29,21 @@ export const SITE_HEADER_COPY = {
     headerHomeAutomation: 'Home automation',
     headerKheGames: 'KHE Games',
     headerPrivacy: 'Privacy',
+    headerTheme: 'Dark theme',
+  },
+};
+
+// The site footer's strings, rendered and merged the same way.
+export const SITE_FOOTER_COPY = {
+  et: {
+    footerLinksLabel: 'Lehe lingid',
+    footer: 'Ise majutatud Eestis',
+    privacyLink: 'Privaatsus',
+  },
+  en: {
+    footerLinksLabel: 'Page links',
+    footer: 'Self-hosted in Estonia',
+    privacyLink: 'Privacy',
   },
 };
 
@@ -87,7 +107,11 @@ export function createLocaleController({
 
   const copy = Object.fromEntries(Object.entries(pageCopy).map(([locale, values]) => [
     locale,
-    { ...(SITE_HEADER_COPY[locale] || SITE_HEADER_COPY.en), ...values },
+    {
+      ...(SITE_HEADER_COPY[locale] || SITE_HEADER_COPY.en),
+      ...(SITE_FOOTER_COPY[locale] || SITE_FOOTER_COPY.en),
+      ...values,
+    },
   ]));
   const supported = Object.keys(copy);
   const fallbackLocale = supported.includes(defaultLocale) ? defaultLocale : supported[0];
@@ -136,6 +160,11 @@ export function createLocaleController({
   });
 
   applyLocale(initialLocale());
+
+  // Imported here, not at the top: scripts/site-header.mjs imports this file in Node.
+  if (document.querySelector('.site-header__theme')) {
+    import('/assets/theme.js').then(({ wireThemeToggle }) => wireThemeToggle({ storageKey: THEME_STORAGE_KEY }));
+  }
 
   return { applyLocale };
 }

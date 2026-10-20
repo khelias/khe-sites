@@ -12,6 +12,7 @@
   <link rel="icon" href="https://khe.ee/logo.svg" type="image/svg+xml" sizes="any">
   <meta name="theme-color" content="#fafafa" media="(prefers-color-scheme: light)">
   <meta name="theme-color" content="#0b0d0d" media="(prefers-color-scheme: dark)">
+  <!-- site-theme -->
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://games.khe.ee/privacy">
   <meta property="og:site_name" content="KHE Games">
@@ -26,13 +27,14 @@
   <meta name="twitter:image" content="https://games.khe.ee/og-image.png">
   <link rel="preload" href="/assets/fonts/inter-400.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="/assets/fonts/inter-500.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="modulepreload" href="/assets/theme.js">
   <link rel="stylesheet" href="/assets/site-header.css">
   <link rel="stylesheet" href="/assets/site.css">
   <script defer src="/assets/analytics-consent.js" data-analytics-token="81aecd30e30c4e97a4d733334d88775b" data-analytics-privacy-url="/privacy?lang=en"></script>
 </head>
 <body class="privacy-page games-privacy">
 
-<!-- site-header home=games title=headerPrivacy parent=games -->
+<!-- site-header home=games title=headerPrivacy parent=games theme -->
 
 <main>
   <h1 data-i18n="heading">Privacy</h1>
@@ -102,11 +104,10 @@
   <p data-i18n-html="complaintBody">You also have the right to lodge a complaint with the Estonian Data Protection Inspectorate (Andmekaitse Inspektsioon, <a href="https://www.aki.ee" target="_blank" rel="noopener">aki.ee</a>).</p>
 </main>
 
-<footer class="site-footer" data-site-footer></footer>
+<!-- site-footer -->
 
 <script type="module">
   import { createLocaleController } from '/assets/site-locale.js';
-  import { renderSiteFooter, withSiteFooterCopy } from '/assets/site-footer.js';
 
   const COPY = {
     et: {
@@ -207,10 +208,8 @@
     },
   };
 
-  renderSiteFooter();
-
   createLocaleController({
-    copy: withSiteFooterCopy(COPY),
+    copy: COPY,
     defaultLocale: 'en',
     links: {
       home: (locale) => `/?lang=${locale}`,

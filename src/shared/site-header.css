@@ -121,6 +121,11 @@
   color-scheme: dark;
 }
 
+/* A light choice on a dark system: form controls and scrollbars follow the page. */
+:root[data-theme="light"] {
+  color-scheme: light;
+}
+
 /* One accent per room: --room for fills and dots, --room-text for text, the .ee and focus. */
 [data-room="home"] { --room: var(--home); --room-text: var(--home); }
 [data-room="server"] { --room: var(--server); --room-text: var(--server); }

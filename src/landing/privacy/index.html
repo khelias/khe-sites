@@ -5,17 +5,19 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <meta name="theme-color" content="#fafafa" media="(prefers-color-scheme: light)">
   <meta name="theme-color" content="#0b0d0d" media="(prefers-color-scheme: dark)">
+  <!-- site-theme -->
   <title>Privacy - Kaido Henrik Elias</title>
   <meta name="description" content="Privacy notice for khe.ee">
   <link rel="preload" href="/assets/fonts/inter-400.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="/assets/fonts/inter-500.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="modulepreload" href="/assets/theme.js">
   <link rel="stylesheet" href="/assets/site-header.css">
   <link rel="stylesheet" href="/assets/site.css">
   <script defer src="/assets/analytics-consent.js" data-analytics-token="58734ed4ae1e4b4e8a8f8f7d50ff74f2" data-analytics-privacy-url="/privacy?lang=en"></script>
 </head>
 <body class="privacy-page landing-privacy">
 
-<!-- site-header home=landing title=headerPrivacy -->
+<!-- site-header home=landing title=headerPrivacy theme -->
 
 <main>
   <h1 data-i18n="heading">Privacy</h1>
@@ -76,11 +78,10 @@
   <p data-i18n-html="complaintBody">You also have the right to lodge a complaint with the Estonian Data Protection Inspectorate (Andmekaitse Inspektsioon, <a href="https://www.aki.ee" target="_blank" rel="noopener">aki.ee</a>).</p>
 </main>
 
-<footer class="site-footer" data-site-footer></footer>
+<!-- site-footer -->
 
 <script type="module">
   import { createLocaleController } from '/assets/site-locale.js';
-  import { renderSiteFooter, withSiteFooterCopy } from '/assets/site-footer.js';
 
   const COPY = {
     et: {
@@ -165,10 +166,8 @@
     },
   };
 
-  renderSiteFooter();
-
   createLocaleController({
-    copy: withSiteFooterCopy(COPY),
+    copy: COPY,
     defaultLocale: 'en',
     links: {
       home: (locale) => `/?lang=${locale}`,

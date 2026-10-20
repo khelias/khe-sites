@@ -8,10 +8,60 @@ import { adrLinkRewriter, MarkdownError, renderMarkdown } from './markdown.mjs';
 import { views } from './architecture-model.mjs';
 import { modelMismatches } from './render-architecture.mjs';
 import { ASSET_REFERENCE, assetVersion, builtPages as listBuiltPages } from './asset-versions.mjs';
+import { themeInitScript } from '@khelias/ui/theme';
 import { COPY } from '../src/landing/architecture/copy.js';
-import { SITE_HEADER_COPY } from '../src/shared/site-locale.js';
+import { SITE_FOOTER_COPY, SITE_HEADER_COPY, THEME_STORAGE_KEY } from '../src/shared/site-locale.js';
 
 const root = dirname(dirname(fileURLToPath(import.meta.url)));
+
+// A dark rule follows the family pattern (DESIGN.md Themes): under the media query on
+// :root:not([data-theme="light"]), and the same declarations again on :root[data-theme="dark"],
+// so a stored choice reaches it. Returns what breaks the pattern.
+function unpairedDarkRules(sheet) {
+  const SYSTEM = ':root:not([data-theme="light"])';
+  const FORCED = ':root[data-theme="dark"]';
+  sheet = sheet.replace(/\/\*[\s\S]*?\*\//g, '');
+  const declarations = (body) => body.split(';').map((line) => line.trim()).filter((line) => line && !line.startsWith('color-scheme')).sort().join(';');
+  const topLevel = [];
+  let depth = 0;
+  let start = 0;
+  for (let i = 0; i < sheet.length; i += 1) {
+    if (sheet[i] === '{') {
+      if (depth === 0) start = i;
+      depth += 1;
+    } else if (sheet[i] === '}') {
+      depth -= 1;
+      if (depth === 0) {
+        const selector = sheet.slice(sheet.lastIndexOf('}', start) + 1, start).trim();
+        topLevel.push([selector, sheet.slice(start + 1, i)]);
+      }
+    }
+  }
+  const forcedRules = new Map(topLevel.filter(([selector]) => selector.startsWith(FORCED)));
+  const problems = [];
+  for (const [selector, body] of topLevel) {
+    if (!selector.includes('prefers-color-scheme')) continue;
+    if (selector !== '@media (prefers-color-scheme: dark)') {
+      problems.push(`${selector} is not the family's dark pattern`);
+      continue;
+    }
+    for (const [, inner, rule] of body.matchAll(/([^{}]+)\{([^{}]*)\}/g)) {
+      const name = inner.trim();
+      if (!name.startsWith(SYSTEM)) {
+        problems.push(`${name} under prefers-color-scheme does not start with ${SYSTEM}`);
+        continue;
+      }
+      const forced = FORCED + name.slice(SYSTEM.length);
+      if (!forcedRules.has(forced)) problems.push(`${name} has no ${forced} twin`);
+      else if (declarations(forcedRules.get(forced)) !== declarations(rule)) problems.push(`${name} and ${forced} differ`);
+    }
+  }
+  const topLevelQueries = topLevel.filter(([selector]) => selector.includes('prefers-color-scheme')).length;
+  if ((sheet.match(/prefers-color-scheme/g) || []).length > topLevelQueries) {
+    problems.push('a prefers-color-scheme query sits inside another rule');
+  }
+  return problems;
+}
 
 await runReportingSourceErrors(async () => {
   const htmlFiles = [
@@ -53,7 +103,6 @@ await runReportingSourceErrors(async () => {
   const sourceFiles = [
     ...htmlFiles,
     'src/shared/analytics-consent.js',
-    'src/shared/site-footer.js',
     'src/shared/site-locale.js',
     'src/shared/site-header.css',
     'src/shared/site.css',
@@ -86,8 +135,8 @@ await runReportingSourceErrors(async () => {
     }
   }
 
-  // DESIGN.md's frontmatter colours are the light :root tokens of site-header.css, and the
-  // system-dark block holds the same values as the data-theme="dark" one.
+  // DESIGN.md's frontmatter colours are the light :root tokens of site-header.css, and the dark
+  // block names the same tokens (unpairedDarkRules below keeps the two dark blocks equal).
   const tokenCss = await readFile(join(root, 'src/shared/site-header.css'), 'utf8');
   const tokenBlock = (selector) => {
     const start = tokenCss.search(new RegExp(`^\\s*${selector.replace(/[[\]().*+?^$|\\]/g, '\\$&')} \\{`, 'm'));
@@ -105,10 +154,9 @@ await runReportingSourceErrors(async () => {
     throw new Error(`DESIGN.md colours ${JSON.stringify(familyColours)} differ from the light :root tokens ${JSON.stringify(light)} in site-header.css`);
   }
   if (primary !== light.ink) throw new Error('DESIGN.md primary is not the ink token');
-  const systemDark = tokenBlock(':root:not([data-theme="light"])');
   const forcedDark = tokenBlock(':root[data-theme="dark"]');
-  if (!sameTokens(systemDark, forcedDark) || Object.keys(light).sort().join() !== Object.keys(forcedDark).sort().join()) {
-    throw new Error('site-header.css: the system-dark block and :root[data-theme="dark"] differ, or name other tokens than the light :root');
+  if (Object.keys(light).sort().join() !== Object.keys(forcedDark).sort().join()) {
+    throw new Error('site-header.css: :root[data-theme="dark"] names other tokens than the light :root');
   }
   for (const relativePath of htmlFiles) {
     const content = await readFile(join(root, relativePath), 'utf8');
@@ -120,7 +168,7 @@ await runReportingSourceErrors(async () => {
   }
 
   // Every data-i18n key of a page with an inline COPY is in both of its languages. The source
-  // page, not the built one: the header and footer keys live in SITE_HEADER_COPY and the footer.
+  // page, not the built one: the header and footer keys live in SITE_HEADER_COPY and SITE_FOOTER_COPY.
   for (const relativePath of ['src/landing/index.html', 'src/games/index.html', 'src/landing/privacy/index.html', 'src/games/privacy/index.html']) {
     const html = await readFile(join(root, relativePath), 'utf8');
     const literal = html.match(/const COPY = (\{[\s\S]*?\n\s*\});/)?.[1];
@@ -134,7 +182,6 @@ await runReportingSourceErrors(async () => {
   }
 
   await import(join(root, 'src/shared/site-locale.js'));
-  await import(join(root, 'src/shared/site-footer.js'));
 
   function expectRender(name, source, expected) {
     const html = renderMarkdown(source, { file: name, rewriteLink: adrLinkRewriter(new Set(['008'])) });
@@ -183,7 +230,11 @@ await runReportingSourceErrors(async () => {
   const mismatches = modelMismatches(sources);
   if (mismatches.length) throw new Error(mismatches.join('\n'));
 
-  for (const [name, copy] of [['copy.js: COPY', COPY], ['site-locale.js: SITE_HEADER_COPY', SITE_HEADER_COPY]]) {
+  for (const [name, copy] of [
+    ['copy.js: COPY', COPY],
+    ['site-locale.js: SITE_HEADER_COPY', SITE_HEADER_COPY],
+    ['site-locale.js: SITE_FOOTER_COPY', SITE_FOOTER_COPY],
+  ]) {
     for (const locale of Object.keys(copy)) {
       for (const key of Object.keys(copy.en)) {
         if (typeof copy[locale][key] !== 'string') throw new Error(`${name}.${locale} has no ${key}`);
@@ -219,6 +270,8 @@ await runReportingSourceErrors(async () => {
   }
   for (const name of ['site-header.css', 'site.css']) {
     const sheet = await readFile(join(root, 'src/shared', name), 'utf8');
+    const unpaired = unpairedDarkRules(sheet);
+    if (unpaired.length) throw new Error(unpaired.map((message) => `${name}: ${message}`).join('\n'));
     for (const match of sheet.matchAll(/url\(\s*['"]?\/assets\/fonts\/([^'")\s]+)['"]?\s*\)/g)) {
       if (!existsSync(join(root, 'src/shared/fonts', match[1]))) throw new Error(`${name} loads /assets/fonts/${match[1]}, which src/shared/fonts lacks`);
     }
@@ -230,19 +283,19 @@ await runReportingSourceErrors(async () => {
     'architecture/index.html',
     ...sources.decisions.map((decision) => `architecture/decisions/${decision.id}/index.html`),
   ];
-  const footerKeys = new Set(['footerLinksLabel', 'footer', 'privacyLink']);
   for (const page of builtPages) {
     if (!existsSync(join(landing, page))) throw new Error(`dist/landing/${page} was not built`);
     const html = await readFile(join(landing, page), 'utf8');
-    const ipv4 = html.match(/\b(?:\d{1,3}\.){3}\d{1,3}\b/);
+    // SVG path data (the footer's GitHub mark) reads like an address, so it is left out.
+    const ipv4 = html.replace(/\sd="[^"]*"/g, '').match(/\b(?:\d{1,3}\.){3}\d{1,3}\b/);
     if (ipv4) throw new Error(`dist/landing/${page} contains an IPv4 address: ${ipv4[0]}`);
     const hostPort = html.match(/\b(?:localhost|[a-z0-9-]+(?:\.[a-z0-9-]+)*\.[a-z]{2,}):\d{2,5}\b/i);
     if (hostPort) throw new Error(`dist/landing/${page} contains a host:port: ${hostPort[0]}`);
     const empty = html.match(/<([a-z][a-z0-9]*)\b[^>]*\sdata-i18n(?:-html)?="([^"]+)"[^>]*><\/\1>/);
     if (empty) throw new Error(`dist/landing/${page} leaves ${empty[2]} empty`);
     for (const match of html.matchAll(/data-i18n(?:-html|-aria)?="([^"]+)"/g)) {
-      if (!(match[1] in COPY.en) && !(match[1] in SITE_HEADER_COPY.en) && !footerKeys.has(match[1])) {
-        throw new Error(`dist/landing/${page} uses ${match[1]}, which copy.js and SITE_HEADER_COPY lack`);
+      if (!(match[1] in COPY.en) && !(match[1] in SITE_HEADER_COPY.en) && !(match[1] in SITE_FOOTER_COPY.en)) {
+        throw new Error(`dist/landing/${page} uses ${match[1]}, which copy.js, SITE_HEADER_COPY and SITE_FOOTER_COPY lack`);
       }
     }
     for (const match of html.matchAll(/href="\/architecture\/decisions\/(\d{3})\//g)) {
@@ -252,8 +305,8 @@ await runReportingSourceErrors(async () => {
     }
   }
   const mainPage = await readFile(join(landing, 'architecture/index.html'), 'utf8');
-  const svgCount = (mainPage.match(/<svg\b/g) || []).length;
-  if (svgCount !== 2 * views.length) throw new Error(`architecture page has ${svgCount} <svg>, expected ${2 * views.length}`);
+  const svgCount = (mainPage.match(/<svg class="arch-svg\b/g) || []).length;
+  if (svgCount !== 2 * views.length) throw new Error(`architecture page has ${svgCount} diagram <svg>, expected ${2 * views.length}`);
   if (mainPage.includes('<!--')) throw new Error('architecture page still has an unfilled placeholder');
   for (const view of views) {
     const start = mainPage.indexOf(`<figure class="arch-figure" data-view="${view.id}"`);
@@ -304,7 +357,9 @@ await runReportingSourceErrors(async () => {
   }
 
   // Every built page carries the filled site header, and every .css and .js
-  // it links carries the hash of the built file.
+  // it links carries the hash of the built file. Every page but /ha/ has the theme toggle, the
+  // pre-paint theme script in <head> before the first stylesheet, and the footer; /ha/, dark
+  // until the house view has a light theme, has none of them.
   for (const site of ['landing', 'games']) {
     const siteDist = join(root, 'dist', site);
     const versions = new Map();
@@ -316,11 +371,26 @@ await runReportingSourceErrors(async () => {
       if (!html.includes('data-lang-option="et"') || !html.includes('data-lang-option="en"')) {
         throw new Error(`dist/${site}/${page} has no ET/EN language switcher`);
       }
-      if (html.includes('<!-- site-header')) throw new Error(`dist/${site}/${page} has an unfilled site-header marker`);
+      for (const marker of ['site-header', 'site-theme', 'site-footer']) {
+        if (html.includes(`<!-- ${marker}`)) throw new Error(`dist/${site}/${page} has an unfilled ${marker} marker`);
+      }
+      const house = site === 'landing' && page === 'ha/index.html';
+      const toggles = (html.match(/<button class="site-header__theme"/g) || []).length;
+      const footers = (html.match(/<footer class="site-footer"/g) || []).length;
+      const head = html.slice(0, html.indexOf('</head>'));
+      const initAt = head.indexOf(`<script>${themeInitScript(THEME_STORAGE_KEY)}</script>`);
+      const firstStylesheet = head.search(/<link rel="stylesheet"/);
+      if (house) {
+        if (toggles || footers || html.includes(THEME_STORAGE_KEY)) throw new Error('dist/landing/ha/index.html has a theme toggle, the theme script or a footer; the house view stays dark');
+      } else {
+        if (toggles !== 1) throw new Error(`dist/${site}/${page} has ${toggles} theme toggles, expected 1`);
+        if (footers !== 1) throw new Error(`dist/${site}/${page} has ${footers} site footers, expected 1`);
+        if (initAt < 0 || firstStylesheet < 0 || initAt > firstStylesheet) throw new Error(`dist/${site}/${page} lacks the theme script in <head> before the first stylesheet`);
+      }
       const htmlTag = html.match(/<html\b[^>]*>/)?.[0] ?? '';
       const room = htmlTag.match(/\sdata-room="([^"]*)"/)?.[1];
       if (!['home', 'server', 'trips', 'house', 'games'].includes(room)) throw new Error(`dist/${site}/${page} has no data-room on <html> from home, server, trips, house, games`);
-      if (site === 'landing' && page === 'ha/index.html' && !htmlTag.includes('data-theme="dark"')) {
+      if (house && !htmlTag.includes('data-theme="dark"')) {
         throw new Error('dist/landing/ha/index.html is not data-theme="dark"; the house view has no light theme');
       }
       for (const [reference, path, version] of html.matchAll(ASSET_REFERENCE)) {

@@ -1,8 +1,5 @@
 import { createLocaleController } from '/assets/site-locale.js';
-import { renderSiteFooter, withSiteFooterCopy } from '/assets/site-footer.js';
 import { COPY } from '/architecture/copy.js';
-
-renderSiteFooter();
 
 // An ADR page keeps its English title in both languages; only the chrome
 // around the decision is localised.
@@ -16,7 +13,7 @@ if (document.body.dataset.page === 'decision') {
 }
 
 createLocaleController({
-  copy: withSiteFooterCopy(copy),
+  copy,
   defaultLocale: 'en',
   links: {
     home: (locale) => `/?lang=${locale}`,
