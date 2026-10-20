@@ -15,7 +15,7 @@ const PARENTS = {
   games: { title: 'headerKheGames' },
 };
 
-// <!-- site-header home=<HOMES key> title=<copy key> [parent=<PARENTS key>] [fixed] -->
+// <!-- site-header home=<HOMES key> [title=<copy key>] [parent=<PARENTS key>] [fixed] -->
 // on a line of its own; the header keeps the marker's indent and renders in the page's <html lang>.
 const MARKER = /^([ \t]*)<!-- site-header ([^>]*?) -->$/gm;
 
@@ -36,6 +36,7 @@ function renderHeader({ home, title, parent, fixed }, locale, indent, file) {
   if (!copy) throw new Error(`${file}: site-header has no copy for <html lang="${locale}">`);
   if (!target) throw new Error(`${file}: site-header home=${home} is not one of ${Object.keys(HOMES).join(', ')}`);
   if (parent && !kicker) throw new Error(`${file}: site-header parent=${parent} is not one of ${Object.keys(PARENTS).join(', ')}`);
+  if (parent && !title) throw new Error(`${file}: site-header parent=${parent} needs a title`);
   const copyText = (key) => {
     if (typeof copy[key] !== 'string') throw new Error(`${file}: site-header uses ${key}, which SITE_HEADER_COPY.${locale} lacks`);
     return copy[key];
@@ -43,7 +44,7 @@ function renderHeader({ home, title, parent, fixed }, locale, indent, file) {
 
   return renderSiteHeader({
     brand: { href: `${target.href}?lang=${locale}`, label: copyText(target.label) },
-    context: {
+    context: title && {
       kicker: kicker ? copyText(kicker.title) : undefined,
       title: copyText(title),
       href: kicker?.href && `${kicker.href}?lang=${locale}`,
@@ -55,9 +56,11 @@ function renderHeader({ home, title, parent, fixed }, locale, indent, file) {
     indent,
     attrs: {
       brand: { 'data-link': 'home', 'data-i18n-aria': target.label },
-      context: kicker?.href ? { 'data-link': parent } : {},
-      kicker: kicker ? { 'data-i18n': kicker.title } : {},
-      title: { 'data-i18n': title },
+      ...(title && {
+        context: kicker?.href ? { 'data-link': parent } : {},
+        kicker: kicker ? { 'data-i18n': kicker.title } : {},
+        title: { 'data-i18n': title },
+      }),
       switcher: { 'data-i18n-aria': 'headerLanguage' },
     },
   });

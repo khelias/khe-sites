@@ -136,21 +136,21 @@ estate's writer register in khe-meta in the same change.
 - The built `/assets/site-header.css` is `@khelias/ui`'s header CSS from
   `node_modules` followed by `src/shared/site-header.css`, which holds only
   khe-sites' fonts (Inter, Source Serif 4), the family tokens and the
-  `--khe-header-*` values it sets on `.site-header, .language-switcher`;
+  `--khe-header-*` values it sets on `.site-header`;
   no rule here restyles a `.site-header__*` part. Every page links it
   before `site.css`; `/ha/`, with Home Assistant's own styles, links only
   it. The package sets its defaults on `.site-header`, so a value on
   `:root` never reaches the header.
 - The site header markup comes from `@khelias/ui`'s `renderSiteHeader`, called
   only by `scripts/site-header.mjs`. A page
-  carries `<!-- site-header home=… title=… [parent=…] [fixed] -->` on a line
+  carries `<!-- site-header home=… [title=…] [parent=…] [fixed] -->` on a line
   of its own, and the build replaces it with the header in the page's
   `<html lang>`, at the marker's indent. Its strings are `SITE_HEADER_COPY`
   in `src/shared/site-locale.js` (both languages, the `header*` keys), which
   `createLocaleController` merges under every page's copy. A new title is a
   key there; a new home or parent is also an entry in `site-header.mjs`.
-  Every built page but the landing home must have exactly one header
-  (check).
+  The landing home has no title, only the mark and the switcher. Every
+  built page must have exactly one header (check).
 - Nothing in the sources carries `?v=`: after the pages are built, the build
   stamps every root-relative `.css` and `.js` URL in them, and in the files
   those link, with the first 10 hex of the built file's SHA-256, so a change
@@ -205,7 +205,7 @@ estate's writer register in khe-meta in the same change.
   diagram tokens keep values of their own.
 - Every built page's `<html>` carries `data-room` (`home`, `server`,
   `trips`, `house`, `games`; check), which sets `--room` (fills, dots) and
-  `--room-text` (text, the `.ee`, focus). A landing row or the server strip
+  `--room-text` (text, the `.ee`, focus). A landing row
   sets its own `data-room` for its dot and arrow. `/ha/` gets
   `data-room="house" data-theme="dark"` from `house3d-demo.mjs`: the house
   view has no light theme yet, so its header stays dark (check).

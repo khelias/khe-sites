@@ -72,17 +72,11 @@
 </head>
 <body class="landing-home">
 
-<div class="language-switcher" role="group" aria-label="Language" data-i18n-aria="languageLabel">
-  <button type="button" data-lang-option="et" aria-pressed="false">ET</button>
-  <button type="button" data-lang-option="en" aria-pressed="true">EN</button>
-</div>
+<!-- site-header home=landing -->
 
 <main class="landing">
   <section class="landing-hero" aria-labelledby="landing-title">
     <div>
-      <div class="monogram brand-mark" aria-hidden="true">
-        <span>KHE</span><span class="brand-mark__suffix">.ee</span>
-      </div>
       <h1 class="hero-title" id="landing-title">Kaido Henrik Elias</h1>
       <p class="hero-lead" data-i18n="tagline">Software architect by trade. Tinkerer by nature.</p>
       <p class="landing-intro" data-i18n="intro">At work I design web applications and the systems behind them. At home I build the same things for my family: a travel journal, home automation and games.</p>
@@ -115,7 +109,7 @@
         </svg>
       </span>
       <span class="project-copy">
-        <span class="project-kicker label room-dot" data-i18n="gamesKicker">2 games</span>
+        <span class="project-kicker label room-dot" data-i18n="gamesKicker">Play</span>
         <span class="project-title" data-i18n="gamesTitle">Games</span>
         <span class="project-desc" data-i18n="gamesDesc">Learning games for kids and an AI-narrated party game for adults.</span>
       </span>
@@ -133,9 +127,9 @@
         </svg>
       </span>
       <span class="project-copy">
-        <span class="project-kicker label room-dot" data-i18n="house3dKicker">Demo · Home Assistant</span>
+        <span class="project-kicker label room-dot" data-i18n="house3dKicker">Try the demo</span>
         <span class="project-title" data-i18n="house3dTitle">Home automation</span>
-        <span class="project-desc" data-i18n="house3dDesc">Running the house with Home Assistant. Try the demo.</span>
+        <span class="project-desc" data-i18n="house3dDesc">Running the house with Home Assistant.</span>
       </span>
       <span class="row-arrow" aria-hidden="true">→</span>
     </a>
@@ -152,9 +146,9 @@
         </svg>
       </span>
       <span class="project-copy">
-        <span class="project-kicker label room-dot" data-i18n="tripsKicker">Demo</span>
+        <span class="project-kicker label room-dot" data-i18n="tripsKicker">Try the demo</span>
         <span class="project-title" data-i18n="tripsTitle">Travel journal</span>
-        <span class="project-desc" data-i18n="tripsDesc">Planning trips and remembering them. Try the demo.</span>
+        <span class="project-desc" data-i18n="tripsDesc">Planning trips and remembering them.</span>
       </span>
       <span class="row-arrow" aria-hidden="true">→</span>
     </a>
@@ -173,31 +167,12 @@
         </svg>
       </span>
       <span class="project-copy">
-        <span class="project-kicker label room-dot" data-i18n="architectureKicker">Architecture and decisions</span>
+        <span class="project-kicker label room-dot" data-i18n="architectureKicker">Read more</span>
         <span class="project-title" data-i18n="architectureTitle">The home server</span>
         <span class="project-desc" data-i18n="architectureDesc">All of this runs on one server in my home. How, and why.</span>
       </span>
       <span class="row-arrow" aria-hidden="true">→</span>
     </a>
-  </section>
-
-  <section class="server-strip" data-room="server" aria-labelledby="server-strip-title">
-    <h2 class="label" id="server-strip-title" data-i18n="serverStripLabel">The home server in brief</h2>
-    <dl>
-      <div>
-        <dt>0</dt>
-        <dd><strong data-i18n="factPorts">open inbound ports</strong><span data-i18n="factPortsNote">An outbound tunnel only.</span></dd>
-      </div>
-      <div>
-        <dt>sha256</dt>
-        <dd><strong data-i18n="factDigest">every image pinned by digest</strong><span data-i18n="factDigestNote">Scanned, attested, named in git.</span></dd>
-      </div>
-      <div>
-        <dt data-i18n="factRestoreValue">weekly</dt>
-        <dd><strong data-i18n="factRestore">restore from offsite, tested</strong><span data-i18n="factRestoreNote">One dump restored each week.</span></dd>
-      </div>
-    </dl>
-    <a href="/architecture/?lang=en" data-link="architecture"><span data-i18n="serverStripLink">Architecture</span> <span aria-hidden="true">→</span></a>
   </section>
 </main>
 
@@ -211,7 +186,6 @@
     et: {
       title: 'Kaido Henrik Elias | Tarkvaraarhitekt',
       description: 'Tarkvaraarhitekt Eestis. Veebirakendused, koduserver, automatiseerimine ja mängud.',
-      languageLabel: 'Keel',
       projectsLabel: 'Projektid',
       tagline: 'Ametilt tarkvaraarhitekt. Loomult nokitseja.',
       intro: 'Töö juures kavandan veebirakendusi ja nende taga olevaid süsteeme. Kodus ehitan samu asju oma perele: reisipäeviku, koduautomaatika ja mängud.',
@@ -219,32 +193,22 @@
       workTitle: 'Veebileht, rakendus või automatiseerimine?',
       workBody: 'Räägime, mida on vaja.',
       workCta: 'Kirjuta mulle',
-      gamesKicker: '2 mängu',
+      gamesKicker: 'Mängi',
       gamesTitle: 'Mängud',
-      gamesDesc: 'Õppemängud lastele ja AI-seiklus täiskasvanutele.',
-      house3dKicker: 'Demo · Home Assistant',
+      gamesDesc: 'Õppemängud lastele ja AI Seiklus täiskasvanutele.',
+      house3dKicker: 'Proovi demot',
       house3dTitle: 'Koduautomaatika',
-      house3dDesc: 'Maja juhtimine Home Assistantiga. Proovi demos järele.',
-      tripsKicker: 'Demo',
+      house3dDesc: 'Maja juhtimine Home Assistantiga.',
+      tripsKicker: 'Proovi demot',
       tripsTitle: 'Reisipäevik',
-      tripsDesc: 'Reiside planeerimine ja meenutamine. Proovi demos järele.',
-      architectureKicker: 'Arhitektuur ja otsused',
+      tripsDesc: 'Reiside planeerimine ja meenutamine.',
+      architectureKicker: 'Loe lähemalt',
       architectureTitle: 'Koduserver',
       architectureDesc: 'Kõik see töötab ühel serveril minu kodus. Kuidas ja miks.',
-      serverStripLabel: 'Koduserver lühidalt',
-      serverStripLink: 'Arhitektuur',
-      factPorts: 'avatud sissetulevat porti',
-      factPortsNote: 'Ainult väljuv tunnel.',
-      factDigest: 'iga konteinerikujutis on kinnitatud räsi järgi',
-      factDigestNote: 'Skannitud, atesteeritud ja gitis kirjas.',
-      factRestoreValue: 'iga nädal',
-      factRestore: 'proovitaaste kodust väljas hoitud koopiast',
-      factRestoreNote: 'Igal nädalal taastatakse üks tõmmis.',
     },
     en: {
       title: 'Kaido Henrik Elias | Software Architect',
       description: 'Software architect in Estonia. Web applications, a home server, automation and games.',
-      languageLabel: 'Language',
       projectsLabel: 'Projects',
       tagline: 'Software architect by trade. Tinkerer by nature.',
       intro: 'At work I design web applications and the systems behind them. At home I build the same things for my family: a travel journal, home automation and games.',
@@ -252,27 +216,18 @@
       workTitle: 'A website, an app or an automation?',
       workBody: "Let's talk about what you need.",
       workCta: 'Write to me',
-      gamesKicker: '2 games',
+      gamesKicker: 'Play',
       gamesTitle: 'Games',
       gamesDesc: 'Learning games for kids and an AI-narrated party game for adults.',
-      house3dKicker: 'Demo · Home Assistant',
+      house3dKicker: 'Try the demo',
       house3dTitle: 'Home automation',
-      house3dDesc: 'Running the house with Home Assistant. Try the demo.',
-      tripsKicker: 'Demo',
+      house3dDesc: 'Running the house with Home Assistant.',
+      tripsKicker: 'Try the demo',
       tripsTitle: 'Travel journal',
-      tripsDesc: 'Planning trips and remembering them. Try the demo.',
-      architectureKicker: 'Architecture and decisions',
+      tripsDesc: 'Planning trips and remembering them.',
+      architectureKicker: 'Read more',
       architectureTitle: 'The home server',
       architectureDesc: 'All of this runs on one server in my home. How, and why.',
-      serverStripLabel: 'The home server in brief',
-      serverStripLink: 'Architecture',
-      factPorts: 'open inbound ports',
-      factPortsNote: 'An outbound tunnel only.',
-      factDigest: 'every image pinned by digest',
-      factDigestNote: 'Scanned, attested, named in git.',
-      factRestoreValue: 'weekly',
-      factRestore: 'restore from offsite, tested',
-      factRestoreNote: 'One dump restored each week.',
     },
   };
 
@@ -287,6 +242,7 @@
     copy: withSiteFooterCopy(COPY),
     defaultLocale: 'en',
     links: {
+      home: (locale) => `/?lang=${locale}`,
       architecture: (locale) => `/architecture/?lang=${locale}`,
       house3d: () => '/ha/',
       trips: (locale) => `/trips/?lang=${locale}`,

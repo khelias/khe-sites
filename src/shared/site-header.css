@@ -129,8 +129,7 @@
 [data-room="games"] { --room: var(--games); --room-text: var(--games); }
 
 /* The family header: opaque paper, one rule, no shadow; the room shows only in the .ee. */
-.site-header,
-.language-switcher {
+.site-header {
   --khe-header-font: var(--sans);
   --khe-header-title-font: var(--serif);
   --khe-header-max-width: 1080px;

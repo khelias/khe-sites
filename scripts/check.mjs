@@ -295,7 +295,7 @@ await runReportingSourceErrors(async () => {
     new Function(match[1].replace(/^\s*import\s.+;\s*$/gm, ''));
   }
 
-  // Every built page but the landing home carries the filled site header, and every .css and .js
+  // Every built page carries the filled site header, and every .css and .js
   // it links carries the hash of the built file.
   for (const site of ['landing', 'games']) {
     const siteDist = join(root, 'dist', site);
@@ -304,8 +304,7 @@ await runReportingSourceErrors(async () => {
       const page = file.slice(siteDist.length + 1);
       const html = await readFile(file, 'utf8');
       const headers = (html.match(/<header class="site-header[ "]/g) || []).length;
-      const expected = site === 'landing' && page === 'index.html' ? 0 : 1;
-      if (headers !== expected) throw new Error(`dist/${site}/${page} has ${headers} site headers, expected ${expected}`);
+      if (headers !== 1) throw new Error(`dist/${site}/${page} has ${headers} site headers, expected 1`);
       if (!html.includes('data-lang-option="et"') || !html.includes('data-lang-option="en"')) {
         throw new Error(`dist/${site}/${page} has no ET/EN language switcher`);
       }
