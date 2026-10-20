@@ -31,7 +31,7 @@
     },
     et: {
       title: 'Analüütika?',
-      body: 'Kasutan Cloudflare Web Analyticsit koondstatistika jaoks. Ei reklaame, küpsiseid ega saitideülest jälitamist.',
+      body: 'Kasutan Cloudflare Web Analyticsit koondstatistika jaoks. Reklaame, küpsiseid ega saitideülest jälgimist ei ole.',
       allow: 'Luba',
       deny: 'Keeldu',
       privacy: 'Privaatsus',

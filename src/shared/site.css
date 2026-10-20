@@ -76,6 +76,7 @@ a { color: var(--ink-2); }
 
 .hero-lead {
   max-width: 34rem;
+  text-wrap: pretty;
   color: var(--ink-2);
   font-size: 1.1875rem;
   line-height: 1.5;
