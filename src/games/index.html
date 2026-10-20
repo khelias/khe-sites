@@ -75,21 +75,29 @@
 
   <div class="container">
     <header class="games-hero">
-      <h1 class="hero-title" data-i18n="heading">Games</h1>
-      <p class="hero-lead" data-i18n="subtitle">Small web games you can play and inspect.</p>
+      <h1 class="hero-title" data-i18n="heading">Small games you can play and inspect.</h1>
     </header>
 
     <main>
-      <article class="game-card card-adventure">
-        <a class="game-main-link" href="/adventure/?lang=en" data-link="adventure">
-          <span class="game-number">01</span>
-          <span class="game-content">
-            <span class="game-tags room-dot">
-              <span class="label">AI</span>
-              <span class="label" data-i18n="liveTag">Live</span>
-            </span>
-            <span class="game-title" data-i18n="adventureTitle">AI Adventure</span>
-            <span class="game-desc" data-i18n="adventureDesc">An AI-narrated group adventure for adults (18+), 3-6 players. Choose the language, genre, and session length; the story grows from your decisions turn by turn.</span>
+      <article class="game-item card-adventure">
+        <a class="project-row" href="/adventure/?lang=en" data-link="adventure">
+          <span class="project-thumb" aria-hidden="true">
+            <svg viewBox="0 0 160 120" focusable="false">
+              <rect class="t-ground" width="160" height="120"/>
+              <path class="t-paper" d="M30 26h66a8 8 0 0 1 8 8v28a8 8 0 0 1-8 8H56L42 82V70H30a8 8 0 0 1-8-8V34a8 8 0 0 1 8-8z"/>
+              <path class="t-line" d="M30 26h66a8 8 0 0 1 8 8v28a8 8 0 0 1-8 8H56L42 82V70H30a8 8 0 0 1-8-8V34a8 8 0 0 1 8-8z"/>
+              <circle class="t-room" cx="48" cy="48" r="4"/>
+              <circle class="t-room" cx="63" cy="48" r="4"/>
+              <circle class="t-room" cx="78" cy="48" r="4"/>
+              <path class="t-paper" d="M98 60h32a7 7 0 0 1 7 7v16a7 7 0 0 1-7 7h-6v10l-11-10H98a7 7 0 0 1-7-7V67a7 7 0 0 1 7-7z"/>
+              <path class="t-line" d="M98 60h32a7 7 0 0 1 7 7v16a7 7 0 0 1-7 7h-6v10l-11-10H98a7 7 0 0 1-7-7V67a7 7 0 0 1 7-7z"/>
+              <path class="t-ink" d="M102 72h22M102 80h14"/>
+            </svg>
+          </span>
+          <span class="project-copy">
+            <span class="project-kicker label room-dot" data-i18n="adventureKicker">For adults · 18+</span>
+            <span class="project-title" data-i18n="adventureTitle">AI Adventure</span>
+            <span class="project-desc" data-i18n="adventureDesc">A party adventure with an AI narrator, for 3-6 players.</span>
           </span>
           <span class="row-arrow" aria-hidden="true">→</span>
         </a>
@@ -99,16 +107,26 @@
         </a>
       </article>
 
-      <article class="game-card card-study">
-        <a class="game-main-link" href="/study/?lang=en" data-link="study">
-          <span class="game-number">02</span>
-          <span class="game-content">
-            <span class="game-tags room-dot">
-              <span class="label" data-i18n="studyTag">Learning</span>
-              <span class="label" data-i18n="liveTag">Live</span>
-            </span>
-            <span class="game-title" data-i18n="studyTitle">Smart Games</span>
-            <span class="game-desc" data-i18n="studyDesc">Reading, math, and logic as quick exercise games. Built for kids, useful for the whole family.</span>
+      <article class="game-item card-study">
+        <a class="project-row" href="/study/?lang=en" data-link="study">
+          <span class="project-thumb" aria-hidden="true">
+            <svg viewBox="0 0 160 120" focusable="false">
+              <rect class="t-ground" width="160" height="120"/>
+              <rect class="t-paper" x="24" y="54" width="34" height="34" rx="6"/>
+              <rect class="t-line" x="24" y="54" width="34" height="34" rx="6"/>
+              <path class="t-ink" d="M33 79l8-17 8 17M36 73h10"/>
+              <rect class="t-paper" x="63" y="34" width="34" height="34" rx="6"/>
+              <rect class="t-line" x="63" y="34" width="34" height="34" rx="6"/>
+              <path class="t-ink" d="M76 45l5-3v18"/>
+              <rect class="t-paper" x="102" y="54" width="34" height="34" rx="6"/>
+              <rect class="t-line" x="102" y="54" width="34" height="34" rx="6"/>
+              <path class="t-room-line" d="M119 62v18M110 71h18"/>
+            </svg>
+          </span>
+          <span class="project-copy">
+            <span class="project-kicker label room-dot" data-i18n="studyKicker">For kids</span>
+            <span class="project-title" data-i18n="studyTitle">Smart Games</span>
+            <span class="project-desc" data-i18n="studyDesc">Reading, math and logic as short games.</span>
           </span>
           <span class="row-arrow" aria-hidden="true">→</span>
         </a>
@@ -129,13 +147,12 @@
       et: {
         title: 'KHE Games | Mängud ja õppeseiklused',
         description: 'KHE Games koondab veebimänge: AI Seiklus on jutustamismäng täiskasvanutele, Tarkade Mängud aitavad lastel harjutada lugemist, matemaatikat ja loogikat.',
-        heading: 'Mängud',
-        subtitle: 'Väikesed veebimängud, mida saab mängida ja uurida.',
+        heading: 'Väikesed mängud, mida saab mängida ja uurida.',
         studyTitle: 'Tarkade Mängud',
-        studyTag: 'Õppimine',
-        liveTag: 'Mängitav',
-        studyDesc: 'Lugemine, matemaatika ja loogika lühikeste harjutusmängudena. Sobib lastele, aga töötab ka pere ühise ajutrennina.',
-        adventureDesc: 'AI-jutustajaga seltskonnaseiklus täiskasvanutele (18+), 3-6 mängijale. Valige keel, žanr ja mängu pikkus; lugu sünnib käik-käigult teie otsustest.',
+        studyKicker: 'Lastele',
+        adventureKicker: 'Täiskasvanutele · 18+',
+        studyDesc: 'Lugemine, matemaatika ja loogika lühikeste mängudena.',
+        adventureDesc: 'Seltskonnaseiklus AI-jutustajaga, 3-6 mängijale.',
         githubCta: 'GitHub',
         studyGithubAria: 'Tarkade Mängud GitHubis',
         adventureTitle: 'AI Seiklus',
@@ -144,13 +161,12 @@
       en: {
         title: 'KHE Games | Browser Games and Learning Adventures',
         description: 'KHE Games collects browser games: AI Adventure is a storytelling game for adults, and Smart Games help kids practice reading, math, and logic.',
-        heading: 'Games',
-        subtitle: 'Small web games you can play and inspect.',
+        heading: 'Small games you can play and inspect.',
         studyTitle: 'Smart Games',
-        studyTag: 'Learning',
-        liveTag: 'Live',
-        studyDesc: 'Reading, math, and logic as quick exercise games. Built for kids, useful for the whole family.',
-        adventureDesc: 'An AI-narrated group adventure for adults (18+), 3-6 players. Choose the language, genre, and session length; the story grows from your decisions turn by turn.',
+        studyKicker: 'For kids',
+        adventureKicker: 'For adults · 18+',
+        studyDesc: 'Reading, math and logic as short games.',
+        adventureDesc: 'A party adventure with an AI narrator, for 3-6 players.',
         githubCta: 'GitHub',
         studyGithubAria: 'Smart Games on GitHub',
         adventureTitle: 'AI Adventure',

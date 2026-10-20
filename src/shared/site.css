@@ -19,7 +19,6 @@ summary {
 
 .site-header,
 .project-row,
-.game-main-link,
 .work-cta {
   --press-opacity: 1;
 }
@@ -154,10 +153,16 @@ a { color: var(--ink-2); }
   border-top: 1px solid var(--rule-strong);
 }
 
+/* The row's thumbnail column and gap; a game's source link lines up with its copy. */
+:root {
+  --row-thumb: 9rem;
+  --row-gap: clamp(1rem, 3vw, 2rem);
+}
+
 .project-row {
   display: grid;
-  grid-template-columns: 9rem minmax(0, 1fr) 2rem;
-  gap: clamp(1rem, 3vw, 2rem);
+  grid-template-columns: var(--row-thumb) minmax(0, 1fr) 2rem;
+  gap: var(--row-gap);
   align-items: center;
   padding: 1.25rem 0;
   border-bottom: 1px solid var(--rule);
@@ -226,13 +231,12 @@ a { color: var(--ink-2); }
 }
 
 @media (hover: hover) and (pointer: fine) {
-  :is(.project-row, .game-main-link):hover .row-arrow { transform: translateX(2px); }
-  :is(.project-row, .game-main-link):hover :is(.project-title, .game-title) { text-decoration: underline; text-decoration-color: var(--room); text-decoration-thickness: 1px; text-underline-offset: 0.2em; }
+  .project-row:hover .row-arrow { transform: translateX(2px); }
+  .project-row:hover .project-title { text-decoration: underline; text-decoration-color: var(--room); text-decoration-thickness: 1px; text-underline-offset: 0.2em; }
 }
 
 /* Touch has no hover: the press shows the row at once. */
-.project-row:active,
-.game-main-link:active {
+.project-row:active {
   transform: scale(0.99);
 }
 
@@ -307,12 +311,16 @@ body.games-home {
   padding: clamp(2.4rem, 7vw, 4.6rem) max(16px, env(safe-area-inset-right)) 0 max(16px, env(safe-area-inset-left));
 }
 
+/* The hero is a sentence, not a name: smaller than the landing's. */
 .games-hero {
-  margin-bottom: clamp(2.4rem, 6vw, 3.5rem);
+  margin-bottom: clamp(2rem, 5vw, 3rem);
 }
 
 .games-hero .hero-title {
-  margin-bottom: 0.85rem;
+  max-width: 24ch;
+  font-size: clamp(2rem, 5vw, 3rem);
+  line-height: 1.1;
+  text-wrap: balance;
 }
 
 .games-home main {
@@ -320,72 +328,23 @@ body.games-home {
   border-top: 1px solid var(--rule-strong);
 }
 
-.game-card {
-  --game-index-width: 2.4rem;
-  --game-row-gap: clamp(0.85rem, 2vw, 1.35rem);
-  display: grid;
-  gap: 0.72rem;
-  padding: 1.35rem 0;
+/* A game row with its source link below it: the item carries the rule. */
+.game-item {
+  padding-bottom: 1.1rem;
   border-bottom: 1px solid var(--rule);
 }
 
-.card-adventure { --room: var(--adventure); }
-.card-study { --room: var(--study); }
-
-.game-main-link {
-  display: grid;
-  grid-template-columns: var(--game-index-width) minmax(0, 1fr) 2rem;
-  gap: var(--game-row-gap);
-  align-items: center;
-  color: var(--ink);
-  text-decoration: none;
-  transition: transform 0.1s ease-out;
+.game-item .project-row {
+  padding-bottom: 0.6rem;
+  border-bottom: 0;
 }
 
-.game-number {
-  align-self: start;
-  padding-top: 0.22rem;
-  color: var(--muted);
-  font-family: var(--mono);
-  font-size: 0.75rem;
-  font-weight: 500;
-  line-height: 1;
-  font-variant-numeric: tabular-nums;
-}
-
-.game-content {
-  display: grid;
-  gap: 0.5rem;
-  min-width: 0;
-}
-
-.game-tags {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 0.35rem 0.9rem;
-}
-
-
-.game-title {
-  color: var(--ink);
-  font-family: var(--serif);
-  font-size: clamp(1.75rem, 4.5vw, 2.4rem);
-  font-weight: 600;
-  letter-spacing: -0.01em;
-  line-height: 1.05;
-}
-
-.game-desc {
-  max-width: 40rem;
-  color: var(--ink-2);
-  font-size: 0.9375rem;
-  line-height: 1.55;
-}
+.card-adventure { --room: var(--adventure); --room-text: var(--adventure); }
+.card-study { --room: var(--study); --room-text: var(--study); }
 
 .game-source-link {
   width: max-content;
-  margin-left: calc(var(--game-index-width) + var(--game-row-gap));
+  margin-left: calc(var(--row-thumb) + var(--row-gap));
   display: inline-flex;
   align-items: center;
   gap: 0.42rem;
@@ -426,7 +385,7 @@ body.games-home {
     transition: none;
   }
 
-  :is(.project-row, .game-main-link):hover .row-arrow {
+  .project-row:hover .row-arrow {
     transform: none;
   }
 }
@@ -1442,9 +1401,13 @@ body.privacy-page {
     grid-template-columns: minmax(0, 1fr);
   }
 
+  :root {
+    --row-thumb: 96px;
+    --row-gap: 1rem;
+  }
+
   .project-row {
-    grid-template-columns: 96px minmax(0, 1fr) 1.5rem;
-    gap: 1rem;
+    grid-template-columns: var(--row-thumb) minmax(0, 1fr) 1.5rem;
   }
 
   .project-title {
@@ -1455,14 +1418,6 @@ body.privacy-page {
     font-size: 0.875rem;
   }
 
-  .game-card {
-    --game-index-width: 2rem;
-    --game-row-gap: 0.7rem;
-  }
-
-  .game-main-link {
-    grid-template-columns: var(--game-index-width) minmax(0, 1fr) 1.5rem;
-  }
 }
 
 @media (max-width: 520px) {
