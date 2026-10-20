@@ -110,11 +110,6 @@ a { color: var(--ink-2); }
   max-width: 34rem;
 }
 
-.work-actions {
-  display: grid;
-  gap: 0.25rem;
-}
-
 .landing-work h2 {
   color: var(--ink);
   font-family: var(--serif);
@@ -134,7 +129,6 @@ a { color: var(--ink-2); }
   display: inline-flex;
   align-items: center;
   gap: 0.5rem;
-  margin-top: 0.25rem;
   padding: 0 1.1rem;
   border-radius: 8px;
   background: var(--ink);
@@ -155,20 +149,6 @@ a { color: var(--ink-2); }
   .landing .work-cta:hover { color: var(--paper); }
 }
 
-.work-links {
-  display: flex;
-  gap: 0.25rem 1.25rem;
-}
-
-.work-links a {
-  min-height: 2.75rem;
-  display: inline-flex;
-  align-items: center;
-  color: var(--ink-2);
-  font-size: 0.875rem;
-  text-decoration-color: var(--rule-strong);
-  text-underline-offset: 0.2em;
-}
 
 .landing-projects {
   margin-top: clamp(3.5rem, 9vh, 5.5rem);
@@ -293,9 +273,16 @@ a { color: var(--ink-2); }
   display: inline-flex;
   align-items: center;
   justify-content: center;
+  gap: 0.4rem;
   color: var(--muted);
   text-decoration: none;
   transition: color 0.15s;
+}
+
+.site-footer svg {
+  width: 0.875rem;
+  height: 0.875rem;
+  fill: currentColor;
 }
 
 @media (hover: hover) and (pointer: fine) {
