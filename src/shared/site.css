@@ -100,8 +100,6 @@ a { color: var(--ink-2); }
   gap: 1.5rem clamp(2rem, 6vw, 5rem);
   align-items: end;
   margin-top: clamp(3rem, 8vh, 4.5rem);
-  padding-top: 1.5rem;
-  border-top: 1px solid var(--rule-strong);
 }
 
 .landing-work > div:first-child {
