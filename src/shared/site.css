@@ -317,7 +317,6 @@ body.games-home {
 }
 
 .games-hero .hero-title {
-  margin-bottom: 0.75rem;
   font-size: clamp(2.25rem, 5vw, 3rem);
 }
 
