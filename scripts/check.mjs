@@ -70,13 +70,57 @@ await runReportingSourceErrors(async () => {
     'Software architect in Tallinn',
   ];
 
+  // The pre-family tokens are gone from khe-sites' own sources. dist is not checked: /ha/'s
+  // house3d-card.js from khe-home-assistant defines --bg and friends in its shadow DOM.
+  const oldToken = /(?<![\w-])--(bg|text|text-dim|text-muted|text-faint|border|border-hover|card-bg|accent|accent-bright|accent-deep|accent-warm|accent-cool|accent-border|display-font)(?![\w-])/;
   for (const relativePath of sourceFiles) {
     const content = await readFile(join(root, relativePath), 'utf8');
+    const oldUse = content.match(oldToken);
+    if (oldUse) throw new Error(`${relativePath} still uses ${oldUse[0]}; the family tokens replace it (DESIGN.md)`);
     const versioned = [...content.matchAll(ASSET_REFERENCE)].find((match) => match[2] !== undefined);
     if (versioned) throw new Error(`${relativePath} hand-versions ${versioned[0]}; the build stamps ?v= from the file's hash`);
     for (const text of bannedText) {
       if (content.includes(text)) {
         throw new Error(`${relativePath} contains stale copy: ${text}`);
+      }
+    }
+  }
+
+  // DESIGN.md's frontmatter colours are the light :root tokens of site-header.css, and the
+  // system-dark block holds the same values as the data-theme="dark" one.
+  const tokenCss = await readFile(join(root, 'src/shared/site-header.css'), 'utf8');
+  const tokenBlock = (selector) => {
+    const start = tokenCss.search(new RegExp(`^\\s*${selector.replace(/[[\]().*+?^$|\\]/g, '\\$&')} \\{`, 'm'));
+    if (start < 0) throw new Error(`site-header.css has no ${selector} block`);
+    const body = tokenCss.slice(start, tokenCss.indexOf('}', start));
+    return Object.fromEntries([...body.matchAll(/--([\w-]+):\s*(#[0-9a-f]{3,8})\s*;/gi)].map(([, name, value]) => [name, value.toLowerCase()]));
+  };
+  const design = await readFile(join(root, 'DESIGN.md'), 'utf8');
+  const designColours = design.match(/^colors:\n((?: {2}.+\n)+)/m)?.[1] ?? '';
+  const frontmatter = Object.fromEntries([...designColours.matchAll(/^ {2}([\w-]+): "(#[0-9a-f]{3,8})"$/gim)].map(([, name, value]) => [name, value.toLowerCase()]));
+  const { primary, ...familyColours } = frontmatter;
+  const light = tokenBlock(':root');
+  const sameTokens = (a, b) => JSON.stringify(Object.entries(a).sort()) === JSON.stringify(Object.entries(b).sort());
+  if (!Object.keys(light).length || !sameTokens(familyColours, light)) {
+    throw new Error(`DESIGN.md colours ${JSON.stringify(familyColours)} differ from the light :root tokens ${JSON.stringify(light)} in site-header.css`);
+  }
+  if (primary !== light.ink) throw new Error('DESIGN.md primary is not the ink token');
+  const systemDark = tokenBlock(':root:not([data-theme="light"])');
+  const forcedDark = tokenBlock(':root[data-theme="dark"]');
+  if (!sameTokens(systemDark, forcedDark) || Object.keys(light).sort().join() !== Object.keys(forcedDark).sort().join()) {
+    throw new Error('site-header.css: the system-dark block and :root[data-theme="dark"] differ, or name other tokens than the light :root');
+  }
+
+  // Every data-i18n key of a page with an inline COPY is in both of its languages. The source
+  // page, not the built one: the header and footer keys live in SITE_HEADER_COPY and the footer.
+  for (const relativePath of ['src/landing/index.html', 'src/games/index.html', 'src/landing/privacy/index.html', 'src/games/privacy/index.html']) {
+    const html = await readFile(join(root, relativePath), 'utf8');
+    const literal = html.match(/const COPY = (\{[\s\S]*?\n\s*\});/)?.[1];
+    if (!literal) throw new Error(`${relativePath} has no inline COPY`);
+    const pageCopy = new Function(`return ${literal}`)();
+    for (const [, key] of html.matchAll(/data-i18n(?:-html|-aria)?="([^"]+)"/g)) {
+      for (const locale of ['et', 'en']) {
+        if (typeof pageCopy[locale]?.[key] !== 'string') throw new Error(`${relativePath} uses ${key}, which its COPY.${locale} lacks`);
       }
     }
   }
@@ -266,6 +310,12 @@ await runReportingSourceErrors(async () => {
         throw new Error(`dist/${site}/${page} has no ET/EN language switcher`);
       }
       if (html.includes('<!-- site-header')) throw new Error(`dist/${site}/${page} has an unfilled site-header marker`);
+      const htmlTag = html.match(/<html\b[^>]*>/)?.[0] ?? '';
+      const room = htmlTag.match(/\sdata-room="([^"]*)"/)?.[1];
+      if (!['home', 'server', 'trips', 'house', 'games'].includes(room)) throw new Error(`dist/${site}/${page} has no data-room on <html> from home, server, trips, house, games`);
+      if (site === 'landing' && page === 'ha/index.html' && !htmlTag.includes('data-theme="dark"')) {
+        throw new Error('dist/landing/ha/index.html is not data-theme="dark"; the house view has no light theme');
+      }
       for (const [reference, path, version] of html.matchAll(ASSET_REFERENCE)) {
         if (!versions.has(path)) {
           const asset = join(siteDist, path);

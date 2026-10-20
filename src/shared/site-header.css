@@ -1,6 +1,7 @@
-/* khe-sites' fonts, colour tokens and the values it sets on the KHE site header. The build
-   puts @khelias/ui's header CSS in front of this file as /assets/site-header.css. Every page
-   loads it before site.css; /ha/, a Home Assistant mock with its own styles, loads only it. */
+/* khe-sites' fonts, the family tokens (DESIGN.md) and the values it sets on the KHE site
+   header. The build puts @khelias/ui's header CSS in front of this file as
+   /assets/site-header.css. Every page loads it before site.css; /ha/, a Home Assistant mock
+   with its own styles, loads only it. */
 @font-face {
   font-family: 'Inter';
   font-style: normal;
@@ -30,20 +31,128 @@
   src: url('/assets/fonts/inter-600.woff2') format('woff2');
 }
 
+@font-face {
+  font-family: 'Source Serif 4';
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url('/assets/fonts/source-serif-4-600-latin-ext.woff2') format('woff2');
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C4, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+@font-face {
+  font-family: 'Source Serif 4';
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url('/assets/fonts/source-serif-4-600-latin.woff2') format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+/* The family tokens, light by default and dark with the system setting; a page that commits
+   to one theme sets data-theme on <html>. DESIGN.md holds the light values and check.mjs
+   keeps the three blocks in step. */
 :root {
-  --bg: #070909;
-  --text: #f5f7f6;
-  --text-dim: #b8c0bd;
-  --text-muted: #7f8a86;
-  --text-faint: #4f5a56;
-  --border: rgba(255, 255, 255, 0.07);
-  --border-hover: rgba(255, 255, 255, 0.16);
-  --card-bg: rgba(255, 255, 255, 0.025);
-  --accent: #5eead4;
-  --accent-bright: #99f6e4;
-  --accent-deep: #0f766e;
-  --accent-warm: #f59e0b;
-  --accent-cool: #38bdf8;
-  --accent-border: rgba(94, 234, 212, 0.3);
-  --display-font: 'Inter', system-ui, sans-serif;
+  --paper: #f6f5f1;
+  --surface: #ffffff;
+  --sunken: #eeece6;
+  --ink: #17191a;
+  --ink-2: #3d4241;
+  --muted: #6b716f;
+  --rule: #dedbd3;
+  --rule-strong: #bdb9af;
+  --home: #d7263d;
+  --server: #0f766e;
+  --trips: #b75a3a;
+  --trips-text: #93411f;
+  --house: #1f5fa8;
+  --house-ground: #e8eef6;
+  --games: #a16207;
+  --adventure: #7c3aed;
+  --study: #047857;
+
+  --serif: 'Source Serif 4', 'Iowan Old Style', Georgia, serif;
+  --sans: 'Inter', system-ui, sans-serif;
+  --mono: ui-monospace, SFMono-Regular, Menlo, monospace;
+  --room: var(--home);
+  --room-text: var(--home);
+  color-scheme: light dark;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --paper: #0b0d0d;
+    --surface: #121615;
+    --sunken: #0f1211;
+    --ink: #eef1f0;
+    --ink-2: #c4cac7;
+    --muted: #8a928f;
+    --rule: #232827;
+    --rule-strong: #3a413f;
+    --home: #fb4b57;
+    --server: #5eead4;
+    --trips: #d9764f;
+    --trips-text: #e8926a;
+    --house: #6fe3ff;
+    --house-ground: #060c1b;
+    --games: #f59e0b;
+    --adventure: #a78bfa;
+    --study: #34d399;
+  }
+}
+
+:root[data-theme="dark"] {
+  --paper: #0b0d0d;
+  --surface: #121615;
+  --sunken: #0f1211;
+  --ink: #eef1f0;
+  --ink-2: #c4cac7;
+  --muted: #8a928f;
+  --rule: #232827;
+  --rule-strong: #3a413f;
+  --home: #fb4b57;
+  --server: #5eead4;
+  --trips: #d9764f;
+  --trips-text: #e8926a;
+  --house: #6fe3ff;
+  --house-ground: #060c1b;
+  --games: #f59e0b;
+  --adventure: #a78bfa;
+  --study: #34d399;
+  color-scheme: dark;
+}
+
+/* One accent per room: --room for fills and dots, --room-text for text, the .ee and focus. */
+[data-room="home"] { --room: var(--home); --room-text: var(--home); }
+[data-room="server"] { --room: var(--server); --room-text: var(--server); }
+[data-room="trips"] { --room: var(--trips); --room-text: var(--trips-text); }
+[data-room="house"] { --room: var(--house); --room-text: var(--house); }
+[data-room="games"] { --room: var(--games); --room-text: var(--games); }
+
+/* The family header: opaque paper, one rule, no shadow; the room shows only in the .ee. */
+.site-header,
+.language-switcher {
+  --khe-header-font: var(--sans);
+  --khe-header-title-font: var(--serif);
+  --khe-header-max-width: 1080px;
+  --khe-header-bg: var(--paper);
+  --khe-header-blur: 0px;
+  --khe-header-border: var(--rule);
+  --khe-header-text: var(--ink);
+  --khe-header-text-muted: var(--muted);
+  --khe-header-focus: var(--room-text);
+
+  --khe-header-brand-radius: 8px;
+  --khe-header-brand-border: var(--rule-strong);
+  --khe-header-brand-border-hover: var(--muted);
+  --khe-header-brand-bg: var(--paper);
+  --khe-header-brand-shadow: none;
+  --khe-header-suffix: var(--room-text);
+
+  --khe-header-switcher-radius: 999px;
+  --khe-header-switcher-border: var(--rule);
+  --khe-header-switcher-bg: var(--surface);
+  --khe-header-button-radius: 999px;
+  --khe-header-button-pressed-text: var(--ink);
+  --khe-header-button-pressed-bg: var(--paper);
+  --khe-header-button-pressed-border: var(--rule-strong);
 }

@@ -1,0 +1,260 @@
+---
+version: alpha
+name: KHE family
+description: One family across the KHE sites and apps; shared chrome on one ground, one accent per room.
+colors:
+  paper: "#f6f5f1"
+  surface: "#ffffff"
+  sunken: "#eeece6"
+  ink: "#17191a"
+  ink-2: "#3d4241"
+  muted: "#6b716f"
+  rule: "#dedbd3"
+  rule-strong: "#bdb9af"
+  home: "#d7263d"
+  server: "#0f766e"
+  trips: "#b75a3a"
+  trips-text: "#93411f"
+  house: "#1f5fa8"
+  house-ground: "#e8eef6"
+  games: "#a16207"
+  adventure: "#7c3aed"
+  study: "#047857"
+  primary: "#17191a"
+typography:
+  display:
+    fontFamily: Source Serif 4
+    fontSize: clamp(2.6rem, 6vw, 4rem)
+    fontWeight: 600
+    lineHeight: 1.02
+  title:
+    fontFamily: Source Serif 4
+    fontSize: 34px
+    fontWeight: 600
+    lineHeight: 1.15
+  heading:
+    fontFamily: Source Serif 4
+    fontSize: 22px
+    fontWeight: 600
+    lineHeight: 1.25
+  context:
+    fontFamily: Source Serif 4
+    fontSize: 17px
+    fontWeight: 600
+  lead:
+    fontFamily: Inter
+    fontSize: 19px
+    lineHeight: 1.5
+  body:
+    fontFamily: Inter
+    fontSize: 16px
+    lineHeight: 1.6
+  small:
+    fontFamily: Inter
+    fontSize: 14px
+    lineHeight: 1.5
+  control:
+    fontFamily: Inter
+    fontSize: 12px
+    fontWeight: 600
+  label:
+    fontFamily: ui-monospace
+    fontSize: 11px
+    fontWeight: 500
+    letterSpacing: 0.12em
+rounded:
+  focus: 4px
+  control: 8px
+  picture: 12px
+  full: 999px
+spacing:
+  content: 1080px
+  gutter: max(16px, env(safe-area-inset-*))
+components:
+  mark:
+    backgroundColor: "{colors.paper}"
+    textColor: "{colors.ink}"
+    rounded: "{rounded.control}"
+  language-switcher:
+    backgroundColor: "{colors.surface}"
+    rounded: "{rounded.full}"
+  button-primary:
+    backgroundColor: "{colors.ink}"
+    textColor: "{colors.paper}"
+    rounded: "{rounded.control}"
+---
+
+# KHE family
+
+## Overview
+
+The KHE sites and apps are one family of rooms
+([estate ADR-015](https://github.com/khelias/khe-architecture/blob/main/decisions/015-family-design-layer.md)).
+Every room shares one ground, one ink and one type in its chrome (the
+header, the mark, the language switcher, the page ground and the type of the
+page chrome), and has one accent of its own, which the chrome shows in exactly
+one place: the `.ee` of the mark. Room content that is an application (a
+game, the Home Assistant dashboard, the trip atlas) keeps its own visual
+language and ground. The ground and ink are the architecture page's
+editorial pair, promoted to the family.
+
+This file is the one source of the family values. Other repos keep only their
+own room in their design docs and cite this one. The tokens live in
+`src/shared/site-header.css`; `scripts/check.mjs` fails when the frontmatter
+differs from its light `:root` block, or when the system-dark block differs
+from the `:root[data-theme="dark"]` block.
+
+## Rooms
+
+| Room | Where | Accent | Text accent |
+|---|---|---|---|
+| Home | khe.ee landing, its privacy page | `home` | `home` |
+| Server | khe.ee/architecture and the ADR pages | `server` | `server` |
+| Trips | khe.ee/trips, khe.ee/r/..., trips.khe.ee | `trips` | `trips-text` |
+| House | khe.ee/ha | `house` | `house` |
+| Games | the games.khe.ee hub and its privacy page | `games` | `games` |
+
+AI Seiklus (`adventure`) and Tarkade Mängud (`study`) live inside the Games
+room: their colours mark their rows on the hub and the `.ee` of their own
+headers. `study` is proposed; khe-study has no single accent yet.
+
+`data-room` on `<html>` maps the room to two properties: `--room` for fills
+and dots, `--room-text` for text, the `.ee` and the focus ring. Trips is the
+one room whose two differ, because `trips` is 4.2:1 on light `paper`.
+
+## Colors
+
+The frontmatter holds the light theme. Dark values live only in the CSS:
+
+| Token | Light | Dark | Use |
+|---|---|---|---|
+| paper | #f6f5f1 | #0b0d0d | page ground, header ground (opaque) |
+| surface | #ffffff | #121615 | switcher track, inputs |
+| sunken | #eeece6 | #0f1211 | picture wells, thumbnails, pressed row |
+| ink | #17191a | #eef1f0 | names, titles, the KHE of the mark |
+| ink-2 | #3d4241 | #c4cac7 | running text |
+| muted | #6b716f | #8a928f | labels, inactive language, on paper only |
+| rule | #dedbd3 | #232827 | hairlines |
+| rule-strong | #bdb9af | #3a413f | the mark's box, section rules |
+| home | #d7263d | #fb4b57 | Home accent and text |
+| server | #0f766e | #5eead4 | Server accent and text |
+| trips | #b75a3a | #d9764f | Trips fills and marks |
+| trips-text | #93411f | #e8926a | Trips text, its `.ee` |
+| house | #1f5fa8 | #6fe3ff | House accent and text |
+| house-ground | #e8eef6 | #060c1b | the house drawing's ground only |
+| games | #a16207 | #f59e0b | Games hub accent and text |
+| adventure | #7c3aed | #a78bfa | AI Seiklus (dark only in the game) |
+| study | #047857 | #34d399 | Tarkade Mängud |
+
+`primary` in the frontmatter is `ink`: the family's one filled button is ink
+on paper, so no tool invents a primary hue.
+
+## Themes
+
+Every room has a light and a dark theme following `prefers-color-scheme`:
+light on `:root`, dark under `@media (prefers-color-scheme: dark)` on
+`:root:not([data-theme="light"])` and again on `:root[data-theme="dark"]`. A
+room may commit its content to one theme when the subject asks for it, and
+its header then takes that theme through `data-theme` on `<html>`: `/ha/` is
+dark until the 3D house view has a light theme, AI Seiklus is dark by design.
+A room may offer its own override control (trips' header toggle). Each page
+carries two `theme-color` metas, `paper` light and dark.
+
+## The `.ee` rule
+
+The room's accent appears in the shared chrome only in the `.ee` of the mark,
+in `--room-text`. Nothing else in the header is coloured: the kicker, the
+title and the switcher are ink and muted on paper.
+
+## Application content and state colour
+
+Content that is an application keeps its own visual language and ground; the
+family covers the shell around it. State colour is meaning, not an accent:
+on and off, ok, warning, fault, a map state, right or wrong. A room may use
+several, each naming a state, at 3:1 for marks and 4.5:1 for text in both
+themes. Shared state tokens are a follow-up, once two rooms need the same ones.
+
+## Typography
+
+Source Serif 4 600 for what you read (display, titles, headings, the header
+title), Inter for what you look up (lead, body, controls), the system mono
+stack for labels and facts.
+
+- `display` serif 600, clamp(2.6rem, 6vw, 4rem) / 1.02: the landing name,
+  the games hub title
+- `title` serif 34px, `heading` serif 22px
+- `context` serif 17px: the header title's family size (see the mark)
+- `lead` Inter 19px, `body` 16px / 1.6, `small` 14px
+- `control` Inter 600 12px
+- `label` mono 500 11px, uppercase, 0.12em tracking
+
+The Source Serif 4 files (weight 600, latin and latin-ext) ship in khe-sites
+only. The apps use the family serif stack, `'Source Serif 4', 'Iowan Old
+Style', Georgia, serif`, so an app without the files (trips) falls back to
+Iowan Old Style.
+
+## Layout
+
+Content is one column, `width: min(1080px, 100%)`, with a gutter of
+`max(16px, env(safe-area-inset-*))`; the header's inner row has the same
+width. The header height is `@khelias/ui`'s own (3.65rem + 1px, 3.35rem + 1px
+at 520px and below). No page scrolls sideways at 320px.
+
+## Shapes
+
+- 4px: the focus ring's corner
+- 8px: the mark, controls and anything pressable
+- 12px: pictures (the landing thumbnails)
+- 999px: the language switcher and its buttons
+
+## Elevation & Depth
+
+Flat. The header is opaque `paper` over one `rule`, with no blur and no
+shadow, so its contrast never depends on what scrolls under it. Sections are
+separated by space and a `rule` or `rule-strong` hairline; nothing is a card.
+
+## Motion and touch
+
+Hover rules sit inside `@media (hover: hover) and (pointer: fine)`; the press
+state is `:active`. A row's arrow moves 2px on hover and stays put under
+`prefers-reduced-motion: reduce`. Every hit area is at least 44px. The
+package's own press scale has no reduced-motion rule yet (a khe-ui follow-up).
+
+## Focus
+
+A 2px outline in `--room-text`, offset 2 to 3px, 4px corner; the header's
+focus colour is the same property.
+
+## The mark
+
+`KHE` in Inter 600, ink, with `.ee` at 0.7em in `--room-text`, in a
+`rule-strong` box with an 8px corner on `paper`, no shadow. The favicon is the
+same mark with the Home `.ee`. In the header the mark, kicker, title and
+buttons keep `@khelias/ui`'s sizes; the family `context`, `control` and
+`label` sizes apply to page content until a khe-ui release exposes them.
+
+## Header values in the apps
+
+The values reach every app as `--khe-header-*` properties set on
+`.site-header` (and a standalone `.language-switcher`), never on `:root`,
+where they would not reach the header:
+
+- `bg` paper, `blur` 0px, `border` rule, `text` ink, `text-muted` muted
+- `title-font` the serif stack, `focus` the room's text accent
+- `brand-border` rule-strong, `brand-bg` paper, `brand-shadow` none,
+  `suffix` the room's text accent
+- `switcher-radius` and `button-radius` 999px, `switcher-border` rule,
+  `switcher-bg` surface, the pressed button ink on paper with a rule-strong
+  edge
+
+## Do's and Don'ts
+
+- Do set a room's accent once, through `data-room`, and let `--room` and
+  `--room-text` carry it.
+- Do add a family colour here, in both themes in `site-header.css`, and in
+  every app that sets it.
+- Do measure text against the header's computed background.
+- Don't colour anything in the chrome but the `.ee`.
+- Don't use a state colour as a room accent, or an accent to mean a state.
+- Don't put a blur, a shadow or a translucent ground on the header.
+- Don't restyle the package's `.site-header__*` parts; set its properties.

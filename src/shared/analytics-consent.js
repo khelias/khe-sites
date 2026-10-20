@@ -96,27 +96,26 @@
         z-index: 10000;
         width: min(20.5rem, calc(100vw - 1.5rem));
         padding: 0.7rem;
-        border: 1px solid rgba(255,255,255,0.12);
+        border: 1px solid var(--rule-strong);
         border-radius: 8px;
-        background: rgba(12,13,15,0.94);
-        color: #fafafa;
-        box-shadow: 0 10px 34px rgba(0,0,0,0.3);
+        background: var(--surface);
+        color: var(--ink);
         contain: content;
-        font: 400 0.78rem/1.35 Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        font: 400 0.78rem/1.35 var(--sans);
       }
       .khe-analytics-consent strong {
         display: block;
         margin-bottom: 0.24rem;
-        color: #fafafa;
+        color: var(--ink);
         font-size: 0.9rem;
-        font-weight: 650;
+        font-weight: 600;
       }
       .khe-analytics-consent p {
         margin: 0 0 0.56rem;
-        color: #d1d5db;
+        color: var(--ink-2);
       }
       .khe-analytics-consent a {
-        color: #f3f4f6;
+        color: var(--ink);
         white-space: nowrap;
       }
       .khe-analytics-actions {
@@ -126,13 +125,13 @@
       }
       .khe-analytics-actions button {
         min-height: 2.75rem;
-        border: 1px solid rgba(255,255,255,0.16);
+        border: 1px solid var(--rule-strong);
         border-radius: 8px;
         padding: 0 0.62rem;
-        background: rgba(255,255,255,0.05);
-        color: #fafafa;
+        background: var(--paper);
+        color: var(--ink);
         cursor: pointer;
-        font: 650 0.76rem/1 Inter, system-ui, sans-serif;
+        font: 600 0.76rem/1 var(--sans);
         touch-action: manipulation;
         user-select: none;
         -webkit-user-select: none;
@@ -142,9 +141,9 @@
         transform: scale(0.97);
       }
       .khe-analytics-actions button[data-consent-choice="granted"] {
-        border-color: #f8fafc;
-        background: #f8fafc;
-        color: #0c0d0f;
+        border-color: var(--ink);
+        background: var(--ink);
+        color: var(--paper);
       }
       .khe-analytics-actions button:disabled {
         cursor: default;
@@ -153,7 +152,7 @@
       .khe-analytics-status {
         min-height: 0;
         margin-top: 0.36rem;
-        color: #a1a1aa;
+        color: var(--muted);
         font-size: 0.72rem;
       }
       @media (max-width: 520px) {

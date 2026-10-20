@@ -9,10 +9,17 @@ Plain HTML, CSS and vanilla JS, built by Node 24 scripts. No framework, no
 bundler. One devDependency, `@khelias/ui` (the KHE site header), pinned
 exactly; run `npm ci` before building.
 
+The look is the KHE family layer
+([estate ADR-015](https://github.com/khelias/khe-architecture/blob/main/decisions/015-family-design-layer.md)):
+shared chrome on one ground in every room, one accent per room shown in the
+chrome only in the `.ee`, light and dark following the system setting.
+khe-sites owns the family [`DESIGN.md`](DESIGN.md), the one source of the
+family values; the apps copy them into their `--khe-header-*` values.
+
 ## Commands
 
-- `npm run check` - build, then static validation of the sources and the
-  built architecture pages
+- `npm run check` - build, then static validation of the sources, the
+  built pages and `DESIGN.md` against the tokens
 - `npm run build` - build `dist/landing` and `dist/games`
 
 ## Layout
@@ -128,7 +135,8 @@ estate's writer register in khe-meta in the same change.
   the demo stays Estonian and keeps `lang="et"`.
 - The built `/assets/site-header.css` is `@khelias/ui`'s header CSS from
   `node_modules` followed by `src/shared/site-header.css`, which holds only
-  khe-sites' fonts, colour tokens and the `--khe-header-*` values it sets;
+  khe-sites' fonts (Inter, Source Serif 4), the family tokens and the
+  `--khe-header-*` values it sets on `.site-header, .language-switcher`;
   no rule here restyles a `.site-header__*` part. Every page links it
   before `site.css`; `/ha/`, with Home Assistant's own styles, links only
   it. The package sets its defaults on `.site-header`, so a value on
@@ -185,9 +193,28 @@ estate's writer register in khe-meta in the same change.
   `createLocaleController` in `site-locale.js` adds a `touchstart` listener.
   Every page has `viewport-fit=cover`, so edge-hugging elements pad with
   `max(<gap>, env(safe-area-inset-*))`.
-- The architecture pages have their own light and dark palette (the `--a-*`
-  tokens in the Architecture section of `site.css`, following the system
-  setting); the rest of the site is dark only.
+- The family tokens (`--paper`, `--ink`, `--muted`, the room accents and the
+  rest in `DESIGN.md`) sit in `site-header.css` in three blocks: light on
+  `:root`, dark under `prefers-color-scheme` on
+  `:root:not([data-theme="light"])`, and again on `:root[data-theme="dark"]`.
+  Check fails when `DESIGN.md`'s frontmatter colours differ from the light
+  block or the two dark blocks differ. The pre-family tokens (`--bg`,
+  `--text*`, `--border*`, `--card-bg`, `--accent*`, `--display-font`) are
+  gone, and check fails when one comes back in a source file. The
+  architecture page's `--a-*` names alias the family tokens; only its
+  diagram tokens keep values of their own.
+- Every built page's `<html>` carries `data-room` (`home`, `server`,
+  `trips`, `house`, `games`; check), which sets `--room` (fills, dots) and
+  `--room-text` (text, the `.ee`, focus). A landing row or the server strip
+  sets its own `data-room` for its dot and arrow. `/ha/` gets
+  `data-room="house" data-theme="dark"` from `house3d-demo.mjs`: the house
+  view has no light theme yet, so its header stays dark (check).
+- The landing and games pages, and their privacy pages, keep their copy in an
+  inline `COPY`; check fails when a `data-i18n`, `data-i18n-html` or
+  `data-i18n-aria` key of the source page is missing from its `et` or `en`.
+- The favicon and share images draw their text as paths
+  (`logo.svg`, `og-image.svg`), so `rsvg-convert -w 1200 -h 630` renders the
+  PNGs without installed fonts.
 - The Cloudflare Web Analytics tokens in the HTML are public beacon tokens,
   not secrets. The beacon loads only after the visitor consents
   (`src/shared/analytics-consent.js`).

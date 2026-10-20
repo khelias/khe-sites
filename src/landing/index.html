@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-room="home">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
@@ -10,7 +10,8 @@
   <link rel="alternate" hreflang="et" href="https://khe.ee/?lang=et">
   <link rel="alternate" hreflang="x-default" href="https://khe.ee/">
   <link rel="icon" href="/logo.svg" type="image/svg+xml" sizes="any">
-  <meta name="theme-color" content="#070909">
+  <meta name="theme-color" content="#f6f5f1" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#0b0d0d" media="(prefers-color-scheme: dark)">
   <meta property="og:type" content="profile">
   <meta property="og:url" content="https://khe.ee/">
   <meta property="og:site_name" content="Kaido Henrik Elias">
@@ -24,7 +25,8 @@
   <meta name="twitter:description" content="Software architect in Estonia. Web applications, a home server, automation and games.">
   <meta name="twitter:image" content="https://khe.ee/og-image.png">
   <link rel="preload" href="/assets/fonts/inter-400.woff2" as="font" type="font/woff2" crossorigin>
-  <link rel="preload" href="/assets/fonts/inter-500.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/assets/fonts/inter-600.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/assets/fonts/source-serif-4-600-latin.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="/assets/site-header.css">
   <link rel="stylesheet" href="/assets/site.css">
   <script defer src="/assets/analytics-consent.js" data-analytics-token="58734ed4ae1e4b4e8a8f8f7d50ff74f2" data-analytics-privacy-url="/privacy?lang=en"></script>
@@ -75,57 +77,127 @@
   <button type="button" data-lang-option="en" aria-pressed="true">EN</button>
 </div>
 
-<main>
-  <section class="landing-intro" aria-labelledby="landing-title">
-    <div class="monogram brand-mark" aria-hidden="true">
-      <span>KHE</span><span class="brand-mark__suffix">.ee</span>
+<main class="landing">
+  <section class="landing-hero" aria-labelledby="landing-title">
+    <div>
+      <div class="monogram brand-mark" aria-hidden="true">
+        <span>KHE</span><span class="brand-mark__suffix">.ee</span>
+      </div>
+      <h1 class="hero-title" id="landing-title">Kaido Henrik Elias</h1>
+      <p class="hero-lead" data-i18n="tagline">Software architect by trade. Tinkerer by nature.</p>
+      <p class="landing-intro" data-i18n="intro">At work I design web applications and the systems behind them. At home I build the same things for my family: a travel journal, home automation and games.</p>
     </div>
-    <h1 id="landing-title">Kaido Henrik Elias</h1>
-    <p class="tagline" data-i18n="tagline">Software architect by trade. Tinkerer by nature.</p>
+
+    <aside class="landing-work" aria-labelledby="work-title">
+      <p class="label" data-i18n="workLabel">Work with me</p>
+      <h2 id="work-title" data-i18n="workTitle">A website, an app or an automation?</h2>
+      <p data-i18n="workBody">Let's talk about what you need.</p>
+      <a class="work-cta" href="mailto:kaidoelias@gmail.com?subject=KHE.ee%20project%20inquiry" data-link="contact"><span data-i18n="workCta">Write to me</span> <span aria-hidden="true">→</span></a>
+      <p class="work-links">
+        <a href="https://github.com/khelias">GitHub</a>
+        <a href="https://www.linkedin.com/in/kaido-henrik-elias/">LinkedIn</a>
+      </p>
+    </aside>
   </section>
 
-  <section class="portfolio-panel" aria-label="Projects" data-i18n-aria="projectsLabel">
-    <div class="project-list">
-      <a class="project-item project-games" href="https://games.khe.ee/?lang=en" data-link="games">
-        <div class="project-copy">
-          <h3 data-i18n="gamesTitle">Games</h3>
-          <p data-i18n="gamesDesc">Learning games for kids and an AI-narrated party game for adults.</p>
-        </div>
-        <span class="project-arrow" aria-hidden="true">→</span>
-      </a>
+  <section class="landing-projects" aria-label="Projects" data-i18n-aria="projectsLabel">
+    <a class="project-row" data-room="games" href="https://games.khe.ee/?lang=en" data-link="games">
+      <span class="project-thumb" aria-hidden="true">
+        <svg viewBox="0 0 160 120" focusable="false">
+          <rect class="t-ground" width="160" height="120"/>
+          <rect class="t-paper" x="30" y="28" width="46" height="64" rx="6" transform="rotate(-8 53 60)"/>
+          <rect class="t-line" x="30" y="28" width="46" height="64" rx="6" transform="rotate(-8 53 60)"/>
+          <circle class="t-adventure" cx="53" cy="60" r="7"/>
+          <rect class="t-paper" x="84" y="28" width="46" height="64" rx="6" transform="rotate(7 107 60)"/>
+          <rect class="t-line" x="84" y="28" width="46" height="64" rx="6" transform="rotate(7 107 60)"/>
+          <circle class="t-study" cx="107" cy="60" r="7"/>
+          <circle class="t-room" cx="80" cy="102" r="4"/>
+        </svg>
+      </span>
+      <span class="project-copy">
+        <span class="project-kicker label room-dot" data-i18n="gamesKicker">2 games</span>
+        <span class="project-title" data-i18n="gamesTitle">Games</span>
+        <span class="project-desc" data-i18n="gamesDesc">Learning games for kids and an AI-narrated party game for adults.</span>
+      </span>
+      <span class="row-arrow" aria-hidden="true">→</span>
+    </a>
 
-      <a class="project-item project-house3d" href="/ha/" data-link="house3d">
-        <div class="project-copy">
-          <h3 data-i18n="house3dTitle">Home automation</h3>
-          <p data-i18n="house3dDesc">Running the house with Home Assistant. Try the demo.</p>
-        </div>
-        <span class="project-arrow" aria-hidden="true">→</span>
-      </a>
+    <a class="project-row" data-room="house" href="/ha/" data-link="house3d">
+      <span class="project-thumb" aria-hidden="true">
+        <svg viewBox="0 0 160 120" focusable="false">
+          <rect class="t-house-ground" width="160" height="120"/>
+          <path class="t-ink" d="M36 56 80 26l44 30v40H36z"/>
+          <path class="t-line" d="M80 56v40M36 72h44M100 72h24"/>
+          <rect class="t-room" x="48" y="80" width="18" height="10" rx="2"/>
+          <circle class="t-room" cx="108" cy="62" r="4"/>
+        </svg>
+      </span>
+      <span class="project-copy">
+        <span class="project-kicker label room-dot" data-i18n="house3dKicker">Demo · Home Assistant</span>
+        <span class="project-title" data-i18n="house3dTitle">Home automation</span>
+        <span class="project-desc" data-i18n="house3dDesc">Running the house with Home Assistant. Try the demo.</span>
+      </span>
+      <span class="row-arrow" aria-hidden="true">→</span>
+    </a>
 
-      <a class="project-item project-trips" href="/trips/?lang=en" data-link="trips">
-        <div class="project-copy">
-          <h3 data-i18n="tripsTitle">Travel journal</h3>
-          <p data-i18n="tripsDesc">Planning trips and remembering them. Try the demo.</p>
-        </div>
-        <span class="project-arrow" aria-hidden="true">→</span>
-      </a>
+    <a class="project-row" data-room="trips" href="/trips/?lang=en" data-link="trips">
+      <span class="project-thumb" aria-hidden="true">
+        <svg viewBox="0 0 160 120" focusable="false">
+          <rect class="t-ground" width="160" height="120"/>
+          <path class="t-line" d="M14 88c20-6 30 6 50-2s24-30 44-34 26 8 40 2"/>
+          <path class="t-room-line t-dash" d="M34 84c16-24 40-10 54-30s30-18 44-24"/>
+          <circle class="t-room" cx="34" cy="84" r="5"/>
+          <circle class="t-room" cx="88" cy="54" r="5"/>
+          <circle class="t-room" cx="132" cy="30" r="5"/>
+        </svg>
+      </span>
+      <span class="project-copy">
+        <span class="project-kicker label room-dot" data-i18n="tripsKicker">Demo</span>
+        <span class="project-title" data-i18n="tripsTitle">Travel journal</span>
+        <span class="project-desc" data-i18n="tripsDesc">Planning trips and remembering them. Try the demo.</span>
+      </span>
+      <span class="row-arrow" aria-hidden="true">→</span>
+    </a>
 
-      <a class="project-item project-architecture" href="/architecture/?lang=en" data-link="architecture">
-        <div class="project-copy">
-          <h3 data-i18n="architectureTitle">The home server</h3>
-          <p data-i18n="architectureDesc">All of this runs on one server in my home. How, and why.</p>
-        </div>
-        <span class="project-arrow" aria-hidden="true">→</span>
-      </a>
+    <a class="project-row" data-room="server" href="/architecture/?lang=en" data-link="architecture">
+      <span class="project-thumb" aria-hidden="true">
+        <svg viewBox="0 0 160 120" focusable="false">
+          <rect class="t-ground" width="160" height="120"/>
+          <rect class="t-paper" x="44" y="24" width="72" height="72" rx="4"/>
+          <rect class="t-line" x="44" y="24" width="72" height="72" rx="4"/>
+          <path class="t-line" d="M44 48h72M44 72h72"/>
+          <circle class="t-room" cx="104" cy="36" r="3.5"/>
+          <circle class="t-room" cx="104" cy="60" r="3.5"/>
+          <circle class="t-room" cx="104" cy="84" r="3.5"/>
+          <path class="t-ink" d="M56 36h28M56 60h20M56 84h24"/>
+        </svg>
+      </span>
+      <span class="project-copy">
+        <span class="project-kicker label room-dot" data-i18n="architectureKicker">Architecture and decisions</span>
+        <span class="project-title" data-i18n="architectureTitle">The home server</span>
+        <span class="project-desc" data-i18n="architectureDesc">All of this runs on one server in my home. How, and why.</span>
+      </span>
+      <span class="row-arrow" aria-hidden="true">→</span>
+    </a>
+  </section>
 
-      <a class="project-item project-contact" href="mailto:kaidoelias@gmail.com?subject=KHE.ee%20project%20inquiry" data-link="contact">
-        <div class="project-copy">
-          <h3 data-i18n="contactTitle">Work with me</h3>
-          <p data-i18n="contactDesc">A website, an app or an automation? Write to me.</p>
-        </div>
-        <span class="project-arrow" aria-hidden="true">→</span>
-      </a>
-    </div>
+  <section class="server-strip" data-room="server" aria-labelledby="server-strip-title">
+    <h2 class="label" id="server-strip-title" data-i18n="serverStripLabel">The home server in brief</h2>
+    <dl>
+      <div>
+        <dt>0</dt>
+        <dd><strong data-i18n="factPorts">open inbound ports</strong><span data-i18n="factPortsNote">An outbound tunnel only.</span></dd>
+      </div>
+      <div>
+        <dt>sha256</dt>
+        <dd><strong data-i18n="factDigest">every image pinned by digest</strong><span data-i18n="factDigestNote">Scanned, attested, named in git.</span></dd>
+      </div>
+      <div>
+        <dt data-i18n="factRestoreValue">weekly</dt>
+        <dd><strong data-i18n="factRestore">restore from offsite, tested</strong><span data-i18n="factRestoreNote">One dump restored each week.</span></dd>
+      </div>
+    </dl>
+    <a href="/architecture/?lang=en" data-link="architecture"><span data-i18n="serverStripLink">Architecture</span> <span aria-hidden="true">→</span></a>
   </section>
 </main>
 
@@ -142,16 +214,32 @@
       languageLabel: 'Keel',
       projectsLabel: 'Projektid',
       tagline: 'Ametilt tarkvaraarhitekt. Loomult nokitseja.',
-      architectureTitle: 'Koduserver',
-      architectureDesc: 'Kõik see töötab ühel serveril minu kodus. Kuidas ja miks.',
-      house3dTitle: 'Koduautomaatika',
-      house3dDesc: 'Maja juhtimine Home Assistantiga. Proovi demos järele.',
-      tripsTitle: 'Reisipäevik',
-      tripsDesc: 'Reiside planeerimine ja meenutamine. Proovi demos järele.',
+      intro: 'Töö juures kavandan veebirakendusi ja nende taga olevaid süsteeme. Kodus ehitan samu asju oma perele: reisipäeviku, koduautomaatika ja mängud.',
+      workLabel: 'Koostöö',
+      workTitle: 'Veebileht, rakendus või automatiseerimine?',
+      workBody: 'Räägime, mida on vaja.',
+      workCta: 'Kirjuta mulle',
+      gamesKicker: '2 mängu',
       gamesTitle: 'Mängud',
       gamesDesc: 'Õppemängud lastele ja AI-seiklus täiskasvanutele.',
-      contactTitle: 'Koostöö',
-      contactDesc: 'Veebileht, rakendus või automatiseerimine? Kirjuta mulle.',
+      house3dKicker: 'Demo · Home Assistant',
+      house3dTitle: 'Koduautomaatika',
+      house3dDesc: 'Maja juhtimine Home Assistantiga. Proovi demos järele.',
+      tripsKicker: 'Demo',
+      tripsTitle: 'Reisipäevik',
+      tripsDesc: 'Reiside planeerimine ja meenutamine. Proovi demos järele.',
+      architectureKicker: 'Arhitektuur ja otsused',
+      architectureTitle: 'Koduserver',
+      architectureDesc: 'Kõik see töötab ühel serveril minu kodus. Kuidas ja miks.',
+      serverStripLabel: 'Koduserver lühidalt',
+      serverStripLink: 'Arhitektuur',
+      factPorts: 'avatud sissetulevat porti',
+      factPortsNote: 'Ainult väljuv tunnel.',
+      factDigest: 'iga konteinerikujutis on kinnitatud räsi järgi',
+      factDigestNote: 'Skannitud, atesteeritud ja gitis kirjas.',
+      factRestoreValue: 'iga nädal',
+      factRestore: 'proovitaaste kodust väljas hoitud koopiast',
+      factRestoreNote: 'Igal nädalal taastatakse üks tõmmis.',
     },
     en: {
       title: 'Kaido Henrik Elias | Software Architect',
@@ -159,16 +247,32 @@
       languageLabel: 'Language',
       projectsLabel: 'Projects',
       tagline: 'Software architect by trade. Tinkerer by nature.',
-      architectureTitle: 'The home server',
-      architectureDesc: 'All of this runs on one server in my home. How, and why.',
-      house3dTitle: 'Home automation',
-      house3dDesc: 'Running the house with Home Assistant. Try the demo.',
-      tripsTitle: 'Travel journal',
-      tripsDesc: 'Planning trips and remembering them. Try the demo.',
+      intro: 'At work I design web applications and the systems behind them. At home I build the same things for my family: a travel journal, home automation and games.',
+      workLabel: 'Work with me',
+      workTitle: 'A website, an app or an automation?',
+      workBody: "Let's talk about what you need.",
+      workCta: 'Write to me',
+      gamesKicker: '2 games',
       gamesTitle: 'Games',
       gamesDesc: 'Learning games for kids and an AI-narrated party game for adults.',
-      contactTitle: 'Work with me',
-      contactDesc: 'A website, an app or an automation? Write to me.',
+      house3dKicker: 'Demo · Home Assistant',
+      house3dTitle: 'Home automation',
+      house3dDesc: 'Running the house with Home Assistant. Try the demo.',
+      tripsKicker: 'Demo',
+      tripsTitle: 'Travel journal',
+      tripsDesc: 'Planning trips and remembering them. Try the demo.',
+      architectureKicker: 'Architecture and decisions',
+      architectureTitle: 'The home server',
+      architectureDesc: 'All of this runs on one server in my home. How, and why.',
+      serverStripLabel: 'The home server in brief',
+      serverStripLink: 'Architecture',
+      factPorts: 'open inbound ports',
+      factPortsNote: 'An outbound tunnel only.',
+      factDigest: 'every image pinned by digest',
+      factDigestNote: 'Scanned, attested, named in git.',
+      factRestoreValue: 'weekly',
+      factRestore: 'restore from offsite, tested',
+      factRestoreNote: 'One dump restored each week.',
     },
   };
 

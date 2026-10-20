@@ -21,11 +21,16 @@ export async function buildHouse3dDemo(outputDir) {
 
   const page = join(outputDir, 'index.html');
   const html = await readFile(page, 'utf8');
-  if (!html.includes('</head>') || !html.includes('<body>') || !html.includes('var(--host-h)')) {
-    throw new SourceError(`${page} has no </head>, <body> or --host-h offset to put the site header in. Check HOME_ASSISTANT_ROOT.`);
+  if (!html.includes('</head>') || !html.includes('<body>') || !html.includes('var(--host-h)') || !/<html\b/.test(html)) {
+    throw new SourceError(`${page} has no <html>, </head>, <body> or --host-h offset to put the site header in. Check HOME_ASSISTANT_ROOT.`);
+  }
+  if (/<html\b[^>]*\sdata-(room|theme)=/.test(html)) {
+    throw new SourceError(`${page} already sets data-room or data-theme on <html>, which the build sets. Check HOME_ASSISTANT_ROOT.`);
   }
   const markup = await readFile(header, 'utf8');
+  // The house view has no light theme yet, so the page and its header stay dark.
   await writeFile(page, html
+    .replace(/<html\b/, '<html data-room="house" data-theme="dark"')
     .replace('</head>', () => '<link rel="stylesheet" href="/assets/site-header.css">\n</head>')
     .replace('<body>', () => `<body>\n${markup}`));
 }
