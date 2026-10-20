@@ -3,14 +3,14 @@ version: alpha
 name: KHE family
 description: One family across the KHE sites and apps; shared chrome on one ground, one accent per room.
 colors:
-  paper: "#f6f5f1"
+  paper: "#fafafa"
   surface: "#ffffff"
-  sunken: "#eeece6"
-  ink: "#17191a"
-  ink-2: "#3d4241"
-  muted: "#6b716f"
-  rule: "#dedbd3"
-  rule-strong: "#bdb9af"
+  sunken: "#eff1f1"
+  ink: "#121415"
+  ink-2: "#363b3d"
+  muted: "#5f6567"
+  rule: "#e3e5e5"
+  rule-strong: "#c3c7c7"
   home: "#d7263d"
   server: "#0f766e"
   trips: "#b75a3a"
@@ -20,7 +20,7 @@ colors:
   games: "#a16207"
   adventure: "#7c3aed"
   study: "#047857"
-  primary: "#17191a"
+  primary: "#121415"
 typography:
   display:
     fontFamily: Source Serif 4
@@ -128,14 +128,14 @@ The frontmatter holds the light theme. Dark values live only in the CSS:
 
 | Token | Light | Dark | Use |
 |---|---|---|---|
-| paper | #f6f5f1 | #0b0d0d | page ground, header ground (opaque) |
+| paper | #fafafa | #0b0d0d | page ground, header ground (opaque) |
 | surface | #ffffff | #121615 | switcher track, inputs |
-| sunken | #eeece6 | #0f1211 | picture wells, thumbnails, pressed row |
-| ink | #17191a | #eef1f0 | names, titles, the KHE of the mark |
-| ink-2 | #3d4241 | #c4cac7 | running text |
-| muted | #6b716f | #8a928f | labels, inactive language, on paper only |
-| rule | #dedbd3 | #232827 | hairlines |
-| rule-strong | #bdb9af | #3a413f | the mark's box, section rules |
+| sunken | #eff1f1 | #0f1211 | picture wells, dark thumbnails, pressed row |
+| ink | #121415 | #eef1f0 | names, titles, the KHE of the mark |
+| ink-2 | #363b3d | #c4cac7 | running text |
+| muted | #5f6567 | #8a928f | labels, inactive language, on paper only |
+| rule | #e3e5e5 | #232827 | hairlines |
+| rule-strong | #c3c7c7 | #3a413f | the mark's box, section rules |
 | home | #d7263d | #fb4b57 | Home accent and text |
 | server | #0f766e | #5eead4 | Server accent and text |
 | trips | #b75a3a | #d9764f | Trips fills and marks |
@@ -204,7 +204,7 @@ at 520px and below). No page scrolls sideways at 320px.
 
 - 4px: the focus ring's corner
 - 8px: the mark, controls and anything pressable
-- 12px: pictures (the landing thumbnails)
+- 12px: pictures (the landing and games thumbnails; light ones sit on a 12% tint of their room)
 - 999px: the language switcher and its buttons
 
 ## Elevation & Depth

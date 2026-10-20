@@ -81,7 +81,7 @@ a { color: var(--ink-2); }
   line-height: 1.5;
 }
 
-.landing-hero .hero-title {
+:is(.landing-hero, .games-hero) .hero-title {
   margin-bottom: 1rem;
 }
 
@@ -89,7 +89,7 @@ a { color: var(--ink-2); }
   margin-bottom: 0.75rem;
 }
 
-.landing-hero .hero-lead + .hero-lead {
+:is(.landing-hero, .games-hero) .hero-lead + .hero-lead {
   margin-top: 0.75rem;
 }
 
@@ -176,7 +176,29 @@ a { color: var(--ink-2); }
   aspect-ratio: 4 / 3;
   overflow: hidden;
   border-radius: 12px;
-  background: var(--sunken);
+  background: var(--thumb-ground);
+  /* On light paper a sunken well reads as grey, so there a thumbnail sits on a 12% tint of
+     its room with darker lines; dark keeps the sunken well. */
+  --thumb-ground: color-mix(in srgb, var(--room) 12%, var(--surface));
+  --thumb-line: color-mix(in srgb, var(--ink) 45%, transparent);
+  --thumb-ink: var(--ink);
+  --thumb-stroke: 2.5;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) .project-thumb {
+    --thumb-ground: var(--sunken);
+    --thumb-line: var(--rule-strong);
+    --thumb-ink: var(--ink-2);
+    --thumb-stroke: 2;
+  }
+}
+
+:root[data-theme="dark"] .project-thumb {
+  --thumb-ground: var(--sunken);
+  --thumb-line: var(--rule-strong);
+  --thumb-ink: var(--ink-2);
+  --thumb-stroke: 2;
 }
 
 .project-thumb svg {
@@ -241,13 +263,13 @@ a { color: var(--ink-2); }
 }
 
 /* Thumbnail drawings: token classes, so they follow the theme. */
-.t-ground { fill: var(--sunken); }
+.t-ground { fill: var(--thumb-ground); }
 .t-paper { fill: var(--paper); }
 .t-house-ground { fill: var(--house-ground); }
-.t-line { fill: none; stroke: var(--rule-strong); stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
-.t-ink { fill: none; stroke: var(--ink-2); stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.t-line { fill: none; stroke: var(--thumb-line); stroke-width: var(--thumb-stroke); stroke-linecap: round; stroke-linejoin: round; }
+.t-ink { fill: none; stroke: var(--thumb-ink); stroke-width: var(--thumb-stroke); stroke-linecap: round; stroke-linejoin: round; }
 .t-room { fill: var(--room); }
-.t-room-line { fill: none; stroke: var(--room); stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round; }
+.t-room-line { fill: none; stroke: var(--room); stroke-width: calc(var(--thumb-stroke) + 0.5); stroke-linecap: round; stroke-linejoin: round; }
 .t-dash { stroke-dasharray: 4 5; }
 .t-adventure { fill: var(--adventure); }
 .t-study { fill: var(--study); }

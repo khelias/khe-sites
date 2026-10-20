@@ -52,14 +52,14 @@
    to one theme sets data-theme on <html>. DESIGN.md holds the light values and check.mjs
    keeps the three blocks in step. */
 :root {
-  --paper: #f6f5f1;
+  --paper: #fafafa;
   --surface: #ffffff;
-  --sunken: #eeece6;
-  --ink: #17191a;
-  --ink-2: #3d4241;
-  --muted: #6b716f;
-  --rule: #dedbd3;
-  --rule-strong: #bdb9af;
+  --sunken: #eff1f1;
+  --ink: #121415;
+  --ink-2: #363b3d;
+  --muted: #5f6567;
+  --rule: #e3e5e5;
+  --rule-strong: #c3c7c7;
   --home: #d7263d;
   --server: #0f766e;
   --trips: #b75a3a;

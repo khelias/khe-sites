@@ -110,6 +110,14 @@ await runReportingSourceErrors(async () => {
   if (!sameTokens(systemDark, forcedDark) || Object.keys(light).sort().join() !== Object.keys(forcedDark).sort().join()) {
     throw new Error('site-header.css: the system-dark block and :root[data-theme="dark"] differ, or name other tokens than the light :root');
   }
+  for (const relativePath of htmlFiles) {
+    const content = await readFile(join(root, relativePath), 'utf8');
+    for (const [scheme, paper] of [['light', light.paper], ['dark', forcedDark.paper]]) {
+      if (!content.includes(`<meta name="theme-color" content="${paper}" media="(prefers-color-scheme: ${scheme})">`)) {
+        throw new Error(`${relativePath}: the ${scheme} theme-color is not the ${scheme} paper token ${paper}`);
+      }
+    }
+  }
 
   // Every data-i18n key of a page with an inline COPY is in both of its languages. The source
   // page, not the built one: the header and footer keys live in SITE_HEADER_COPY and the footer.
