@@ -84,6 +84,10 @@ not a static deploy: the same nginx proxies `/adventure/` to the
 `adventure-web` and `adventure-proxy` containers, pulled from GHCR
 (khe-homelab `services/apps/games/`).
 
+What this repo publishes on `khe.ee` and `games.khe.ee` is also copied
+hourly to the Cloudflare edge fallback ([estate ADR-016](https://github.com/khelias/khe-architecture/blob/main/decisions/016-static-fallback-at-the-edge.md)), which serves it
+when the homelab is down, so it must be fit for a third-party host.
+
 Because deploy runs on that runner, a fork PR's run is approved only after
 reading its `.github/workflows/` diff
 ([estate ADR-006](https://github.com/khelias/khe-architecture/blob/main/decisions/006-branch-protection.md)).
