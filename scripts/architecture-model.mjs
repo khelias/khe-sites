@@ -50,6 +50,20 @@ export const elements = {
   ghcr: { kind: 'step', owner: 'machine', tag: 'tagRegistry', label: 'elGhcr', sub: 'elGhcrSub' },
   pinPr: { kind: 'step', owner: 'machine', tag: 'tagHomelab', label: 'elPinPr', sub: 'elPinPrSub' },
   deploy: { kind: 'step', owner: 'machine', tag: 'tagVm', label: 'elDeploy', sub: 'elDeploySub' },
+
+  stepLoop: { kind: 'boundary', label: 'groupStepLoop', style: 'dashed' },
+  afterSteps: { kind: 'boundary', label: 'groupAfterSteps', style: 'rule' },
+  runPlan: { kind: 'step', owner: 'agent', tag: 'tagAgent', label: 'elRunPlan', sub: 'elRunPlanSub' },
+  planReview: { kind: 'step', owner: 'agent', tag: 'tagSubagent', label: 'elPlanReview', sub: 'elPlanReviewSub' },
+  goalSet: { kind: 'step', owner: 'person', tag: 'tagPerson', label: 'elGoalSet', sub: 'elGoalSetSub' },
+  stepChange: { kind: 'step', owner: 'agent', tag: 'tagAgent', label: 'elStepChange', sub: 'elStepChangeSub' },
+  stepCheck: { kind: 'step', owner: 'agent', tag: 'tagAgent', label: 'elStepCheck', sub: 'elStepCheckSub' },
+  stepBrowser: { kind: 'step', owner: 'agent', tag: 'tagAgent', label: 'elStepBrowser', sub: 'elStepBrowserSub' },
+  planDiff: { kind: 'step', owner: 'agent', tag: 'tagSubagent', label: 'elPlanDiff', sub: 'elPlanDiffSub' },
+  simplify: { kind: 'step', owner: 'agent', tag: 'tagAgent', label: 'elSimplify', sub: 'elSimplifySub' },
+  codeReview: { kind: 'step', owner: 'agent', tag: 'tagAgent', label: 'elCodeReview', sub: 'elCodeReviewSub' },
+  retro: { kind: 'step', owner: 'agent', tag: 'tagAgent', label: 'elRetro', sub: 'elRetroSub' },
+  goalMet: { kind: 'step', owner: 'agent', tag: 'tagEvaluator', label: 'elGoalMet', sub: 'elGoalMetSub' },
 };
 
 // Each view has a wide layout (desktop) and a narrow one (phones), naming the
@@ -58,6 +72,12 @@ export const elements = {
 // 'tree'` leaves from the source's centre, and `labelAt` puts the label's
 // baseline centre at a fixed point.
 const column = (ids, x, y, w, h, step) => Object.fromEntries(ids.map((id, i) => [id, [x, y + i * step, w, h]]));
+const row = (ids, x, y, w, h, step) => Object.fromEntries(ids.map((id, i) => [id, [x + i * step, y, w, h]]));
+const chain = (ids) => ids.slice(1).map((id, i) => ({ from: ids[i], to: id }));
+const shippingBefore = ['plan', 'approve', 'execute', 'review', 'gate', 'push'];
+const shippingAfter = ['ci', 'ghcr', 'pinPr', 'deploy'];
+const agentsStart = ['runPlan', 'planReview', 'goalSet', 'stepChange', 'stepCheck', 'stepBrowser'];
+const agentsFinish = ['planDiff', 'simplify', 'codeReview', 'gate', 'retro', 'goalMet'];
 
 export const views = [
   {
@@ -130,19 +150,13 @@ export const views = [
         nodes: {
           beforePush: [0, 0, 1152, 140],
           afterPush: [0, 188, 800, 132],
-          ...Object.fromEntries(['plan', 'approve', 'execute', 'review', 'gate', 'push'].map((id, i) => [id, [i * 200, 40, 152, 88]])),
-          ...Object.fromEntries(['ci', 'ghcr', 'pinPr', 'deploy'].map((id, i) => [id, [i * 200, 232, 152, 88]])),
+          ...row(shippingBefore, 0, 40, 152, 88, 200),
+          ...row(shippingAfter, 0, 232, 152, 88, 200),
         },
         edges: [
-          { from: 'plan', to: 'approve' },
-          { from: 'approve', to: 'execute' },
-          { from: 'execute', to: 'review' },
-          { from: 'review', to: 'gate' },
-          { from: 'gate', to: 'push' },
+          ...chain(shippingBefore),
           { from: 'push', to: 'ci', route: 'tree', label: 'relPushDeploys', labelAt: [576, 172] },
-          { from: 'ci', to: 'ghcr' },
-          { from: 'ghcr', to: 'pinPr' },
-          { from: 'pinPr', to: 'deploy' },
+          ...chain(shippingAfter),
         ],
       },
       narrow: {
@@ -150,20 +164,53 @@ export const views = [
         height: 1112,
         nodes: {
           beforePush: [0, 0, 342, 636],
-          ...column(['plan', 'approve', 'execute', 'review', 'gate', 'push'], 12, 36, 318, 64, 104),
+          ...column(shippingBefore, 12, 36, 318, 64, 104),
           afterPush: [0, 684, 342, 428],
-          ...column(['ci', 'ghcr', 'pinPr', 'deploy'], 12, 720, 318, 64, 104),
+          ...column(shippingAfter, 12, 720, 318, 64, 104),
         },
         edges: [
-          { from: 'plan', to: 'approve' },
-          { from: 'approve', to: 'execute' },
-          { from: 'execute', to: 'review' },
-          { from: 'review', to: 'gate' },
-          { from: 'gate', to: 'push' },
+          ...chain(shippingBefore),
           { from: 'push', to: 'ci', label: 'relPushDeploys' },
-          { from: 'ci', to: 'ghcr' },
-          { from: 'ghcr', to: 'pinPr' },
-          { from: 'pinPr', to: 'deploy' },
+          ...chain(shippingAfter),
+        ],
+      },
+    },
+  },
+  {
+    id: 'agents',
+    title: 'viewAgentsTitle',
+    desc: 'viewAgentsDesc',
+    focus: 'planDiff',
+    layouts: {
+      wide: {
+        width: 1164,
+        height: 320,
+        nodes: {
+          stepLoop: [576, 0, 584, 140],
+          afterSteps: [0, 188, 1164, 132],
+          ...row(agentsStart, 0, 40, 168, 88, 196),
+          ...row(agentsFinish, 0, 232, 168, 88, 196),
+        },
+        edges: [
+          ...chain(agentsStart),
+          { from: 'stepBrowser', to: 'planDiff', route: 'tree', label: 'relStepsDone', labelAt: [582, 172] },
+          ...chain(agentsFinish),
+        ],
+      },
+      narrow: {
+        width: 342,
+        height: 1320,
+        nodes: {
+          ...column(agentsStart.slice(0, 3), 12, 0, 318, 64, 104),
+          stepLoop: [0, 312, 342, 324],
+          ...column(agentsStart.slice(3), 12, 348, 318, 64, 104),
+          afterSteps: [0, 684, 342, 636],
+          ...column(agentsFinish, 12, 720, 318, 64, 104),
+        },
+        edges: [
+          ...chain(agentsStart),
+          { from: 'stepBrowser', to: 'planDiff', label: 'relStepsDone' },
+          ...chain(agentsFinish),
         ],
       },
     },

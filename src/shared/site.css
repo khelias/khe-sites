@@ -538,6 +538,10 @@ body.architecture-page {
   line-height: 1.4;
 }
 
+.arch-section > h3 {
+  margin: 3.5rem 0 0.75rem;
+}
+
 .arch .arch-tag.arch-tag--buys {
   color: var(--a-accent-ink);
 }
