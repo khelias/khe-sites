@@ -382,8 +382,8 @@ await runReportingSourceErrors(async () => {
   if (existsSync(dashboardJson)) {
     const dashboard = JSON.parse(await readFile(dashboardJson, 'utf8'));
     if (!Array.isArray(dashboard.views) || !dashboard.views.length) throw new Error('dist/landing/ha/dashboard.json has no views');
-    // the same demo in English, which the page loads with ?lang=en
-    for (const file of ['dashboard.en.json', 'states.en.json', 'series.en.json', 'model.en.json']) {
+    // the same demo in English, which the page loads with ?lang=en, and the scenarios in both
+    for (const file of ['dashboard.en.json', 'states.en.json', 'series.en.json', 'model.en.json', 'scenarios.json', 'scenarios.en.json']) {
       if (!existsSync(join(demo, file))) throw new Error(`dist/landing/ha/${file} was not built`);
     }
     const dashboardEn = JSON.parse(await readFile(join(demo, 'dashboard.en.json'), 'utf8'));
