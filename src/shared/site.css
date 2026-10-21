@@ -575,14 +575,21 @@ body.architecture-page {
   margin-top: 0.75rem;
 }
 
+/* One value column as wide as the widest value, so "iga nädal" stays on one
+   line and the three rows still align. */
 .arch-facts {
+  display: grid;
+  grid-template-columns: max-content minmax(0, 1fr);
+  column-gap: 1rem;
   border-top: 2px solid var(--a-text);
 }
 
 .arch-facts div {
+  grid-column: 1 / -1;
   display: grid;
   grid-template-columns: 6.5rem minmax(0, 1fr);
-  gap: 1rem;
+  grid-template-columns: subgrid;
+  column-gap: 1rem;
   align-items: baseline;
   padding: 1rem 0;
   border-bottom: 1px solid var(--a-rule);
@@ -594,7 +601,7 @@ body.architecture-page {
   font-size: 1.45rem;
   font-weight: 500;
   line-height: 1.1;
-  overflow-wrap: anywhere;
+  white-space: nowrap;
 }
 
 .arch-facts div:first-child dt {
