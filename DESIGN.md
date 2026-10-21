@@ -89,11 +89,12 @@ components:
 ## Overview
 
 The KHE sites and apps are one family of rooms
-([estate ADR-015](https://github.com/khelias/khe-architecture/blob/main/decisions/015-family-design-layer.md)).
-Every room shares one ground, one ink and one type in its chrome (the
-header, the mark, the language switcher, the page ground and the type of the
-page chrome), and has one accent of its own, which the chrome shows in exactly
-one place: the `.ee` of the mark. Room content that is an application (a
+([estate ADR-018](https://github.com/khelias/khe-architecture/blob/main/decisions/018-rooms-menu-in-the-shared-header.md),
+which supersedes ADR-015). Every room shares one ground, one ink and one type
+in its chrome (the header, the mark, the language switcher, the page ground
+and the type of the page chrome), and has one accent of its own, which the
+chrome shows in the `.ee` of the mark and as the room's dot in the rooms
+list. Room content that is an application (a
 game, the Home Assistant dashboard, the trip atlas) keeps its own visual
 language and ground. The ground and ink are the architecture page's
 editorial pair, promoted to the family.
@@ -102,7 +103,10 @@ This file is the one source of the family values. Other repos keep only their
 own room in their design docs and cite this one. The tokens live in
 `src/shared/site-header.css`; `scripts/check.mjs` fails when the frontmatter
 differs from its light `:root` block, or when the system-dark block differs
-from the `:root[data-theme="dark"]` block.
+from the `:root[data-theme="dark"]` block. The five room accents are also
+`@khelias/ui`'s own defaults for the rooms list's dots, since every header
+shows all five; the check fails when the package's light or dark dot differs
+from the Colors table below.
 
 ## Rooms
 
@@ -172,11 +176,24 @@ majutatud Eestis" / "Self-hosted in Estonia" in the page's language. Its
 text is `muted`, `ink` on hover, the focus ring the room's text accent;
 each room places it on its own page. Trips has none for now.
 
-## The `.ee` rule
+## The accent rule
 
 The room's accent appears in the shared chrome only in the `.ee` of the mark,
-in `--room-text`. Nothing else in the header is coloured: the kicker, the
-title and the switcher are ink and muted on paper.
+in `--room-text`, and every room's accent as its dot in the rooms list.
+Nothing else in the header is coloured: the rooms button, the title, the
+room names and notes and the switcher are ink and muted.
+
+## The header
+
+The KHE.ee mark leads to the khe.ee front page from every room. After it,
+on every page but the khe.ee landing, the current room's name with a chevron
+("Mängud ⌄") opens the rooms list: every room in a fixed order, each with
+its dot, its name and a short note, the current one marked with a check. Inside
+an app the app's name follows after a slash ("Mängud ⌄ / Tarkade Mängud"). A
+page's own name lives in its heading, never in the header. The list, its
+names, notes and addresses come from `@khelias/ui`, so every room lists the
+same rooms
+([estate ADR-018](https://github.com/khelias/khe-architecture/blob/main/decisions/018-rooms-menu-in-the-shared-header.md)).
 
 ## Application content and state colour
 
@@ -224,6 +241,8 @@ at 520px and below). No page scrolls sideways at 320px.
 Flat. The header is opaque `paper` over one `rule`, with no blur and no
 shadow, so its contrast never depends on what scrolls under it. Sections are
 separated by space and a `rule` or `rule-strong` hairline; nothing is a card.
+The one exception is the rooms list, which floats over the page on
+`surface` with a `rule-strong` edge and a soft shadow.
 
 ## Motion and touch
 
@@ -241,7 +260,7 @@ focus colour is the same property.
 
 `KHE` in Inter 600, ink, with `.ee` at 0.7em in `--room-text`, in a
 `rule-strong` box with an 8px corner on `paper`, no shadow. The favicon is the
-same mark with the Home `.ee`. In the header the mark, kicker, title and
+same mark with the Home `.ee`. In the header the mark, rooms button, title and
 buttons keep `@khelias/ui`'s sizes; the family `context`, `control` and
 `label` sizes apply to page content until a khe-ui release exposes them.
 
@@ -258,6 +277,11 @@ where they would not reach the header:
 - `switcher-radius` and `button-radius` 999px, `switcher-border` rule,
   `switcher-bg` surface, the pressed button ink on paper with a rule-strong
   edge
+- `menu-bg` surface, `menu-border` rule-strong, `menu-current-bg` sunken,
+  `menu-shadow` a soft `0 12px 32px` black at 14%: the rooms list floats
+  over the page, the one shadow in the chrome
+- the five `room-<id>` dots are the package's, the room accents in both
+  themes; an app sets them only to differ, which it should not
 
 ## Do's and Don'ts
 
@@ -266,7 +290,7 @@ where they would not reach the header:
 - Do add a family colour here, in both themes in `site-header.css`, and in
   every app that sets it.
 - Do measure text against the header's computed background.
-- Don't colour anything in the chrome but the `.ee`.
+- Don't colour anything in the chrome but the `.ee` and the rooms list's dots.
 - Don't use a state colour as a room accent, or an accent to mean a state.
-- Don't put a blur, a shadow or a translucent ground on the header.
+- Don't put a blur, a shadow or a translucent ground on the header bar.
 - Don't restyle the package's `.site-header__*` parts; set its properties.

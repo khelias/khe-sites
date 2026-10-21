@@ -18,7 +18,6 @@ createLocaleController({
   links: {
     home: (locale) => `/?lang=${locale}`,
     privacy: (locale) => `/privacy?lang=${locale}`,
-    architecture: (locale) => `/architecture/?lang=${locale}`,
     register: (locale) => `/architecture/?lang=${locale}#decisions`,
   },
 });

@@ -8,6 +8,7 @@ import { adrLinkRewriter, MarkdownError, renderMarkdown } from './markdown.mjs';
 import { views } from './architecture-model.mjs';
 import { modelMismatches } from './render-architecture.mjs';
 import { ASSET_REFERENCE, assetVersion, builtPages as listBuiltPages } from './asset-versions.mjs';
+import { ROOM_IDS } from '@khelias/ui/rooms';
 import { themeInitScript } from '@khelias/ui/theme';
 import { COPY } from '../src/landing/architecture/copy.js';
 import { SITE_FOOTER_COPY, SITE_HEADER_COPY, THEME_STORAGE_KEY } from '../src/shared/site-locale.js';
@@ -138,10 +139,10 @@ await runReportingSourceErrors(async () => {
   // DESIGN.md's frontmatter colours are the light :root tokens of site-header.css, and the dark
   // block names the same tokens (unpairedDarkRules below keeps the two dark blocks equal).
   const tokenCss = await readFile(join(root, 'src/shared/site-header.css'), 'utf8');
-  const tokenBlock = (selector) => {
-    const start = tokenCss.search(new RegExp(`^\\s*${selector.replace(/[[\]().*+?^$|\\]/g, '\\$&')} \\{`, 'm'));
-    if (start < 0) throw new Error(`site-header.css has no ${selector} block`);
-    const body = tokenCss.slice(start, tokenCss.indexOf('}', start));
+  const tokenBlock = (selector, css = tokenCss, name = 'site-header.css') => {
+    const start = css.search(new RegExp(`^\\s*${selector.replace(/[[\]().*+?^$|\\]/g, '\\$&')} \\{`, 'm'));
+    if (start < 0) throw new Error(`${name} has no ${selector} block`);
+    const body = css.slice(start, css.indexOf('}', start));
     return Object.fromEntries([...body.matchAll(/--([\w-]+):\s*(#[0-9a-f]{3,8})\s*;/gi)].map(([, name, value]) => [name, value.toLowerCase()]));
   };
   const design = await readFile(join(root, 'DESIGN.md'), 'utf8');
@@ -158,6 +159,24 @@ await runReportingSourceErrors(async () => {
   if (Object.keys(light).sort().join() !== Object.keys(forcedDark).sort().join()) {
     throw new Error('site-header.css: :root[data-theme="dark"] names other tokens than the light :root');
   }
+  // The rooms list's dots are @khelias/ui's values (estate ADR-018); each room's light and dark
+  // value is its accent in DESIGN.md's Colors table.
+  const packageCss = await readFile(fileURLToPath(import.meta.resolve('@khelias/ui/site-header.css')), 'utf8');
+  const packageDots = (selector) => tokenBlock(selector, packageCss, "@khelias/ui's site-header.css");
+  const designTable = Object.fromEntries([...design.matchAll(/^\| ([\w-]+) \| (#[0-9a-f]{6}) \| (#[0-9a-f]{6}) \|/gim)]
+    .map(([, name, lightValue, darkValue]) => [name, [lightValue.toLowerCase(), darkValue.toLowerCase()]]));
+  const dots = [packageDots(':where(.site-header, .language-switcher:not(.site-header *))'), packageDots(':where(:root[data-theme="dark"] .site-header)')];
+  for (const id of ROOM_IDS) {
+    const expected = designTable[id];
+    if (!expected) throw new Error(`DESIGN.md's Colors table has no row for the room ${id}`);
+    dots.forEach((values, theme) => {
+      const value = values[`khe-header-room-${id}`];
+      if (value !== expected[theme]) {
+        throw new Error(`@khelias/ui's ${theme ? 'dark' : 'light'} dot for ${id} is ${value}, DESIGN.md says ${expected[theme]}`);
+      }
+    });
+  }
+
   for (const relativePath of htmlFiles) {
     const content = await readFile(join(root, relativePath), 'utf8');
     for (const [scheme, paper] of [['light', light.paper], ['dark', forcedDark.paper]]) {
@@ -395,7 +414,13 @@ await runReportingSourceErrors(async () => {
       }
       const htmlTag = html.match(/<html\b[^>]*>/)?.[0] ?? '';
       const room = htmlTag.match(/\sdata-room="([^"]*)"/)?.[1];
-      if (!['home', 'server', 'trips', 'house', 'games'].includes(room)) throw new Error(`dist/${site}/${page} has no data-room on <html> from home, server, trips, house, games`);
+      if (!ROOM_IDS.includes(room)) throw new Error(`dist/${site}/${page} has no data-room on <html> from ${ROOM_IDS.join(', ')}`);
+      // The rooms menu (estate ADR-018): every page but the khe.ee landing, with its own room current.
+      const roomButtons = [...html.matchAll(/<button class="site-header__rooms"[^>]*\sdata-khe-room="([^"]*)"/g)].map((match) => match[1]);
+      const expectedButtons = site === 'landing' && page === 'index.html' ? [] : [room];
+      if (JSON.stringify(roomButtons) !== JSON.stringify(expectedButtons)) {
+        throw new Error(`dist/${site}/${page} has rooms buttons for ${JSON.stringify(roomButtons)}, expected ${JSON.stringify(expectedButtons)}`);
+      }
       if (house && !htmlTag.includes('data-theme="dark"')) {
         throw new Error('dist/landing/ha/index.html is not data-theme="dark"; the house view has no light theme');
       }

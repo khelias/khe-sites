@@ -7,13 +7,14 @@ Static source for two independently deployed sites: `khe.ee` from
 
 Plain HTML, CSS and vanilla JS, built by Node 24 scripts. No framework, no
 bundler. One devDependency, `@khelias/ui` (the KHE site header with its
-theme toggle, and the site footer), pinned exactly; run `npm ci` before
-building.
+rooms menu and theme toggle, and the site footer), pinned exactly; run
+`npm ci` before building.
 
 The look is the KHE family layer
-([estate ADR-015](https://github.com/khelias/khe-architecture/blob/main/decisions/015-family-design-layer.md)):
-shared chrome on one ground in every room, one accent per room shown in the
-chrome only in the `.ee`, light and dark following the system setting.
+([estate ADR-018](https://github.com/khelias/khe-architecture/blob/main/decisions/018-rooms-menu-in-the-shared-header.md),
+which supersedes ADR-015): shared chrome on one ground in every room, one
+accent per room shown in the chrome only in the `.ee` and as the room's dot
+in the rooms list, light and dark following the system setting.
 khe-sites owns the family [`DESIGN.md`](DESIGN.md), the one source of the
 family values; the apps copy them into their `--khe-header-*` values.
 
@@ -150,15 +151,27 @@ estate's writer register in khe-meta in the same change.
   `:root` never reaches the header.
 - The site header markup comes from `@khelias/ui`'s `renderSiteHeader`, called
   only by `scripts/site-header.mjs`. A page
-  carries `<!-- site-header home=… [title=…] [parent=…] [fixed] -->` on a line
+  carries `<!-- site-header home=… [rooms] [theme] [fixed] -->` on a line
   of its own, and the build replaces it with the header in the page's
-  `<html lang>`, at the marker's indent. Its strings are `SITE_HEADER_COPY`
+  `<html lang>`, at the marker's indent. `home` names where the mark leads,
+  always the khe.ee front page (`landing` is `/`, `khe.ee` its full address
+  from games.khe.ee). Its strings are `SITE_HEADER_COPY`
   in `src/shared/site-locale.js` (both languages, the `header*` keys), which
-  `createLocaleController` merges under every page's copy. A new title is a
-  key there; a new home or parent is also an entry in `site-header.mjs`.
-  The landing and games homes have no title, only the mark and the
-  switcher. Every
+  `createLocaleController` merges under every page's copy. Every
   built page must have exactly one header (check).
+- The rooms menu (estate ADR-018): `rooms` on the marker renders the
+  current room's button, from the page's `<html data-room>`, and the list of
+  every room; every page but the khe.ee landing has it, the landing none
+  (check). The header shows no page title: a page's name is its heading. The
+  room names, notes and addresses are the package's (`@khelias/ui/rooms`);
+  the build copies its `dist/rooms.js` to `/assets/rooms.js`, and on a page
+  with the button `createLocaleController` imports it once the page shows a
+  language other than the one it was built in, and calls `setRoomsLocale`
+  from `applyLocale`, so a first locale of `et` and every switch after it
+  rewrite the names, notes and `?lang` of every room link. The list's
+  `--khe-header-menu-*` values are set in `site-header.css`; its dots are the
+  package's room accents, which check compares with `DESIGN.md`'s Colors
+  table.
 - Theme (estate ADR-017): every page but `/ha/` follows the system setting
   until the visitor presses the header's toggle (`theme` on the marker,
   label `headerTheme`). The choice is stored under `THEME_STORAGE_KEY`

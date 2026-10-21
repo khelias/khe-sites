@@ -133,7 +133,8 @@
 [data-room="house"] { --room: var(--house); --room-text: var(--house); }
 [data-room="games"] { --room: var(--games); --room-text: var(--games); }
 
-/* The family header: opaque paper, one rule, no shadow; the room shows only in the .ee. */
+/* The family header: opaque paper, one rule, no shadow; the room shows only in the .ee and the
+   rooms list's dots, whose values come from the package (estate ADR-018). */
 .site-header {
   --khe-header-font: var(--sans);
   --khe-header-title-font: var(--serif);
@@ -159,6 +160,12 @@
   --khe-header-button-pressed-text: var(--ink);
   --khe-header-button-pressed-bg: var(--paper);
   --khe-header-button-pressed-border: var(--rule-strong);
+
+  /* The rooms list floats over the page, so it alone has a soft shadow. */
+  --khe-header-menu-bg: var(--surface);
+  --khe-header-menu-border: var(--rule-strong);
+  --khe-header-menu-shadow: 0 12px 32px rgb(0 0 0 / 0.14);
+  --khe-header-menu-current-bg: var(--sunken);
 }
 
 /* A fixed header sits over a full-bleed app (/ha/), so it spans the width and its

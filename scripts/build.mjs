@@ -43,6 +43,7 @@ await runReportingSourceErrors(async () => {
     await copyDirectory(join(root, 'src', app), outputDir);
     await copyFile(join(root, 'src', 'shared', 'site-locale.js'), join(outputDir, 'assets', 'site-locale.js'));
     await copyFile(packageFile('theme'), join(outputDir, 'assets', 'theme.js'));
+    await copyFile(packageFile('rooms'), join(outputDir, 'assets', 'rooms.js'));
     await copyFile(join(root, 'src', 'shared', 'analytics-consent.js'), join(outputDir, 'assets', 'analytics-consent.js'));
     await writeFile(join(outputDir, 'assets', 'site-header.css'), siteHeaderCss);
     await copyFile(join(root, 'src', 'shared', 'site.css'), join(outputDir, 'assets', 'site.css'));

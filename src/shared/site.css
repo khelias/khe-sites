@@ -1330,7 +1330,7 @@ body.privacy-page {
 }
 
 .privacy-page p,
-.privacy-page li {
+.privacy-page main li {
   font-size: 1rem;
 }
 
@@ -1369,17 +1369,17 @@ body.privacy-page {
   }
 }
 
-.privacy-page ul {
+.privacy-page main ul {
   list-style: none;
 }
 
-.privacy-page li {
+.privacy-page main li {
   position: relative;
   margin-bottom: 0.5rem;
   padding-left: 1rem;
 }
 
-.privacy-page li::before {
+.privacy-page main li::before {
   content: "-";
   position: absolute;
   left: 0;

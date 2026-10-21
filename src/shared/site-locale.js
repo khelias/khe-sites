@@ -10,25 +10,13 @@ export const SITE_HEADER_COPY = {
   et: {
     headerLanguage: 'Keel',
     headerHomeLanding: 'KHE avaleht',
-    headerHomeGames: 'KHE Games avaleht',
     headerHomeKheEe: 'KHE.ee avaleht',
-    headerArchitecture: 'Arhitektuur',
-    headerDecision: 'Otsus',
-    headerHomeAutomation: 'Koduautomaatika',
-    headerKheGames: 'KHE Games',
-    headerPrivacy: 'Privaatsus',
     headerTheme: 'Tume teema',
   },
   en: {
     headerLanguage: 'Language',
     headerHomeLanding: 'KHE home',
-    headerHomeGames: 'KHE Games home',
     headerHomeKheEe: 'KHE.ee home',
-    headerArchitecture: 'Architecture',
-    headerDecision: 'Decision',
-    headerHomeAutomation: 'Home automation',
-    headerKheGames: 'KHE Games',
-    headerPrivacy: 'Privacy',
     headerTheme: 'Dark theme',
   },
 };
@@ -122,10 +110,21 @@ export function createLocaleController({
       || (useBrowserDefault ? browserLocale(supported, fallbackLocale) : fallbackLocale);
   }
 
+  // The rooms menu is built in the page's language, so its module loads only once the page
+  // shows another. Imported here, not at the top: scripts/site-header.mjs imports this file in
+  // Node. Every switch waits on the same promise, so the menu ends in the last language chosen.
+  const hasRooms = Boolean(document.querySelector('.site-header__rooms'));
+  const builtLocale = document.documentElement.lang;
+  let rooms = null;
+
   function applyLocale(locale) {
     const activeLocale = normalizeLocale(locale, supported) || fallbackLocale;
     const activeCopy = copy[activeLocale] || copy[fallbackLocale];
 
+    if (hasRooms && (rooms || activeLocale !== builtLocale)) {
+      rooms ??= import('/assets/rooms.js');
+      rooms.then(({ setRoomsLocale }) => setRoomsLocale(document, activeLocale));
+    }
     document.documentElement.lang = activeLocale;
     document.title = activeCopy.title;
     setMetaContent('meta[name="description"]', activeCopy.description);
@@ -161,7 +160,6 @@ export function createLocaleController({
 
   applyLocale(initialLocale());
 
-  // Imported here, not at the top: scripts/site-header.mjs imports this file in Node.
   if (document.querySelector('.site-header__theme')) {
     import('/assets/theme.js').then(({ wireThemeToggle }) => wireThemeToggle({ storageKey: THEME_STORAGE_KEY }));
   }
