@@ -140,11 +140,6 @@
       .khe-analytics-actions button:active {
         transform: scale(0.97);
       }
-      .khe-analytics-actions button[data-consent-choice="granted"] {
-        border-color: var(--ink);
-        background: var(--ink);
-        color: var(--paper);
-      }
       .khe-analytics-actions button:disabled {
         cursor: default;
         opacity: 0.72;
