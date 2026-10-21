@@ -50,7 +50,8 @@
 
 /* The family tokens, light by default and dark with the system setting; a page that commits
    to one theme sets data-theme on <html>. DESIGN.md holds the light values and check.mjs
-   keeps the three blocks in step. */
+   keeps the three blocks in step. The consent banner carries its own --khe-consent-* copy of the
+   six it uses, for pages without these tokens, and check.mjs holds it equal (estate ADR-019). */
 :root {
   --paper: #fafafa;
   --surface: #ffffff;

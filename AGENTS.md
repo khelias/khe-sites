@@ -260,5 +260,14 @@ estate's writer register in khe-meta in the same change.
   (`logo.svg`, `og-image.svg`), so `rsvg-convert -w 1200 -h 630` renders the
   PNGs without installed fonts.
 - The Cloudflare Web Analytics tokens in the HTML are public beacon tokens,
-  not secrets. The beacon loads only after the visitor consents
-  (`src/shared/analytics-consent.js`).
+  not secrets. The beacon loads only after the visitor consents in the
+  banner, `src/shared/analytics-consent.js`, served on both origins at
+  `/assets/analytics-consent.js`. /study and /adventure load it unstamped
+  from the games root and keep no copy
+  ([estate ADR-019](https://github.com/khelias/khe-architecture/blob/main/decisions/019-consent-banner-from-the-origin-root.md)),
+  so renaming or moving it, or changing its `data-analytics-token` and
+  `data-analytics-privacy-url` attributes, the `khe.analyticsConsent.v1`
+  storage key, `window.kheAnalyticsConsent` or `[data-analytics-preferences]`,
+  breaks them; a breaking change goes to a new path. Its colours are its own
+  `--khe-consent-*` values in both themes, which check holds equal to
+  `site-header.css`, and it reads no page token, since the games define none.

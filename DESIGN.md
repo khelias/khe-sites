@@ -128,7 +128,9 @@ one room whose two differ, because `trips` is 4.2:1 on light `paper`.
 
 ## Colors
 
-The frontmatter holds the light theme. Dark values live only in the CSS:
+The frontmatter holds the light theme. Dark values live only in the CSS, and
+the consent banner (`src/shared/analytics-consent.js`) carries its own copy of
+the six it uses in both themes, so it renders on the game pages too:
 
 | Token | Light | Dark | Use |
 |---|---|---|---|

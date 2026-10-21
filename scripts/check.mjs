@@ -159,6 +159,27 @@ await runReportingSourceErrors(async () => {
   if (Object.keys(light).sort().join() !== Object.keys(forcedDark).sort().join()) {
     throw new Error('site-header.css: :root[data-theme="dark"] names other tokens than the light :root');
   }
+  // The consent banner renders on game pages without the family tokens, so it reads only its own
+  // --khe-consent-* copy of them, equal to site-header.css in each theme (estate ADR-019).
+  const consentName = 'analytics-consent.js';
+  const consentCss = (await readFile(join(root, 'src/shared', consentName), 'utf8')).match(/style\.textContent = `([^`]*)`/)?.[1];
+  if (!consentCss) throw new Error(`${consentName} has no style.textContent template`);
+  const foreignVar = consentCss.match(/var\((--(?!khe-consent-)[\w-]+)/);
+  if (foreignVar) throw new Error(`${consentName} reads ${foreignVar[1]}; the banner uses only its own --khe-consent-* values`);
+  const consentLight = tokenBlock('.khe-analytics-consent', consentCss, consentName);
+  const consentDark = tokenBlock(':root[data-theme="dark"] .khe-analytics-consent', consentCss, consentName);
+  const consentNames = Object.keys(consentLight);
+  if (!consentNames.length || consentNames.some((name) => !name.startsWith('khe-consent-'))) {
+    throw new Error(`${consentName}: .khe-analytics-consent sets ${consentNames.join(', ') || 'nothing'}, not only --khe-consent-* values`);
+  }
+  for (const [theme, own, family] of [['light', consentLight, light], ['dark', consentDark, forcedDark]]) {
+    const expected = Object.fromEntries(consentNames.map((name) => [name, family[name.slice('khe-consent-'.length)]]));
+    if (!sameTokens(own, expected)) {
+      throw new Error(`${consentName}: the ${theme} values ${JSON.stringify(own)} are not site-header.css's ${JSON.stringify(expected)}`);
+    }
+  }
+  const consentUnpaired = unpairedDarkRules(consentCss);
+  if (consentUnpaired.length) throw new Error(consentUnpaired.map((message) => `${consentName}: ${message}`).join('\n'));
   // The rooms list's dots are @khelias/ui's values (estate ADR-018); each room's light and dark
   // value is its accent in DESIGN.md's Colors table.
   const packageCss = await readFile(fileURLToPath(import.meta.resolve('@khelias/ui/site-header.css')), 'utf8');
