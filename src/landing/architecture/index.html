@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <title>Estate architecture | KHE</title>
-  <meta name="description" content="A small software estate run from one machine at home: the estate in one picture, five decisions that shape it, how a change ships, how it stays up and where it is weak.">
+  <meta name="description" content="A small software estate run from one machine at home: the estate in one picture, how a change reaches the server, how it stays up and where it is weak.">
   <link rel="canonical" href="https://khe.ee/architecture/">
   <link rel="alternate" hreflang="en" href="https://khe.ee/architecture/?lang=en">
   <link rel="alternate" hreflang="et" href="https://khe.ee/architecture/?lang=et">
@@ -17,13 +17,13 @@
   <meta property="og:url" content="https://khe.ee/architecture/">
   <meta property="og:site_name" content="Kaido Henrik Elias">
   <meta property="og:title" content="Estate architecture | KHE">
-  <meta property="og:description" content="A small software estate run from one machine at home: the estate in one picture, five decisions that shape it, how a change ships, how it stays up and where it is weak.">
+  <meta property="og:description" content="A small software estate run from one machine at home: the estate in one picture, how a change reaches the server, how it stays up and where it is weak.">
   <meta property="og:image" content="https://khe.ee/og-image.png">
   <meta property="og:image:width" content="1200">
   <meta property="og:image:height" content="630">
   <meta name="twitter:card" content="summary">
   <meta name="twitter:title" content="Estate architecture | KHE">
-  <meta name="twitter:description" content="A small software estate run from one machine at home: the estate in one picture, five decisions that shape it, how a change ships, how it stays up and where it is weak.">
+  <meta name="twitter:description" content="A small software estate run from one machine at home: the estate in one picture, how a change reaches the server, how it stays up and where it is weak.">
   <meta name="twitter:image" content="https://khe.ee/og-image.png">
   <link rel="preload" href="/assets/fonts/inter-400.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="/assets/fonts/inter-500.woff2" as="font" type="font/woff2" crossorigin>
@@ -40,13 +40,13 @@
       "@id": "https://khe.ee/architecture/#webpage",
       "url": "https://khe.ee/architecture/",
       "name": "KHE estate architecture",
-      "description": "A small software estate run from one machine at home: the estate in one picture, five decisions that shape it, how a change ships, how it stays up and where it is weak.",
+      "description": "A small software estate run from one machine at home: the estate in one picture, how a change reaches the server, how it stays up and where it is weak.",
       "isPartOf": {
         "@id": "https://khe.ee/#website"
       },
       "about": [
         "Software architecture",
-        "Architecture decision records",
+        "Continuous delivery",
         "Self-hosting",
         "Cloudflare Tunnel",
         "GitHub Actions",
@@ -69,7 +69,7 @@
       <p class="arch-kicker" data-i18n="kicker"></p>
       <h1 id="arch-title" data-i18n="headline"></h1>
       <p class="arch-lead" data-i18n="lead"></p>
-      <p class="arch-lead" data-i18n="leadHow"></p>
+      <p class="arch-lead" data-i18n-html="leadHow"></p>
     </div>
     <dl class="arch-facts" aria-label="Three facts" data-i18n-aria="factsLabel">
       <div>
@@ -90,10 +90,8 @@
   <nav class="arch-nav" aria-label="On this page" data-i18n-aria="tocLabel">
     <ol>
       <li><a href="#estate"><span class="arch-num">01</span> <span data-i18n="navEstate"></span></a></li>
-      <li><a href="#key-decisions"><span class="arch-num">02</span> <span data-i18n="navKeyDecisions"></span></a></li>
-      <li><a href="#shipping"><span class="arch-num">03</span> <span data-i18n="navShipping"></span></a></li>
-      <li><a href="#uptime"><span class="arch-num">04</span> <span data-i18n="navUptime"></span></a></li>
-      <li><a href="#decisions"><span class="arch-num">05</span> <span data-i18n="navRegister"></span></a></li>
+      <li><a href="#shipping"><span class="arch-num">02</span> <span data-i18n="navShipping"></span></a></li>
+      <li><a href="#uptime"><span class="arch-num">03</span> <span data-i18n="navUptime"></span></a></li>
     </ol>
   </nav>
 
@@ -108,27 +106,17 @@
     </details>
   </section>
 
-  <section class="arch-section" id="key-decisions" aria-labelledby="key-decisions-title">
-    <p class="arch-num" aria-hidden="true">02</p>
-    <h2 id="key-decisions-title" data-i18n="keyDecisionsTitle"></h2>
-    <p class="arch-prose" data-i18n="keyDecisionsIntro"></p>
-    <!-- key-decisions -->
-  </section>
-
   <section class="arch-section" id="shipping" aria-labelledby="shipping-title">
-    <p class="arch-num" aria-hidden="true">03</p>
+    <p class="arch-num" aria-hidden="true">02</p>
     <h2 id="shipping-title" data-i18n="shippingTitle"></h2>
     <p class="arch-prose" data-i18n="shippingIntro"></p>
     <!-- view:shipping -->
     <p class="arch-note" data-i18n="shippingNote"></p>
-    <h3 class="arch-tag" data-i18n="agentsTitle"></h3>
-    <p class="arch-prose" data-i18n="agentsIntro"></p>
-    <!-- view:agents -->
-    <p class="arch-note" data-i18n="agentsNote"></p>
+    <p class="arch-prose arch-crosslink" data-i18n-html="shippingBefore"></p>
   </section>
 
   <section class="arch-section" id="uptime" aria-labelledby="uptime-title">
-    <p class="arch-num" aria-hidden="true">04</p>
+    <p class="arch-num" aria-hidden="true">03</p>
     <h2 id="uptime-title" data-i18n="uptimeTitle"></h2>
     <div class="arch-columns">
       <div>
@@ -160,14 +148,7 @@
     </div>
   </section>
 
-  <section class="arch-section" id="decisions" aria-labelledby="decisions-title">
-    <p class="arch-num" aria-hidden="true">05</p>
-    <h2 id="decisions-title" data-i18n="decisionsTitle"></h2>
-    <p class="arch-prose" data-i18n-html="decisionsIntro"></p>
-    <p class="arch-prose arch-lang-note" data-i18n="decisionsInEnglish"></p>
-    <!-- register -->
-    <!-- product-decisions -->
-  </section>
+  <p class="arch-prose arch-onward" data-i18n-html="onwardDecisions"></p>
 </main>
 
 <!-- site-footer -->

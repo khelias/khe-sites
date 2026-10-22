@@ -6,7 +6,7 @@ import { fileURLToPath } from 'node:url';
 import { loadSources, runReportingSourceErrors } from './architecture-sources.mjs';
 import { adrLinkRewriter, MarkdownError, renderMarkdown } from './markdown.mjs';
 import { views } from './architecture-model.mjs';
-import { modelMismatches } from './render-architecture.mjs';
+import { ARCHITECTURE_PAGES, modelMismatches } from './render-architecture.mjs';
 import { ASSET_REFERENCE, assetVersion, builtPages as listBuiltPages } from './asset-versions.mjs';
 import { ROOM_IDS } from '@khelias/ui/rooms';
 import { themeInitScript } from '@khelias/ui/theme';
@@ -67,7 +67,7 @@ function unpairedDarkRules(sheet) {
 await runReportingSourceErrors(async () => {
   const htmlFiles = [
     'src/landing/index.html',
-    'src/landing/architecture/index.html',
+    ...ARCHITECTURE_PAGES.map(({ path }) => `src/landing/${path}`),
     'scripts/templates/decision.html',
     'src/landing/privacy/index.html',
     'src/games/index.html',
@@ -320,7 +320,7 @@ await runReportingSourceErrors(async () => {
   // The rest checks the build output; npm run check builds first.
   const landing = join(root, 'dist/landing');
   const builtPages = [
-    'architecture/index.html',
+    ...ARCHITECTURE_PAGES.map(({ path }) => path),
     ...sources.decisions.map((decision) => `architecture/decisions/${decision.id}/index.html`),
   ];
   for (const page of builtPages) {
@@ -344,20 +344,27 @@ await runReportingSourceErrors(async () => {
       }
     }
   }
-  const mainPage = await readFile(join(landing, 'architecture/index.html'), 'utf8');
-  const svgCount = (mainPage.match(/<svg class="arch-svg\b/g) || []).length;
-  if (svgCount !== 2 * views.length) throw new Error(`architecture page has ${svgCount} diagram <svg>, expected ${2 * views.length}`);
-  if (mainPage.includes('<!--')) throw new Error('architecture page still has an unfilled placeholder');
-  for (const view of views) {
-    const start = mainPage.indexOf(`<figure class="arch-figure" data-view="${view.id}"`);
-    const figure = start < 0 ? '' : mainPage.slice(start, mainPage.indexOf('</figure>', start));
-    const textStart = figure.indexOf('class="visually-hidden"');
-    const text = textStart < 0 ? '' : figure.slice(textStart);
-    if (!text) throw new Error(`architecture page has no text list for the ${view.id} diagram`);
-    for (const edge of view.layouts.narrow.edges) {
-      if (!text.includes(`data-edge="${edge.from}:${edge.to}"`)) throw new Error(`The ${view.id} text list lacks the edge ${edge.from} -> ${edge.to}`);
+  // Each page draws two SVGs and a text list per view whose `page` it is, and no other diagram.
+  const filled = {};
+  for (const { path, page } of ARCHITECTURE_PAGES) {
+    const html = await readFile(join(landing, path), 'utf8');
+    filled[page] = html;
+    const pageViews = views.filter((view) => view.page === page);
+    const svgCount = (html.match(/<svg class="arch-svg\b/g) || []).length;
+    if (svgCount !== 2 * pageViews.length) throw new Error(`dist/landing/${path} has ${svgCount} diagram <svg>, expected ${2 * pageViews.length}`);
+    if (html.includes('<!--')) throw new Error(`dist/landing/${path} still has an unfilled placeholder`);
+    for (const view of pageViews) {
+      const start = html.indexOf(`<figure class="arch-figure" data-view="${view.id}"`);
+      const figure = start < 0 ? '' : html.slice(start, html.indexOf('</figure>', start));
+      const textStart = figure.indexOf('class="visually-hidden"');
+      const text = textStart < 0 ? '' : figure.slice(textStart);
+      if (!text) throw new Error(`dist/landing/${path} has no text list for the ${view.id} diagram`);
+      for (const edge of view.layouts.narrow.edges) {
+        if (!text.includes(`data-edge="${edge.from}:${edge.to}"`)) throw new Error(`The ${view.id} text list lacks the edge ${edge.from} -> ${edge.to}`);
+      }
     }
   }
+  const mainPage = filled.architecture;
   const uptime = mainPage.slice(mainPage.indexOf('id="uptime"'), mainPage.indexOf('</section>', mainPage.indexOf('id="uptime"')));
   const layerList = uptime.match(/<ol class="arch-layers">([\s\S]*?)<\/ol>/);
   const layerRows = layerList ? (layerList[1].match(/<li\b/g) || []).length : 0;
@@ -365,7 +372,19 @@ await runReportingSourceErrors(async () => {
   if (layerRows !== readmeLayers) {
     throw new Error(`#uptime lists ${layerRows} resilience layers, the khe-homelab README has ${readmeLayers}`);
   }
+  // The register lives on /architecture/decisions/ at id="decisions", where the ADR pages and the
+  // key decisions' last cell link it.
+  if (!/id="decisions"[\s\S]*<table class="arch-table arch-register">/.test(filled.decisions)) {
+    throw new Error('dist/landing/architecture/decisions/index.html has no register under id="decisions"');
+  }
+  for (const page of ['architecture', 'agents']) {
+    if (filled[page].includes('arch-register')) throw new Error(`the ${page} page carries the register, which belongs on /architecture/decisions/`);
+  }
   const sitemap = await readFile(join(landing, 'sitemap.xml'), 'utf8');
+  for (const { path } of ARCHITECTURE_PAGES) {
+    const url = `/${path.replace(/index\.html$/, '')}`;
+    if (!sitemap.includes(`<loc>https://khe.ee${url}</loc>`)) throw new Error(`sitemap.xml does not list ${url}`);
+  }
   for (const decision of sources.decisions) {
     if (!sitemap.includes(`<loc>https://khe.ee/architecture/decisions/${decision.id}/</loc>`)) {
       throw new Error(`sitemap.xml does not list ADR-${decision.id}`);

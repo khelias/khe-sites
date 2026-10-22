@@ -464,18 +464,36 @@ function replaceMarker(html, marker, content, file) {
   return html.replace(token, content);
 }
 
+// The pages the build fills: each gets the views whose `page` it is, then its
+// own markers.
+export const ARCHITECTURE_PAGES = [
+  { path: 'architecture/index.html', page: 'architecture', markers: (sources) => ({ blocks: renderBlocks(sources) }) },
+  {
+    path: 'architecture/decisions/index.html',
+    page: 'decisions',
+    markers: (sources) => ({
+      'key-decisions': renderKeyDecisions(sources.decisions),
+      register: renderRegister(sources.decisions),
+      'product-decisions': renderProductDecisions(),
+    }),
+  },
+  { path: 'agents/index.html', page: 'agents', markers: () => ({}) },
+];
+
 export async function renderArchitecture(landingDist, sources) {
   const problems = modelMismatches(sources);
   if (problems.length) throw new SourceError(problems.join('\n'));
+  for (const view of views) {
+    if (!ARCHITECTURE_PAGES.some(({ page }) => page === view.page)) throw new SourceError(`Diagram ${view.id} is on the page ${view.page}, which the build does not fill`);
+  }
 
-  const pagePath = join(landingDist, 'architecture', 'index.html');
-  let page = await readFile(pagePath, 'utf8');
-  for (const view of views) page = replaceMarker(page, `view:${view.id}`, renderView(view), pagePath);
-  page = replaceMarker(page, 'blocks', renderBlocks(sources), pagePath);
-  page = replaceMarker(page, 'key-decisions', renderKeyDecisions(sources.decisions), pagePath);
-  page = replaceMarker(page, 'register', renderRegister(sources.decisions), pagePath);
-  page = replaceMarker(page, 'product-decisions', renderProductDecisions(), pagePath);
-  await writeFile(pagePath, fillI18n(page));
+  for (const { path, page, markers } of ARCHITECTURE_PAGES) {
+    const pagePath = join(landingDist, path);
+    let html = await readFile(pagePath, 'utf8');
+    for (const view of views.filter((view) => view.page === page)) html = replaceMarker(html, `view:${view.id}`, renderView(view), pagePath);
+    for (const [marker, content] of Object.entries(markers(sources))) html = replaceMarker(html, marker, content, pagePath);
+    await writeFile(pagePath, fillI18n(html));
+  }
 
   const template = await readFile(join(root, 'scripts', 'templates', 'decision.html'), 'utf8');
   const byId = new Map(sources.decisions.map((decision) => [decision.id, decision]));

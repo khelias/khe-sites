@@ -38,12 +38,7 @@ export const elements = {
   'ha-estfeed': { kind: 'repo', name: 'ha-estfeed', repo: 'ha-estfeed' },
   'khe-home-assistant': { kind: 'repo', name: 'khe-home-assistant', repo: 'khe-home-assistant' },
 
-  beforePush: { kind: 'boundary', label: 'groupBeforePush', style: 'rule' },
-  afterPush: { kind: 'boundary', label: 'groupAfterPush', style: 'rule' },
-  plan: { kind: 'step', owner: 'agent', tag: 'tagAgent', label: 'elPlan', sub: 'elPlanSub' },
-  approve: { kind: 'step', owner: 'person', tag: 'tagPerson', label: 'elApprove', sub: 'elApproveSub' },
-  execute: { kind: 'step', owner: 'agent', tag: 'tagAgent', label: 'elExecute', sub: 'elExecuteSub' },
-  review: { kind: 'step', owner: 'agent', tag: 'tagAgent', label: 'elReview', sub: 'elReviewSub' },
+  fromPush: { kind: 'boundary', label: 'groupFromPush', style: 'rule' },
   gate: { kind: 'step', owner: 'machine', tag: 'tagHook', label: 'elGate', sub: 'elGateSub' },
   push: { kind: 'step', owner: 'person', tag: 'tagPerson', label: 'elPush', sub: 'elPushSub' },
   ci: { kind: 'step', owner: 'machine', tag: 'tagCi', label: 'elCi', sub: 'elCiSub' },
@@ -74,14 +69,16 @@ export const elements = {
 const column = (ids, x, y, w, h, step) => Object.fromEntries(ids.map((id, i) => [id, [x, y + i * step, w, h]]));
 const row = (ids, x, y, w, h, step) => Object.fromEntries(ids.map((id, i) => [id, [x + i * step, y, w, h]]));
 const chain = (ids) => ids.slice(1).map((id, i) => ({ from: ids[i], to: id }));
-const shippingBefore = ['plan', 'approve', 'execute', 'review', 'gate', 'push'];
-const shippingAfter = ['ci', 'ghcr', 'pinPr', 'deploy'];
+const shipping = ['push', 'ci', 'ghcr', 'pinPr', 'deploy'];
 const agentsStart = ['runPlan', 'planReview', 'goalSet', 'stepChange', 'stepCheck', 'stepBrowser'];
-const agentsFinish = ['planDiff', 'simplify', 'codeReview', 'gate', 'retro', 'goalMet'];
+const agentsFinish = ['planDiff', 'simplify', 'codeReview', 'gate', 'retro', 'goalMet', 'push'];
 
+// `page` is the built page a view is drawn on: architecture (/architecture/)
+// or agents (/agents/).
 export const views = [
   {
     id: 'estate',
+    page: 'architecture',
     title: 'viewEstateTitle',
     desc: 'viewEstateDesc',
     focus: 'cloudflare',
@@ -140,71 +137,61 @@ export const views = [
   },
   {
     id: 'shipping',
+    page: 'architecture',
     title: 'viewShippingTitle',
     desc: 'viewShippingDesc',
     focus: 'deploy',
     layouts: {
       wide: {
         width: 1152,
-        height: 320,
+        height: 132,
         nodes: {
-          beforePush: [0, 0, 1152, 140],
-          afterPush: [0, 188, 800, 132],
-          ...row(shippingBefore, 0, 40, 152, 88, 200),
-          ...row(shippingAfter, 0, 232, 152, 88, 200),
+          fromPush: [0, 0, 1152, 132],
+          ...row(shipping, 0, 44, 192, 88, 240),
         },
-        edges: [
-          ...chain(shippingBefore),
-          { from: 'push', to: 'ci', route: 'tree', label: 'relPushDeploys', labelAt: [576, 172] },
-          ...chain(shippingAfter),
-        ],
+        edges: chain(shipping),
       },
       narrow: {
         width: 342,
-        height: 1112,
+        height: 532,
         nodes: {
-          beforePush: [0, 0, 342, 636],
-          ...column(shippingBefore, 12, 36, 318, 64, 104),
-          afterPush: [0, 684, 342, 428],
-          ...column(shippingAfter, 12, 720, 318, 64, 104),
+          fromPush: [0, 0, 342, 532],
+          ...column(shipping, 12, 36, 318, 64, 104),
         },
-        edges: [
-          ...chain(shippingBefore),
-          { from: 'push', to: 'ci', label: 'relPushDeploys' },
-          ...chain(shippingAfter),
-        ],
+        edges: chain(shipping),
       },
     },
   },
   {
     id: 'agents',
+    page: 'agents',
     title: 'viewAgentsTitle',
     desc: 'viewAgentsDesc',
     focus: 'planDiff',
     layouts: {
       wide: {
         width: 1164,
-        height: 320,
+        height: 344,
         nodes: {
-          stepLoop: [576, 0, 584, 140],
-          afterSteps: [0, 188, 1164, 132],
-          ...row(agentsStart, 0, 40, 168, 88, 196),
-          ...row(agentsFinish, 0, 232, 168, 88, 196),
+          stepLoop: [576, 0, 584, 152],
+          afterSteps: [0, 200, 1164, 144],
+          ...row(agentsStart, 0, 40, 168, 100, 196),
+          ...row(agentsFinish, 0, 244, 156, 100, 168),
         },
         edges: [
           ...chain(agentsStart),
-          { from: 'stepBrowser', to: 'planDiff', route: 'tree', label: 'relStepsDone', labelAt: [582, 172] },
+          { from: 'stepBrowser', to: 'planDiff', route: 'tree', label: 'relStepsDone', labelAt: [582, 184] },
           ...chain(agentsFinish),
         ],
       },
       narrow: {
         width: 342,
-        height: 1320,
+        height: 1424,
         nodes: {
           ...column(agentsStart.slice(0, 3), 12, 0, 318, 64, 104),
           stepLoop: [0, 312, 342, 324],
           ...column(agentsStart.slice(3), 12, 348, 318, 64, 104),
-          afterSteps: [0, 684, 342, 636],
+          afterSteps: [0, 684, 342, 740],
           ...column(agentsFinish, 12, 720, 318, 64, 104),
         },
         edges: [

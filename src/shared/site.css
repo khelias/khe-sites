@@ -389,10 +389,10 @@ body.architecture-page {
   --a-muted: var(--muted);
   --a-rule: var(--rule);
   --a-rule-strong: var(--rule-strong);
-  --a-accent: var(--server);
+  --a-accent: var(--room);
+  --a-accent-ink: color-mix(in srgb, var(--room-text) 75%, var(--a-text));
+  --a-accent-soft: color-mix(in srgb, var(--room) 10%, var(--a-bg));
   --a-node: #8d918e;
-  --a-accent-ink: #0b5c56;
-  --a-accent-soft: #e2efec;
   --a-proposed: #a16207;
   --a-code: #ebe8e1;
   --a-person: #9a4d00;
@@ -403,8 +403,6 @@ body.architecture-page {
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) body.architecture-page {
     --a-node: #5d6562;
-    --a-accent-ink: #a7f3e6;
-    --a-accent-soft: rgba(94, 234, 212, 0.1);
     --a-proposed: #f2b84b;
     --a-code: #1a1f1e;
     --a-person: #fbbf77;
@@ -414,8 +412,6 @@ body.architecture-page {
 
 :root[data-theme="dark"] body.architecture-page {
   --a-node: #5d6562;
-  --a-accent-ink: #a7f3e6;
-  --a-accent-soft: rgba(94, 234, 212, 0.1);
   --a-proposed: #f2b84b;
   --a-code: #1a1f1e;
   --a-person: #fbbf77;
@@ -432,7 +428,7 @@ body.architecture-page {
 }
 
 /* The diagrams need the wider column, so the header widens with it and both edges line up. */
-[data-page="architecture"] .site-header {
+body.architecture-page:not(.architecture-decision) .site-header {
   --khe-header-max-width: 1240px;
 }
 
@@ -562,11 +558,27 @@ body.architecture-page {
   font-size: 0.95rem;
 }
 
+/* A pointer to the next page: after a diagram's note, and at the end of the server page. */
+.arch-crosslink {
+  margin-top: 1.5rem;
+}
+
+.arch-onward {
+  margin-top: 6rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--a-rule);
+}
+
 .arch-hero {
   display: grid;
   grid-template-columns: minmax(0, 1fr) minmax(18rem, 24rem);
   gap: 3.5rem;
   align-items: start;
+}
+
+/* The decisions and agents pages have no facts column. */
+.arch-hero__text:only-child {
+  grid-column: 1 / -1;
 }
 
 .arch-lead {

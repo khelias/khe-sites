@@ -164,6 +164,27 @@
       </span>
       <span class="row-arrow" aria-hidden="true">→</span>
     </a>
+
+    <a class="project-row" data-room="home" href="/agents/?lang=en" data-link="agents">
+      <span class="project-thumb" aria-hidden="true">
+        <svg viewBox="0 0 160 120" focusable="false">
+          <rect class="t-ground" width="160" height="120"/>
+          <rect class="t-paper" x="20" y="38" width="34" height="44" rx="4"/>
+          <rect class="t-line" x="20" y="38" width="34" height="44" rx="4"/>
+          <rect class="t-paper" x="66" y="38" width="34" height="44" rx="4"/>
+          <rect class="t-line" x="66" y="38" width="34" height="44" rx="4"/>
+          <path class="t-ink" d="M28 52h18M28 61h12M74 52h18M74 61h14"/>
+          <path class="t-line" d="M54 60h12M100 60h14"/>
+          <circle class="t-room" cx="126" cy="60" r="10"/>
+        </svg>
+      </span>
+      <span class="project-copy">
+        <span class="project-kicker label room-dot" data-i18n="agentsKicker">How it is made</span>
+        <span class="project-title" data-i18n="agentsTitle">Building with agents</span>
+        <span class="project-desc" data-i18n="agentsDesc">AI agents write the code to a plan and check each other's work.</span>
+      </span>
+      <span class="row-arrow" aria-hidden="true">→</span>
+    </a>
   </section>
 
   <section class="landing-work" aria-labelledby="work-title">
@@ -205,6 +226,9 @@
       architectureKicker: 'Vaata sisse',
       architectureTitle: 'Koduserver',
       architectureDesc: 'Kõik see töötab ühel serveril minu kodus. Kuidas ja miks.',
+      agentsKicker: 'Kuidas see tehtud on',
+      agentsTitle: 'Agentidega arendus',
+      agentsDesc: 'AI-agendid kirjutavad koodi plaani järgi ja kontrollivad üksteise tööd.',
     },
     en: {
       title: 'Kaido Henrik Elias | Software Architect',
@@ -229,6 +253,9 @@
       architectureKicker: 'Look inside',
       architectureTitle: 'The home server',
       architectureDesc: 'All of this runs on one server in my home. How, and why.',
+      agentsKicker: 'How it is made',
+      agentsTitle: 'Building with agents',
+      agentsDesc: "AI agents write the code to a plan and check each other's work.",
     },
   };
 
@@ -243,6 +270,7 @@
     links: {
       home: (locale) => `/?lang=${locale}`,
       architecture: (locale) => `/architecture/?lang=${locale}`,
+      agents: (locale) => `/agents/?lang=${locale}`,
       house3d: () => '/ha/',
       trips: (locale) => `/trips/?lang=${locale}`,
       games: (locale) => `${gamesOrigin}/?lang=${locale}`,

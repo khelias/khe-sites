@@ -112,8 +112,8 @@ from the Colors table below.
 
 | Room | Where | Accent | Text accent |
 |---|---|---|---|
-| Home | khe.ee landing, its privacy page | `home` | `home` |
-| Server | khe.ee/architecture and the ADR pages | `server` | `server` |
+| Home | khe.ee landing, its privacy page, khe.ee/agents | `home` | `home` |
+| Server | khe.ee/architecture, its decisions page and the ADR pages | `server` | `server` |
 | Trips | khe.ee/trips, khe.ee/r/..., trips.khe.ee | `trips` | `trips-text` |
 | House | khe.ee/ha | `house` | `house` |
 | Games | the games.khe.ee hub and its privacy page | `games` | `games` |

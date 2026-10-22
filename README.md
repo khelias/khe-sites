@@ -7,10 +7,13 @@
 Static source for the public KHE web presence, in plain HTML, CSS and
 JavaScript:
 
-- [khe.ee](https://khe.ee) - the landing page and the
-  [estate architecture](https://khe.ee/architecture/): the estate in one
-  diagram, the decisions that shape it, how a change ships, how it stays up
-  and where it is weak, and every estate decision on its own page
+- [khe.ee](https://khe.ee) - the landing page and three pages about how
+  it is made: the [home server](https://khe.ee/architecture/) (the estate in
+  one diagram, how a change reaches it from a push, how it stays up and where
+  it is weak), its [decisions](https://khe.ee/architecture/decisions/) (the
+  five that shape it, the register and every estate decision on its own
+  page) and [agentic development](https://khe.ee/agents/) (how the agents
+  work from a plan to the push)
 - [khe.ee/ha](https://khe.ee/ha/) - the Home Assistant 3D house
   view on a made-up house, built from
   [khe-home-assistant](https://github.com/khelias/khe-home-assistant)

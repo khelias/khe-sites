@@ -1,7 +1,8 @@
 # khe-sites
 
 Static source for two independently deployed sites: `khe.ee` from
-`src/landing/` (with the estate architecture page at `/architecture/`) and
+`src/landing/` (with the estate architecture pages at `/architecture/`,
+`/architecture/decisions/` and `/agents/`) and
 `games.khe.ee` from `src/games/`, the launcher shell. The game apps
 (`khe-study`, `khe-ai-adventure`) live and deploy in their own repos.
 
@@ -29,10 +30,12 @@ family values; the apps copy them into their `--khe-header-*` values.
 ```
 src/
   landing/   khe.ee
-    architecture/  estate architecture page: copy.js (en/et strings),
-             architecture.js; diagrams, building blocks, the five key
-             decisions, register and ADR pages are rendered into it at
-             build time
+    architecture/  the home server page: copy.js (en/et strings of all
+             three architecture pages), architecture.js; its diagrams and
+             building blocks are rendered into it at build time
+      decisions/   the five key decisions and the register, rendered at
+             build time; the ADR pages are built beside it
+    agents/  agentic development (home room): the agents diagram
   games/     games.khe.ee launcher shell
   shared/    cross-site assets, copied into each site's /assets/ at build
 scripts/
@@ -42,7 +45,8 @@ scripts/
   house3d-demo.mjs         runs khe-home-assistant's demo build into
                            dist/landing/ha/
   architecture-model.mjs   diagram elements, edges and layout
-  render-architecture.mjs  renders the page, ADR pages and sitemap entries
+  render-architecture.mjs  renders the three pages, ADR pages and sitemap
+                           entries
   site-header.mjs          fills each page's site-header, site-theme and
                            site-footer markers through @khelias/ui
   asset-versions.mjs       stamps ?v=<content hash> on .css and .js links
@@ -206,7 +210,10 @@ estate's writer register in khe-meta in the same change.
   every khe-homelab service group, and nothing else; check fails otherwise.
   The repo elements appear in no diagram; they feed the building-block rows
   in the estate section's `<details>`.
-- Each view (`estate`, `shipping`, `agents`) has two layouts, `wide` and
+- Each view (`estate`, `shipping`, `agents`) names the `page` it is drawn on
+  (`architecture` or `agents`; `ARCHITECTURE_PAGES` in
+  `render-architecture.mjs` lists the pages and their markers, and check
+  counts each page's diagrams from it). Each has two layouts, `wide` and
   `narrow`, each with its own geometry and edges, and both naming the same
   nodes (check enforces it). The build draws one SVG per layout; CSS shows
   the wide one from 1240px (where the column fits the 1192-unit layout
@@ -214,13 +221,20 @@ estate's writer register in khe-meta in the same change.
   language in a `<g lang>` and word-wrapped at build, and the build fails
   when a wrapped label overflows its box in either language. The text
   equivalent is a visually hidden list built from the narrow layout.
-- The page sections, in order: hero with three static facts, `#estate`,
-  `#key-decisions` (from `keyDecisions` in the model), `#shipping` (the
-  shipping and agents views), `#uptime` (one row per khe-homelab README
-  resilience layer; check compares the counts) and `#decisions`, the
-  register. Keep the register at `id="decisions"`: the homelab nginx
-  redirects `/architecture/decisions/` to `/architecture/#decisions`, and
-  the ADR pages link back to it.
+- The three pages share `copy.js`, `architecture.js` and the
+  `architecture-page` body class; `body[data-page]` picks each one's title
+  and description (`title` for the server page, `<page>PageTitle` for the
+  others). `/architecture/` (server room): hero with three static facts,
+  `#estate`, `#shipping` (the delivery view, from the push to the deploy),
+  `#uptime` (one row per khe-homelab README resilience layer; check compares
+  the counts), then a line to the decisions page.
+  `/architecture/decisions/` (server room): `#key-decisions` (from
+  `keyDecisions` in the model) and `#decisions`, the register, which check
+  requires there and nowhere else; the ADR pages' breadcrumb links it, and
+  khe-homelab's landing nginx and edge fallback serve the bare directory
+  (no redirect). `/agents/` (home room): the agents view, from the plan to
+  the push. The push is in both diagrams: the agents view ends on it, the
+  delivery view starts from it.
 - Headings use Source Serif 4 (weight 600, latin and latin-ext subsets in
   `src/shared/fonts/`), body text Inter, mono labels the system mono stack.
   Check fails when `site-header.css` or `site.css` loads a font file that is
@@ -246,8 +260,10 @@ estate's writer register in khe-meta in the same change.
   block or the two dark blocks differ. The pre-family tokens (`--bg`,
   `--text*`, `--border*`, `--card-bg`, `--accent*`, `--display-font`) are
   gone, and check fails when one comes back in a source file. The
-  architecture page's `--a-*` names alias the family tokens; only its
-  diagram tokens keep values of their own.
+  architecture pages' `--a-*` names alias the family tokens; only the
+  diagram tokens keep values of their own. `--a-accent` is the page's
+  `--room`, and the accent ink and soft fill have home-room values for
+  `/agents/`.
 - Every built page's `<html>` carries `data-room` (`home`, `server`,
   `trips`, `house`, `games`; check), which sets `--room` (fills, dots) and
   `--room-text` (text, the `.ee`, focus). A landing row
