@@ -220,7 +220,7 @@ export const keyDecisions = [
   { ids: ['010'], key: 'kd010' },
   { ids: ['008'], key: 'kd008' },
   { ids: ['001', '014'], key: 'kd001' },
-  { ids: ['006'], key: 'kd006' },
+  { ids: ['020'], key: 'kd020' },
 ];
 
 // Product repos keep their own decisions; the page links the directories.
