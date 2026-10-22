@@ -262,8 +262,8 @@ estate's writer register in khe-meta in the same change.
   gone, and check fails when one comes back in a source file. The
   architecture pages' `--a-*` names alias the family tokens; only the
   diagram tokens keep values of their own. `--a-accent` is the page's
-  `--room`, and the accent ink and soft fill have home-room values for
-  `/agents/`.
+  `--room`, and the accent ink and soft fill are mixed from the room's
+  tokens, so `/agents/` (home room) shows no server teal.
 - Every built page's `<html>` carries `data-room` (`home`, `server`,
   `trips`, `house`, `games`; check), which sets `--room` (fills, dots) and
   `--room-text` (text, the `.ee`, focus). A landing row
