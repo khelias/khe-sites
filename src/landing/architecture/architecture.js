@@ -27,7 +27,6 @@ createLocaleController({
   links: {
     home: (locale) => `/?lang=${locale}`,
     privacy: (locale) => `/privacy?lang=${locale}`,
-    architecture: (locale) => `/architecture/?lang=${locale}`,
     shipping: (locale) => `/architecture/?lang=${locale}#shipping`,
     register: (locale) => `/architecture/decisions/?lang=${locale}`,
     agents: (locale) => `/agents/?lang=${locale}`,
