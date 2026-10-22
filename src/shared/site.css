@@ -576,6 +576,11 @@ body.architecture-page:not(.architecture-decision) .site-header {
   align-items: start;
 }
 
+/* A page without a nav (/agents/) starts its first section closer to the hero. */
+.arch-hero + .arch-section {
+  margin-top: 3rem;
+}
+
 /* The decisions and agents pages have no facts column. */
 .arch-hero__text:only-child {
   grid-column: 1 / -1;

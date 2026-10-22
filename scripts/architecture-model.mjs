@@ -48,6 +48,7 @@ export const elements = {
 
   stepLoop: { kind: 'boundary', label: 'groupStepLoop', style: 'dashed' },
   afterSteps: { kind: 'boundary', label: 'groupAfterSteps', style: 'rule' },
+  task: { kind: 'step', owner: 'person', tag: 'tagPerson', label: 'elTask', sub: 'elTaskSub' },
   runPlan: { kind: 'step', owner: 'agent', tag: 'tagAgent', label: 'elRunPlan', sub: 'elRunPlanSub' },
   planReview: { kind: 'step', owner: 'agent', tag: 'tagSubagent', label: 'elPlanReview', sub: 'elPlanReviewSub' },
   goalSet: { kind: 'step', owner: 'person', tag: 'tagPerson', label: 'elGoalSet', sub: 'elGoalSetSub' },
@@ -70,7 +71,7 @@ const column = (ids, x, y, w, h, step) => Object.fromEntries(ids.map((id, i) => 
 const row = (ids, x, y, w, h, step) => Object.fromEntries(ids.map((id, i) => [id, [x + i * step, y, w, h]]));
 const chain = (ids) => ids.slice(1).map((id, i) => ({ from: ids[i], to: id }));
 const shipping = ['push', 'ci', 'ghcr', 'pinPr', 'deploy'];
-const agentsStart = ['runPlan', 'planReview', 'goalSet', 'stepChange', 'stepCheck', 'stepBrowser'];
+const agentsStart = ['task', 'runPlan', 'planReview', 'goalSet', 'stepChange', 'stepCheck', 'stepBrowser'];
 const agentsFinish = ['planDiff', 'simplify', 'codeReview', 'gate', 'retro', 'goalMet', 'push'];
 
 // `page` is the built page a view is drawn on: architecture (/architecture/)
@@ -173,9 +174,9 @@ export const views = [
         width: 1164,
         height: 344,
         nodes: {
-          stepLoop: [576, 0, 584, 152],
+          stepLoop: [660, 0, 504, 152],
           afterSteps: [0, 200, 1164, 144],
-          ...row(agentsStart, 0, 40, 168, 100, 196),
+          ...row(agentsStart, 0, 40, 156, 100, 168),
           ...row(agentsFinish, 0, 244, 156, 100, 168),
         },
         edges: [
@@ -186,13 +187,13 @@ export const views = [
       },
       narrow: {
         width: 342,
-        height: 1424,
+        height: 1528,
         nodes: {
-          ...column(agentsStart.slice(0, 3), 12, 0, 318, 64, 104),
-          stepLoop: [0, 312, 342, 324],
-          ...column(agentsStart.slice(3), 12, 348, 318, 64, 104),
-          afterSteps: [0, 684, 342, 740],
-          ...column(agentsFinish, 12, 720, 318, 64, 104),
+          ...column(agentsStart.slice(0, 4), 12, 0, 318, 64, 104),
+          stepLoop: [0, 416, 342, 324],
+          ...column(agentsStart.slice(4), 12, 452, 318, 64, 104),
+          afterSteps: [0, 788, 342, 740],
+          ...column(agentsFinish, 12, 824, 318, 64, 104),
         },
         edges: [
           ...chain(agentsStart),
