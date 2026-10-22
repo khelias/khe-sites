@@ -50,16 +50,16 @@ export const elements = {
   afterSteps: { kind: 'boundary', label: 'groupAfterSteps', style: 'rule' },
   task: { kind: 'step', owner: 'person', tag: 'tagPerson', label: 'elTask', sub: 'elTaskSub' },
   runPlan: { kind: 'step', owner: 'agent', tag: 'tagAgent', label: 'elRunPlan', sub: 'elRunPlanSub' },
-  planReview: { kind: 'step', owner: 'agent', tag: 'tagSubagent', label: 'elPlanReview', sub: 'elPlanReviewSub' },
+  planReview: { kind: 'step', owner: 'agent', tag: 'tagAgent', label: 'elPlanReview', sub: 'elPlanReviewSub' },
   goalSet: { kind: 'step', owner: 'person', tag: 'tagPerson', label: 'elGoalSet', sub: 'elGoalSetSub' },
   stepChange: { kind: 'step', owner: 'agent', tag: 'tagAgent', label: 'elStepChange', sub: 'elStepChangeSub' },
   stepCheck: { kind: 'step', owner: 'agent', tag: 'tagAgent', label: 'elStepCheck', sub: 'elStepCheckSub' },
   stepBrowser: { kind: 'step', owner: 'agent', tag: 'tagAgent', label: 'elStepBrowser', sub: 'elStepBrowserSub' },
-  planDiff: { kind: 'step', owner: 'agent', tag: 'tagSubagent', label: 'elPlanDiff', sub: 'elPlanDiffSub' },
+  planDiff: { kind: 'step', owner: 'agent', tag: 'tagAgent', label: 'elPlanDiff', sub: 'elPlanDiffSub' },
   simplify: { kind: 'step', owner: 'agent', tag: 'tagAgent', label: 'elSimplify', sub: 'elSimplifySub' },
   codeReview: { kind: 'step', owner: 'agent', tag: 'tagAgent', label: 'elCodeReview', sub: 'elCodeReviewSub' },
   retro: { kind: 'step', owner: 'agent', tag: 'tagAgent', label: 'elRetro', sub: 'elRetroSub' },
-  goalMet: { kind: 'step', owner: 'agent', tag: 'tagEvaluator', label: 'elGoalMet', sub: 'elGoalMetSub' },
+  goalMet: { kind: 'step', owner: 'agent', tag: 'tagAgent', label: 'elGoalMet', sub: 'elGoalMetSub' },
 };
 
 // Each view has a wide layout (desktop) and a narrow one (phones), naming the
