@@ -108,7 +108,21 @@ when the homelab is down, so it must be fit for a third-party host.
 
 Because deploy runs on that runner, a fork PR's run is approved only after
 reading its `.github/workflows/` diff
-([estate ADR-006](https://github.com/khelias/khe-architecture/blob/main/decisions/006-branch-protection.md)).
+([estate ADR-020](https://github.com/khelias/khe-architecture/blob/main/decisions/020-agent-work-through-pull-requests.md)).
+
+Agent work reaches `main` through a pull request (estate ADR-020 point 3):
+the repo is `pr: true` in the workspace's `repos/repos.yaml`, so the commit
+gate refuses a commit on `main`. Commit on a branch; the handover pushes it,
+opens the PR and turns on auto-merge with a merge commit. It merges once
+the two required checks pass, "Static site quality" and "Personal-data
+scan". The scan job in `ci.yml` runs khe-workspace's
+`scripts/pii-scan-range.sh` with its `.claude/hooks/pii-rules.toml`, checked
+out at the commit pinned in the "Checkout khe-workspace" step. When
+khe-workspace changes the script or the rules, move the pin here in a
+commit of its own, once that khe-workspace commit is on GitHub. The gitleaks
+version and its SHA-256 are the job's `env`. A diff under
+`.github/workflows/` gets a person's look before the push: a PR can weaken
+its own required job.
 
 Automated writers
 ([estate ADR-007](https://github.com/khelias/khe-architecture/blob/main/decisions/007-automated-writers.md)): Renovate
@@ -116,8 +130,9 @@ automerges npm patch and minor updates of stable packages, 0.x patches of
 devDependencies, GitHub Actions minor and patch updates, digests, pins and
 lock file maintenance (`renovate.json`); every merge to `main` deploys, and
 the weekly schedule redeploys from the current sources. The way back from a
-bad merge here is to revert its commit on `main` and push, which redeploys
-the previous state; a bad page from a source repo is reverted there and
+bad merge here is a branch that reverts it (`git revert -m 1` for a merge
+commit), taken through a PR like any change, whose merge redeploys the
+previous state; a bad page from a source repo is reverted there and
 reaches khe.ee at the next deploy here. A new automated writer joins the
 estate's writer register in khe-meta in the same change.
 

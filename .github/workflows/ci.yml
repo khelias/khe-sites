@@ -9,6 +9,9 @@ on:
 permissions:
   contents: read
 
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
@@ -19,7 +22,6 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 10
     env:
-      FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
       # The architecture page reads the ADRs and the estate index from
       # khe-architecture and the service groups from khe-homelab.
       ARCHITECTURE_ROOT: ${{ github.workspace }}/.sources/khe-architecture
@@ -74,3 +76,46 @@ jobs:
 
       - name: Build
         run: npm run build
+
+  # Required on pull requests (estate ADR-020): the commits on the branch are
+  # scanned with the same rules the local commit gate uses, from khe-workspace
+  # at a pinned commit. Move the pin when those rules or the script change.
+  pii-scan:
+    name: Personal-data scan
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: read
+    env:
+      GITLEAKS_VERSION: 8.30.1
+      GITLEAKS_SHA256: 551f6fc83ea457d62a0d98237cbad105af8d557003051f41f3e7ca7b3f2470eb
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Checkout khe-workspace
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          repository: khelias/khe-workspace
+          ref: e975e7aeb0d11ac4a818fc9c4eb10b91df52c105
+          path: .sources/khe-workspace
+          persist-credentials: false
+
+      - name: Install gitleaks
+        run: |
+          curl -fsSL -o "$RUNNER_TEMP/gitleaks.tar.gz" \
+            "https://github.com/gitleaks/gitleaks/releases/download/v${GITLEAKS_VERSION}/gitleaks_${GITLEAKS_VERSION}_linux_x64.tar.gz"
+          echo "${GITLEAKS_SHA256}  $RUNNER_TEMP/gitleaks.tar.gz" | sha256sum -c -
+          tar -xzf "$RUNNER_TEMP/gitleaks.tar.gz" -C "$RUNNER_TEMP" gitleaks
+          echo "$RUNNER_TEMP" >> "$GITHUB_PATH"
+
+      - name: Scan the branch's commits
+        env:
+          BASE_SHA: ${{ github.event.pull_request.base.sha }}
+          HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+        run: bash .sources/khe-workspace/scripts/pii-scan-range.sh "$BASE_SHA" "$HEAD_SHA"
