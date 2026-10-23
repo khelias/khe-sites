@@ -8,21 +8,30 @@ Static source for two independently deployed sites: `khe.ee` from
 
 Plain HTML, CSS and vanilla JS, built by Node 24 scripts. No framework, no
 bundler. One devDependency, `@khelias/ui` (the KHE site header with its
-rooms menu and theme toggle, and the site footer), pinned exactly; run
-`npm ci` before building.
+rooms menu and theme toggle, the site footer and the design check), pinned
+exactly; run `npm ci` before building.
 
 The look is the KHE family layer
-([estate ADR-018](https://github.com/khelias/khe-architecture/blob/main/decisions/018-rooms-menu-in-the-shared-header.md),
-which supersedes ADR-015): shared chrome on one ground in every room, one
-accent per room shown in the chrome only in the `.ee` and as the room's dot
-in the rooms list, light and dark following the system setting.
-khe-sites owns the family [`DESIGN.md`](DESIGN.md), the one source of the
-family values; the apps copy them into their `--khe-header-*` values.
+([estate ADR-021](https://github.com/khelias/khe-architecture/blob/main/decisions/021-family-shell-and-design-check.md),
+which supersedes ADR-018): shared chrome and application shell on one ground
+in every room, one accent per room shown in the chrome only in the `.ee` and
+as the room's dot in the rooms list, light and dark following the system
+setting. khe-sites owns the family [`DESIGN.md`](DESIGN.md), the one source
+of the family values; the apps copy them into their `--khe-header-*` values.
+`npm run check` starts with `khe-design-lint` from `@khelias/ui`, the family's
+design check (estate ADR-021 point 8): it counts gradients, blur, shadows,
+large radii, default palette colours, capitals, tracking, emoji and em
+dashes per file under `src/` against `khe-design-lint-baseline.json`, and
+fails on a count above it or below it. Rewrite the baseline with
+`npx khe-design-lint --write-baseline` after a fix; a line that keeps a
+match on purpose carries `design-lint-allow <rule>: <reason>`. The
+architecture section's own ban on shadow and gradient in `check.mjs` is
+stricter and stays.
 
 ## Commands
 
 - `npm run check` - build, then static validation of the sources, the
-  built pages and `DESIGN.md` against the tokens
+  built pages and `DESIGN.md` against the tokens, after `khe-design-lint`
 - `npm run build` - build `dist/landing` and `dist/games`
 
 ## Layout
@@ -178,7 +187,7 @@ estate's writer register in khe-meta in the same change.
   in `src/shared/site-locale.js` (both languages, the `header*` keys), which
   `createLocaleController` merges under every page's copy. Every
   built page must have exactly one header (check).
-- The rooms menu (estate ADR-018): `rooms` on the marker renders the
+- The rooms menu (estate ADR-021): `rooms` on the marker renders the
   current room's button, from the page's `<html data-room>`, and the list of
   every room; every page but the khe.ee landing has it, the landing none
   (check). The header shows no page title: a page's name is its heading. The

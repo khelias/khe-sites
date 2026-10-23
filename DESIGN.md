@@ -12,14 +12,14 @@ colors:
   rule: "#e3e5e5"
   rule-strong: "#c3c7c7"
   home: "#d7263d"
-  server: "#0f766e"
+  server: "#246b5f"
   trips: "#b75a3a"
   trips-text: "#93411f"
   house: "#1f5fa8"
   house-ground: "#e8eef6"
-  games: "#a16207"
-  adventure: "#7c3aed"
-  study: "#047857"
+  games: "#8a5a12"
+  adventure: "#6a3d8f"
+  study: "#2f6b3a"
   primary: "#121415"
 typography:
   display:
@@ -58,10 +58,14 @@ typography:
     fontSize: 12px
     fontWeight: 600
   label:
+    fontFamily: Inter
+    fontSize: 13px
+    fontWeight: 500
+    lineHeight: 1.4
+  fact:
     fontFamily: ui-monospace
     fontSize: 11px
     fontWeight: 500
-    letterSpacing: 0.12em
 rounded:
   focus: 4px
   control: 8px
@@ -89,15 +93,15 @@ components:
 ## Overview
 
 The KHE sites and apps are one family of rooms
-([estate ADR-018](https://github.com/khelias/khe-architecture/blob/main/decisions/018-rooms-menu-in-the-shared-header.md),
-which supersedes ADR-015). Every room shares one ground, one ink and one type
-in its chrome (the header, the mark, the language switcher, the page ground
-and the type of the page chrome), and has one accent of its own, which the
-chrome shows in the `.ee` of the mark and as the room's dot in the rooms
-list. Room content that is an application (a
-game, the Home Assistant dashboard, the trip atlas) keeps its own visual
-language and ground. The ground and ink are the architecture page's
-editorial pair, promoted to the family.
+([estate ADR-021](https://github.com/khelias/khe-architecture/blob/main/decisions/021-family-shell-and-design-check.md),
+which supersedes ADR-018 and ADR-015). Every room shares one ground, one ink
+and one type in its chrome (the header, the mark, the language switcher, the
+page ground and the type of the page chrome) and in the shell of its
+application (surfaces, controls, dialogs, notifications, menus, lists), and
+has one accent of its own, which the chrome shows in the `.ee` of the mark
+and as the room's dot in the rooms list. Play areas, canvases, maps and the
+house drawing keep their own look. The ground and ink are the architecture
+page's editorial pair, promoted to the family.
 
 This file is the one source of the family values. Other repos keep only their
 own room in their design docs and cite this one. The tokens live in
@@ -143,14 +147,14 @@ the six it uses in both themes, so it renders on the game pages too:
 | rule | #e3e5e5 | #232827 | hairlines |
 | rule-strong | #c3c7c7 | #3a413f | the mark's box, section rules |
 | home | #d7263d | #fb4b57 | Home accent and text |
-| server | #0f766e | #5eead4 | Server accent and text |
+| server | #246b5f | #7fc8b8 | Server accent and text |
 | trips | #b75a3a | #d9764f | Trips fills and marks |
 | trips-text | #93411f | #e8926a | Trips text, its `.ee` |
 | house | #1f5fa8 | #6fe3ff | House accent and text |
 | house-ground | #e8eef6 | #060c1b | the house drawing's ground only |
-| games | #a16207 | #f59e0b | Games hub accent and text |
-| adventure | #7c3aed | #a78bfa | AI Seiklus (dark only in the game) |
-| study | #047857 | #34d399 | Tarkade Mängud |
+| games | #8a5a12 | #d9a441 | Games hub accent and text |
+| adventure | #6a3d8f | #b59ad6 | AI Seiklus (dark only in the game) |
+| study | #2f6b3a | #7cc28a | Tarkade Mängud |
 
 `primary` in the frontmatter is `ink`: the family's one filled button is ink
 on paper, so no tool invents a primary hue.
@@ -195,21 +199,27 @@ an app the app's name follows after a slash ("Mängud ⌄ / Tarkade Mängud"). A
 page's own name lives in its heading, never in the header. The list, its
 names, notes and addresses come from `@khelias/ui`, so every room lists the
 same rooms
-([estate ADR-018](https://github.com/khelias/khe-architecture/blob/main/decisions/018-rooms-menu-in-the-shared-header.md)).
+([estate ADR-021](https://github.com/khelias/khe-architecture/blob/main/decisions/021-family-shell-and-design-check.md)).
 
-## Application content and state colour
+## Application shell and state colour
 
-Content that is an application keeps its own visual language and ground; the
-family covers the shell around it. State colour is meaning, not an accent:
-on and off, ok, warning, fault, a map state, right or wrong. A room may use
-several, each naming a state, at 3:1 for marks and 4.5:1 for text in both
-themes. Shared state tokens are a follow-up, once two rooms need the same ones.
+The family covers every room's shell, not only the chrome
+([estate ADR-021](https://github.com/khelias/khe-architecture/blob/main/decisions/021-family-shell-and-design-check.md) point 1): the page
+ground, the type, the surfaces, the controls, dialogs, notifications, menus
+and lists around a room's content use the values and rules in this file.
+Play areas, canvases, maps and the house drawing keep their own look, within
+the design check's baseline, which only shrinks. A room whose shell does not
+meet this yet says so in its `AGENTS.md`. State colour is meaning, not an
+accent: on and off, ok, warning, fault, a map state, right or wrong. A room
+may use several, each naming a state, at 3:1 for marks and 4.5:1 for text in
+both themes. Shared state tokens are a follow-up, once two rooms need the
+same ones.
 
 ## Typography
 
 Source Serif 4 600 for what you read (display, titles, headings, the header
-title), Inter for what you look up (lead, body, controls), the system mono
-stack for labels and facts.
+title), Inter for what you look up (lead, body, controls, labels), the system
+mono stack for facts: dates, numbers, times and codes.
 
 - `display` serif 600, clamp(2.6rem, 6vw, 4rem) / 1.02: the landing name,
   the games hub title
@@ -217,7 +227,10 @@ stack for labels and facts.
 - `context` serif 17px: the header title's family size (see the mark)
 - `lead` Inter 19px, `body` 16px / 1.6, `small` 14px
 - `control` Inter 600 12px
-- `label` mono 500 11px, uppercase, 0.12em tracking
+- `label` Inter 500 13px / 1.4, sentence case, no tracking and no dot: the
+  kicker above a title, a list's heading; `muted`, or the room's text accent
+  on a page's own kicker
+- `fact` mono 500 11px, no capitals or tracking: a date, a number, a code
 
 The Source Serif 4 files (weight 600, latin and latin-ext) ship in khe-sites
 only. The apps use the family serif stack, `'Source Serif 4', 'Iowan Old
@@ -296,3 +309,31 @@ where they would not reach the header:
 - Don't use a state colour as a room accent, or an accent to mean a state.
 - Don't put a blur, a shadow or a translucent ground on the header bar.
 - Don't restyle the package's `.site-header__*` parts; set its properties.
+
+### Tells
+
+The habits that make a page read as generated. `khe-design-lint` from
+`@khelias/ui` counts the first group in every web app against a baseline that
+only shrinks ([estate ADR-021](https://github.com/khelias/khe-architecture/blob/main/decisions/021-family-shell-and-design-check.md) point 8);
+a line may opt out with `design-lint-allow <rule>: <reason>`.
+
+- Gradients, backdrop blur and blur filters.
+- Shadows, other than the one floating layer (the rooms list, a dialog, a
+  menu) and a `0 0 0 Npx` ring.
+- Radii above 12px, other than the 999px pill and a circle.
+- Default palette colours (Tailwind's named scales and their hex values)
+  instead of the family tokens.
+- Capitals by CSS and tracking wider than 0.02em.
+- Emoji in interface strings; content (a badge picture, a game's word list)
+  may keep them.
+- Em dashes in interface strings.
+
+No check sees the rest; review for them:
+
+- A centred hero with a pill badge above the title.
+- Three icon feature cards in a row.
+- Invented numbers: a statistic nobody measured.
+- Emoji used as icons.
+- Exclamation copy ("Great job!") and capitalised praise.
+- Glow: a coloured shadow or halo behind a control or a title.
+- Gradient text.

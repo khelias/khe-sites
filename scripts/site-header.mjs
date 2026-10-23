@@ -11,7 +11,7 @@ const HOMES = {
 
 // <!-- site-header home=<HOMES key> [rooms] [theme] [fixed] --> on a line of its own; the header
 // keeps the marker's indent and renders in the page's <html lang>. rooms shows the rooms menu
-// with the page's <html data-room> current (estate ADR-018); every page but the landing has it.
+// with the page's <html data-room> current (estate ADR-021); every page but the landing has it.
 const MARKER = /^([ \t]*)<!-- site-header ([^>]*?) -->$/gm;
 // <!-- site-theme --> in <head>, before the first stylesheet: the stored theme before first paint.
 const THEME_MARKER = /^([ \t]*)<!-- site-theme -->$/gm;
