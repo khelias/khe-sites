@@ -62,14 +62,14 @@
   --rule: #e3e5e5;
   --rule-strong: #c3c7c7;
   --home: #d7263d;
-  --server: #0f766e;
+  --server: #246b5f;
   --trips: #b75a3a;
   --trips-text: #93411f;
   --house: #1f5fa8;
   --house-ground: #e8eef6;
-  --games: #a16207;
-  --adventure: #7c3aed;
-  --study: #047857;
+  --games: #8a5a12;
+  --adventure: #6a3d8f;
+  --study: #2f6b3a;
 
   --serif: 'Source Serif 4', 'Iowan Old Style', Georgia, serif;
   --sans: 'Inter', system-ui, sans-serif;
@@ -90,14 +90,14 @@
     --rule: #232827;
     --rule-strong: #3a413f;
     --home: #fb4b57;
-    --server: #5eead4;
+    --server: #7fc8b8;
     --trips: #d9764f;
     --trips-text: #e8926a;
     --house: #6fe3ff;
     --house-ground: #060c1b;
-    --games: #f59e0b;
-    --adventure: #a78bfa;
-    --study: #34d399;
+    --games: #d9a441;
+    --adventure: #b59ad6;
+    --study: #7cc28a;
   }
 }
 
@@ -111,14 +111,14 @@
   --rule: #232827;
   --rule-strong: #3a413f;
   --home: #fb4b57;
-  --server: #5eead4;
+  --server: #7fc8b8;
   --trips: #d9764f;
   --trips-text: #e8926a;
   --house: #6fe3ff;
   --house-ground: #060c1b;
-  --games: #f59e0b;
-  --adventure: #a78bfa;
-  --study: #34d399;
+  --games: #d9a441;
+  --adventure: #b59ad6;
+  --study: #7cc28a;
   color-scheme: dark;
 }
 
@@ -135,7 +135,7 @@
 [data-room="games"] { --room: var(--games); --room-text: var(--games); }
 
 /* The family header: opaque paper, one rule, no shadow; the room shows only in the .ee and the
-   rooms list's dots, whose values come from the package (estate ADR-018). */
+   rooms list's dots, whose values come from the package (estate ADR-021). */
 .site-header {
   --khe-header-font: var(--sans);
   --khe-header-title-font: var(--serif);

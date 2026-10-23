@@ -180,7 +180,7 @@ await runReportingSourceErrors(async () => {
   }
   const consentUnpaired = unpairedDarkRules(consentCss);
   if (consentUnpaired.length) throw new Error(consentUnpaired.map((message) => `${consentName}: ${message}`).join('\n'));
-  // The rooms list's dots are @khelias/ui's values (estate ADR-018); each room's light and dark
+  // The rooms list's dots are @khelias/ui's values (estate ADR-021); each room's light and dark
   // value is its accent in DESIGN.md's Colors table.
   const packageCss = await readFile(fileURLToPath(import.meta.resolve('@khelias/ui/site-header.css')), 'utf8');
   const packageDots = (selector) => tokenBlock(selector, packageCss, "@khelias/ui's site-header.css");
@@ -455,7 +455,7 @@ await runReportingSourceErrors(async () => {
       const htmlTag = html.match(/<html\b[^>]*>/)?.[0] ?? '';
       const room = htmlTag.match(/\sdata-room="([^"]*)"/)?.[1];
       if (!ROOM_IDS.includes(room)) throw new Error(`dist/${site}/${page} has no data-room on <html> from ${ROOM_IDS.join(', ')}`);
-      // The rooms menu (estate ADR-018): every page but the khe.ee landing, with its own room current.
+      // The rooms menu (estate ADR-021): every page but the khe.ee landing, with its own room current.
       const roomButtons = [...html.matchAll(/<button class="site-header__rooms"[^>]*\sdata-khe-room="([^"]*)"/g)].map((match) => match[1]);
       const expectedButtons = site === 'landing' && page === 'index.html' ? [] : [room];
       if (JSON.stringify(roomButtons) !== JSON.stringify(expectedButtons)) {

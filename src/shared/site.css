@@ -46,15 +46,17 @@ a { color: var(--ink-2); }
   a:hover { color: var(--ink); }
 }
 
-/* The family label: mono, small, uppercase. */
+/* The family label: small Inter in sentence case, muted. */
+.label,
+.arch-kicker,
+.arch-tag {
+  font-size: 0.8125rem;
+  font-weight: 500;
+  line-height: 1.4;
+}
+
 .label {
   color: var(--muted);
-  font-family: var(--mono);
-  font-size: 0.6875rem;
-  font-weight: 500;
-  letter-spacing: 0.12em;
-  line-height: 1.4;
-  text-transform: uppercase;
 }
 
 /* Landing */
@@ -211,22 +213,6 @@ a { color: var(--ink-2); }
   display: grid;
   gap: 0.35rem;
   min-width: 0;
-}
-
-.project-kicker {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.5rem;
-}
-
-/* A row's dot in its room colour (a game row sets --room to the game's). */
-.room-dot::before {
-  content: '';
-  flex: none;
-  width: 0.5rem;
-  height: 0.5rem;
-  border-radius: 50%;
-  background: var(--room);
 }
 
 .project-title {
@@ -393,7 +379,7 @@ body.architecture-page {
   --a-accent-ink: color-mix(in srgb, var(--room-text) 75%, var(--a-text));
   --a-accent-soft: color-mix(in srgb, var(--room) 10%, var(--a-bg));
   --a-node: #8d918e;
-  --a-proposed: #a16207;
+  --a-proposed: var(--games);
   --a-code: #ebe8e1;
   --a-person: #9a4d00;
   --a-machine: #44506b;
@@ -506,15 +492,14 @@ body.architecture-page:not(.architecture-decision) .site-header {
   line-height: 1.25;
 }
 
-.arch-kicker,
+/* The family fact: the section numbers, the layers' numbers and times, a decision's ADR ids. */
 .arch-num,
-.arch-tag {
+.arch-layers li > .arch-tag,
+.arch-pick > p.arch-tag {
   font-family: var(--a-mono);
-  font-size: 0.72rem;
+  font-size: 0.6875rem;
   font-weight: 500;
   line-height: 1.4;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
 }
 
 .arch-kicker {
@@ -528,8 +513,8 @@ body.architecture-page:not(.architecture-decision) .site-header {
 
 .arch h3.arch-tag {
   color: var(--a-muted);
-  font-family: var(--a-mono);
-  font-size: 0.72rem;
+  font-family: var(--sans);
+  font-size: 0.8125rem;
   font-weight: 500;
   line-height: 1.4;
 }
@@ -951,7 +936,6 @@ html[lang="et"] .arch-svg [lang="en"] {
 .arch-layers li > .arch-tag:last-child {
   color: var(--a-text);
   text-align: right;
-  text-transform: none;
 }
 
 .arch-layers strong,
