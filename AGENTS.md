@@ -117,12 +117,13 @@ when the homelab is down, so it must be fit for a third-party host.
 
 Because deploy runs on that runner, a fork PR's run is approved only after
 reading its `.github/workflows/` diff
-([estate ADR-020](https://github.com/khelias/khe-architecture/blob/main/decisions/020-agent-work-through-pull-requests.md)).
+([estate ADR-023](https://github.com/khelias/khe-architecture/blob/main/decisions/023-agent-pushes-where-its-session-allows.md)).
 
-Agent work reaches `main` through a pull request (estate ADR-020 point 3):
+Agent work reaches `main` through a pull request (estate ADR-023 point 3):
 the repo is `pr: true` in the workspace's `repos/repos.yaml`, so the commit
-gate refuses a commit on `main`. Commit on a branch; the handover pushes it,
-opens the PR and turns on auto-merge with a merge commit. It merges once
+gate refuses a commit on `main` and a push that moves it. Commit on a
+branch; the agent pushes it, opens the PR and turns on auto-merge with a
+merge commit (a handover does this where its session cannot push). It merges once
 the two required checks pass, "Static site quality" and "Personal-data
 scan". The scan job in `ci.yml` runs khe-workspace's
 `scripts/pii-scan-range.sh` with its `.claude/hooks/pii-rules.toml`, checked
@@ -130,8 +131,8 @@ out at the commit pinned in the "Checkout khe-workspace" step. When
 khe-workspace changes the script or the rules, move the pin here in a
 commit of its own, once that khe-workspace commit is on GitHub. The gitleaks
 version and its SHA-256 are the job's `env`. A diff under
-`.github/workflows/` gets a person's look before the push: a PR can weaken
-its own required job.
+`.github/workflows/` gets a person's look before the push, so the agent
+hands that push over: a PR can weaken its own required job.
 
 Automated writers
 ([estate ADR-007](https://github.com/khelias/khe-architecture/blob/main/decisions/007-automated-writers.md)): Renovate
@@ -257,8 +258,8 @@ estate's writer register in khe-meta in the same change.
   requires there and nowhere else; the ADR pages' breadcrumb links it, and
   khe-homelab's landing nginx and edge fallback serve the bare directory
   (no redirect). `/agents/` (home room): the agents view, from the plan to
-  the push. The push is in both diagrams: the agents view ends on it, the
-  delivery view starts from it.
+  the push. The push, the agent's, is in both diagrams: the agents view
+  ends on it, the delivery view starts from it.
 - Headings use Source Serif 4 (weight 600, latin and latin-ext subsets in
   `src/shared/fonts/`), body text Inter, mono labels the system mono stack.
   Check fails when `site-header.css` or `site.css` loads a font file that is

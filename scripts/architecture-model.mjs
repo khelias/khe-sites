@@ -40,7 +40,7 @@ export const elements = {
 
   fromPush: { kind: 'boundary', label: 'groupFromPush', style: 'rule' },
   gate: { kind: 'step', owner: 'machine', tag: 'tagHook', label: 'elGate', sub: 'elGateSub' },
-  push: { kind: 'step', owner: 'person', tag: 'tagPerson', label: 'elPush', sub: 'elPushSub' },
+  push: { kind: 'step', owner: 'agent', tag: 'tagAgent', label: 'elPush', sub: 'elPushSub' },
   ci: { kind: 'step', owner: 'machine', tag: 'tagCi', label: 'elCi', sub: 'elCiSub' },
   ghcr: { kind: 'step', owner: 'machine', tag: 'tagRegistry', label: 'elGhcr', sub: 'elGhcrSub' },
   pinPr: { kind: 'step', owner: 'machine', tag: 'tagHomelab', label: 'elPinPr', sub: 'elPinPrSub' },
@@ -220,7 +220,7 @@ export const keyDecisions = [
   { ids: ['010'], key: 'kd010' },
   { ids: ['008'], key: 'kd008' },
   { ids: ['001', '014'], key: 'kd001' },
-  { ids: ['020'], key: 'kd020' },
+  { ids: ['023'], key: 'kd023' },
 ];
 
 // Product repos keep their own decisions; the page links the directories.
