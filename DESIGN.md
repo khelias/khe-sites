@@ -141,7 +141,7 @@ the six it uses in both themes, so it renders on the game pages too:
 | paper | #fafafa | #0b0d0d | page ground, header ground (opaque) |
 | surface | #ffffff | #121615 | switcher track, inputs |
 | sunken | #eff1f1 | #0f1211 | picture wells, dark thumbnails, pressed row |
-| ink | #121415 | #eef1f0 | names, titles, the KHE of the mark |
+| ink | #121415 | #eef1f0 | names, titles, the KHE of the mark, the landing's lead |
 | ink-2 | #363b3d | #c4cac7 | running text |
 | muted | #5f6567 | #8a928f | labels, inactive language, on paper only |
 | rule | #e3e5e5 | #232827 | hairlines |
@@ -255,7 +255,8 @@ at 520px and below). No page scrolls sideways at 320px.
 
 Flat. The header is opaque `paper` over one `rule`, with no blur and no
 shadow, so its contrast never depends on what scrolls under it. Sections are
-separated by space and a `rule` or `rule-strong` hairline; nothing is a card.
+separated by space and a `rule` or `rule-strong` hairline; the landing's
+project rows by space alone. Nothing is a card.
 The one exception is the rooms list, which floats over the page on
 `surface` with a `rule-strong` edge and a soft shadow.
 
@@ -332,6 +333,7 @@ No check sees the rest; review for them:
 
 - A centred hero with a pill badge above the title.
 - Three icon feature cards in a row.
+- A kicker on every row or section that repeats what its title already says.
 - Invented numbers: a statistic nobody measured.
 - Emoji used as icons.
 - Exclamation copy ("Great job!") and capitalised praise.
