@@ -1,5 +1,8 @@
 # khe-sites
 
+Workspace-wide rules (push, review, docs, estate ADRs) are in [khe-workspace
+`AGENTS.md`](https://github.com/khelias/khe-workspace/blob/main/AGENTS.md).
+
 Static source for two independently deployed sites: `khe.ee` from
 `src/landing/` (with the estate architecture pages at `/architecture/`,
 `/architecture/decisions/` and `/agents/`) and
@@ -19,12 +22,8 @@ as the room's dot in the rooms list, light and dark following the system
 setting. khe-sites owns the family [`DESIGN.md`](DESIGN.md), the one source
 of the family values; the apps copy them into their `--khe-header-*` values.
 `npm run check` starts with `khe-design-lint` from `@khelias/ui`, the family's
-design check (estate ADR-021 point 8): it counts gradients, blur, shadows,
-large radii, default palette colours, capitals, tracking, emoji and em
-dashes per file under `src/` against `khe-design-lint-baseline.json`, and
-fails on a count above it or below it. Rewrite the baseline with
-`npx khe-design-lint --write-baseline` after a fix; a line that keeps a
-match on purpose carries `design-lint-allow <rule>: <reason>`. The
+design check (estate ADR-021 point 8; usage in khe-ui `AGENTS.md`), over
+`src/` against `khe-design-lint-baseline.json`. The
 architecture section's own ban on shadow and gradient in `check.mjs` is
 stricter and stays.
 
@@ -115,15 +114,13 @@ What this repo publishes on `khe.ee` and `games.khe.ee` is also copied
 hourly to the Cloudflare edge fallback ([estate ADR-016](https://github.com/khelias/khe-architecture/blob/main/decisions/016-static-fallback-at-the-edge.md)), which serves it
 when the homelab is down, so it must be fit for a third-party host.
 
-Because deploy runs on that runner, a fork PR's run is approved only after
-reading its `.github/workflows/` diff
-([estate ADR-023](https://github.com/khelias/khe-architecture/blob/main/decisions/023-agent-pushes-where-its-session-allows.md)).
+Because deploy runs on that runner, a fork PR's run is approved as the
+workspace `AGENTS.md` says
+([estate ADR-023](https://github.com/khelias/khe-architecture/blob/main/decisions/023-agent-pushes-where-its-session-allows.md)
+point 5).
 
-Agent work reaches `main` through a pull request (estate ADR-023 point 3):
-the repo is `pr: true` in the workspace's `repos/repos.yaml`, so the commit
-gate refuses a commit on `main` and a push that moves it. Commit on a
-branch; the agent pushes it, opens the PR and turns on auto-merge with a
-merge commit (a handover does this where its session cannot push). It merges once
+This repo is `pr: true`: agent work reaches `main` by the pull-request route
+in the workspace `AGENTS.md` (estate ADR-023 point 3). It merges once
 the two required checks pass, "Static site quality" and "Personal-data
 scan". The scan job in `ci.yml` runs khe-workspace's
 `scripts/pii-scan-range.sh` with its `.claude/hooks/pii-rules.toml`, checked
@@ -143,8 +140,7 @@ the weekly schedule redeploys from the current sources. The way back from a
 bad merge here is a branch that reverts it (`git revert -m 1` for a merge
 commit), taken through a PR like any change, whose merge redeploys the
 previous state; a bad page from a source repo is reverted there and
-reaches khe.ee at the next deploy here. A new automated writer joins the
-estate's writer register in khe-meta in the same change.
+reaches khe.ee at the next deploy here.
 
 ## Gotchas
 
