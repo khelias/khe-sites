@@ -21,6 +21,7 @@ export const elements = {
   backup: { kind: 'platform', label: 'elBackup', sub: 'elBackupSub' },
   runner: { kind: 'platform', label: 'elRunner', sub: 'elRunnerSub' },
   house: { kind: 'platform', label: 'elHouse', sub: 'elHouseSub', groups: ['home'] },
+  agentVm: { kind: 'platform', label: 'elAgentVm', sub: 'elAgentVmSub' },
   github: { kind: 'external', label: 'elGithub', sub: 'elGithubSub' },
   r2: { kind: 'external', label: 'elR2', sub: 'elR2Sub' },
   telegram: { kind: 'external', label: 'elTelegram', sub: 'elTelegramSub' },
@@ -103,7 +104,8 @@ export const views = [
           observability: [712, 136, 192, 72],
           backup: [504, 224, 192, 72],
           runner: [712, 224, 192, 72],
-          house: [504, 312, 400, 72],
+          house: [504, 312, 192, 72],
+          agentVm: [712, 312, 192, 72],
           github: [1024, 40, 160, 72],
           r2: [1024, 128, 160, 72],
           telegram: [1024, 216, 160, 72],
@@ -120,15 +122,15 @@ export const views = [
       },
       narrow: {
         width: 342,
-        height: 1294,
+        height: 1360,
         nodes: {
           people: [0, 0, 342, 236],
           ...column(['household', 'visitors', 'guests'], 12, 36, 318, 56, 66),
           cloudflare: [0, 300, 342, 64],
-          host: [0, 428, 342, 500],
-          ...column(['edge', 'runtime', 'family', 'observability', 'backup', 'runner', 'house'], 12, 464, 318, 56, 66),
-          outside: [0, 992, 342, 302],
-          ...column(['github', 'r2', 'telegram', 'aiApis'], 12, 1028, 318, 56, 66),
+          host: [0, 428, 342, 566],
+          ...column(['edge', 'runtime', 'family', 'observability', 'backup', 'runner', 'house', 'agentVm'], 12, 464, 318, 56, 66),
+          outside: [0, 1058, 342, 302],
+          ...column(['github', 'r2', 'telegram', 'aiApis'], 12, 1094, 318, 56, 66),
         },
         edges: [
           { from: 'people', to: 'cloudflare', label: 'relHttps' },
@@ -210,7 +212,7 @@ export const views = [
 // The building-block rows under the estate diagram, in reading order.
 export const blockCards = [
   { group: 'groupProducts', ids: ['khe-study', 'khe-ai-adventure', 'khe-trips', 'khe-albums', 'khe-bunny-tales', 'khe-sites', 'khe-ui'] },
-  { group: 'groupPlatform', repo: 'khe-homelab', ids: ['edge', 'runtime', 'family', 'observability', 'backup', 'runner'] },
+  { group: 'groupPlatform', repo: 'khe-homelab', ids: ['edge', 'runtime', 'family', 'observability', 'backup', 'runner', 'agentVm'] },
   { group: 'groupHouse', ids: ['house', 'khe-home-assistant'] },
   { group: 'groupMeta', ids: ['khe-workspace', 'khe-architecture', 'khe-meta', 'khelias', 'ha-estfeed'] },
 ];

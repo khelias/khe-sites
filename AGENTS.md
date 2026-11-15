@@ -45,7 +45,8 @@ src/
              building blocks are rendered into it at build time
       decisions/   the five key decisions and the register, rendered at
              build time; the ADR pages are built beside it
-    agents/  agentic development (home room): the agents diagram
+    agents/  agentic development (home room): the agents diagram and
+             where the agents run
     stories/ Jutud, the stories room: stories.js, stories.css, and
              story.json and story.m4a from khe-bunny-tales
   games/     games.khe.ee launcher shell
@@ -259,8 +260,9 @@ reaches khe.ee at the next deploy here.
   requires there and nowhere else; the ADR pages' breadcrumb links it, and
   khe-homelab's landing nginx and edge fallback serve the bare directory
   (no redirect). `/agents/` (home room): the agents view, from the plan to
-  the push. The push, the agent's, is in both diagrams: the agents view
-  ends on it, the delivery view starts from it.
+  the push, then `#where`, where the agents run (estate ADR-027). The
+  push, the agent's, is in both diagrams: the agents view ends on it, the
+  delivery view starts from it.
 - Headings use Source Serif 4 (weight 600, latin and latin-ext subsets in
   `src/shared/fonts/`), body text Inter, mono labels the system mono stack.
   Check fails when `site-header.css` or `site.css` loads a font file that is
