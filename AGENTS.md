@@ -5,9 +5,10 @@ Workspace-wide rules (push, review, docs, estate ADRs) are in [khe-workspace
 
 Static source for two independently deployed sites: `khe.ee` from
 `src/landing/` (with the estate architecture pages at `/architecture/`,
-`/architecture/decisions/` and `/agents/`) and
-`games.khe.ee` from `src/games/`, the launcher shell. The game apps
-(`khe-study`, `khe-ai-adventure`) live and deploy in their own repos.
+`/architecture/decisions/` and `/agents/`, and Jutud, the stories room, at
+`/stories/`) and `games.khe.ee` from `src/games/`, the launcher shell. The
+game apps (`khe-study`, `khe-ai-adventure`) live and deploy in their own
+repos.
 
 Plain HTML, CSS and vanilla JS, built by Node 24 scripts. No framework, no
 bundler. One devDependency, `@khelias/ui` (the KHE site header with its
@@ -23,7 +24,8 @@ setting. khe-sites owns the family [`DESIGN.md`](DESIGN.md), the one source
 of the family values; the apps copy them into their `--khe-header-*` values.
 `npm run check` starts with `khe-design-lint` from `@khelias/ui`, the family's
 design check (estate ADR-021 point 8; usage in khe-ui `AGENTS.md`), over
-`src/` against `khe-design-lint-baseline.json`. The
+`src/` against `khe-design-lint-baseline.json`. It excludes
+`src/landing/stories/`, whose content keeps its own look ([estate ADR-028](https://github.com/khelias/khe-architecture/blob/main/decisions/028-the-stories-room-keeps-its-own-look.md)). The
 architecture section's own ban on shadow and gradient in `check.mjs` is
 stricter and stays.
 
@@ -44,6 +46,8 @@ src/
       decisions/   the five key decisions and the register, rendered at
              build time; the ADR pages are built beside it
     agents/  agentic development (home room): the agents diagram
+    stories/ Jutud, the stories room: stories.js, stories.css, and
+             story.json and story.m4a from khe-bunny-tales
   games/     games.khe.ee launcher shell
   shared/    cross-site assets, copied into each site's /assets/ at build
 scripts/
@@ -57,7 +61,7 @@ scripts/
                            entries
   site-header.mjs          fills each page's site-header, site-theme and
                            site-footer markers through @khelias/ui
-  asset-versions.mjs       stamps ?v=<content hash> on .css and .js links
+  asset-versions.mjs       stamps ?v=<content hash> on asset links
   markdown.mjs             strict Markdown subset for the ADRs
   templates/decision.html  the ADR page
   templates/house3d-header.html  the header marker and script the build puts
@@ -221,8 +225,9 @@ reaches khe.ee at the next deploy here.
   `site.css` sets its `--khe-footer-*` values from the family tokens and
   places it per page. Every page but `/ha/` has exactly one (check).
 - Nothing in the sources carries `?v=`: after the pages are built, the build
-  stamps every root-relative `.css` and `.js` URL in them, and in the files
-  those link, with the first 10 hex of the built file's SHA-256, so a change
+  stamps every root-relative `.css`, `.js`, `.json` and `.m4a` URL in them,
+  and in the `.css` and `.js` files those link, with the first 10 hex of the
+  built file's SHA-256, so a change
   to `site.css` or `site-locale.js` needs no hand edit. Check fails on a
   hand-written `?v=` in a source and on a built link whose hash does not
   match its file. Relative URLs (khe-home-assistant's files under `/ha/`) and
@@ -286,7 +291,7 @@ reaches khe.ee at the next deploy here.
   `--room`, and the accent ink and soft fill are mixed from the room's
   tokens, so `/agents/` (home room) shows no server teal.
 - Every built page's `<html>` carries `data-room` (`home`, `server`,
-  `trips`, `house`, `games`; check), which sets `--room` (fills, dots) and
+  `trips`, `house`, `games`, `stories`; check), which sets `--room` (fills, dots) and
   `--room-text` (text, the `.ee`, focus). A landing row
   sets its own `data-room` for its dot and arrow. `/ha/` gets
   `data-room="house" data-theme="dark"` from `house3d-demo.mjs`: the house
@@ -309,3 +314,13 @@ reaches khe.ee at the next deploy here.
   breaks them; a breaking change goes to a new path. Its colours are its own
   `--khe-consent-*` values in both themes, which check holds equal to
   `site-header.css`, and it reads no page token, since the games define none.
+- `khe.ee/stories/` (Jutud) keeps its own look ([estate ADR-028](https://github.com/khelias/khe-architecture/blob/main/decisions/028-the-stories-room-keeps-its-own-look.md)):
+  system type, `ui-serif` for the story, large radii and the one translucent
+  layer, the player; the family header and footer stay. It is committed to
+  the dark theme on `<html data-theme="dark">` (estate ADR-021 point 2): no
+  theme toggle, no theme script, one `theme-color` (check). Its `story.json`
+  (title, paragraphs with their start in seconds, duration) and `story.m4a`
+  are written by khe-bunny-tales' `scripts/demo.py` with the real names
+  changed, and are replaced by a new export, never edited by hand. Source
+  Serif 4's 400-500 weights, the story's fallback serif, are its own, in
+  `src/landing/stories/fonts/`.

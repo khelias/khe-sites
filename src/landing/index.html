@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <title>Kaido Henrik Elias | Software Architect</title>
-  <meta name="description" content="Software architect in Estonia. At home I make things for my family: games, home automation and a travel journal.">
+  <meta name="description" content="Software architect in Estonia. At home I make things for my family: games, home automation, a travel journal and bedtime stories.">
   <link rel="canonical" href="https://khe.ee/">
   <link rel="alternate" hreflang="en" href="https://khe.ee/?lang=en">
   <link rel="alternate" hreflang="et" href="https://khe.ee/?lang=et">
@@ -17,13 +17,13 @@
   <meta property="og:url" content="https://khe.ee/">
   <meta property="og:site_name" content="Kaido Henrik Elias">
   <meta property="og:title" content="Kaido Henrik Elias | Software Architect">
-  <meta property="og:description" content="Software architect in Estonia. At home I make things for my family: games, home automation and a travel journal.">
+  <meta property="og:description" content="Software architect in Estonia. At home I make things for my family: games, home automation, a travel journal and bedtime stories.">
   <meta property="og:image" content="https://khe.ee/og-image.png">
   <meta property="og:image:width" content="1200">
   <meta property="og:image:height" content="630">
   <meta name="twitter:card" content="summary">
   <meta name="twitter:title" content="Kaido Henrik Elias | Software Architect">
-  <meta name="twitter:description" content="Software architect in Estonia. At home I make things for my family: games, home automation and a travel journal.">
+  <meta name="twitter:description" content="Software architect in Estonia. At home I make things for my family: games, home automation, a travel journal and bedtime stories.">
   <meta name="twitter:image" content="https://khe.ee/og-image.png">
   <link rel="preload" href="/assets/fonts/inter-400.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="/assets/fonts/inter-600.woff2" as="font" type="font/woff2" crossorigin>
@@ -141,6 +141,25 @@
       <span class="row-arrow" aria-hidden="true">→</span>
     </a>
 
+    <a class="project-row" data-room="stories" href="/stories/?lang=en" data-link="stories">
+      <span class="project-thumb" aria-hidden="true">
+        <svg viewBox="0 0 160 120" focusable="false">
+          <rect class="t-ground" width="160" height="120"/>
+          <path class="t-paper" d="M28 52c16-8 34-10 52-4 18-6 36-4 52 4v46c-16-8-34-10-52-4-18-6-36-4-52 4z"/>
+          <path class="t-line" d="M28 52c16-8 34-10 52-4 18-6 36-4 52 4v46c-16-8-34-10-52-4-18-6-36-4-52 4zM80 48v46"/>
+          <path class="t-ink" d="M40 64c10-3 20-3 30 0M40 76c10-3 20-3 30 0M90 64c10-3 20-3 30 0M90 76c10-3 20-3 30 0"/>
+          <path class="t-room" d="M112 14a12 12 0 1 0 12 20 10 10 0 0 1-12-20z"/>
+          <circle class="t-room" cx="92" cy="24" r="2.2"/>
+          <circle class="t-room" cx="138" cy="44" r="1.8"/>
+        </svg>
+      </span>
+      <span class="project-copy">
+        <span class="project-title" data-i18n="storiesTitle">Stories</span>
+        <span class="project-desc" data-i18n="storiesDesc">Bedtime stories of a bunny family, read aloud.</span>
+      </span>
+      <span class="row-arrow" aria-hidden="true">→</span>
+    </a>
+
     <a class="project-row" data-room="server" href="/architecture/?lang=en" data-link="architecture">
       <span class="project-thumb" aria-hidden="true">
         <svg viewBox="0 0 160 120" focusable="false">
@@ -199,7 +218,7 @@
   const COPY = {
     et: {
       title: 'Kaido Henrik Elias | Tarkvaraarhitekt',
-      description: 'Tarkvaraarhitekt Eestis. Kodus teen asju oma perele: mängud, koduautomaatika ja reisipäevik.',
+      description: 'Tarkvaraarhitekt Eestis. Kodus teen asju oma perele: mängud, koduautomaatika, reisipäevik ja unejutud.',
       projectsLabel: 'Projektid',
       role: 'Tarkvaraarhitekt',
       introWork: 'Igapäevatöös kavandan süsteeme, mida kasutavad tuhanded inimesed.',
@@ -213,6 +232,8 @@
       house3dDesc: 'Maja juhtimine Home Assistantiga.',
       tripsTitle: 'Reisipäevik',
       tripsDesc: 'Reiside planeerimine ja meenutamine.',
+      storiesTitle: 'Jutud',
+      storiesDesc: 'Jänkupere unejutud, ette loetud.',
       architectureTitle: 'Koduserver',
       architectureDesc: 'Kõik see töötab ühel serveril minu kodus. Kuidas ja miks.',
       agentsTitle: 'Agentidega arendus',
@@ -220,7 +241,7 @@
     },
     en: {
       title: 'Kaido Henrik Elias | Software Architect',
-      description: 'Software architect in Estonia. At home I make things for my family: games, home automation and a travel journal.',
+      description: 'Software architect in Estonia. At home I make things for my family: games, home automation, a travel journal and bedtime stories.',
       projectsLabel: 'Projects',
       role: 'Software architect',
       introWork: 'In my day job I design systems thousands of people use.',
@@ -234,6 +255,8 @@
       house3dDesc: 'Running the house with Home Assistant.',
       tripsTitle: 'Travel journal',
       tripsDesc: 'Planning trips and remembering them.',
+      storiesTitle: 'Stories',
+      storiesDesc: 'Bedtime stories of a bunny family, read aloud.',
       architectureTitle: 'The home server',
       architectureDesc: 'All of this runs on one server in my home. How, and why.',
       agentsTitle: 'Agentic development',
@@ -255,6 +278,7 @@
       agents: (locale) => `/agents/?lang=${locale}`,
       house3d: () => '/ha/',
       trips: (locale) => `/trips/?lang=${locale}`,
+      stories: (locale) => `/stories/?lang=${locale}`,
       games: (locale) => `${gamesOrigin}/?lang=${locale}`,
       contact: () => 'mailto:kaidoelias@gmail.com?subject=KHE.ee',
       privacy: (locale) => `/privacy?lang=${locale}`,

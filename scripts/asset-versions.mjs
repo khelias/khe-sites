@@ -3,8 +3,10 @@ import { existsSync } from 'node:fs';
 import { readdir, readFile, writeFile } from 'node:fs/promises';
 import { join } from 'node:path';
 
-// A root-relative .css or .js URL in an attribute, an import or a url(), with any ?v= it has.
-export const ASSET_REFERENCE = /(?<=["'(])(\/[\w./-]+\.(?:css|js))(?:\?v=(\w*))?(?=["')])/g;
+// A root-relative .css, .js, .json or .m4a URL in an attribute, an import or a url(), with any
+// ?v= it has. Only .css and .js are read for further URLs; the rest are hashed as they are.
+export const ASSET_REFERENCE = /(?<=["'(])(\/[\w./-]+\.(?:css|js|json|m4a))(?:\?v=(\w*))?(?=["')])/g;
+const LINKS_FURTHER = /\.(?:css|js)$/;
 
 export function assetVersion(content) {
   return createHash('sha256').update(content).digest('hex').slice(0, 10);
@@ -16,8 +18,8 @@ export async function builtPages(siteDist) {
     .map((name) => join(siteDist, name));
 }
 
-// Returns stamp(content, from), which gives every .css and .js URL in content ?v=<hash of the
-// built file>. A stylesheet or script that links further assets is stamped first, so its hash
+// Returns stamp(content, from), which gives every asset URL in content ?v=<hash of the built
+// file>. A stylesheet or script that links further assets is stamped first, so its hash
 // covers theirs; each asset is stamped and rewritten once.
 export function createAssetStamper(siteDist) {
   const versions = new Map();
@@ -30,8 +32,11 @@ export function createAssetStamper(siteDist) {
     const file = join(siteDist, path);
     if (!existsSync(file)) throw new Error(`${from} links ${path}, which the build did not write`);
     versions.set(path, null);
-    const content = await stamp(await readFile(file, 'utf8'), file);
-    await writeFile(file, content);
+    let content = await readFile(file);
+    if (LINKS_FURTHER.test(path)) {
+      content = await stamp(content.toString('utf8'), file);
+      await writeFile(file, content);
+    }
     versions.set(path, assetVersion(content));
     return versions.get(path);
   }

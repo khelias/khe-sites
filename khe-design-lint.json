@@ -1,5 +1,6 @@
 {
   "include": ["src/**"],
+  "exclude": ["src/landing/stories/**"],
   "content": [],
   "baseline": "khe-design-lint-baseline.json"
 }

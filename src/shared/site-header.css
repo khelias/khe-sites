@@ -65,6 +65,7 @@
   --server: #246b5f;
   --trips: #b75a3a;
   --trips-text: #93411f;
+  --stories: #a3336f;
   --house: #1f5fa8;
   --house-ground: #e8eef6;
   --games: #8a5a12;
@@ -93,6 +94,7 @@
     --server: #7fc8b8;
     --trips: #d9764f;
     --trips-text: #e8926a;
+    --stories: #f08cc0;
     --house: #6fe3ff;
     --house-ground: #060c1b;
     --games: #d9a441;
@@ -114,6 +116,7 @@
   --server: #7fc8b8;
   --trips: #d9764f;
   --trips-text: #e8926a;
+  --stories: #f08cc0;
   --house: #6fe3ff;
   --house-ground: #060c1b;
   --games: #d9a441;
@@ -131,6 +134,7 @@
 [data-room="home"] { --room: var(--home); --room-text: var(--home); }
 [data-room="server"] { --room: var(--server); --room-text: var(--server); }
 [data-room="trips"] { --room: var(--trips); --room-text: var(--trips-text); }
+[data-room="stories"] { --room: var(--stories); --room-text: var(--stories); }
 [data-room="house"] { --room: var(--house); --room-text: var(--house); }
 [data-room="games"] { --room: var(--games); --room-text: var(--games); }
 
