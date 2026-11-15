@@ -15,6 +15,11 @@ import { SITE_FOOTER_COPY, SITE_HEADER_COPY, THEME_STORAGE_KEY } from '../src/sh
 
 const root = dirname(dirname(fileURLToPath(import.meta.url)));
 
+// An attribute of a page's <html> tag, or undefined.
+function htmlAttribute(html, name) {
+  return html.match(/<html\b[^>]*>/)?.[0].match(new RegExp(`\\s${name}="([^"]*)"`))?.[1];
+}
+
 // A dark rule follows the family pattern (DESIGN.md Themes): under the media query on
 // :root:not([data-theme="light"]), and the same declarations again on :root[data-theme="dark"],
 // so a stored choice reaches it. Returns what breaks the pattern.
@@ -72,6 +77,7 @@ await runReportingSourceErrors(async () => {
     'src/landing/privacy/index.html',
     'src/games/index.html',
     'src/games/privacy/index.html',
+    'src/landing/stories/index.html',
   ];
 
   const requiredMarkers = [
@@ -111,6 +117,8 @@ await runReportingSourceErrors(async () => {
     'scripts/house3d-demo.mjs',
     'src/landing/architecture/architecture.js',
     'src/landing/architecture/copy.js',
+    'src/landing/stories/stories.js',
+    'src/landing/stories/stories.css',
   ];
   const bannedText = [
     'Tarkvaraarhitekt töö poolest',
@@ -198,9 +206,28 @@ await runReportingSourceErrors(async () => {
     });
   }
 
+  // A page committed to one theme (estate ADR-021 point 2) has that theme's paper alone, in its
+  // theme-color and in its web app manifest, if it has one.
+  const papers = { light: light.paper, dark: forcedDark.paper };
   for (const relativePath of htmlFiles) {
     const content = await readFile(join(root, relativePath), 'utf8');
-    for (const [scheme, paper] of [['light', light.paper], ['dark', forcedDark.paper]]) {
+    const theme = htmlAttribute(content, 'data-theme');
+    if (theme) {
+      const paper = papers[theme];
+      if (!paper || (content.match(/<meta name="theme-color"/g) || []).length !== 1 || !content.includes(`<meta name="theme-color" content="${paper}">`)) {
+        throw new Error(`${relativePath} is committed to ${theme} but lacks the one theme-color of its paper`);
+      }
+      const manifestHref = content.match(/<link rel="manifest" href="([^"]+)"/)?.[1];
+      if (manifestHref) {
+        const siteRoot = relativePath.split('/').slice(0, 2).join('/');
+        const manifest = JSON.parse(await readFile(join(root, siteRoot, manifestHref), 'utf8'));
+        if (manifest.background_color !== paper || manifest.theme_color !== paper) {
+          throw new Error(`${relativePath}: its manifest's background_color and theme_color are not the ${theme} paper ${paper}`);
+        }
+      }
+      continue;
+    }
+    for (const [scheme, paper] of Object.entries(papers)) {
       if (!content.includes(`<meta name="theme-color" content="${paper}" media="(prefers-color-scheme: ${scheme})">`)) {
         throw new Error(`${relativePath}: the ${scheme} theme-color is not the ${scheme} paper token ${paper}`);
       }
@@ -209,10 +236,13 @@ await runReportingSourceErrors(async () => {
 
   // Every data-i18n key of a page with an inline COPY is in both of its languages. The source
   // page, not the built one: the header and footer keys live in SITE_HEADER_COPY and SITE_FOOTER_COPY.
-  for (const relativePath of ['src/landing/index.html', 'src/games/index.html', 'src/landing/privacy/index.html', 'src/games/privacy/index.html']) {
+  for (const relativePath of htmlFiles) {
     const html = await readFile(join(root, relativePath), 'utf8');
     const literal = html.match(/const COPY = (\{[\s\S]*?\n\s*\});/)?.[1];
-    if (!literal) throw new Error(`${relativePath} has no inline COPY`);
+    if (!literal) {
+      if (html.includes('const COPY')) throw new Error(`${relativePath}: its inline COPY is not in the shape check reads`);
+      continue;
+    }
     const pageCopy = new Function(`return ${literal}`)();
     for (const [, key] of html.matchAll(/data-i18n(?:-html|-aria)?="([^"]+)"/g)) {
       for (const locale of ['et', 'en']) {
@@ -284,7 +314,7 @@ await runReportingSourceErrors(async () => {
       }
     }
   }
-  for (const script of ['src/landing/architecture/architecture.js', 'src/landing/architecture/copy.js']) {
+  for (const script of sourceFiles.filter((path) => path.endsWith('.js'))) {
     execFileSync(process.execPath, ['--check', join(root, script)], { stdio: 'inherit' });
   }
 
@@ -421,10 +451,11 @@ await runReportingSourceErrors(async () => {
     new Function(match[1].replace(/^\s*import\s.+;\s*$/gm, ''));
   }
 
-  // Every built page carries the filled site header, and every .css and .js
-  // it links carries the hash of the built file. Every page but /ha/ has the theme toggle, the
+  // Every built page carries the filled site header, and every asset it links
+  // carries the hash of the built file. Every page but /ha/ has the theme toggle, the
   // pre-paint theme script in <head> before the first stylesheet, and the footer; /ha/, dark
-  // until the house view has a light theme, has none of them.
+  // until the house view has a light theme, has none of them. A page committed to one theme on
+  // its <html data-theme> (estate ADR-021 point 2) has the footer but neither toggle nor script.
   for (const site of ['landing', 'games']) {
     const siteDist = join(root, 'dist', site);
     const versions = new Map();
@@ -440,20 +471,21 @@ await runReportingSourceErrors(async () => {
         if (html.includes(`<!-- ${marker}`)) throw new Error(`dist/${site}/${page} has an unfilled ${marker} marker`);
       }
       const house = site === 'landing' && page === 'ha/index.html';
+      const theme = htmlAttribute(html, 'data-theme');
       const toggles = (html.match(/<button class="site-header__theme"/g) || []).length;
       const footers = (html.match(/<footer class="site-footer"/g) || []).length;
       const head = html.slice(0, html.indexOf('</head>'));
       const initAt = head.indexOf(`<script>${themeInitScript(THEME_STORAGE_KEY)}</script>`);
       const firstStylesheet = head.search(/<link rel="stylesheet"/);
-      if (house) {
-        if (toggles || footers || html.includes(THEME_STORAGE_KEY)) throw new Error('dist/landing/ha/index.html has a theme toggle, the theme script or a footer; the house view stays dark');
+      const expectedFooters = house ? 0 : 1;
+      if (footers !== expectedFooters) throw new Error(`dist/${site}/${page} has ${footers} site footers, expected ${expectedFooters}`);
+      if (theme) {
+        if (toggles || html.includes(THEME_STORAGE_KEY)) throw new Error(`dist/${site}/${page} is committed to one theme but has the theme toggle or the theme script`);
       } else {
         if (toggles !== 1) throw new Error(`dist/${site}/${page} has ${toggles} theme toggles, expected 1`);
-        if (footers !== 1) throw new Error(`dist/${site}/${page} has ${footers} site footers, expected 1`);
         if (initAt < 0 || firstStylesheet < 0 || initAt > firstStylesheet) throw new Error(`dist/${site}/${page} lacks the theme script in <head> before the first stylesheet`);
       }
-      const htmlTag = html.match(/<html\b[^>]*>/)?.[0] ?? '';
-      const room = htmlTag.match(/\sdata-room="([^"]*)"/)?.[1];
+      const room = htmlAttribute(html, 'data-room');
       if (!ROOM_IDS.includes(room)) throw new Error(`dist/${site}/${page} has no data-room on <html> from ${ROOM_IDS.join(', ')}`);
       // The rooms menu (estate ADR-021): every page but the khe.ee landing, with its own room current.
       const roomButtons = [...html.matchAll(/<button class="site-header__rooms"[^>]*\sdata-khe-room="([^"]*)"/g)].map((match) => match[1]);
@@ -461,13 +493,13 @@ await runReportingSourceErrors(async () => {
       if (JSON.stringify(roomButtons) !== JSON.stringify(expectedButtons)) {
         throw new Error(`dist/${site}/${page} has rooms buttons for ${JSON.stringify(roomButtons)}, expected ${JSON.stringify(expectedButtons)}`);
       }
-      if (house && !htmlTag.includes('data-theme="dark"')) {
+      if (house && theme !== 'dark') {
         throw new Error('dist/landing/ha/index.html is not data-theme="dark"; the house view has no light theme');
       }
       for (const [reference, path, version] of html.matchAll(ASSET_REFERENCE)) {
         if (!versions.has(path)) {
           const asset = join(siteDist, path);
-          versions.set(path, existsSync(asset) ? assetVersion(await readFile(asset, 'utf8')) : 'missing');
+          versions.set(path, existsSync(asset) ? assetVersion(await readFile(asset)) : 'missing');
         }
         if (version !== versions.get(path)) {
           throw new Error(`dist/${site}/${page} links ${reference}, but the built file's hash is ${versions.get(path)}`);

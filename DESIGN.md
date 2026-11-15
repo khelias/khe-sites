@@ -15,6 +15,7 @@ colors:
   server: "#246b5f"
   trips: "#b75a3a"
   trips-text: "#93411f"
+  stories: "#a3336f"
   house: "#1f5fa8"
   house-ground: "#e8eef6"
   games: "#8a5a12"
@@ -107,9 +108,9 @@ This file is the one source of the family values. Other repos keep only their
 own room in their design docs and cite this one. The tokens live in
 `src/shared/site-header.css`; `scripts/check.mjs` fails when the frontmatter
 differs from its light `:root` block, or when the system-dark block differs
-from the `:root[data-theme="dark"]` block. The five room accents are also
+from the `:root[data-theme="dark"]` block. The six room accents are also
 `@khelias/ui`'s own defaults for the rooms list's dots, since every header
-shows all five; the check fails when the package's light or dark dot differs
+shows all six; the check fails when the package's light or dark dot differs
 from the Colors table below.
 
 ## Rooms
@@ -119,6 +120,7 @@ from the Colors table below.
 | Home | khe.ee landing, its privacy page, khe.ee/agents | `home` | `home` |
 | Server | khe.ee/architecture, its decisions page and the ADR pages | `server` | `server` |
 | Trips | khe.ee/trips, khe.ee/r/..., trips.khe.ee | `trips` | `trips-text` |
+| Stories | khe.ee/stories | `stories` | `stories` |
 | House | khe.ee/ha | `house` | `house` |
 | Games | the games.khe.ee hub and its privacy page | `games` | `games` |
 
@@ -150,6 +152,7 @@ the six it uses in both themes, so it renders on the game pages too:
 | server | #246b5f | #7fc8b8 | Server accent and text |
 | trips | #b75a3a | #d9764f | Trips fills and marks |
 | trips-text | #93411f | #e8926a | Trips text, its `.ee` |
+| stories | #a3336f | #f08cc0 | Stories accent and text |
 | house | #1f5fa8 | #6fe3ff | House accent and text |
 | house-ground | #e8eef6 | #060c1b | the house drawing's ground only |
 | games | #8a5a12 | #d9a441 | Games hub accent and text |
@@ -209,7 +212,10 @@ ground, the type, the surfaces, the controls, dialogs, notifications, menus
 and lists around a room's content use the values and rules in this file.
 Play areas, canvases, maps and the house drawing keep their own look, within
 the design check's baseline, which only shrinks. A room whose shell does not
-meet this yet says so in its `AGENTS.md`. State colour is meaning, not an
+meet this yet says so in its `AGENTS.md`. The Stories room's content keeps
+its own look, system type, a reading serif, large radii and a material behind
+the player, under the family header and footer ([estate ADR-028](https://github.com/khelias/khe-architecture/blob/main/decisions/028-the-stories-room-keeps-its-own-look.md)); the design check
+skips its files. State colour is meaning, not an
 accent: on and off, ok, warning, fault, a map state, right or wrong. A room
 may use several, each naming a state, at 3:1 for marks and 4.5:1 for text in
 both themes. Shared state tokens are a follow-up, once two rooms need the
@@ -235,7 +241,9 @@ mono stack for facts: dates, numbers, times and codes.
 The Source Serif 4 files (weight 600, latin and latin-ext) ship in khe-sites
 only. The apps use the family serif stack, `'Source Serif 4', 'Iowan Old
 Style', Georgia, serif`, so an app without the files (trips) falls back to
-Iowan Old Style.
+Iowan Old Style. The Stories room sets its own type ([estate ADR-028](https://github.com/khelias/khe-architecture/blob/main/decisions/028-the-stories-room-keeps-its-own-look.md)):
+the system font, and `ui-serif` (New York on Apple) for the story, with
+Source Serif 4 as its fallback.
 
 ## Layout
 
@@ -296,7 +304,7 @@ where they would not reach the header:
 - `menu-bg` surface, `menu-border` rule-strong, `menu-current-bg` sunken,
   `menu-shadow` a soft `0 12px 32px` black at 14%: the rooms list floats
   over the page, the one shadow in the chrome
-- the five `room-<id>` dots are the package's, the room accents in both
+- the six `room-<id>` dots are the package's, the room accents in both
   themes; an app sets them only to differ, which it should not
 
 ## Do's and Don'ts
