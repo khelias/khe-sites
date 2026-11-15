@@ -1,7 +1,7 @@
 {
   "name": "Jutud",
   "short_name": "Jutud",
-  "description": "Unejutt „Käbi padja all“ jänkuperest, ette loetud Neurokõne häälega.",
+  "description": "Unejutt „Käbi padja all“ jänkuperest, ette loetud.",
   "lang": "et",
   "start_url": "/stories/",
   "scope": "/stories/",

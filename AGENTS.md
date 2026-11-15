@@ -322,7 +322,6 @@ reaches khe.ee at the next deploy here.
   the dark theme on `<html data-theme="dark">` (estate ADR-021 point 2): no
   theme toggle, no theme script, one `theme-color` (check). Its `story.json`
   (title, paragraphs with their start in seconds, duration) and `story.m4a`
-  are written by khe-bunny-tales' `scripts/demo.py` with the real names
-  changed, and are replaced by a new export, never edited by hand. Source
-  Serif 4's 400-500 weights, the story's fallback serif, are its own, in
-  `src/landing/stories/fonts/`.
+  are written by khe-bunny-tales' `scripts/demo.py`, and are replaced by a
+  new export, never edited by hand. Source Serif 4's 400-500 weights, the
+  story's fallback serif, are its own, in `src/landing/stories/fonts/`.
