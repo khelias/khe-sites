@@ -27,17 +27,16 @@ export async function startStories(copy) {
   const play = () => audio.play().catch(() => {});
 
   // A story whose story.json does not load is left out, so the others still play.
-  const loaded = await Promise.allSettled([...document.querySelectorAll('[data-story-open]')].map(async (card) => {
+  const cards = [...document.querySelectorAll('[data-story-open]')];
+  const loaded = await Promise.allSettled(cards.map(async (card) => {
     const url = card.getAttribute('data-story-data');
     const response = await fetch(url);
-    if (!response.ok) {
-      card.hidden = true;
-      throw new Error(`${url}: ${response.status}`);
-    }
+    if (!response.ok) throw new Error(`${url}: ${response.status}`);
     const data = await response.json();
     card.querySelector('[data-card-title]').textContent = data.title;
     return { card, data, hash: card.hash, src: card.getAttribute('data-story-src'), art: card.querySelector('.story-art') };
   }));
+  loaded.forEach(({ status }, i) => { cards[i].hidden = status === 'rejected'; });
   const stories = loaded.filter(({ status }) => status === 'fulfilled').map(({ value }) => value);
   if (!stories.length) throw new Error('no story loaded');
   const storyAt = (hash) => stories.find((story) => story.hash === hash);
