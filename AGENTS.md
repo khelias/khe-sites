@@ -48,7 +48,8 @@ src/
     agents/  agentic development (home room): the agents diagram and
              where the agents run
     stories/ Jutud, the stories room: stories.js, stories.css, and
-             story.json and story.m4a from khe-bunny-tales
+             <slug>/story.json and story.m4a, one folder per story, from
+             khe-bunny-tales
   games/     games.khe.ee launcher shell
   shared/    cross-site assets, copied into each site's /assets/ at build
 scripts/
@@ -320,8 +321,12 @@ reaches khe.ee at the next deploy here.
   system type, `ui-serif` for the story, large radii and the one translucent
   layer, the player; the family header and footer stay. It is committed to
   the dark theme on `<html data-theme="dark">` (estate ADR-021 point 2): no
-  theme toggle, no theme script, one `theme-color` (check). Its `story.json`
-  (title, paragraphs with their start in seconds, duration) and `story.m4a`
-  are written by khe-bunny-tales' `scripts/demo.py`, and are replaced by a
-  new export, never edited by hand. Source Serif 4's 400-500 weights, the
-  story's fallback serif, are its own, in `src/landing/stories/fonts/`.
+  theme toggle, no theme script, one `theme-color` (check). Each story is a
+  card in `index.html` naming its `<slug>/story.json` (title, paragraphs
+  with their start in seconds, duration) and `<slug>/story.m4a`, written by
+  khe-bunny-tales' `scripts/demo.py` and replaced by a new export, never
+  edited by hand; the first card is the story the player loads. Which
+  stories are published, and with which names, is
+  [estate ADR-029](https://github.com/khelias/khe-architecture/blob/main/decisions/029-family-stories-are-published-with-the-childrens-names.md).
+  Source Serif 4's 400-500 weights, the story's fallback serif, are its
+  own, in `src/landing/stories/fonts/`.
