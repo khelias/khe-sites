@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <title>Jutud</title>
-  <meta name="description" content="Unejutt „Käbi padja all“ jänkuperest, ette loetud.">
+  <meta name="description" content="Unejutud jänkuperest, ette loetud.">
   <link rel="canonical" href="https://khe.ee/stories/">
   <link rel="alternate" hreflang="et" href="https://khe.ee/stories/?lang=et">
   <link rel="alternate" hreflang="en" href="https://khe.ee/stories/?lang=en">
@@ -19,17 +19,18 @@
   <meta property="og:url" content="https://khe.ee/stories/">
   <meta property="og:site_name" content="Kaido Henrik Elias">
   <meta property="og:title" content="Jutud">
-  <meta property="og:description" content="Unejutt „Käbi padja all“ jänkuperest, ette loetud.">
+  <meta property="og:description" content="Unejutud jänkuperest, ette loetud.">
   <meta property="og:image" content="https://khe.ee/og-image.png">
   <meta property="og:image:width" content="1200">
   <meta property="og:image:height" content="630">
   <meta name="twitter:card" content="summary">
   <meta name="twitter:title" content="Jutud">
-  <meta name="twitter:description" content="Unejutt „Käbi padja all“ jänkuperest, ette loetud.">
+  <meta name="twitter:description" content="Unejutud jänkuperest, ette loetud.">
   <meta name="twitter:image" content="https://khe.ee/og-image.png">
   <link rel="preload" href="/assets/fonts/inter-400.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="/assets/fonts/inter-600.woff2" as="font" type="font/woff2" crossorigin>
-  <link rel="preload" href="/stories/story.json" as="fetch" crossorigin>
+  <link rel="preload" href="/stories/home-alone/story.json" as="fetch" crossorigin>
+  <link rel="preload" href="/stories/cone-under-pillow/story.json" as="fetch" crossorigin>
   <link rel="stylesheet" href="/assets/site-header.css">
   <link rel="stylesheet" href="/assets/site.css">
   <link rel="stylesheet" href="/stories/stories.css">
@@ -55,28 +56,46 @@
           </div>
         </div>
 
-        <a class="story-card" href="#kabi-padja-all" data-story-open>
-          <span class="story-art" aria-hidden="true">
+        <a class="story-card" href="#uksi-kodus" data-story-open data-story-data="/stories/home-alone/story.json" data-story-src="/stories/home-alone/story.m4a">
+          <span class="story-art" data-art="sun" aria-hidden="true">
+            <svg class="drawing" viewBox="0 0 96 120" focusable="false">
+              <circle cx="48" cy="36" r="17"/>
+              <path d="M72 36h7M24 36h-7M48 12v-7M48 60v7M65 19l4.9-4.9M31 19l-4.9-4.9M65 53l4.9 4.9M31 53l-4.9 4.9"/>
+              <path d="M8 106q40-12 80 0"/>
+              <path class="drawing-fine" d="M28 101c-1-7-5-11-10-13M28 101V83M28 101c1-7 5-11 10-13M48 100c-1-7-5-11-10-13M48 100V82M48 100c1-7 5-11 10-13M68 101c-1-7-5-11-10-13M68 101V83M68 101c1-7 5-11 10-13"/>
+            </svg>
+          </span>
+          <span class="story-card-body">
+            <span class="story-card-title" lang="et" data-card-title></span>
+            <span class="story-card-length">
+              <svg viewBox="0 0 13 14" aria-hidden="true" focusable="false"><path d="M1 1.6v10.8a1 1 0 0 0 1.5.86l9.2-5.4a1 1 0 0 0 0-1.72L2.5.74A1 1 0 0 0 1 1.6z"/></svg>
+              <span data-card-length></span>
+            </span>
+          </span>
+        </a>
+
+        <a class="story-card" href="#kabi-padja-all" data-story-open data-story-data="/stories/cone-under-pillow/story.json" data-story-src="/stories/cone-under-pillow/story.m4a">
+          <span class="story-art" data-art="cone" aria-hidden="true">
             <svg class="art-sky" viewBox="0 0 340 200" preserveAspectRatio="xMidYMid slice" focusable="false">
               <path class="art-moon" d="M46 26a18 18 0 1 0 12 33A16 16 0 0 1 46 26z"/>
               <circle class="art-star" cx="268" cy="40" r="2.2"/>
               <circle class="art-star" cx="234" cy="72" r="1.7"/>
               <circle class="art-star" cx="290" cy="112" r="1.7"/>
             </svg>
-            <svg class="cone" viewBox="0 0 96 120" focusable="false">
+            <svg class="drawing" viewBox="0 0 96 120" focusable="false">
               <path d="M48 14v-8"/>
               <path d="M48 14c-17 0-26 20-26 44s11 50 26 50 26-26 26-50-9-44-26-44z"/>
               <path d="M25 40q23 12 46 0"/>
               <path d="M22 60q26 13 52 0"/>
               <path d="M25 80q23 11 46 0"/>
-              <path class="cone-tip" d="M34 98q14 6 28 0"/>
+              <path class="drawing-fine" d="M34 98q14 6 28 0"/>
             </svg>
           </span>
           <span class="story-card-body">
-            <span class="story-card-title" lang="et" data-story-title></span>
+            <span class="story-card-title" lang="et" data-card-title></span>
             <span class="story-card-length">
               <svg viewBox="0 0 13 14" aria-hidden="true" focusable="false"><path d="M1 1.6v10.8a1 1 0 0 0 1.5.86l9.2-5.4a1 1 0 0 0 0-1.72L2.5.74A1 1 0 0 0 1 1.6z"/></svg>
-              <span data-story-length-short></span>
+              <span data-card-length></span>
             </span>
           </span>
         </a>
@@ -100,15 +119,7 @@
   </div>
 
   <section class="player" aria-label="Mängija" data-i18n-aria="playerLabel">
-    <span class="player-tile" aria-hidden="true">
-      <svg class="cone" viewBox="0 0 96 120" focusable="false">
-        <path d="M48 14v-8"/>
-        <path d="M48 14c-17 0-26 20-26 44s11 50 26 50 26-26 26-50-9-44-26-44z"/>
-        <path d="M25 40q23 12 46 0"/>
-        <path d="M22 60q26 13 52 0"/>
-        <path d="M25 80q23 11 46 0"/>
-      </svg>
-    </span>
+    <span class="player-tile" aria-hidden="true" data-player-tile></span>
     <span class="player-names">
       <span class="player-title" lang="et" data-story-title></span>
       <span class="player-series" lang="et">Jänkujutud</span>
@@ -135,7 +146,7 @@
       </button>
     </div>
   </section>
-  <audio preload="metadata" src="/stories/story.m4a" data-story-audio></audio>
+  <audio preload="metadata" data-story-audio></audio>
 
   <!-- site-footer -->
 
@@ -146,7 +157,7 @@
     const COPY = {
       et: {
         title: 'Jutud',
-        description: 'Unejutt „Käbi padja all“ jänkuperest, ette loetud.',
+        description: 'Unejutud jänkuperest, ette loetud.',
         heading: 'Jutud',
         seriesNote: 'Unejutud ühest jänkuperest',
         more: 'Uusi jutte tuleb siia aegamööda.',
@@ -163,7 +174,7 @@
       },
       en: {
         title: 'Stories',
-        description: 'The bedtime story “Käbi padja all” (A Cone Under the Pillow) about a bunny family, read aloud in Estonian.',
+        description: 'Bedtime stories about a bunny family, read aloud in Estonian.',
         heading: 'Stories',
         seriesNote: 'Bedtime stories about a bunny family, in Estonian',
         more: 'New stories will come here over time.',
