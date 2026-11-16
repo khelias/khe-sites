@@ -137,7 +137,9 @@ Automated writers
 automerges npm patch and minor updates of stable packages, 0.x patches of
 devDependencies, GitHub Actions minor and patch updates, digests, pins and
 lock file maintenance (`renovate.json`); every merge to `main` deploys, and
-the weekly schedule redeploys from the current sources. The way back from a
+the weekly schedule redeploys from the current sources. An npm or Actions update is raised
+only once its release is three days old; lock file maintenance has no
+release date and is not held. The way back from a
 bad merge here is a branch that reverts it (`git revert -m 1` for a merge
 commit), taken through a PR like any change, whose merge redeploys the
 previous state; a bad page from a source repo is reverted there and
