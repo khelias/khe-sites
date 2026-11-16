@@ -12,12 +12,18 @@ export const SITE_HEADER_COPY = {
     headerHomeLanding: 'KHE avaleht',
     headerHomeKheEe: 'KHE.ee avaleht',
     headerTheme: 'Tume teema',
+    headerDemo: 'Demo',
+    headerDemoNoteHouse: 'Väljamõeldud maja, seadmed on simuleeritud.',
+    headerDemoNoteStories: 'Mõned jutud kogust, ülejäänud jäävad perele.',
   },
   en: {
     headerLanguage: 'Language',
     headerHomeLanding: 'KHE home',
     headerHomeKheEe: 'KHE.ee home',
     headerTheme: 'Dark theme',
+    headerDemo: 'Demo',
+    headerDemoNoteHouse: 'A made-up house with simulated devices.',
+    headerDemoNoteStories: 'A few stories from the collection; the rest stay with the family.',
   },
 };
 

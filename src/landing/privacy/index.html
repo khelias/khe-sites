@@ -39,7 +39,9 @@
   <ul>
     <li data-i18n-html="storageLocale"><code>app_locale</code> keeps your language choice, so the site opens in the language you picked.</li>
     <li data-i18n-html="storageConsent"><code>khe.analyticsConsent.v1</code> keeps your analytics choice.</li>
-    <li data-i18n-html="storageLocal">Both stay in your browser's <code>localStorage</code> until you clear it. The site does not receive them.</li>
+    <li data-i18n-html="storageTheme"><code>khe-theme</code> keeps your light or dark theme choice, once you change it with the button in the header.</li>
+    <li data-i18n-html="storageLocal">These stay in your browser's <code>localStorage</code> until you clear it. The site does not receive them.</li>
+    <li data-i18n-html="storageView"><code>khe-view:/stories/</code> notes whether you came to <code>khe.ee/stories/</code> from another khe.ee or games.khe.ee page, so the page keeps the site's header for the rest of the visit. The page reads where the visit came from in your browser, and nothing is sent anywhere. It stays in <code>sessionStorage</code> until you close the tab.</li>
   </ul>
 
   <h2 data-i18n="requestsHeading">Third-party requests</h2>
@@ -66,7 +68,7 @@
   <ul>
     <li data-i18n-html="retentionCookie"><code>__cf_bm</code> cookie: about 30 minutes.</li>
     <li data-i18n="retentionLogs">Server logs: 30 days.</li>
-    <li data-i18n-html="retentionStorage">Browser storage (<code>app_locale</code>, <code>khe.analyticsConsent.v1</code>): until you clear it.</li>
+    <li data-i18n-html="retentionStorage">Browser storage (<code>app_locale</code>, <code>khe.analyticsConsent.v1</code>, <code>khe-theme</code>): until you clear it; <code>khe-view:/stories/</code>: until you close the tab.</li>
     <li data-i18n="retentionAnalytics">Analytics: the site owner sees only aggregate statistics in Cloudflare.</li>
   </ul>
 
@@ -100,7 +102,9 @@
       storageHeading: 'Brauseri salvestus',
       storageLocale: '<code>app_locale</code> hoiab sinu keelevalikut, et sait avaneks sinu valitud keeles.',
       storageConsent: '<code>khe.analyticsConsent.v1</code> hoiab sinu analüütikavalikut.',
-      storageLocal: 'Mõlemad väärtused jäävad sinu brauseri kohalikku salvestusruumi (<code>localStorage</code>), kuni sa need kustutad. Saidile neid ei saadeta.',
+      storageTheme: '<code>khe-theme</code> hoiab sinu heleda või tumeda teema valikut, kui oled seda päise nupuga muutnud.',
+      storageLocal: 'Need väärtused jäävad sinu brauseri kohalikku salvestusruumi (<code>localStorage</code>), kuni sa need kustutad. Saidile neid ei saadeta.',
+      storageView: '<code>khe-view:/stories/</code> jätab meelde, kas tulid lehele <code>khe.ee/stories/</code> mõnelt teiselt khe.ee või games.khe.ee lehelt, et leht näitaks ülejäänud külastuse ajal saidi päist. Leht vaatab sinu brauseris, kust külastus algas, ja midagi ei saadeta kuhugi. Väärtus jääb seansi salvestusruumi (<code>sessionStorage</code>), kuni sa vahekaardi sulged.',
       requestsHeading: 'Kolmanda osapoole päringud',
       requestsBody: 'Fondid ja skriptid tulevad samast serverist. Kui analüütika on lubatud, laaditakse Cloudflare Web Analyticsi beacon aadressilt static.cloudflareinsights.com ja mõõteandmed saadetakse Cloudflare\'ile.',
       hostingHeading: 'Majutus, vastuvõtjad ja edastamine',
@@ -116,7 +120,7 @@
       retentionHeading: 'Kui kaua andmeid hoitakse',
       retentionCookie: 'Küpsis <code>__cf_bm</code>: umbes 30 minutit.',
       retentionLogs: 'Serveri logid: 30 päeva.',
-      retentionStorage: 'Brauseri salvestus (<code>app_locale</code>, <code>khe.analyticsConsent.v1</code>): kuni sa selle kustutad.',
+      retentionStorage: 'Brauseri salvestus (<code>app_locale</code>, <code>khe.analyticsConsent.v1</code>, <code>khe-theme</code>): kuni sa selle kustutad; <code>khe-view:/stories/</code>: kuni sa vahekaardi sulged.',
       retentionAnalytics: 'Analüütika: saidi omanik näeb Cloudflare\'is ainult koondstatistikat.',
       automatedHeading: 'Automatiseeritud otsused',
       automatedBody: 'Automatiseeritud otsuseid ega profileerimist ei tehta.',
@@ -140,7 +144,9 @@
       storageHeading: 'Browser storage',
       storageLocale: '<code>app_locale</code> keeps your language choice, so the site opens in the language you picked.',
       storageConsent: '<code>khe.analyticsConsent.v1</code> keeps your analytics choice.',
-      storageLocal: 'Both stay in your browser\'s <code>localStorage</code> until you clear it. The site does not receive them.',
+      storageTheme: '<code>khe-theme</code> keeps your light or dark theme choice, once you change it with the button in the header.',
+      storageLocal: 'These stay in your browser\'s <code>localStorage</code> until you clear it. The site does not receive them.',
+      storageView: '<code>khe-view:/stories/</code> notes whether you came to <code>khe.ee/stories/</code> from another khe.ee or games.khe.ee page, so the page keeps the site\'s header for the rest of the visit. The page reads where the visit came from in your browser, and nothing is sent anywhere. It stays in <code>sessionStorage</code> until you close the tab.',
       requestsHeading: 'Third-party requests',
       requestsBody: 'Fonts and scripts are served from this server. If analytics is allowed, the Cloudflare Web Analytics beacon loads from static.cloudflareinsights.com and sends measurement data to Cloudflare.',
       hostingHeading: 'Hosting, recipients and transfers',
@@ -156,7 +162,7 @@
       retentionHeading: 'How long data is kept',
       retentionCookie: '<code>__cf_bm</code> cookie: about 30 minutes.',
       retentionLogs: 'Server logs: 30 days.',
-      retentionStorage: 'Browser storage (<code>app_locale</code>, <code>khe.analyticsConsent.v1</code>): until you clear it.',
+      retentionStorage: 'Browser storage (<code>app_locale</code>, <code>khe.analyticsConsent.v1</code>, <code>khe-theme</code>): until you clear it; <code>khe-view:/stories/</code>: until you close the tab.',
       retentionAnalytics: 'Analytics: the site owner sees only aggregate statistics in Cloudflare.',
       automatedHeading: 'Automated decisions',
       automatedBody: 'There is no automated decision-making or profiling.',

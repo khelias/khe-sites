@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-  <title>Jutud</title>
+  <title>Unejänku</title>
   <meta name="description" content="Unejutud jänkuperest, ette loetud.">
   <link rel="canonical" href="https://khe.ee/stories/">
   <link rel="alternate" hreflang="et" href="https://khe.ee/stories/?lang=et">
@@ -12,21 +12,22 @@
   <link rel="icon" href="/logo.svg" type="image/svg+xml" sizes="any">
   <link rel="apple-touch-icon" href="/stories/icon-180.png">
   <link rel="manifest" href="/stories/manifest.webmanifest">
-  <meta name="apple-mobile-web-app-title" content="Jutud">
+  <meta name="apple-mobile-web-app-title" content="Unejänku">
   <meta name="apple-mobile-web-app-status-bar-style" content="black">
   <meta name="theme-color" content="#0b0d0d">
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://khe.ee/stories/">
   <meta property="og:site_name" content="Kaido Henrik Elias">
-  <meta property="og:title" content="Jutud">
+  <meta property="og:title" content="Unejänku">
   <meta property="og:description" content="Unejutud jänkuperest, ette loetud.">
   <meta property="og:image" content="https://khe.ee/og-image.png">
   <meta property="og:image:width" content="1200">
   <meta property="og:image:height" content="630">
   <meta name="twitter:card" content="summary">
-  <meta name="twitter:title" content="Jutud">
+  <meta name="twitter:title" content="Unejänku">
   <meta name="twitter:description" content="Unejutud jänkuperest, ette loetud.">
   <meta name="twitter:image" content="https://khe.ee/og-image.png">
+  <!-- site-view -->
   <link rel="preload" href="/assets/fonts/inter-400.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="/assets/fonts/inter-600.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="/stories/home-alone/story.json" as="fetch" crossorigin>
@@ -37,13 +38,11 @@
   <script defer src="/assets/analytics-consent.js" data-analytics-token="58734ed4ae1e4b4e8a8f8f7d50ff74f2" data-analytics-privacy-url="/privacy?lang=et"></script>
 </head>
 <body class="stories-page" data-view="library">
-  <!-- site-header home=landing rooms -->
+  <!-- site-header home=landing rooms demo product=/stories/ title=appName -->
 
   <div class="stories-app">
-    <section class="library" aria-labelledby="library-title">
-      <h1 id="library-title" data-i18n="heading">Jutud</h1>
-
-      <section class="series" aria-labelledby="series-title">
+    <section class="library" aria-labelledby="series-title">
+      <div class="series">
         <div class="series-head">
           <svg class="series-mark" aria-hidden="true" viewBox="0 0 104 120" focusable="false">
             <path d="M38 62c-8-14-11-34-6-48 3-8 11-8 13 1 3 12 1 32-2 46"/>
@@ -51,7 +50,7 @@
             <path d="M52 112c-19 0-30-10-30-25s13-27 30-27 30 12 30 27-11 25-30 25z"/>
           </svg>
           <div>
-            <h2 id="series-title" lang="et">Jänkujutud</h2>
+            <h1 id="series-title" lang="et">Jänkujutud</h1>
             <p class="series-note" data-i18n="seriesNote">Unejutud ühest jänkuperest</p>
           </div>
         </div>
@@ -99,7 +98,7 @@
             </span>
           </span>
         </a>
-      </section>
+      </div>
 
       <p class="library-note" data-i18n="more">Uusi jutte tuleb siia aegamööda.</p>
     </section>
@@ -107,7 +106,7 @@
     <article class="story" aria-labelledby="story-title">
       <a class="story-back" href="/stories/" data-story-close>
         <svg viewBox="0 0 22 22" aria-hidden="true" focusable="false"><path d="M13.5 4.5 7 11l6.5 6.5"/></svg>
-        <span data-i18n="back">Jutud</span>
+        <span lang="et" data-i18n="back">Jänkujutud</span>
       </a>
       <header class="story-head">
         <h2 id="story-title" lang="et" data-story-title></h2>
@@ -156,12 +155,12 @@
 
     const COPY = {
       et: {
-        title: 'Jutud',
+        title: 'Unejänku',
+        appName: 'Unejänku',
         description: 'Unejutud jänkuperest, ette loetud.',
-        heading: 'Jutud',
         seriesNote: 'Unejutud ühest jänkuperest',
         more: 'Uusi jutte tuleb siia aegamööda.',
-        back: 'Jutud',
+        back: 'Jänkujutud',
         credit: 'Loeb kõnesüntees <a href="https://huggingface.co/cbentes/pocket-tts-estonian">Pocket TTS Estonian</a> issi hääle järgi.',
         playerLabel: 'Mängija',
         seek: 'Koht jutus',
@@ -173,12 +172,12 @@
         minutesShort: '{n} min',
       },
       en: {
-        title: 'Stories',
+        title: 'Sleepy Bunny',
+        appName: 'Sleepy Bunny',
         description: 'Bedtime stories about a bunny family, read aloud in Estonian.',
-        heading: 'Stories',
         seriesNote: 'Bedtime stories about a bunny family, in Estonian',
         more: 'New stories will come here over time.',
-        back: 'Stories',
+        back: 'Jänkujutud',
         credit: 'Read by the <a href="https://huggingface.co/cbentes/pocket-tts-estonian">Pocket TTS Estonian</a> speech synthesis in Dad’s voice.',
         playerLabel: 'Player',
         seek: 'Position in the story',

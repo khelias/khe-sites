@@ -10,6 +10,8 @@ import { ARCHITECTURE_PAGES, modelMismatches } from './render-architecture.mjs';
 import { ASSET_REFERENCE, assetVersion, builtPages as listBuiltPages } from './asset-versions.mjs';
 import { ROOM_IDS } from '@khelias/ui/rooms';
 import { themeInitScript } from '@khelias/ui/theme';
+import { viewInitScript } from '@khelias/ui/view';
+import { readPageCopy } from './site-header.mjs';
 import { COPY } from '../src/landing/architecture/copy.js';
 import { SITE_FOOTER_COPY, SITE_HEADER_COPY, THEME_STORAGE_KEY } from '../src/shared/site-locale.js';
 
@@ -238,12 +240,8 @@ await runReportingSourceErrors(async () => {
   // page, not the built one: the header and footer keys live in SITE_HEADER_COPY and SITE_FOOTER_COPY.
   for (const relativePath of htmlFiles) {
     const html = await readFile(join(root, relativePath), 'utf8');
-    const literal = html.match(/const COPY = (\{[\s\S]*?\n\s*\});/)?.[1];
-    if (!literal) {
-      if (html.includes('const COPY')) throw new Error(`${relativePath}: its inline COPY is not in the shape check reads`);
-      continue;
-    }
-    const pageCopy = new Function(`return ${literal}`)();
+    const pageCopy = readPageCopy(html, relativePath);
+    if (!pageCopy) continue;
     for (const [, key] of html.matchAll(/data-i18n(?:-html|-aria)?="([^"]+)"/g)) {
       for (const locale of ['et', 'en']) {
         if (typeof pageCopy[locale]?.[key] !== 'string') throw new Error(`${relativePath} uses ${key}, which its COPY.${locale} lacks`);
@@ -467,7 +465,7 @@ await runReportingSourceErrors(async () => {
       if (!html.includes('data-lang-option="et"') || !html.includes('data-lang-option="en"')) {
         throw new Error(`dist/${site}/${page} has no ET/EN language switcher`);
       }
-      for (const marker of ['site-header', 'site-theme', 'site-footer']) {
+      for (const marker of ['site-header', 'site-theme', 'site-view', 'site-footer']) {
         if (html.includes(`<!-- ${marker}`)) throw new Error(`dist/${site}/${page} has an unfilled ${marker} marker`);
       }
       const house = site === 'landing' && page === 'ha/index.html';
@@ -493,6 +491,24 @@ await runReportingSourceErrors(async () => {
       if (JSON.stringify(roomButtons) !== JSON.stringify(expectedButtons)) {
         throw new Error(`dist/${site}/${page} has rooms buttons for ${JSON.stringify(roomButtons)}, expected ${JSON.stringify(expectedButtons)}`);
       }
+      // A product page (estate ADR-030) has its view script in <head> before the first
+      // stylesheet and the footer's KHE.ee link; no other page has either. The demos, /ha/ and
+      // /stories/, carry the demo line, and no other page does.
+      const product = html.match(/<header class="site-header[^>]*\sdata-khe-product="([^"]*)"/)?.[1];
+      const homeLinks = (html.match(/class="site-footer__home"/g) || []).length;
+      if (product) {
+        const viewScript = `<script>${viewInitScript(product)}</script>`;
+        const viewScripts = head.split(viewScript).length - 1;
+        if (viewScripts !== 1 || head.indexOf(viewScript) > firstStylesheet) throw new Error(`dist/${site}/${page} has ${viewScripts} view scripts before the first stylesheet, expected 1`);
+        if (homeLinks !== 1) throw new Error(`dist/${site}/${page} has ${homeLinks} footer KHE.ee links, expected 1`);
+        const privacy = await readFile(join(siteDist, 'privacy', 'index.html'), 'utf8');
+        if (!privacy.includes(`khe-view:${product}`)) throw new Error(`dist/${site}/privacy/index.html does not name the session key khe-view:${product} of ${page}`);
+      } else if (head.includes('khe-view:') || homeLinks) {
+        throw new Error(`dist/${site}/${page} is not a product page but has the view script or the footer KHE.ee link`);
+      }
+      const demoLines = (html.match(/<p class="site-header__demo"/g) || []).length;
+      const expectedDemoLines = site === 'landing' && ['ha/index.html', 'stories/index.html'].includes(page) ? 1 : 0;
+      if (demoLines !== expectedDemoLines) throw new Error(`dist/${site}/${page} has ${demoLines} demo lines, expected ${expectedDemoLines}`);
       if (house && theme !== 'dark') {
         throw new Error('dist/landing/ha/index.html is not data-theme="dark"; the house view has no light theme');
       }

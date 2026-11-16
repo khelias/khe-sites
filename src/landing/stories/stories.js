@@ -1,4 +1,4 @@
-// The Jutud player: the library of stories and the reading view of the open one, with the
+// The Unejänku player: the library of stories and the reading view of the open one, with the
 // paragraph being read marked as the audio plays. Each card in index.html names its story's
 // story.json and story.m4a, which come from khe-bunny-tales' scripts/demo.py; the paragraph
 // starts are seconds into the audio.
@@ -141,7 +141,7 @@ export async function startStories(copy) {
       navigator.mediaSession.metadata = new MediaMetadata({
         title: story.data.title,
         artist: 'Jänkujutud',
-        album: 'Jutud',
+        album: 'Unejänku',
         artwork: [{ src: ARTWORK, sizes: '512x512', type: 'image/png' }],
       });
     }

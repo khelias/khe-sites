@@ -1,4 +1,4 @@
-/* Jutud. Its own look (estate ADR-028): system type, the reading serif, large rounded cards
+/* Unejänku, the stories room. Its own look (estate ADR-028): system type, the reading serif, large rounded cards
    and a material behind the player; the family header and footer stay. Committed to the
    dark theme (estate ADR-021 point 2): a bedtime story is listened to in a dark room. */
 
@@ -70,12 +70,6 @@ body.stories-page {
   padding: 1.5rem 0 3rem;
 }
 
-.library h1 {
-  padding: 0 4px;
-  font-size: 2.125rem;
-  line-height: 1.2;
-}
-
 .series {
   display: flex;
   flex-direction: column;
@@ -96,7 +90,7 @@ body.stories-page {
   stroke-width: 9;
 }
 
-.series-head h2 {
+.series-head h1 {
   font-size: 1.375rem;
   line-height: 1.27;
 }
@@ -558,7 +552,6 @@ body.stories-page {
     padding: 2.25rem 1.5rem 2.25rem 2.5rem;
   }
 
-  .library h1,
   .series-head,
   .library-note {
     padding: 0;
@@ -569,7 +562,7 @@ body.stories-page {
     height: 23px;
   }
 
-  .series-head h2 {
+  .series-head h1 {
     font-size: 1.25rem;
   }
 
