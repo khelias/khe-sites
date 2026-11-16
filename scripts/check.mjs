@@ -495,6 +495,12 @@ await runReportingSourceErrors(async () => {
       const demoLines = (html.match(/<p class="site-header__demo"/g) || []).length;
       const expectedDemoLines = site === 'landing' && page === 'ha/index.html' ? 1 : 0;
       if (demoLines !== expectedDemoLines) throw new Error(`dist/${site}/${page} has ${demoLines} demo lines, expected ${expectedDemoLines}`);
+      // The demo's one link to the real site (estate ADR-034).
+      const demoLinks = [...html.matchAll(/<a class="site-header__demo-link" href="([^"]*)"/g)].map((match) => match[1]);
+      const expectedDemoLinks = expectedDemoLines ? ['https://home.khe.ee/'] : [];
+      if (JSON.stringify(demoLinks) !== JSON.stringify(expectedDemoLinks)) {
+        throw new Error(`dist/${site}/${page} has demo links ${JSON.stringify(demoLinks)}, expected ${JSON.stringify(expectedDemoLinks)}`);
+      }
       if (house && theme !== 'dark') {
         throw new Error('dist/landing/ha/index.html is not data-theme="dark"; the house view has no light theme');
       }

@@ -316,7 +316,11 @@ reaches khe.ee at the next deploy here.
   [the frame and the product view](https://github.com/khelias/khe-architecture/blob/main/decisions/030-the-portfolio-frame-and-the-product-view.md)):
   `demo` on the marker adds the package's demo line under the header, with
   `headerDemo` and `headerDemoNote<Room>` from `SITE_HEADER_COPY`; `/ha/`
-  has it and no other page (check). No page here is a product page, so none
+  has it and no other page (check). The line's link to the real site
+  ([estate ADR-034](https://github.com/khelias/khe-architecture/blob/main/decisions/034-the-demo-line-links-the-real-site.md))
+  is `headerDemoLink` with the room's `DEMO_LINKS` entry in
+  `scripts/site-header.mjs`, which throws on a demo room without one; check
+  holds `/ha/` to its one link. No page here is a product page, so none
   has the view script or the footer's KHE.ee link (check).
 - `khe.ee/stories/` is Unejänku, built by khe-stories with the stories from
   khe-bunny-tales, which deploys it; khe-homelab's landing serves it from
