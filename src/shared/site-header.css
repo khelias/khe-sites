@@ -171,6 +171,9 @@
   --khe-header-menu-border: var(--rule-strong);
   --khe-header-menu-shadow: 0 12px 32px rgb(0 0 0 / 0.14);
   --khe-header-menu-current-bg: var(--sunken);
+
+  /* A demo's line under the row (estate ADR-030): neutral, no room accent. */
+  --khe-header-demo-bg: var(--sunken);
 }
 
 /* A fixed header sits over a full-bleed app (/ha/), so it spans the width and its

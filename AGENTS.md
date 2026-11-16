@@ -5,8 +5,8 @@ Workspace-wide rules (push, review, docs, estate ADRs) are in [khe-workspace
 
 Static source for two independently deployed sites: `khe.ee` from
 `src/landing/` (with the estate architecture pages at `/architecture/`,
-`/architecture/decisions/` and `/agents/`, and Jutud, the stories room, at
-`/stories/`) and `games.khe.ee` from `src/games/`, the launcher shell. The
+`/architecture/decisions/` and `/agents/`, and Unejänku, the app in the
+stories room Jutud, at `/stories/`) and `games.khe.ee` from `src/games/`, the launcher shell. The
 game apps (`khe-study`, `khe-ai-adventure`) live and deploy in their own
 repos.
 
@@ -47,7 +47,7 @@ src/
              build time; the ADR pages are built beside it
     agents/  agentic development (home room): the agents diagram and
              where the agents run
-    stories/ Jutud, the stories room: stories.js, stories.css, and
+    stories/ Unejänku, the stories room: stories.js, stories.css, and
              <slug>/story.json and story.m4a, one folder per story, from
              khe-bunny-tales
   games/     games.khe.ee launcher shell
@@ -182,7 +182,7 @@ reaches khe.ee at the next deploy here.
   `:root` never reaches the header.
 - The site header markup comes from `@khelias/ui`'s `renderSiteHeader`, called
   only by `scripts/site-header.mjs`. A page
-  carries `<!-- site-header home=… [rooms] [theme] [fixed] -->` on a line
+  carries `<!-- site-header home=… [rooms] [theme] [fixed] [demo] [product=…] [title=…] -->` on a line
   of its own, and the build replaces it with the header in the page's
   `<html lang>`, at the marker's indent. `home` names where the mark leads,
   always the khe.ee front page (`landing` is `/`, `khe.ee` its full address
@@ -193,7 +193,9 @@ reaches khe.ee at the next deploy here.
 - The rooms menu (estate ADR-021): `rooms` on the marker renders the
   current room's button, from the page's `<html data-room>`, and the list of
   every room; every page but the khe.ee landing has it, the landing none
-  (check). The header shows no page title: a page's name is its heading. The
+  (check). The header shows no page title: a page's name is its heading, and
+  only an app names itself there (`title=<key>`, from the page's inline
+  `COPY`, `/stories/`' `appName`). The
   room names, notes and addresses are the package's (`@khelias/ui/rooms`);
   the build copies its `dist/rooms.js` to `/assets/rooms.js`, and on a page
   with the button `createLocaleController` imports it once the page shows a
@@ -317,7 +319,21 @@ reaches khe.ee at the next deploy here.
   breaks them; a breaking change goes to a new path. Its colours are its own
   `--khe-consent-*` values in both themes, which check holds equal to
   `site-header.css`, and it reads no page token, since the games define none.
-- `khe.ee/stories/` (Jutud) keeps its own look ([estate ADR-028](https://github.com/khelias/khe-architecture/blob/main/decisions/028-the-stories-room-keeps-its-own-look.md)):
+- Demos and products (estate ADR-030,
+  [the frame and the product view](https://github.com/khelias/khe-architecture/blob/main/decisions/030-the-portfolio-frame-and-the-product-view.md)):
+  `demo` on the marker adds the package's demo line under the header, with
+  `headerDemo` and `headerDemoNote<Room>` from `SITE_HEADER_COPY`; `/ha/` and
+  `/stories/` have it and no other page (check). `product=<root>` marks a
+  product page: a `<!-- site-view -->` marker in `<head>`, before the first
+  stylesheet, becomes the package's inline `viewInitScript(root)`, which sets
+  `data-khe-view="product"` on `<html>` unless the visit came from another
+  khe.ee or games.khe.ee page within the last 30 minutes
+  (`sessionStorage['khe-view:<root>']`), and the footer gets the KHE.ee link
+  (`data-link="home"`) that only the product view shows. Check requires the
+  script, the link and the privacy page naming `khe-view:<root>` on a product
+  page, and neither the script nor the link elsewhere. `/stories/`
+  is the one product page so far.
+- `khe.ee/stories/` (Unejänku) keeps its own look ([estate ADR-028](https://github.com/khelias/khe-architecture/blob/main/decisions/028-the-stories-room-keeps-its-own-look.md)):
   system type, `ui-serif` for the story, large radii and the one translucent
   layer, the player; the family header and footer stay. It is committed to
   the dark theme on `<html data-theme="dark">` (estate ADR-021 point 2): no

@@ -203,6 +203,10 @@ page's own name lives in its heading, never in the header. The list, its
 names, notes and addresses come from `@khelias/ui`, so every room lists the
 same rooms
 ([estate ADR-021](https://github.com/khelias/khe-architecture/blob/main/decisions/021-family-shell-and-design-check.md)).
+A demo carries a line under the header, part of it: "Demo" in ink and one
+muted sentence on what the demo shows and what stays private, on `sunken`,
+neutral with no room accent
+([estate ADR-030](https://github.com/khelias/khe-architecture/blob/main/decisions/030-the-portfolio-frame-and-the-product-view.md)).
 
 ## Application shell and state colour
 
