@@ -221,7 +221,7 @@ export const blockCards = [
 // The five decisions section: each names its ADRs and a copy-key prefix
 // (`<key>Title`, `<key>Buys`, `<key>Costs`).
 export const keyDecisions = [
-  { ids: ['011'], key: 'kd011' },
+  { ids: ['022'], key: 'kd022' },
   { ids: ['010'], key: 'kd010' },
   { ids: ['008'], key: 'kd008' },
   { ids: ['001', '014'], key: 'kd001' },
