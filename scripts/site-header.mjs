@@ -9,6 +9,12 @@ const HOMES = {
   'khe.ee': { href: 'https://khe.ee/', label: 'headerHomeKheEe' },
 };
 
+// Where a demo's family link leads, by room (estate ADR-034): the real site's root, without
+// ?lang since Home Assistant has its own language.
+const DEMO_LINKS = {
+  house: 'https://home.khe.ee/',
+};
+
 // <!-- site-header home=<HOMES key> [rooms] [theme] [fixed] [demo] -->
 // on a line of its own; the header keeps the marker's indent and renders in the page's
 // <html lang>. rooms shows the rooms menu with the page's <html data-room> current (estate
@@ -55,11 +61,13 @@ function renderHeader({ home, rooms, theme, fixed, demo }, locale, room, indent,
   if (!target) throw new Error(`${file}: site-header home=${home} is not one of ${Object.keys(HOMES).join(', ')}`);
   if ((rooms || demo) && !room) throw new Error(`${file}: site-header rooms and demo need <html data-room="…">`);
   const noteKey = demo && `headerDemoNote${room[0].toUpperCase()}${room.slice(1)}`;
+  const demoLink = demo && DEMO_LINKS[room];
+  if (demo && !demoLink) throw new Error(`${file}: site-header demo for room ${room} has no DEMO_LINKS entry`);
 
   return renderSiteHeader({
     brand: { href: `${target.href}?lang=${locale}`, label: copyText(target.label) },
     rooms: rooms ? { current: room, locale } : undefined,
-    demo: demo ? { label: copyText('headerDemo'), note: copyText(noteKey) } : undefined,
+    demo: demo ? { label: copyText('headerDemo'), note: copyText(noteKey), link: { href: demoLink, label: copyText('headerDemoLink') } } : undefined,
     themeToggle: theme ? { label: copyText('headerTheme') } : undefined,
     locales: [{ code: 'et', label: 'ET' }, { code: 'en', label: 'EN' }],
     activeLocale: locale,
@@ -69,7 +77,7 @@ function renderHeader({ home, rooms, theme, fixed, demo }, locale, room, indent,
     attrs: {
       brand: { 'data-link': 'home', 'data-i18n-aria': target.label },
       ...(theme && { theme: { 'data-i18n-aria': 'headerTheme' } }),
-      ...(demo && { demoLabel: { 'data-i18n': 'headerDemo' }, demoText: { 'data-i18n': noteKey } }),
+      ...(demo && { demoLabel: { 'data-i18n': 'headerDemo' }, demoText: { 'data-i18n': noteKey }, demoLink: { 'data-i18n': 'headerDemoLink' } }),
       switcher: { 'data-i18n-aria': 'headerLanguage' },
     },
   });
