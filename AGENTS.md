@@ -15,14 +15,14 @@ rooms menu and theme toggle, the site footer and the design check), pinned
 exactly; run `npm ci` before building.
 
 The look is the KHE family layer
-([estate ADR-021](https://github.com/khelias/khe-architecture/blob/main/decisions/021-family-shell-and-design-check.md),
-which supersedes ADR-018): shared chrome and application shell on one ground
+([estate ADR-035](https://github.com/khelias/khe-architecture/blob/main/decisions/035-family-shell-and-design-check-with-its-exceptions.md),
+which supersedes ADR-021): shared chrome and application shell on one ground
 in every room, one accent per room shown in the chrome only in the `.ee` and
 as the room's dot in the rooms list, light and dark following the system
 setting. khe-sites owns the family [`DESIGN.md`](DESIGN.md), the one source
 of the family values; the apps copy them into their `--khe-header-*` values.
 `npm run check` starts with `khe-design-lint` from `@khelias/ui`, the family's
-design check (estate ADR-021 point 8; usage in khe-ui `AGENTS.md`), over
+design check (estate ADR-035 point 8; usage in khe-ui `AGENTS.md`), over
 `src/` against `khe-design-lint-baseline.json`. The
 architecture section's own ban on shadow and gradient in `check.mjs` is
 stricter and stays.
@@ -185,7 +185,7 @@ reaches khe.ee at the next deploy here.
   in `src/shared/site-locale.js` (both languages, the `header*` keys), which
   `createLocaleController` merges under every page's copy. Every
   built page must have exactly one header (check).
-- The rooms menu (estate ADR-021): `rooms` on the marker renders the
+- The rooms menu (estate ADR-035): `rooms` on the marker renders the
   current room's button, from the page's `<html data-room>`, and the list of
   every room; every page but the khe.ee landing has it, the landing none
   (check). The header shows no page title: a page's name is its heading. The

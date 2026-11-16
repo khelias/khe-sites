@@ -94,8 +94,8 @@ components:
 ## Overview
 
 The KHE sites and apps are one family of rooms
-([estate ADR-021](https://github.com/khelias/khe-architecture/blob/main/decisions/021-family-shell-and-design-check.md),
-which supersedes ADR-018 and ADR-015). Every room shares one ground, one ink
+([estate ADR-035](https://github.com/khelias/khe-architecture/blob/main/decisions/035-family-shell-and-design-check-with-its-exceptions.md),
+which supersedes ADR-021). Every room shares one ground, one ink
 and one type in its chrome (the header, the mark, the language switcher, the
 page ground and the type of the page chrome) and in the shell of its
 application (surfaces, controls, dialogs, notifications, menus, lists), and
@@ -202,7 +202,7 @@ an app the app's name follows after a slash ("Mängud ⌄ / Tarkade Mängud"). A
 page's own name lives in its heading, never in the header. The list, its
 names, notes and addresses come from `@khelias/ui`, so every room lists the
 same rooms
-([estate ADR-021](https://github.com/khelias/khe-architecture/blob/main/decisions/021-family-shell-and-design-check.md)).
+([estate ADR-035](https://github.com/khelias/khe-architecture/blob/main/decisions/035-family-shell-and-design-check-with-its-exceptions.md)).
 A demo carries a line under the header, part of it: "Demo" in ink and one
 muted sentence on what the demo shows and what stays private, on `sunken`,
 neutral with no room accent
@@ -211,7 +211,7 @@ neutral with no room accent
 ## Application shell and state colour
 
 The family covers every room's shell, not only the chrome
-([estate ADR-021](https://github.com/khelias/khe-architecture/blob/main/decisions/021-family-shell-and-design-check.md) point 1): the page
+([estate ADR-035](https://github.com/khelias/khe-architecture/blob/main/decisions/035-family-shell-and-design-check-with-its-exceptions.md) point 1): the page
 ground, the type, the surfaces, the controls, dialogs, notifications, menus
 and lists around a room's content use the values and rules in this file.
 Play areas, canvases, maps and the house drawing keep their own look, within
@@ -327,7 +327,7 @@ where they would not reach the header:
 
 The habits that make a page read as generated. `khe-design-lint` from
 `@khelias/ui` counts the first group in every web app against a baseline that
-only shrinks ([estate ADR-021](https://github.com/khelias/khe-architecture/blob/main/decisions/021-family-shell-and-design-check.md) point 8);
+only shrinks ([estate ADR-035](https://github.com/khelias/khe-architecture/blob/main/decisions/035-family-shell-and-design-check-with-its-exceptions.md) point 8);
 a line may opt out with `design-lint-allow <rule>: <reason>`.
 
 - Gradients, backdrop blur and blur filters.
