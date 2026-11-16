@@ -5,8 +5,7 @@ Workspace-wide rules (push, review, docs, estate ADRs) are in [khe-workspace
 
 Static source for two independently deployed sites: `khe.ee` from
 `src/landing/` (with the estate architecture pages at `/architecture/`,
-`/architecture/decisions/` and `/agents/`, and Unejänku, the app in the
-stories room Jutud, at `/stories/`) and `games.khe.ee` from `src/games/`, the launcher shell. The
+`/architecture/decisions/` and `/agents/`) and `games.khe.ee` from `src/games/`, the launcher shell. The
 game apps (`khe-study`, `khe-ai-adventure`) live and deploy in their own
 repos.
 
@@ -24,8 +23,7 @@ setting. khe-sites owns the family [`DESIGN.md`](DESIGN.md), the one source
 of the family values; the apps copy them into their `--khe-header-*` values.
 `npm run check` starts with `khe-design-lint` from `@khelias/ui`, the family's
 design check (estate ADR-021 point 8; usage in khe-ui `AGENTS.md`), over
-`src/` against `khe-design-lint-baseline.json`. It excludes
-`src/landing/stories/`, whose content keeps its own look ([estate ADR-028](https://github.com/khelias/khe-architecture/blob/main/decisions/028-the-stories-room-keeps-its-own-look.md)). The
+`src/` against `khe-design-lint-baseline.json`. The
 architecture section's own ban on shadow and gradient in `check.mjs` is
 stricter and stays.
 
@@ -47,9 +45,6 @@ src/
              build time; the ADR pages are built beside it
     agents/  agentic development (home room): the agents diagram and
              where the agents run
-    stories/ Unejänku, the stories room: stories.js, stories.css, and
-             <slug>/story.json and story.m4a, one folder per story, from
-             khe-bunny-tales
   games/     games.khe.ee launcher shell
   shared/    cross-site assets, copied into each site's /assets/ at build
 scripts/
@@ -182,7 +177,7 @@ reaches khe.ee at the next deploy here.
   `:root` never reaches the header.
 - The site header markup comes from `@khelias/ui`'s `renderSiteHeader`, called
   only by `scripts/site-header.mjs`. A page
-  carries `<!-- site-header home=… [rooms] [theme] [fixed] [demo] [product=…] [title=…] -->` on a line
+  carries `<!-- site-header home=… [rooms] [theme] [fixed] [demo] -->` on a line
   of its own, and the build replaces it with the header in the page's
   `<html lang>`, at the marker's indent. `home` names where the mark leads,
   always the khe.ee front page (`landing` is `/`, `khe.ee` its full address
@@ -193,9 +188,7 @@ reaches khe.ee at the next deploy here.
 - The rooms menu (estate ADR-021): `rooms` on the marker renders the
   current room's button, from the page's `<html data-room>`, and the list of
   every room; every page but the khe.ee landing has it, the landing none
-  (check). The header shows no page title: a page's name is its heading, and
-  only an app names itself there (`title=<key>`, from the page's inline
-  `COPY`, `/stories/`' `appName`). The
+  (check). The header shows no page title: a page's name is its heading. The
   room names, notes and addresses are the package's (`@khelias/ui/rooms`);
   the build copies its `dist/rooms.js` to `/assets/rooms.js`, and on a page
   with the button `createLocaleController` imports it once the page shows a
@@ -229,7 +222,7 @@ reaches khe.ee at the next deploy here.
   `site.css` sets its `--khe-footer-*` values from the family tokens and
   places it per page. Every page but `/ha/` has exactly one (check).
 - Nothing in the sources carries `?v=`: after the pages are built, the build
-  stamps every root-relative `.css`, `.js`, `.json` and `.m4a` URL in them,
+  stamps every root-relative `.css`, `.js` and `.json` URL in them,
   and in the `.css` and `.js` files those link, with the first 10 hex of the
   built file's SHA-256, so a change
   to `site.css` or `site-locale.js` needs no hand edit. Check fails on a
@@ -319,30 +312,14 @@ reaches khe.ee at the next deploy here.
   breaks them; a breaking change goes to a new path. Its colours are its own
   `--khe-consent-*` values in both themes, which check holds equal to
   `site-header.css`, and it reads no page token, since the games define none.
-- Demos and products (estate ADR-030,
+- Demos (estate ADR-030,
   [the frame and the product view](https://github.com/khelias/khe-architecture/blob/main/decisions/030-the-portfolio-frame-and-the-product-view.md)):
   `demo` on the marker adds the package's demo line under the header, with
-  `headerDemo` and `headerDemoNote<Room>` from `SITE_HEADER_COPY`; `/ha/` and
-  `/stories/` have it and no other page (check). `product=<root>` marks a
-  product page: a `<!-- site-view -->` marker in `<head>`, before the first
-  stylesheet, becomes the package's inline `viewInitScript(root)`, which sets
-  `data-khe-view="product"` on `<html>` unless the visit came from another
-  khe.ee or games.khe.ee page within the last 30 minutes
-  (`sessionStorage['khe-view:<root>']`), and the footer gets the KHE.ee link
-  (`data-link="home"`) that only the product view shows. Check requires the
-  script, the link and the privacy page naming `khe-view:<root>` on a product
-  page, and neither the script nor the link elsewhere. `/stories/`
-  is the one product page so far.
-- `khe.ee/stories/` (Unejänku) keeps its own look ([estate ADR-028](https://github.com/khelias/khe-architecture/blob/main/decisions/028-the-stories-room-keeps-its-own-look.md)):
-  system type, `ui-serif` for the story, large radii and the one translucent
-  layer, the player; the family header and footer stay. It is committed to
-  the dark theme on `<html data-theme="dark">` (estate ADR-021 point 2): no
-  theme toggle, no theme script, one `theme-color` (check). Each story is a
-  card in `index.html` naming its `<slug>/story.json` (title, paragraphs
-  with their start in seconds, duration) and `<slug>/story.m4a`, written by
-  khe-bunny-tales' `scripts/demo.py` and replaced by a new export, never
-  edited by hand; the first card is the story the player loads. Which
-  stories are published, and with which names, is
-  [estate ADR-029](https://github.com/khelias/khe-architecture/blob/main/decisions/029-family-stories-are-published-with-the-childrens-names.md).
-  Source Serif 4's 400-500 weights, the story's fallback serif, are its
-  own, in `src/landing/stories/fonts/`.
+  `headerDemo` and `headerDemoNote<Room>` from `SITE_HEADER_COPY`; `/ha/`
+  has it and no other page (check). No page here is a product page, so none
+  has the view script or the footer's KHE.ee link (check).
+- `khe.ee/stories/` is Unejänku, built by khe-stories with the stories from
+  khe-bunny-tales, which deploys it; khe-homelab's landing serves it from
+  its own mount ([estate ADR-031](https://github.com/khelias/khe-architecture/blob/main/decisions/031-stories-public-app-private-stories-audio-outside-git.md)). This repo keeps the landing's row and
+  link to it, its sitemap entry, the `stories` room tokens in `DESIGN.md`,
+  and the privacy page's lines on its storage, offline cache and AI voice.

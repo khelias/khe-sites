@@ -3,9 +3,9 @@ import { existsSync } from 'node:fs';
 import { readdir, readFile, writeFile } from 'node:fs/promises';
 import { join } from 'node:path';
 
-// A root-relative .css, .js, .json or .m4a URL in an attribute, an import or a url(), with any
+// A root-relative .css, .js or .json URL in an attribute, an import or a url(), with any
 // ?v= it has. Only .css and .js are read for further URLs; the rest are hashed as they are.
-export const ASSET_REFERENCE = /(?<=["'(])(\/[\w./-]+\.(?:css|js|json|m4a))(?:\?v=(\w*))?(?=["')])/g;
+export const ASSET_REFERENCE = /(?<=["'(])(\/[\w./-]+\.(?:css|js|json))(?:\?v=(\w*))?(?=["')])/g;
 const LINKS_FURTHER = /\.(?:css|js)$/;
 
 export function assetVersion(content) {
