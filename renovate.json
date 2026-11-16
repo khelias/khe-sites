@@ -63,6 +63,6 @@
   ],
   "lockFileMaintenance": {
     "enabled": true,
-    "automerge": true
+    "automerge": false
   }
 }

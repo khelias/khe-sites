@@ -135,11 +135,11 @@ hands that push over: a PR can weaken its own required job.
 Automated writers
 ([estate ADR-007](https://github.com/khelias/khe-architecture/blob/main/decisions/007-automated-writers.md)): Renovate
 automerges npm patch and minor updates of stable packages, 0.x patches of
-devDependencies, GitHub Actions minor and patch updates, digests, pins and
-lock file maintenance (`renovate.json`); every merge to `main` deploys, and
-the weekly schedule redeploys from the current sources. An npm or Actions update is raised
-only once its release is three days old; lock file maintenance has no
-release date and is not held. The way back from a
+devDependencies, GitHub Actions minor and patch updates, digests and pins
+(`renovate.json`); every merge to `main` deploys, and the weekly schedule
+redeploys from the current sources. An npm or Actions update is raised only
+once its release is three days old. Lock file maintenance is not held by
+that, so its weekly PR waits for a merge by hand. The way back from a
 bad merge here is a branch that reverts it (`git revert -m 1` for a merge
 commit), taken through a PR like any change, whose merge redeploys the
 previous state; a bad page from a source repo is reverted there and
