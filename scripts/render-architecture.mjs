@@ -375,11 +375,15 @@ const decisionUrl = (id) => `/architecture/decisions/${id}/`;
 // The five decisions: what each buys and costs, then a cell that counts the
 // rest of the register so the number cannot go stale.
 function renderKeyDecisions(decisions) {
-  const known = new Set(decisions.map((decision) => decision.id));
+  const byId = new Map(decisions.map((decision) => [decision.id, decision]));
   const shown = new Set();
   const cards = keyDecisions.map(({ ids, key }) => {
     for (const id of ids) {
-      if (!known.has(id)) throw new SourceError(`The key decisions name ADR-${id}, which khe-architecture lacks`);
+      const decision = byId.get(id);
+      if (!decision) throw new SourceError(`The key decisions name ADR-${id}, which khe-architecture lacks`);
+      if (decision.status === 'Superseded') {
+        throw new SourceError(`The key decisions name ADR-${id}, superseded by ADR-${decision.supersededBy.join(', ADR-')}`);
+      }
       shown.add(id);
     }
     const tag = ids.map((id) => `ADR-${id}`).join(' · ');
