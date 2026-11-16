@@ -120,7 +120,7 @@ from the Colors table below.
 | Home | khe.ee landing, its privacy page, khe.ee/agents | `home` | `home` |
 | Server | khe.ee/architecture, its decisions page and the ADR pages | `server` | `server` |
 | Trips | khe.ee/trips, khe.ee/r/..., trips.khe.ee | `trips` | `trips-text` |
-| Stories | khe.ee/stories | `stories` | `stories` |
+| Stories | khe.ee/stories, stories.khe.ee (khe-stories) | `stories` | `stories` |
 | House | khe.ee/ha | `house` | `house` |
 | Games | the games.khe.ee hub and its privacy page | `games` | `games` |
 
@@ -218,8 +218,8 @@ Play areas, canvases, maps and the house drawing keep their own look, within
 the design check's baseline, which only shrinks. A room whose shell does not
 meet this yet says so in its `AGENTS.md`. The Stories room's content keeps
 its own look, system type, a reading serif, large radii and a material behind
-the player, under the family header and footer ([estate ADR-028](https://github.com/khelias/khe-architecture/blob/main/decisions/028-the-stories-room-keeps-its-own-look.md)); the design check
-skips its files. State colour is meaning, not an
+the player, under the family header and footer ([estate ADR-028](https://github.com/khelias/khe-architecture/blob/main/decisions/028-the-stories-room-keeps-its-own-look.md)); that look
+lives in khe-stories ([estate ADR-031](https://github.com/khelias/khe-architecture/blob/main/decisions/031-stories-public-app-private-stories-audio-outside-git.md)), whose design check skips those files. State colour is meaning, not an
 accent: on and off, ok, warning, fault, a map state, right or wrong. A room
 may use several, each naming a state, at 3:1 for marks and 4.5:1 for text in
 both themes. Shared state tokens are a follow-up, once two rooms need the

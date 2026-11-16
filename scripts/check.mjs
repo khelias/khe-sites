@@ -10,7 +10,6 @@ import { ARCHITECTURE_PAGES, modelMismatches } from './render-architecture.mjs';
 import { ASSET_REFERENCE, assetVersion, builtPages as listBuiltPages } from './asset-versions.mjs';
 import { ROOM_IDS } from '@khelias/ui/rooms';
 import { themeInitScript } from '@khelias/ui/theme';
-import { viewInitScript } from '@khelias/ui/view';
 import { readPageCopy } from './site-header.mjs';
 import { COPY } from '../src/landing/architecture/copy.js';
 import { SITE_FOOTER_COPY, SITE_HEADER_COPY, THEME_STORAGE_KEY } from '../src/shared/site-locale.js';
@@ -79,7 +78,6 @@ await runReportingSourceErrors(async () => {
     'src/landing/privacy/index.html',
     'src/games/index.html',
     'src/games/privacy/index.html',
-    'src/landing/stories/index.html',
   ];
 
   const requiredMarkers = [
@@ -119,8 +117,6 @@ await runReportingSourceErrors(async () => {
     'scripts/house3d-demo.mjs',
     'src/landing/architecture/architecture.js',
     'src/landing/architecture/copy.js',
-    'src/landing/stories/stories.js',
-    'src/landing/stories/stories.css',
   ];
   const bannedText = [
     'Tarkvaraarhitekt töö poolest',
@@ -491,23 +487,13 @@ await runReportingSourceErrors(async () => {
       if (JSON.stringify(roomButtons) !== JSON.stringify(expectedButtons)) {
         throw new Error(`dist/${site}/${page} has rooms buttons for ${JSON.stringify(roomButtons)}, expected ${JSON.stringify(expectedButtons)}`);
       }
-      // A product page (estate ADR-030) has its view script in <head> before the first
-      // stylesheet and the footer's KHE.ee link; no other page has either. The demos, /ha/ and
-      // /stories/, carry the demo line, and no other page does.
-      const product = html.match(/<header class="site-header[^>]*\sdata-khe-product="([^"]*)"/)?.[1];
-      const homeLinks = (html.match(/class="site-footer__home"/g) || []).length;
-      if (product) {
-        const viewScript = `<script>${viewInitScript(product)}</script>`;
-        const viewScripts = head.split(viewScript).length - 1;
-        if (viewScripts !== 1 || head.indexOf(viewScript) > firstStylesheet) throw new Error(`dist/${site}/${page} has ${viewScripts} view scripts before the first stylesheet, expected 1`);
-        if (homeLinks !== 1) throw new Error(`dist/${site}/${page} has ${homeLinks} footer KHE.ee links, expected 1`);
-        const privacy = await readFile(join(siteDist, 'privacy', 'index.html'), 'utf8');
-        if (!privacy.includes(`khe-view:${product}`)) throw new Error(`dist/${site}/privacy/index.html does not name the session key khe-view:${product} of ${page}`);
-      } else if (head.includes('khe-view:') || homeLinks) {
-        throw new Error(`dist/${site}/${page} is not a product page but has the view script or the footer KHE.ee link`);
+      // No page here is a product page (estate ADR-030) since the stories moved to khe-stories
+      // (estate ADR-031), so none has the view script or the footer's KHE.ee link.
+      if (head.includes('khe-view:') || (html.match(/class="site-footer__home"/g) || []).length) {
+        throw new Error(`dist/${site}/${page} has the product view script or the footer KHE.ee link`);
       }
       const demoLines = (html.match(/<p class="site-header__demo"/g) || []).length;
-      const expectedDemoLines = site === 'landing' && ['ha/index.html', 'stories/index.html'].includes(page) ? 1 : 0;
+      const expectedDemoLines = site === 'landing' && page === 'ha/index.html' ? 1 : 0;
       if (demoLines !== expectedDemoLines) throw new Error(`dist/${site}/${page} has ${demoLines} demo lines, expected ${expectedDemoLines}`);
       if (house && theme !== 'dark') {
         throw new Error('dist/landing/ha/index.html is not data-theme="dark"; the house view has no light theme');
