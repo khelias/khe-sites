@@ -33,6 +33,8 @@ export const elements = {
   'khe-albums': { kind: 'product', name: 'khe-albums', repo: 'khe-albums' },
   'khe-bunny-tales': { kind: 'product', name: 'khe-bunny-tales', repo: 'khe-bunny-tales' },
   'khe-stories': { kind: 'product', name: 'khe-stories', repo: 'khe-stories' },
+  'khe-deals': { kind: 'product', name: 'khe-deals', repo: 'khe-deals' },
+  'khe-deals-watches': { kind: 'repo', name: 'khe-deals-watches', repo: 'khe-deals-watches' },
   'khe-sites': { kind: 'product', name: 'khe-sites', repo: 'khe-sites' },
   'khe-ui': { kind: 'repo', name: 'khe-ui', repo: 'khe-ui' },
   'khe-workspace': { kind: 'repo', name: 'khe-workspace', repo: 'khe-workspace' },
@@ -212,7 +214,7 @@ export const views = [
 
 // The building-block rows under the estate diagram, in reading order.
 export const blockCards = [
-  { group: 'groupProducts', ids: ['khe-study', 'khe-ai-adventure', 'khe-trips', 'khe-albums', 'khe-bunny-tales', 'khe-stories', 'khe-sites', 'khe-ui'] },
+  { group: 'groupProducts', ids: ['khe-study', 'khe-ai-adventure', 'khe-trips', 'khe-albums', 'khe-bunny-tales', 'khe-stories', 'khe-deals', 'khe-deals-watches', 'khe-sites', 'khe-ui'] },
   { group: 'groupPlatform', repo: 'khe-homelab', ids: ['edge', 'runtime', 'family', 'observability', 'backup', 'runner', 'agentVm'] },
   { group: 'groupHouse', ids: ['house', 'khe-home-assistant'] },
   { group: 'groupMeta', ids: ['khe-workspace', 'khe-architecture', 'khe-meta', 'khelias', 'ha-estfeed'] },
