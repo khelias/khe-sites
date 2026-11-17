@@ -142,7 +142,7 @@ the six it uses in both themes, so it renders on the game pages too:
 |---|---|---|---|
 | paper | #fafafa | #0b0d0d | page ground, header ground (opaque) |
 | surface | #ffffff | #121615 | switcher track, inputs |
-| sunken | #eff1f1 | #0f1211 | picture wells, dark thumbnails, pressed row |
+| sunken | #eff1f1 | #171c1b | picture wells, dark thumbnails, pressed row |
 | ink | #121415 | #eef1f0 | names, titles, the KHE of the mark, the landing's lead |
 | ink-2 | #363b3d | #c4cac7 | running text |
 | muted | #5f6567 | #8a928f | labels, inactive language, on paper only |
@@ -198,7 +198,10 @@ The KHE.ee mark leads to the khe.ee front page from every room. After it,
 on every page but the khe.ee landing, the current room's name with a chevron
 ("Mängud ⌄") opens the rooms list: every room in a fixed order, each with
 its dot, its name and a short note, the current one marked with a check. Inside
-an app the app's name follows after a slash ("Mängud ⌄ / Tarkade Mängud"). A
+an app the app's name follows after a slash ("Mängud ⌄ / Tarkade Mängud"). On a
+phone, from 520px down to just above 360px, an app's header shows the room's
+chevron without its name, so the app's name fits; beside an app's own action
+the app's name gives way instead. A
 page's own name lives in its heading, never in the header. The list, its
 names, notes and addresses come from `@khelias/ui`, so every room lists the
 same rooms

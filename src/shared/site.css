@@ -46,17 +46,12 @@ a { color: var(--ink-2); }
   a:hover { color: var(--ink); }
 }
 
-/* The family label: small Inter in sentence case, muted. */
-.label,
+/* The family label: small Inter in sentence case. */
 .arch-kicker,
 .arch-tag {
   font-size: 0.8125rem;
   font-weight: 500;
   line-height: 1.4;
-}
-
-.label {
-  color: var(--muted);
 }
 
 /* Landing */
@@ -75,20 +70,29 @@ a { color: var(--ink-2); }
   line-height: 1.02;
 }
 
+.hero-lead,
+.hero-role {
+  color: var(--ink-2);
+  font-size: 1.1875rem;
+}
+
 .hero-lead {
   max-width: 34rem;
   text-wrap: pretty;
-  color: var(--ink-2);
-  font-size: 1.1875rem;
   line-height: 1.5;
 }
 
-:is(.landing-hero, .games-hero) .hero-title {
+.landing-hero .hero-title {
+  margin-bottom: 0.375rem;
+}
+
+.games-hero .hero-title {
   margin-bottom: 1rem;
 }
 
-.hero-kicker {
-  margin-bottom: 0.75rem;
+.hero-role {
+  margin-bottom: 1rem;
+  line-height: 1.35;
 }
 
 .landing-hero .hero-lead {
