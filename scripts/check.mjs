@@ -76,8 +76,10 @@ await runReportingSourceErrors(async () => {
     ...ARCHITECTURE_PAGES.map(({ path }) => `src/landing/${path}`),
     'scripts/templates/decision.html',
     'src/landing/privacy/index.html',
+    'src/landing/404.html',
     'src/games/index.html',
     'src/games/privacy/index.html',
+    'src/games/404.html',
   ];
 
   const requiredMarkers = [
@@ -247,8 +249,8 @@ await runReportingSourceErrors(async () => {
 
   await import(join(root, 'src/shared/site-locale.js'));
 
-  function expectRender(name, source, expected) {
-    const html = renderMarkdown(source, { file: name, rewriteLink: adrLinkRewriter(new Set(['008'])) });
+  function expectRender(name, source, expected, privateRepoUrls = []) {
+    const html = renderMarkdown(source, { file: name, rewriteLink: adrLinkRewriter(new Set(['008']), privateRepoUrls) });
     if (!html.includes(expected)) {
       throw new Error(`Markdown fixture "${name}": expected ${expected} in\n${html}`);
     }
@@ -272,6 +274,7 @@ await runReportingSourceErrors(async () => {
   expectRender('code in link text', 'See [`khe-homelab`](https://github.com/khelias/khe-homelab).', '<a href="https://github.com/khelias/khe-homelab"><code>khe-homelab</code></a>');
   expectRender('bold in a list item', '- **Visibility.** Per repo, *really*.', '<li><strong>Visibility.</strong> Per repo, <em>really</em>.</li>');
   expectRender('ADR link rewrite', 'As [ADR-008](008-container-images.md) says.', '<a href="/architecture/decisions/008/">ADR-008</a>');
+  expectRender('private repo link', 'In [`khe-x`](https://github.com/khelias/khe-x/blob/main/a.md), not [khe-x-y](https://github.com/khelias/khe-x-y).', 'In <code>khe-x</code>, not <a href="https://github.com/khelias/khe-x-y">', ['https://github.com/khelias/khe-x']);
   expectThrow('table', 'Text\n\n| a | b |', 'table');
   expectThrow('fence', '```\ncode\n```', 'fenced block');
   expectThrow('deep nesting', '- a\n  - b\n    - c', 'nested two levels');
@@ -456,6 +459,8 @@ await runReportingSourceErrors(async () => {
     for (const file of await listBuiltPages(siteDist)) {
       const page = file.slice(siteDist.length + 1);
       const html = await readFile(file, 'utf8');
+      const privateRepo = sources.repos.find((repo) => repo.visibility === 'private' && new RegExp(`href="${repo.url}["/#]`).test(html));
+      if (privateRepo) throw new Error(`dist/${site}/${page} links the private repo ${privateRepo.name}`);
       const headers = (html.match(/<header class="site-header[ "]/g) || []).length;
       if (headers !== 1) throw new Error(`dist/${site}/${page} has ${headers} site headers, expected 1`);
       if (!html.includes('data-lang-option="et"') || !html.includes('data-lang-option="en"')) {

@@ -70,7 +70,8 @@ function renderInline(text, context, base = 0) {
         continue;
       }
       const href = context.rewriteLink(text.slice(close + 2, target), { ...context, line: context.lineAt(base + i) });
-      out += `<a href="${escapeHtml(href)}">${renderInline(text.slice(i + 1, close), context, base + i + 1)}</a>`;
+      const label = renderInline(text.slice(i + 1, close), context, base + i + 1);
+      out += href === null ? label : `<a href="${escapeHtml(href)}">${label}</a>`;
       i = target + 1;
     } else if (char === '*') {
       const delimiter = text[i + 1] === '*' ? '**' : '*';
@@ -247,9 +248,11 @@ export function renderMarkdown(source, { file = 'markdown', firstLine = 1, rewri
 }
 
 // ADR cross-links become their page on the site; any other relative link has
-// no published target, so it fails rather than shipping a broken link.
-export function adrLinkRewriter(knownIds) {
+// no published target, so it fails rather than shipping a broken link. A link into a private
+// repo is a 404 for a visitor, so only its text is kept.
+export function adrLinkRewriter(knownIds, privateRepoUrls = []) {
   return (href, context) => {
+    if (privateRepoUrls.some((url) => href === url || href.startsWith(`${url}/`) || href.startsWith(`${url}#`))) return null;
     const adr = href.match(/^(\d{3})-[a-z0-9-]+\.md(#[a-z0-9-]+)?$/);
     if (adr) {
       if (!knownIds.has(adr[1])) {

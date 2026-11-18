@@ -111,6 +111,9 @@ not a static deploy: the same nginx proxies `/adventure/` to the
 `adventure-web` and `adventure-proxy` containers, pulled from GHCR
 (khe-homelab `services/apps/games/`).
 
+Each site's `404.html` is the page the homelab nginx and the edge fallback
+answer an unknown address with.
+
 What this repo publishes on `khe.ee` and `games.khe.ee` is also copied
 hourly to the Cloudflare edge fallback ([estate ADR-016](https://github.com/khelias/khe-architecture/blob/main/decisions/016-static-fallback-at-the-edge.md)), which serves it
 when the homelab is down, so it must be fit for a third-party host.
