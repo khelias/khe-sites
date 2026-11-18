@@ -38,7 +38,7 @@
 
 <main>
   <h1 data-i18n="heading">Privacy</h1>
-  <p class="updated" data-i18n="updated">Last updated: 2026-09-29</p>
+  <p class="updated" data-i18n="updated">Last updated: 2026-11-18</p>
 
   <p data-i18n="intro">This notice explains what personal data games.khe.ee handles, why, and what your rights are. The site has no advertising and no user accounts, and it does no profiling or tracking for advertising.</p>
 
@@ -59,6 +59,8 @@
     <li data-i18n-html="storageStudy"><strong>Smart Games (/study/)</strong> stores game state, such as level progress, in the browser. The server never receives it.</li>
     <li data-i18n-html="storageAdventure"><strong>AI Adventure (/adventure/)</strong> stores game settings and state in the browser.</li>
     <li data-i18n-html="storageLocal">All of it stays in your browser's <code>localStorage</code> until you clear it.</li>
+    <li data-i18n-html="storageView"><code>khe-view:/study/</code> and <code>khe-view:/adventure/</code> note whether you came to a game from another khe.ee or games.khe.ee page, so the game keeps the site's header for the rest of the visit. The game reads where the visit came from in your browser, and nothing is sent anywhere. They stay in <code>sessionStorage</code> until you close the tab.</li>
+    <li data-i18n-html="storageOffline"><strong>Smart Games</strong> and <strong>AI Adventure</strong> set up a service worker in your browser, which keeps the game's own files in the browser's cache (Cache Storage), so the game opens without a connection. The cache holds no personal data and nothing in it is sent to the site. To remove it, clear the data of games.khe.ee in your browser's settings, which also clears your game progress, and uninstall the app if you installed it.</li>
   </ul>
 
   <h2 data-i18n="adventureHeading">AI Adventure</h2>
@@ -92,7 +94,8 @@
     <li data-i18n="retentionLogs">Server logs: 30 days.</li>
     <li data-i18n="retentionCounters">Usage counters: up to 24 hours, in memory only.</li>
     <li data-i18n="retentionProviders">AI providers: under their own terms linked above.</li>
-    <li data-i18n="retentionStorage">Browser storage: until you clear it.</li>
+    <li data-i18n-html="retentionStorage">Browser storage: until you clear it; the <code>khe-view:</code> keys: until you close the tab.</li>
+    <li data-i18n="retentionOffline">The games' cache: until a newer version replaces it or you clear the site's data.</li>
     <li data-i18n="retentionAnalytics">Analytics: the site owner sees only aggregate statistics in Cloudflare.</li>
   </ul>
 
@@ -114,7 +117,7 @@
       title: 'Privaatsus - KHE Games',
       description: 'KHE Games privaatsusteave analüütika, brauseri kohaliku salvestuse, AI Seikluse teenusepakkujate ja majutuse kohta.',
       heading: 'Privaatsus',
-      updated: 'Uuendatud: 2026-09-29',
+      updated: 'Uuendatud: 2026-11-18',
       intro: 'Siin on kirjas, milliseid isikuandmeid games.khe.ee töötleb, miks ja millised õigused sul on. Saidil ei ole reklaame ega kasutajakontosid ning see ei profileeri sind ega jälgi sind reklaami eesmärgil.',
       controllerHeading: 'Vastutav töötleja ja kontakt',
       controllerBody: 'Vastutav töötleja on Kaido Henrik Elias, kes peab saiti games.khe.ee eraisikuna. Andmeid puudutavate küsimuste ja oma õiguste kasutamiseks kirjuta aadressil <a href="mailto:kaidoelias@gmail.com">kaidoelias@gmail.com</a>.',
@@ -129,6 +132,8 @@
       storageStudy: '<strong>Tarkade Mängud (/study/)</strong> salvestavad mänguseisu, näiteks taseme edenemise, brauserisse. Serverisse seda ei saadeta.',
       storageAdventure: '<strong>AI Seiklus (/adventure/)</strong> salvestab mänguseaded ja mänguseisu brauserisse.',
       storageLocal: 'Kõik see jääb sinu brauseri kohalikku salvestusruumi (<code>localStorage</code>), kuni sa selle kustutad.',
+      storageView: '<code>khe-view:/study/</code> ja <code>khe-view:/adventure/</code> jätavad meelde, kas tulid mängu juurde mõnelt teiselt khe.ee või games.khe.ee lehelt, et mäng näitaks ülejäänud külastuse ajal saidi päist. Mäng vaatab sinu brauseris, kust külastus algas, ja midagi ei saadeta kuhugi. Väärtused jäävad seansi salvestusruumi (<code>sessionStorage</code>), kuni sa vahekaardi sulged.',
+      storageOffline: '<strong>Tarkade Mängud</strong> ja <strong>AI Seiklus</strong> seavad sinu brauseris sisse taustaskripti (service worker), mis hoiab mängu enda faile brauseri vahemälus (Cache Storage), et mäng avaneks ka ilma võrguta. Vahemälus ei ole isikuandmeid ja sealt ei saadeta saidile midagi. Eemaldamiseks kustuta brauseri seadetes saidi games.khe.ee andmed, mis kustutab ka mänguseisu, ja kui oled rakenduse paigaldanud, eemalda ka see.',
       adventureHeading: 'AI Seiklus',
       adventureAge: 'AI Seiklus on mõeldud ainult täiskasvanutele (18+).',
       adventureBody: 'Loo kirjutamiseks saadab AI Seiklus mängijate sisestatud teksti selle saidi serveri kaudu tehisintellekti teenusepakkujale. Saadetakse seltskonna kirjeldus koos selles olevate nimedega, koht, detail, iga käigu valikud ja vaba tekst, enda kirjutatud algus (kui see on olemas) ning mänguseaded.',
@@ -150,7 +155,8 @@
       retentionLogs: 'Serveri logid: 30 päeva.',
       retentionCounters: 'Kasutusloendurid: kuni 24 tundi, ainult mälus.',
       retentionProviders: 'Tehisintellekti teenusepakkujad: nende endi ülal viidatud tingimuste järgi.',
-      retentionStorage: 'Brauseri salvestus: kuni sa selle kustutad.',
+      retentionStorage: 'Brauseri salvestus: kuni sa selle kustutad; väärtused <code>khe-view:</code>: kuni sa vahekaardi sulged.',
+      retentionOffline: 'Mängude vahemälu: kuni uuem versioon selle asendab või sa saidi andmed kustutad.',
       retentionAnalytics: 'Analüütika: saidi omanik näeb Cloudflare\'is ainult koondstatistikat.',
       automatedHeading: 'Automatiseeritud otsused',
       automatedBody: 'Automatiseeritud otsuseid ega profileerimist ei tehta.',
@@ -162,7 +168,7 @@
       title: 'Privacy - KHE Games',
       description: 'Privacy notice for KHE Games, including analytics, browser local storage, AI Adventure providers, and hosting.',
       heading: 'Privacy',
-      updated: 'Last updated: 2026-09-29',
+      updated: 'Last updated: 2026-11-18',
       intro: 'This notice explains what personal data games.khe.ee handles, why, and what your rights are. The site has no advertising and no user accounts, and it does no profiling or tracking for advertising.',
       controllerHeading: 'Controller and contact',
       controllerBody: 'The controller is Kaido Henrik Elias, who runs games.khe.ee as a private person. For questions about your data or to use your rights, write to <a href="mailto:kaidoelias@gmail.com">kaidoelias@gmail.com</a>.',
@@ -177,6 +183,8 @@
       storageStudy: '<strong>Smart Games (/study/)</strong> stores game state, such as level progress, in the browser. The server never receives it.',
       storageAdventure: '<strong>AI Adventure (/adventure/)</strong> stores game settings and state in the browser.',
       storageLocal: 'All of it stays in your browser\'s <code>localStorage</code> until you clear it.',
+      storageView: '<code>khe-view:/study/</code> and <code>khe-view:/adventure/</code> note whether you came to a game from another khe.ee or games.khe.ee page, so the game keeps the site\'s header for the rest of the visit. The game reads where the visit came from in your browser, and nothing is sent anywhere. They stay in <code>sessionStorage</code> until you close the tab.',
+      storageOffline: '<strong>Smart Games</strong> and <strong>AI Adventure</strong> set up a service worker in your browser, which keeps the game\'s own files in the browser\'s cache (Cache Storage), so the game opens without a connection. The cache holds no personal data and nothing in it is sent to the site. To remove it, clear the data of games.khe.ee in your browser\'s settings, which also clears your game progress, and uninstall the app if you installed it.',
       adventureHeading: 'AI Adventure',
       adventureAge: 'AI Adventure is for adults only (18+).',
       adventureBody: 'To write the story, AI Adventure sends what the players enter through this site\'s server to an AI provider: the group description with any names in it, the place, the detail, the choices and free text of each turn, and your own premise if you write one, together with the game settings.',
@@ -198,7 +206,8 @@
       retentionLogs: 'Server logs: 30 days.',
       retentionCounters: 'Usage counters: up to 24 hours, in memory only.',
       retentionProviders: 'AI providers: under their own terms linked above.',
-      retentionStorage: 'Browser storage: until you clear it.',
+      retentionStorage: 'Browser storage: until you clear it; the <code>khe-view:</code> keys: until you close the tab.',
+      retentionOffline: 'The games\' cache: until a newer version replaces it or you clear the site\'s data.',
       retentionAnalytics: 'Analytics: the site owner sees only aggregate statistics in Cloudflare.',
       automatedHeading: 'Automated decisions',
       automatedBody: 'There is no automated decision-making or profiling.',
