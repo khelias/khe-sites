@@ -422,7 +422,7 @@ function decisionLinks(ids, byId) {
   return ids.map((id) => `<a href="${decisionUrl(id)}" lang="en">ADR-${id}: ${escapeHtml(byId.get(id).title)}</a>`).join('<br>');
 }
 
-function renderDecisionPage(template, decision, byId, knownIds) {
+function renderDecisionPage(template, decision, byId, rewriteLink) {
   const url = `${SITE}${decisionUrl(decision.id)}`;
   const meta = [
     `<div>${i18n('metaStatus', 'dt')}<dd>${i18n(statusKey(decision.status))}</dd></div>`,
@@ -456,7 +456,7 @@ function renderDecisionPage(template, decision, byId, knownIds) {
     body: renderMarkdown(decision.body, {
       file: decision.file,
       firstLine: decision.bodyStartLine,
-      rewriteLink: adrLinkRewriter(knownIds),
+      rewriteLink,
     }),
     sourceUrl: `${SOURCE_BASE}${decision.file}`,
   }));
@@ -501,11 +501,12 @@ export async function renderArchitecture(landingDist, sources) {
 
   const template = await readFile(join(root, 'scripts', 'templates', 'decision.html'), 'utf8');
   const byId = new Map(sources.decisions.map((decision) => [decision.id, decision]));
-  const knownIds = new Set(byId.keys());
+  const privateRepoUrls = sources.repos.filter((repo) => repo.visibility === 'private').map((repo) => repo.url);
+  const rewriteLink = adrLinkRewriter(new Set(byId.keys()), privateRepoUrls);
   for (const decision of sources.decisions) {
     const directory = join(landingDist, 'architecture', 'decisions', decision.id);
     await mkdir(directory, { recursive: true });
-    await writeFile(join(directory, 'index.html'), renderDecisionPage(template, decision, byId, knownIds));
+    await writeFile(join(directory, 'index.html'), renderDecisionPage(template, decision, byId, rewriteLink));
   }
 
   const sitemapPath = join(landingDist, 'sitemap.xml');
