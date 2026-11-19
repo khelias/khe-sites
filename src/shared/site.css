@@ -1258,14 +1258,14 @@ html:not([lang="et"]) .arch-lang-note {
   font-size: 0.9rem;
 }
 
-/* /agents/: one task as a timeline, then the numbers behind every plan. */
-.arch-case {
+/* /agents/: the steps of a planned change as a timeline, then the numbers behind every plan. */
+.arch-path {
   display: flex;
   flex-wrap: wrap;
   gap: 2.5rem 4rem;
 }
 
-.arch-case__intro {
+.arch-path__intro {
   flex: 1 1 17.5rem;
   max-width: 22.5rem;
 }

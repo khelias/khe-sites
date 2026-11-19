@@ -478,8 +478,8 @@ function duration(minutes) {
 export function findingRows(loop) {
   const sum = (a, b) => Object.fromEntries(Object.keys(a).map((key) => [key, a[key] + b[key]]));
   return [
-    { title: 'case03Title', who: 'whoSeparate', counts: loop.planReview },
-    { title: 'case08Title', who: 'whoSeparate', counts: loop.planCheck },
+    { title: 'step03Title', who: 'whoSeparate', counts: loop.planReview },
+    { title: 'step06Title', who: 'whoSeparate', counts: loop.planCheck },
     { title: 'agentsCodeRow', who: 'whoAgent', counts: sum(loop.codeReview, loop.securityReview) },
   ];
 }

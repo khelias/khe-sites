@@ -43,8 +43,8 @@ src/
              building blocks are rendered into it at build time
       decisions/   the five key decisions and the register, rendered at
              build time; the ADR pages are built beside it
-    agents/  agentic development (home room): one task as a timeline,
-             the agent loop's numbers, where the agents run
+    agents/  agentic development (home room): the steps of a planned
+             change, the agent loop's numbers, where the agents run
   games/     games.khe.ee launcher shell
   shared/    cross-site assets, copied into each site's /assets/ at build
 scripts/
@@ -286,8 +286,8 @@ reaches khe.ee at the next deploy here.
   `keyDecisions` in the model) and `#decisions`, the register, which check
   requires there and nowhere else; the ADR pages' breadcrumb links it, and
   khe-homelab's landing nginx and edge fallback serve the bare directory
-  (no redirect). `/agents/` (home room), no diagram: `#case`, one real task
-  as a timeline whose step numbers and counts are copy; `#numbers`, the
+  (no redirect). `/agents/` (home room), no diagram: `#path`, the steps
+  a planned change takes, as a timeline with no counts; `#numbers`, the
   agent loop's totals and findings bars from khe-architecture's
   `metrics/agent-loop.json`, which the retro refreshes
   ([estate ADR-044](https://github.com/khelias/khe-architecture/blob/main/decisions/044-agent-loop-numbers-are-a-counts-only-snapshot-here.md));
