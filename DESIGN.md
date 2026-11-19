@@ -136,7 +136,7 @@ one room whose two differ, because `trips` is 4.2:1 on light `paper`.
 
 The frontmatter holds the light theme. Dark values live only in the CSS, and
 the consent banner (`src/shared/analytics-consent.js`) carries its own copy of
-the six it uses in both themes, so it renders on the game pages too:
+the four it uses in both themes, so it renders on the game pages too:
 
 | Token | Light | Dark | Use |
 |---|---|---|---|
@@ -264,7 +264,7 @@ at 520px and below). No page scrolls sideways at 320px.
 - 4px: the focus ring's corner
 - 8px: the mark, controls and anything pressable
 - 12px: pictures (the landing and games thumbnails; light ones sit on a 12% tint of their room)
-- 999px: the language switcher and its buttons
+- 999px: the language switcher, the consent pill and their buttons
 
 ## Elevation & Depth
 
@@ -272,8 +272,9 @@ Flat. The header is opaque `paper` over one `rule`, with no blur and no
 shadow, so its contrast never depends on what scrolls under it. Sections are
 separated by space and a `rule` or `rule-strong` hairline; the landing's
 project rows by space alone. Nothing is a card.
-The one exception is the rooms list, which floats over the page on
-`surface` with a `rule-strong` edge and a soft shadow.
+The exceptions float over the page on `surface` with a `rule-strong` edge
+and a soft shadow: the rooms list, and the consent banner, a pill at the
+bottom centre with its question and two equal buttons.
 
 ## Motion and touch
 

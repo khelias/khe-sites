@@ -20,24 +20,8 @@
   }
 
   const copy = {
-    en: {
-      title: 'Analytics?',
-      body: 'I use Cloudflare Web Analytics for aggregate stats. No ads, cookies, or cross-site tracking.',
-      allow: 'Allow',
-      deny: 'Decline',
-      privacy: 'Privacy',
-      savedAllowed: 'Analytics allowed.',
-      savedDenied: 'Analytics declined.',
-    },
-    et: {
-      title: 'Analüütika?',
-      body: 'Kasutan Cloudflare Web Analyticsit koondstatistika jaoks. Reklaame, küpsiseid ega saitideülest jälgimist ei ole.',
-      allow: 'Luba',
-      deny: 'Keeldu',
-      privacy: 'Privaatsus',
-      savedAllowed: 'Analüütika lubatud.',
-      savedDenied: 'Analüütika keelatud.',
-    },
+    en: { question: 'Allow statistics?', allow: 'Allow', deny: 'Decline' },
+    et: { question: 'Kas lubad statistika?', allow: 'Luba', deny: 'Keeldu' },
   };
 
   function currentCopy() {
@@ -93,28 +77,30 @@
         --khe-consent-paper: #fafafa;
         --khe-consent-surface: #ffffff;
         --khe-consent-ink: #121415;
-        --khe-consent-ink-2: #363b3d;
-        --khe-consent-muted: #5f6567;
         --khe-consent-rule-strong: #c3c7c7;
+        box-sizing: border-box;
         position: fixed;
-        right: max(0.75rem, env(safe-area-inset-right));
-        bottom: max(0.75rem, env(safe-area-inset-bottom));
+        left: 50%;
+        bottom: max(1rem, env(safe-area-inset-bottom));
         z-index: 10000;
-        width: min(20.5rem, calc(100vw - 1.5rem));
-        padding: 0.7rem;
+        display: flex;
+        align-items: center;
+        gap: 0.25rem;
+        max-width: calc(100vw - 2rem);
+        padding: 0.25rem 0.25rem 0.25rem 1rem;
         border: 1px solid var(--khe-consent-rule-strong);
-        border-radius: 8px;
+        border-radius: 999px;
         background: var(--khe-consent-surface);
+        box-shadow: 0 12px 32px rgb(0 0 0 / 0.14); /* design-lint-allow shadow: a floating layer, like the rooms list */
         color: var(--khe-consent-ink);
-        contain: content;
-        font: 400 0.78rem/1.35 'Inter', system-ui, sans-serif;
+        font: 400 0.875rem/1.4 'Inter', system-ui, sans-serif;
+        transform: translateX(-50%);
+        white-space: nowrap;
       }
       :root[data-theme="dark"] .khe-analytics-consent {
         --khe-consent-paper: #0b0d0d;
         --khe-consent-surface: #121615;
         --khe-consent-ink: #eef1f0;
-        --khe-consent-ink-2: #c4cac7;
-        --khe-consent-muted: #8a928f;
         --khe-consent-rule-strong: #3a413f;
       }
       @media (prefers-color-scheme: dark) {
@@ -122,68 +108,59 @@
           --khe-consent-paper: #0b0d0d;
           --khe-consent-surface: #121615;
           --khe-consent-ink: #eef1f0;
-          --khe-consent-ink-2: #c4cac7;
-          --khe-consent-muted: #8a928f;
           --khe-consent-rule-strong: #3a413f;
         }
       }
-      .khe-analytics-consent strong {
-        display: block;
-        margin-bottom: 0.24rem;
-        color: var(--khe-consent-ink);
-        font-size: 0.9rem;
-        font-weight: 600;
-      }
-      .khe-analytics-consent p {
-        margin: 0 0 0.56rem;
-        color: var(--khe-consent-ink-2);
-      }
       .khe-analytics-consent a {
+        margin-right: 0.5rem;
         color: var(--khe-consent-ink);
         text-decoration: underline;
-        white-space: nowrap;
+        text-decoration-color: var(--khe-consent-rule-strong);
+        text-underline-offset: 3px;
       }
-      .khe-analytics-actions {
-        display: grid;
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-        gap: 0.4rem;
-      }
-      .khe-analytics-actions button {
+      .khe-analytics-consent button {
+        box-sizing: border-box;
+        min-width: 4.5rem;
         min-height: 2.75rem;
+        padding: 0 0.875rem;
         border: 1px solid var(--khe-consent-rule-strong);
-        border-radius: 8px;
-        padding: 0 0.62rem;
+        border-radius: 999px;
         background: var(--khe-consent-paper);
         color: var(--khe-consent-ink);
         cursor: pointer;
-        font: 600 0.76rem/1 'Inter', system-ui, sans-serif;
+        font: 600 0.8125rem/1 'Inter', system-ui, sans-serif;
         touch-action: manipulation;
         user-select: none;
         -webkit-user-select: none;
         transition: transform 0.1s ease-out;
       }
-      .khe-analytics-actions button:active {
-        transform: scale(0.97);
-      }
-      .khe-analytics-actions button:disabled {
-        cursor: default;
-        opacity: 0.72;
-      }
-      .khe-analytics-status {
-        min-height: 0;
-        margin-top: 0.36rem;
-        color: var(--khe-consent-muted);
-        font-size: 0.72rem;
-      }
-      @media (max-width: 520px) {
-        .khe-analytics-consent {
-          right: max(0.5rem, env(safe-area-inset-right));
-          bottom: max(0.5rem, env(safe-area-inset-bottom));
-          width: min(20.5rem, calc(100vw - 1rem));
-          padding: 0.62rem;
+      @media (prefers-reduced-motion: no-preference) {
+        .khe-analytics-consent button:active {
+          transform: scale(0.97);
         }
-        .khe-analytics-consent p {
-          max-width: 34ch;
+      }
+      .khe-analytics-consent :focus-visible {
+        outline: 2px solid var(--khe-consent-ink);
+        outline-offset: 2px;
+      }
+      .khe-analytics-consent a:focus-visible {
+        border-radius: 4px;
+      }
+      @media (max-width: 359px) {
+        .khe-analytics-consent {
+          flex-wrap: wrap;
+          width: calc(100vw - 2rem);
+          padding: 0.75rem;
+          gap: 0.5rem;
+          border-radius: 12px;
+          white-space: normal;
+        }
+        .khe-analytics-consent a {
+          flex-basis: 100%;
+          margin: 0 0 0 0.25rem;
+        }
+        .khe-analytics-consent button {
+          flex: 1;
         }
       }
     `;
@@ -203,16 +180,10 @@
     const panel = document.createElement('section');
     panel.className = 'khe-analytics-consent';
     panel.setAttribute('data-analytics-consent-panel', '');
-    panel.setAttribute('role', 'region');
-    panel.setAttribute('aria-label', text.title);
     panel.innerHTML = `
-      <strong>${text.title}</strong>
-      <p>${text.body} <a href="${localizedPrivacyUrl()}">${text.privacy}</a>.</p>
-      <div class="khe-analytics-actions">
-        <button type="button" data-consent-choice="granted">${text.allow}</button>
-        <button type="button" data-consent-choice="denied">${text.deny}</button>
-      </div>
-      <div class="khe-analytics-status" aria-live="polite"></div>
+      <a href="${localizedPrivacyUrl()}">${text.question}</a>
+      <button type="button" data-consent-choice="granted">${text.allow}</button>
+      <button type="button" data-consent-choice="denied">${text.deny}</button>
     `;
 
     panel.addEventListener('click', (event) => {
@@ -226,12 +197,7 @@
 
       writeChoice(choice);
       if (choice === 'granted') loadBeacon();
-      panel.querySelectorAll('button').forEach((item) => {
-        item.disabled = true;
-      });
-      panel.querySelector('.khe-analytics-status').textContent =
-        choice === 'granted' ? text.savedAllowed : text.savedDenied;
-      window.setTimeout(closeBanner, 180);
+      panel.remove();
     });
 
     document.body.appendChild(panel);
