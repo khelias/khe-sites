@@ -1,4 +1,5 @@
-const STORAGE_KEY = 'app_locale';
+// The language the visitor chose with the switcher, shared by every page on the origin.
+export const LOCALE_STORAGE_KEY = 'app_locale';
 
 // The visitor's light or dark choice over the system setting (estate ADR-017); the same key on
 // khe.ee and games.khe.ee, which are separate origins and so keep separate choices.
@@ -93,6 +94,7 @@ export function createLocaleController({
   defaultLocale = 'en',
   useBrowserDefault = false,
   links = {},
+  alternatePages = false,
 }) {
   // iOS Safari applies :active only once the page listens for touchstart.
   // Every page starts a locale controller, so the press states in site.css and site-header.css
@@ -112,7 +114,7 @@ export function createLocaleController({
 
   function initialLocale() {
     return normalizeLocale(queryLocale(), supported)
-      || normalizeLocale(window.localStorage.getItem(STORAGE_KEY), supported)
+      || normalizeLocale(window.localStorage.getItem(LOCALE_STORAGE_KEY), supported)
       || (useBrowserDefault ? browserLocale(supported, fallbackLocale) : fallbackLocale);
   }
 
@@ -162,10 +164,20 @@ export function createLocaleController({
   // Only a press is stored: app_locale is shared with the games on the origin, and an installed
   // game opens in Estonian until a language is chosen. A ?lang shows the page in its language
   // and goes on in the links, since the build writes one into every room link.
+  // A room with one page per language (alternatePages, /workshop/) goes to the page in the chosen
+  // language, named by its <link rel="alternate" hreflang>, instead of translating this one.
   document.querySelectorAll('[data-lang-option]').forEach((button) => {
     button.addEventListener('click', () => {
-      const locale = normalizeLocale(button.getAttribute('data-lang-option'), supported);
-      if (locale) window.localStorage.setItem(STORAGE_KEY, locale);
+      const option = button.getAttribute('data-lang-option');
+      const page = alternatePages && option !== builtLocale
+        && document.querySelector(`link[rel="alternate"][hreflang="${option}"]`)?.getAttribute('href');
+      if (page) {
+        window.localStorage.setItem(LOCALE_STORAGE_KEY, option);
+        window.location.assign(`${page}?lang=${option}`);
+        return;
+      }
+      const locale = normalizeLocale(option, supported);
+      if (locale) window.localStorage.setItem(LOCALE_STORAGE_KEY, locale);
       applyLocale(locale);
     });
   });

@@ -53,6 +53,8 @@ scripts/
   architecture-sources.mjs reads khe-architecture and khe-homelab
   house3d-demo.mjs         runs khe-home-assistant's demo build into
                            dist/landing/ha/
+  workshop-room.mjs        runs khe-workshop's room build into
+                           dist/landing/workshop/
   architecture-model.mjs   diagram elements, edges and layout
   render-architecture.mjs  renders the three pages, ADR pages and sitemap
                            entries
@@ -63,6 +65,7 @@ scripts/
   templates/decision.html  the ADR page
   templates/house3d-header.html  the header marker and script the build puts
                            on /ha/
+  templates/workshop-header.html  the same for /workshop/
 ```
 
 ## Rules
@@ -177,6 +180,24 @@ reaches khe.ee at the next deploy here.
   keeps current, once at load and shows itself in that language
   (khe-home-assistant ADR-003, its `*.en.json` files, which the check
   requires); the hash keeps the open view.
+- `/workshop/` is Töökoda, the household's printed parts ([estate
+  ADR-043](https://github.com/khelias/khe-architecture/blob/main/decisions/043-household-parts-are-public-source-built-into-khe-sites.md)):
+  the build runs khe-workshop's `python3 -I scripts/site_build.py <out> --base
+  /workshop/` from `WORKSHOP_ROOT`, else the sibling checkout, which CI and
+  deploy check out into `.sources/`; a part published there reaches khe.ee at
+  the next deploy here. `scripts/workshop-room.mjs` fills each page's four
+  `khe:` markers with the family head, the header
+  (`scripts/templates/workshop-header.html`), the footer and the consent
+  script, and lists every page at the sitemap's `<!-- workshop -->`. The room
+  has one page per language (`/workshop/...`, `/workshop/en/...`) rather than
+  translating in place: a classic script at the top of `<head>` opens the
+  other page, named by the page's `<link rel="alternate" hreflang>`, when
+  `?lang` or the stored language differs from the page's, before any style or
+  module loads, and `createLocaleController`'s `alternatePages` option makes
+  the switcher store the language and go there. Its modules import each other root-relative, so the
+  stamper versions the whole module graph and three.js has one URL (check);
+  its STL and replay files carry khe-workshop's own `?v=`. The page links
+  `site-header.css` and the room's `room.css`, not `site.css`.
 - The built `/assets/site-header.css` is `@khelias/ui`'s header CSS and its
   footer CSS from `node_modules`, followed by `src/shared/site-header.css`, which holds only
   khe-sites' fonts (Inter, Source Serif 4), the family tokens and the
@@ -299,7 +320,7 @@ reaches khe.ee at the next deploy here.
   `--room`, and the accent ink and soft fill are mixed from the room's
   tokens, so `/agents/` (home room) shows no server teal.
 - Every built page's `<html>` carries `data-room` (`home`, `server`,
-  `trips`, `house`, `games`, `stories`; check), which sets `--room` (fills, dots) and
+  `trips`, `house`, `games`, `stories`, `workshop`; check), which sets `--room` (fills, dots) and
   `--room-text` (text, the `.ee`, focus). A landing row
   sets its own `data-room` for its dot and arrow. `/ha/` gets
   `data-room="house" data-theme="dark"` from `house3d-demo.mjs`: the house

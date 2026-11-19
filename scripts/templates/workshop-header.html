@@ -1,0 +1,25 @@
+<!-- site-header home=landing rooms theme -->
+<script type="module">
+  import { createLocaleController } from '/assets/site-locale.js';
+
+  // khe-workshop writes one page per language: the redirect at the top of <head> has already
+  // opened the asked one, and the switcher goes to the other page. Its links get the page's
+  // ?lang, as every room link does, so a language that was asked for and not stored holds.
+  const locale = document.documentElement.lang;
+  document.querySelectorAll('a[href^="/workshop/"]').forEach((anchor) => {
+    const url = new URL(anchor.href);
+    if (!url.pathname.endsWith('/')) return;
+    url.searchParams.set('lang', locale);
+    anchor.setAttribute('href', `${url.pathname}${url.search}${url.hash}`);
+  });
+  const description = document.querySelector('meta[name="description"]');
+  createLocaleController({
+    copy: { [locale]: { title: document.title, description: description ? description.content : '' } },
+    defaultLocale: locale,
+    alternatePages: true,
+    links: {
+      home: (choice) => `/?lang=${choice}`,
+      privacy: (choice) => `/privacy?lang=${choice}`,
+    },
+  });
+</script>

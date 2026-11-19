@@ -2,12 +2,11 @@ import { mkdir, readFile, writeFile } from 'node:fs/promises';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { blockCards, elements, keyDecisions, productDecisionDirs, views } from './architecture-model.mjs';
-import { SourceError } from './architecture-sources.mjs';
+import { replaceMarker, SITE, SourceError } from './architecture-sources.mjs';
 import { adrLinkRewriter, escapeHtml, renderMarkdown } from './markdown.mjs';
 import { COPY } from '../src/landing/architecture/copy.js';
 
 const root = dirname(dirname(fileURLToPath(import.meta.url)));
-const SITE = 'https://khe.ee';
 const SOURCE_BASE = 'https://github.com/khelias/khe-architecture/blob/main/';
 
 function copyText(key) {
@@ -460,12 +459,6 @@ function renderDecisionPage(template, decision, byId, rewriteLink) {
     }),
     sourceUrl: `${SOURCE_BASE}${decision.file}`,
   }));
-}
-
-function replaceMarker(html, marker, content, file) {
-  const token = `<!-- ${marker} -->`;
-  if (!html.includes(token)) throw new SourceError(`${file} has no ${token} marker`);
-  return html.replace(token, content);
 }
 
 // The pages the build fills: each gets the views whose `page` it is, then its

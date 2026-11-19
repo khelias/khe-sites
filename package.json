@@ -11,6 +11,6 @@
     "node": ">=24"
   },
   "devDependencies": {
-    "@khelias/ui": "0.7.1"
+    "@khelias/ui": "0.8.0"
   }
 }
