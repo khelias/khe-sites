@@ -348,8 +348,9 @@ reaches khe.ee at the next deploy here.
   ([estate ADR-045](https://github.com/khelias/khe-architecture/blob/main/decisions/045-khe-ee-pages-from-other-repos-load-the-consent-banner-unstamped.md)),
   so renaming or moving it, or changing its `data-analytics-token` and
   `data-analytics-privacy-url` attributes, the `khe.analyticsConsent.v1`
-  storage key, `window.kheAnalyticsConsent` or `[data-analytics-preferences]`,
-  breaks them; a breaking change goes to a new path. Its colours are its own
+  storage key, `window.kheAnalyticsConsent`, `[data-analytics-preferences]`
+  or the pill's `.khe-analytics-consent` class, which khe-trips lifts above
+  its phone tab bar, breaks them; a breaking change goes to a new path. Its colours are its own
   `--khe-consent-*` values in both themes, which check holds equal to
   `site-header.css`, and it reads no page token, since the games define none.
 - Demos (estate ADR-030,
