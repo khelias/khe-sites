@@ -1,8 +1,7 @@
-import { execFileSync } from 'node:child_process';
 import { readFile, writeFile } from 'node:fs/promises';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { resolveSourceRoot, SourceError } from './architecture-sources.mjs';
+import { runSourceBuild, SourceError } from './architecture-sources.mjs';
 
 const header = join(dirname(fileURLToPath(import.meta.url)), 'templates', 'house3d-header.html');
 
@@ -10,14 +9,7 @@ const header = join(dirname(fileURLToPath(import.meta.url)), 'templates', 'house
 // test house, so no model and no house data pass through here. The KHE site header is added
 // here, so khe.ee's branding stays out of khe-home-assistant.
 export async function buildHouse3dDemo(outputDir) {
-  const root = resolveSourceRoot('HOME_ASSISTANT_ROOT', 'khe-home-assistant');
-  try {
-    execFileSync('python3', ['-I', join(root, 'scripts', 'house3d-build.py'), '--demo', outputDir], {
-      stdio: ['ignore', 'ignore', 'inherit'],
-    });
-  } catch (error) {
-    throw new SourceError(`The 3D house demo build in ${root} failed (${error.message.split('\n')[0]}). Check HOME_ASSISTANT_ROOT.`);
-  }
+  runSourceBuild('HOME_ASSISTANT_ROOT', 'khe-home-assistant', 'scripts/house3d-build.py', ['--demo', outputDir], 'The 3D house demo build');
 
   const page = join(outputDir, 'index.html');
   const html = await readFile(page, 'utf8');

@@ -4,6 +4,7 @@ import { fileURLToPath } from 'node:url';
 import { loadSources, runReportingSourceErrors } from './architecture-sources.mjs';
 import { renderArchitecture } from './render-architecture.mjs';
 import { buildHouse3dDemo } from './house3d-demo.mjs';
+import { buildWorkshopRoom } from './workshop-room.mjs';
 import { fillSiteChrome } from './site-header.mjs';
 import { builtPages, createAssetStamper } from './asset-versions.mjs';
 
@@ -52,6 +53,7 @@ await runReportingSourceErrors(async () => {
 
   await renderArchitecture(join(dist, 'landing'), await loadSources());
   await buildHouse3dDemo(join(dist, 'landing', 'ha'));
+  await buildWorkshopRoom(join(dist, 'landing'));
 
   for (const app of apps) {
     const outputDir = join(dist, app);

@@ -160,6 +160,25 @@
       <span class="row-arrow" aria-hidden="true">→</span>
     </a>
 
+    <a class="project-row" data-room="workshop" href="/workshop/en/?lang=en" data-link="workshop">
+      <span class="project-thumb" aria-hidden="true">
+        <svg viewBox="0 0 160 120" focusable="false">
+          <rect class="t-ground" width="160" height="120"/>
+          <path class="t-line" d="M88 8v16"/>
+          <path class="t-ink" d="M76 24h24v14l-8 10h-8l-8-10z"/>
+          <rect class="t-paper" x="28" y="62" width="104" height="42" rx="4"/>
+          <rect class="t-line" x="28" y="62" width="104" height="42" rx="4"/>
+          <path class="t-line" d="M28 76h104M28 90h104"/>
+          <path class="t-room-line" d="M34 56h54"/>
+        </svg>
+      </span>
+      <span class="project-copy">
+        <span class="project-title" data-i18n="workshopTitle">Workshop</span>
+        <span class="project-desc" data-i18n="workshopDesc">Parts we design and print for our own home.</span>
+      </span>
+      <span class="row-arrow" aria-hidden="true">→</span>
+    </a>
+
     <a class="project-row" data-room="server" href="/architecture/?lang=en" data-link="architecture">
       <span class="project-thumb" aria-hidden="true">
         <svg viewBox="0 0 160 120" focusable="false">
@@ -234,6 +253,8 @@
       tripsDesc: 'Reiside planeerimine ja meenutamine.',
       storiesTitle: 'Jutud',
       storiesDesc: 'Jänkupere unejutud, ette loetud.',
+      workshopTitle: 'Töökoda',
+      workshopDesc: 'Detailid, mida oma kodu jaoks ise kavandame ja prindime.',
       architectureTitle: 'Koduserver',
       architectureDesc: 'Kõik see töötab ühel serveril minu kodus. Kuidas ja miks.',
       agentsTitle: 'Agentidega arendus',
@@ -257,6 +278,8 @@
       tripsDesc: 'Planning trips and remembering them.',
       storiesTitle: 'Stories',
       storiesDesc: 'Bedtime stories of a bunny family, read aloud.',
+      workshopTitle: 'Workshop',
+      workshopDesc: 'Parts we design and print for our own home.',
       architectureTitle: 'The home server',
       architectureDesc: 'All of this runs on one server in my home. How, and why.',
       agentsTitle: 'Agentic development',
@@ -279,6 +302,7 @@
       house3d: () => '/ha/',
       trips: (locale) => `/trips/?lang=${locale}`,
       stories: (locale) => `/stories/?lang=${locale}`,
+      workshop: (locale) => `/workshop/${locale === 'et' ? '' : 'en/'}?lang=${locale}`,
       games: (locale) => `${gamesOrigin}/?lang=${locale}`,
       contact: () => 'mailto:kaidoelias@gmail.com?subject=KHE.ee',
       privacy: (locale) => `/privacy?lang=${locale}`,

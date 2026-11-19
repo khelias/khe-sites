@@ -18,6 +18,7 @@ jobs:
       FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
       ARCHITECTURE_ROOT: ${{ github.workspace }}/.sources/khe-architecture
       HOME_ASSISTANT_ROOT: ${{ github.workspace }}/.sources/khe-home-assistant
+      WORKSHOP_ROOT: ${{ github.workspace }}/.sources/khe-workshop
       # The homelab checkout the runner deploys from, so the architecture page
       # counts the stacks that actually run. Job level, since Check builds too.
       HOMELAB_ROOT: /home/khe/homelab
@@ -40,6 +41,14 @@ jobs:
         with:
           repository: khelias/khe-home-assistant
           path: .sources/khe-home-assistant
+          persist-credentials: false
+
+      # Töökoda at /workshop/, built by khe-workshop's own script from its published parts.
+      - name: Checkout khe-workshop
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          repository: khelias/khe-workshop
+          path: .sources/khe-workshop
           persist-credentials: false
 
       - name: Setup Node.js

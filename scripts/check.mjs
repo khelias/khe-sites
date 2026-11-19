@@ -1,12 +1,13 @@
 import { execFileSync } from 'node:child_process';
 import { existsSync } from 'node:fs';
-import { readFile } from 'node:fs/promises';
+import { readdir, readFile } from 'node:fs/promises';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { loadSources, runReportingSourceErrors } from './architecture-sources.mjs';
 import { adrLinkRewriter, MarkdownError, renderMarkdown } from './markdown.mjs';
 import { views } from './architecture-model.mjs';
 import { ARCHITECTURE_PAGES, modelMismatches } from './render-architecture.mjs';
+import { WORKSHOP_BASE, workshopRoot } from './workshop-room.mjs';
 import { ASSET_REFERENCE, assetVersion, builtPages as listBuiltPages } from './asset-versions.mjs';
 import { ROOM_IDS } from '@khelias/ui/rooms';
 import { themeInitScript } from '@khelias/ui/theme';
@@ -70,6 +71,19 @@ function unpairedDarkRules(sheet) {
   return problems;
 }
 
+// Each inline script of a page parses; a module's imports are left out, since they resolve only in
+// a browser.
+function parseInlineScripts(html) {
+  for (const match of html.matchAll(/<script(?: type="module")?>([\s\S]*?)<\/script>/g)) {
+    new Function(match[1].replace(/^\s*import\s.+;\s*$/gm, ''));
+  }
+}
+
+function assertDarkPaired(sheet, name) {
+  const unpaired = unpairedDarkRules(sheet);
+  if (unpaired.length) throw new Error(unpaired.map((message) => `${name}: ${message}`).join('\n'));
+}
+
 await runReportingSourceErrors(async () => {
   const htmlFiles = [
     'src/landing/index.html',
@@ -103,10 +117,7 @@ await runReportingSourceErrors(async () => {
       throw new Error(`${relativePath} still references root-level fonts`);
     }
 
-    for (const match of content.matchAll(/<script type="module">([\s\S]*?)<\/script>/g)) {
-      const script = match[1].replace(/^\s*import\s.+;\s*$/gm, '');
-      new Function(script);
-    }
+    parseInlineScripts(content);
   }
 
   const sourceFiles = [
@@ -117,6 +128,8 @@ await runReportingSourceErrors(async () => {
     'src/shared/site.css',
     'scripts/templates/house3d-header.html',
     'scripts/house3d-demo.mjs',
+    'scripts/templates/workshop-header.html',
+    'scripts/workshop-room.mjs',
     'src/landing/architecture/architecture.js',
     'src/landing/architecture/copy.js',
   ];
@@ -192,8 +205,7 @@ await runReportingSourceErrors(async () => {
   if (!menuShadow || consentShadow !== menuShadow) {
     throw new Error(`${consentName}: box-shadow ${consentShadow} is not site-header.css's --khe-header-menu-shadow ${menuShadow}`);
   }
-  const consentUnpaired = unpairedDarkRules(consentCss);
-  if (consentUnpaired.length) throw new Error(consentUnpaired.map((message) => `${consentName}: ${message}`).join('\n'));
+  assertDarkPaired(consentCss, consentName);
   // The rooms list's dots are @khelias/ui's values (estate ADR-021); each room's light and dark
   // value is its accent in DESIGN.md's Colors table.
   const packageCss = await readFile(fileURLToPath(import.meta.resolve('@khelias/ui/site-header.css')), 'utf8');
@@ -343,8 +355,7 @@ await runReportingSourceErrors(async () => {
   }
   for (const name of ['site-header.css', 'site.css']) {
     const sheet = await readFile(join(root, 'src/shared', name), 'utf8');
-    const unpaired = unpairedDarkRules(sheet);
-    if (unpaired.length) throw new Error(unpaired.map((message) => `${name}: ${message}`).join('\n'));
+    assertDarkPaired(sheet, name);
     for (const match of sheet.matchAll(/url\(\s*['"]?\/assets\/fonts\/([^'")\s]+)['"]?\s*\)/g)) {
       if (!existsSync(join(root, 'src/shared/fonts', match[1]))) throw new Error(`${name} loads /assets/fonts/${match[1]}, which src/shared/fonts lacks`);
     }
@@ -450,9 +461,45 @@ await runReportingSourceErrors(async () => {
   for (const marker of ['/assets/site-header.css', 'class="site-header site-header--fixed"', 'data-lang-option="et"', 'data-lang-option="en"']) {
     if (!demoPage.includes(marker)) throw new Error(`dist/landing/ha/index.html is missing ${marker}`);
   }
-  for (const match of demoPage.matchAll(/<script type="module">([\s\S]*?)<\/script>/g)) {
-    new Function(match[1].replace(/^\s*import\s.+;\s*$/gm, ''));
+
+  // Töökoda, built from khe-workshop: the index and each published part in both languages,
+  // every page in the sitemap, every data file the pages link, three.js under one stamped URL so
+  // a 30-day cache never mixes two versions, and room.css's tokens the family's.
+  const workshop = join(landing, WORKSHOP_BASE);
+  const workshopSource = workshopRoot();
+  const published = [];
+  for (const entry of await readdir(join(workshopSource, 'parts'), { withFileTypes: true })) {
+    const partFile = join(workshopSource, 'parts', entry.name, 'part.json');
+    if (entry.isDirectory() && existsSync(partFile) && JSON.parse(await readFile(partFile, 'utf8')).published) published.push(entry.name);
   }
+  if (!published.length) throw new Error('khe-workshop has no published part, so /workshop/ would be empty');
+  const three = new Set();
+  for (const lang of ['', 'en/']) {
+    for (const path of ['', ...published.map((id) => `${id}/`)]) {
+      const page = `${WORKSHOP_BASE}${lang}${path}`;
+      const file = join(landing, page, 'index.html');
+      if (!existsSync(file)) throw new Error(`dist/landing${page}index.html was not built`);
+      if (!sitemap.includes(`<loc>https://khe.ee${page}</loc>`)) throw new Error(`sitemap.xml does not list ${page}`);
+      const html = await readFile(file, 'utf8');
+      for (const [, url] of html.matchAll(/"(\/workshop\/data\/[^"?]+)/g)) {
+        if (!existsSync(join(landing, url))) throw new Error(`dist/landing${page}index.html links ${url}, which was not built`);
+      }
+    }
+  }
+  for (const name of await readdir(join(workshop, 'assets'), { recursive: true })) {
+    if (!name.endsWith('.js') || /three\.(?:core|module)\.js$/.test(name)) continue;
+    for (const [url] of (await readFile(join(workshop, 'assets', name), 'utf8')).matchAll(/[\w./-]*three\.module\.js(?:\?v=\w+)?/g)) three.add(url);
+  }
+  if (three.size !== 1 || ![...three][0].includes('?v=')) {
+    throw new Error(`dist/landing${WORKSHOP_BASE} imports three.module.js as ${[...three].join(', ') || 'nothing'}, not under one stamped URL`);
+  }
+  const roomCss = await readFile(join(workshopSource, 'web', 'src', 'room.css'), 'utf8');
+  for (const [selector, family] of [[':root', light], [':root[data-theme="dark"]', forcedDark]]) {
+    for (const [name, value] of Object.entries(tokenBlock(selector, roomCss, 'room.css'))) {
+      if (family[name] !== value) throw new Error(`khe-workshop room.css sets --${name}: ${value} under ${selector}, DESIGN.md's family value is ${family[name]}`);
+    }
+  }
+  assertDarkPaired(roomCss, 'khe-workshop room.css');
 
   // Every built page carries the filled site header, and every asset it links
   // carries the hash of the built file. Every page but /ha/ has the theme toggle, the
@@ -472,7 +519,7 @@ await runReportingSourceErrors(async () => {
       if (!html.includes('data-lang-option="et"') || !html.includes('data-lang-option="en"')) {
         throw new Error(`dist/${site}/${page} has no ET/EN language switcher`);
       }
-      for (const marker of ['site-header', 'site-theme', 'site-view', 'site-footer']) {
+      for (const marker of ['site-header', 'site-theme', 'site-view', 'site-footer', 'khe:']) {
         if (html.includes(`<!-- ${marker}`)) throw new Error(`dist/${site}/${page} has an unfilled ${marker} marker`);
       }
       const house = site === 'landing' && page === 'ha/index.html';
@@ -484,11 +531,17 @@ await runReportingSourceErrors(async () => {
       const firstStylesheet = head.search(/<link rel="stylesheet"/);
       const expectedFooters = house ? 0 : 1;
       if (footers !== expectedFooters) throw new Error(`dist/${site}/${page} has ${footers} site footers, expected ${expectedFooters}`);
+      parseInlineScripts(html);
       if (theme) {
         if (toggles || html.includes(THEME_STORAGE_KEY)) throw new Error(`dist/${site}/${page} is committed to one theme but has the theme toggle or the theme script`);
       } else {
         if (toggles !== 1) throw new Error(`dist/${site}/${page} has ${toggles} theme toggles, expected 1`);
         if (initAt < 0 || firstStylesheet < 0 || initAt > firstStylesheet) throw new Error(`dist/${site}/${page} lacks the theme script in <head> before the first stylesheet`);
+        for (const [scheme, paper] of Object.entries(papers)) {
+          if (!head.includes(`<meta name="theme-color" content="${paper}" media="(prefers-color-scheme: ${scheme})">`)) {
+            throw new Error(`dist/${site}/${page}: the ${scheme} theme-color is not the ${scheme} paper token ${paper}`);
+          }
+        }
       }
       const room = htmlAttribute(html, 'data-room');
       if (!ROOM_IDS.includes(room)) throw new Error(`dist/${site}/${page} has no data-room on <html> from ${ROOM_IDS.join(', ')}`);

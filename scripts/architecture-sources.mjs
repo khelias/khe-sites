@@ -6,9 +6,18 @@ import { fileURLToPath } from 'node:url';
 
 const root = dirname(dirname(fileURLToPath(import.meta.url)));
 
+export const SITE = 'https://khe.ee';
+
 // Thrown for a problem in a source, so build and check can print one line
 // instead of a stack trace.
 export class SourceError extends Error {}
+
+export function replaceMarker(html, marker, content, file) {
+  const token = `<!-- ${marker} -->`;
+  const found = html.split(token).length - 1;
+  if (found !== 1) throw new SourceError(`${file} has ${found} ${token} markers, expected 1`);
+  return html.replace(token, () => content);
+}
 
 export async function runReportingSourceErrors(main) {
   try {
@@ -54,6 +63,18 @@ export function resolveSourceRoot(envName, siblingName) {
     );
   }
   return sibling;
+}
+
+// Runs a source repo's own Python build, which writes what khe-sites then wraps in the family
+// shell; returns the repo's root.
+export function runSourceBuild(envName, siblingName, script, args, label) {
+  const root = resolveSourceRoot(envName, siblingName);
+  try {
+    execFileSync('python3', ['-I', join(root, script), ...args], { stdio: ['ignore', 'ignore', 'inherit'] });
+  } catch (error) {
+    throw new SourceError(`${label} in ${root} failed (${error.message.split('\n')[0]}). Check ${envName}.`);
+  }
+  return root;
 }
 
 async function readSource(path, envName) {
