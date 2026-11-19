@@ -199,6 +199,60 @@ export async function loadDecisions(architectureRoot) {
   return decisions;
 }
 
+// The agent loop's counts, written by the workspace retro into khe-architecture
+// (estate ADR-044). The key set is exact: a renamed or new key fails the build
+// rather than showing an empty or stale number.
+const COUNT_KEYS = ['acted', 'dropped', 'notRun', 'pending'];
+export const AGENT_LOOP_SHAPE = {
+  since: 'date',
+  until: 'date',
+  plans: 'count',
+  planReview: COUNT_KEYS,
+  planCheck: COUNT_KEYS,
+  codeReview: COUNT_KEYS,
+  securityReview: COUNT_KEYS,
+  operator: ['acted', 'notRun', 'pending'],
+  push: ['unchanged', 'changed', 'discarded', 'pending'],
+  pushedPlans: 'count',
+  revertedPlans: 'count',
+  planToPush: ['count', 'medianMinutes'],
+};
+
+function sameKeys(value, expected, where) {
+  if (!value || typeof value !== 'object' || Array.isArray(value)) throw new SourceError(`${where} is not an object`);
+  const actual = Object.keys(value);
+  const missing = expected.filter((key) => !actual.includes(key));
+  const unknown = actual.filter((key) => !expected.includes(key));
+  if (missing.length) throw new SourceError(`${where} lacks ${missing.join(', ')}`);
+  if (unknown.length) throw new SourceError(`${where} has unknown ${unknown.join(', ')}`);
+}
+
+function assertCount(value, where) {
+  if (!Number.isInteger(value) || value < 0) throw new SourceError(`${where} is not a whole count: ${JSON.stringify(value)}`);
+}
+
+export function parseAgentLoop(text, file = 'metrics/agent-loop.json') {
+  let data;
+  try {
+    data = JSON.parse(text);
+  } catch (error) {
+    throw new SourceError(`${file}: ${error.message}`);
+  }
+  sameKeys(data, Object.keys(AGENT_LOOP_SHAPE), file);
+  for (const [key, shape] of Object.entries(AGENT_LOOP_SHAPE)) {
+    const where = `${file}: ${key}`;
+    if (shape === 'date') {
+      if (typeof data[key] !== 'string' || !/^\d{4}-\d{2}-\d{2}$/.test(data[key])) throw new SourceError(`${where} is not a YYYY-MM-DD date`);
+    } else if (shape === 'count') {
+      assertCount(data[key], where);
+    } else {
+      sameKeys(data[key], shape, where);
+      for (const inner of shape) assertCount(data[key][inner], `${where}.${inner}`);
+    }
+  }
+  return data;
+}
+
 async function findComposeFiles(directory) {
   const found = [];
   const entries = await readdir(directory, { withFileTypes: true });
@@ -268,6 +322,7 @@ export async function loadSources() {
     homelabRoot,
     repos: parseEstate(estate),
     decisions: await loadDecisions(architectureRoot),
+    agentLoop: parseAgentLoop(await readSource(join(architectureRoot, 'metrics', 'agent-loop.json'), 'ARCHITECTURE_ROOT')),
     homelab: await loadHomelab(homelabRoot),
   };
 }
