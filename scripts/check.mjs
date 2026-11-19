@@ -3,10 +3,10 @@ import { existsSync } from 'node:fs';
 import { readdir, readFile } from 'node:fs/promises';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { loadSources, runReportingSourceErrors } from './architecture-sources.mjs';
+import { AGENT_LOOP_SHAPE, loadSources, parseAgentLoop, runReportingSourceErrors, SourceError } from './architecture-sources.mjs';
 import { adrLinkRewriter, MarkdownError, renderMarkdown } from './markdown.mjs';
 import { views } from './architecture-model.mjs';
-import { ARCHITECTURE_PAGES, modelMismatches } from './render-architecture.mjs';
+import { ARCHITECTURE_PAGES, findingRows, modelMismatches } from './render-architecture.mjs';
 import { WORKSHOP_BASE, workshopRoot } from './workshop-room.mjs';
 import { ASSET_REFERENCE, assetVersion, builtPages as listBuiltPages } from './asset-versions.mjs';
 import { ROOM_IDS } from '@khelias/ui/rooms';
@@ -302,6 +302,30 @@ await runReportingSourceErrors(async () => {
   expectThrow('line number', 'one\n\n> quote', 'line number:12');
   expectThrow('inline line number', 'one\ntwo <b>three</b>', 'inline line number:11');
 
+  // The agent-loop snapshot's reader refuses a missing, unknown or fractional count (estate ADR-044).
+  const loopFixture = Object.fromEntries(Object.entries(AGENT_LOOP_SHAPE).map(([key, shape]) => {
+    if (shape === 'date') return [key, '2026-10-22'];
+    if (shape === 'count') return [key, 1];
+    return [key, Object.fromEntries(shape.map((inner) => [inner, 1]))];
+  }));
+  parseAgentLoop(JSON.stringify(loopFixture));
+  const expectLoopThrow = (name, mutate, fragment) => {
+    const data = structuredClone(loopFixture);
+    mutate(data);
+    try {
+      parseAgentLoop(JSON.stringify(data));
+    } catch (error) {
+      if (error instanceof SourceError && error.message.includes(fragment)) return;
+      throw error;
+    }
+    throw new Error(`parseAgentLoop accepted a snapshot with ${name}`);
+  };
+  expectLoopThrow('a key removed', (data) => delete data.plans, 'lacks plans');
+  expectLoopThrow('an unknown key', (data) => { data.extra = 1; }, 'unknown extra');
+  expectLoopThrow('an inner key removed', (data) => delete data.planReview.dropped, 'planReview lacks dropped');
+  expectLoopThrow('a fractional count', (data) => { data.planCheck.acted = 1.5; }, 'planCheck.acted is not a whole count');
+  expectLoopThrow('a bad date', (data) => { data.until = '19.11.2026'; }, 'until is not a YYYY-MM-DD date');
+
   const sources = await loadSources();
   const knownIds = new Set(sources.decisions.map((decision) => decision.id));
   for (const decision of sources.decisions) {
@@ -375,7 +399,7 @@ await runReportingSourceErrors(async () => {
     if (ipv4) throw new Error(`dist/landing/${page} contains an IPv4 address: ${ipv4[0]}`);
     const hostPort = html.match(/\b(?:localhost|[a-z0-9-]+(?:\.[a-z0-9-]+)*\.[a-z]{2,}):\d{2,5}\b/i);
     if (hostPort) throw new Error(`dist/landing/${page} contains a host:port: ${hostPort[0]}`);
-    const empty = html.match(/<([a-z][a-z0-9]*)\b[^>]*\sdata-i18n(?:-html)?="([^"]+)"[^>]*><\/\1>/);
+    const empty = html.match(/<([a-z][a-z0-9]*)\b[^>]*\s(?:data-i18n(?:-html)?|data-metric)="([^"]+)"[^>]*><\/\1>/);
     if (empty) throw new Error(`dist/landing/${page} leaves ${empty[2]} empty`);
     for (const match of html.matchAll(/data-i18n(?:-html|-aria)?="([^"]+)"/g)) {
       if (!(match[1] in COPY.en) && !(match[1] in SITE_HEADER_COPY.en) && !(match[1] in SITE_FOOTER_COPY.en)) {
@@ -408,6 +432,13 @@ await runReportingSourceErrors(async () => {
       }
     }
   }
+  // /agents/ shows the snapshot's numbers (every page's empty-element check above covers
+  // data-metric), and every findings row has its bar.
+  if (!filled.agents.includes(' data-metric="')) throw new Error('dist/landing/agents/index.html shows no data-metric number');
+  const rowCount = findingRows(sources.agentLoop).length;
+  const foundRows = (filled.agents.match(/<li class="arch-found">/g) || []).length;
+  const bars = (filled.agents.match(/class="arch-bar__acted" style="width: /g) || []).length;
+  if (foundRows !== rowCount || bars !== rowCount) throw new Error(`dist/landing/agents/index.html has ${foundRows} findings rows and ${bars} bars, expected ${rowCount} of each`);
   const mainPage = filled.architecture;
   const uptime = mainPage.slice(mainPage.indexOf('id="uptime"'), mainPage.indexOf('</section>', mainPage.indexOf('id="uptime"')));
   const layerList = uptime.match(/<ol class="arch-layers">([\s\S]*?)<\/ol>/);

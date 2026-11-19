@@ -43,8 +43,8 @@ src/
              building blocks are rendered into it at build time
       decisions/   the five key decisions and the register, rendered at
              build time; the ADR pages are built beside it
-    agents/  agentic development (home room): the agents diagram and
-             where the agents run
+    agents/  agentic development (home room): one task as a timeline,
+             the agent loop's numbers, where the agents run
   games/     games.khe.ee launcher shell
   shared/    cross-site assets, copied into each site's /assets/ at build
 scripts/
@@ -159,7 +159,7 @@ reaches khe.ee at the next deploy here.
   open in Estonian when installed until a language is chosen, and every room
   link carries a `?lang` whether or not one was.
 - Build and check read their sources at build time: `ARCHITECTURE_ROOT`
-  (khe-architecture: `ESTATE.md`, `decisions/`) and `HOMELAB_ROOT`
+  (khe-architecture: `ESTATE.md`, `decisions/`, `metrics/agent-loop.json`) and `HOMELAB_ROOT`
   (khe-homelab: compose files, the `## Resilience` list), else the sibling
   checkouts next to the main checkout (found through the git common dir, so
   a worktree works). A missing source fails the build naming the variable;
@@ -264,8 +264,8 @@ reaches khe.ee at the next deploy here.
   every khe-homelab service group, and nothing else; check fails otherwise.
   The repo elements appear in no diagram; they feed the building-block rows
   in the estate section's `<details>`.
-- Each view (`estate`, `shipping`, `agents`) names the `page` it is drawn on
-  (`architecture` or `agents`; `ARCHITECTURE_PAGES` in
+- Each view (`estate`, `shipping`) names the `page` it is drawn on
+  (`architecture`; `ARCHITECTURE_PAGES` in
   `render-architecture.mjs` lists the pages and their markers, and check
   counts each page's diagrams from it). Each has two layouts, `wide` and
   `narrow`, each with its own geometry and edges, and both naming the same
@@ -286,10 +286,15 @@ reaches khe.ee at the next deploy here.
   `keyDecisions` in the model) and `#decisions`, the register, which check
   requires there and nowhere else; the ADR pages' breadcrumb links it, and
   khe-homelab's landing nginx and edge fallback serve the bare directory
-  (no redirect). `/agents/` (home room): the agents view, from the plan to
-  the push, then `#where`, where the agents run (estate ADR-027). The
-  push, the agent's, is in both diagrams: the agents view ends on it, the
-  delivery view starts from it.
+  (no redirect). `/agents/` (home room), no diagram: `#case`, one real task
+  as a timeline whose step numbers and counts are copy; `#numbers`, the
+  agent loop's totals and findings bars from khe-architecture's
+  `metrics/agent-loop.json`, which the retro refreshes
+  ([estate ADR-044](https://github.com/khelias/khe-architecture/blob/main/decisions/044-agent-loop-numbers-are-a-counts-only-snapshot-here.md));
+  then `#where` (estate ADR-027) and `#weak`. The build throws on a snapshot
+  with a missing or unknown key or a count that is not whole
+  (`parseAgentLoop`), fills each `data-metric` element and writes the bar
+  widths inline, scaled to the longest row; check fails on an empty one.
 - Headings use Source Serif 4 (weight 600, latin and latin-ext subsets in
   `src/shared/fonts/`), body text Inter, mono labels the system mono stack.
   Check fails when `site-header.css` or `site.css` loads a font file that is

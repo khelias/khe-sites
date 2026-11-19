@@ -12,8 +12,8 @@ JavaScript:
   one diagram, how a change reaches it from a push, how it stays up and where
   it is weak), its [decisions](https://khe.ee/architecture/decisions/) (the
   five that shape it, the register and every estate decision on its own
-  page) and [agentic development](https://khe.ee/agents/) (how the agents
-  work from a plan to the push)
+  page) and [agentic development](https://khe.ee/agents/) (one real task
+  step by step, and what the agents' checks found)
 - [khe.ee/ha](https://khe.ee/ha/) - the Home Assistant 3D house
   view on a made-up house, built from
   [khe-home-assistant](https://github.com/khelias/khe-home-assistant)
