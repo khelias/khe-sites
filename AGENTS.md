@@ -337,6 +337,10 @@ reaches khe.ee at the next deploy here.
   `/assets/analytics-consent.js`. /study and /adventure load it unstamped
   from the games root and keep no copy
   ([estate ADR-019](https://github.com/khelias/khe-architecture/blob/main/decisions/019-consent-banner-from-the-origin-root.md)),
+  as do khe.ee/stories/ (khe-stories) and khe.ee/trips/ and khe.ee/r/
+  (khe-trips) from the khe.ee root, where a change reaches them within the
+  30-day browser cache
+  ([estate ADR-045](https://github.com/khelias/khe-architecture/blob/main/decisions/045-khe-ee-pages-from-other-repos-load-the-consent-banner-unstamped.md)),
   so renaming or moving it, or changing its `data-analytics-token` and
   `data-analytics-privacy-url` attributes, the `khe.analyticsConsent.v1`
   storage key, `window.kheAnalyticsConsent` or `[data-analytics-preferences]`,

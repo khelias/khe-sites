@@ -21,7 +21,7 @@
 
 <main>
   <h1 data-i18n="heading">Privacy</h1>
-  <p class="updated" data-i18n="updated">Last updated: 2026-11-16</p>
+  <p class="updated" data-i18n="updated">Last updated: 2026-11-19</p>
 
   <p data-i18n="intro">This notice explains what personal data khe.ee handles, why, and what your rights are. khe.ee is a personal page. It has no advertising and no user accounts, and it does no profiling or cross-site tracking.</p>
 
@@ -41,6 +41,7 @@
     <li data-i18n-html="storageConsent"><code>khe.analyticsConsent.v1</code> keeps your analytics choice.</li>
     <li data-i18n-html="storageTheme"><code>khe-theme</code> keeps your light or dark theme choice, once you change it with the button in the header.</li>
     <li data-i18n-html="storageResume"><code>unejanku:v1:pos:&lt;story&gt;</code> keeps where you stopped listening to a story on <code>khe.ee/stories/</code> (the position in seconds, the length of the reading and when you listened), so the story can continue from there. It is removed when the story plays to the end.</li>
+    <li data-i18n-html="storageTrips"><code>khe-trips-locale</code> and <code>khe-trips-theme</code> keep the language and theme of the trip pages, <code>khe.ee/r/</code> and <code>khe.ee/trips/</code>.</li>
     <li data-i18n-html="storageLocal">These stay in your browser's <code>localStorage</code> until you clear it. The site does not receive them.</li>
     <li data-i18n-html="storageView"><code>khe-view:/stories/</code> notes whether you came to <code>khe.ee/stories/</code> from another khe.ee or games.khe.ee page, so the page keeps the site's header for the rest of the visit. The page reads where the visit came from in your browser, and nothing is sent anywhere. It stays in <code>sessionStorage</code> until you close the tab.</li>
     <li data-i18n-html="storageOffline"><code>khe.ee/stories/</code> sets up a service worker in your browser, which keeps the page and the story texts in the browser's cache (Cache Storage), so the stories open without a connection. A story's reading is kept there only when you press "Keep on this phone", and the same button removes it. Nothing in the cache is sent to the site, and a story taken off the site leaves it at your next visit online.</li>
@@ -60,7 +61,7 @@
   </ul>
 
   <h2 data-i18n="sharesHeading">Trip pages and other services</h2>
-  <p data-i18n-html="sharesBody">Pages under <code>khe.ee/r/</code> are private trip pages, shared only by direct link and hidden from search engines. Their maps may load tiles from an external map service (OpenFreeMap), which then sees your IP address.</p>
+  <p data-i18n-html="sharesBody">Pages under <code>khe.ee/r/</code> are private trip pages, shared only by direct link, and <code>khe.ee/trips/</code> is a demo of the trip atlas. Both are hidden from search engines. Their maps may load tiles from an external map service (OpenFreeMap), which then sees your IP address.</p>
   <p data-i18n="servicesBody">Other khe.ee subdomains host private self-hosted applications for the site owner and family. They are not open to public registration, and this notice does not cover them.</p>
 
   <h2 data-i18n="basisHeading">Legal bases</h2>
@@ -73,7 +74,7 @@
   <ul>
     <li data-i18n-html="retentionCookie"><code>__cf_bm</code> cookie: about 30 minutes.</li>
     <li data-i18n="retentionLogs">Server logs: 30 days.</li>
-    <li data-i18n-html="retentionStorage">Browser storage (<code>app_locale</code>, <code>khe.analyticsConsent.v1</code>, <code>khe-theme</code>): until you clear it; <code>unejanku:v1:pos:&lt;story&gt;</code>: until the story plays to the end or you clear it; <code>khe-view:/stories/</code>: until you close the tab.</li>
+    <li data-i18n-html="retentionStorage">Browser storage (<code>app_locale</code>, <code>khe.analyticsConsent.v1</code>, <code>khe-theme</code>, <code>khe-trips-locale</code>, <code>khe-trips-theme</code>): until you clear it; <code>unejanku:v1:pos:&lt;story&gt;</code>: until the story plays to the end or you clear it; <code>khe-view:/stories/</code>: until you close the tab.</li>
     <li data-i18n="retentionOffline">The stories page's cache: the page and texts until a newer version replaces them; a kept reading until you remove it, clear the site's data or the story leaves the site.</li>
     <li data-i18n="retentionAnalytics">Analytics: the site owner sees only aggregate statistics in Cloudflare.</li>
   </ul>
@@ -96,7 +97,7 @@
       title: 'Privaatsus - Kaido Henrik Elias',
       description: 'khe.ee privaatsusteave',
       heading: 'Privaatsus',
-      updated: 'Uuendatud: 2026-11-16',
+      updated: 'Uuendatud: 2026-11-19',
       intro: 'Siin on kirjas, milliseid isikuandmeid khe.ee töötleb, miks ja millised õigused sul on. khe.ee on isiklik avaleht. Sellel ei ole reklaame ega kasutajakontosid ning see ei profileeri sind ega jälgi sind teistel saitidel.',
       controllerHeading: 'Vastutav töötleja ja kontakt',
       controllerBody: 'Vastutav töötleja on Kaido Henrik Elias, kes peab saiti khe.ee eraisikuna. Andmeid puudutavate küsimuste ja oma õiguste kasutamiseks kirjuta aadressil <a href="mailto:kaidoelias@gmail.com">kaidoelias@gmail.com</a>.',
@@ -110,6 +111,7 @@
       storageConsent: '<code>khe.analyticsConsent.v1</code> hoiab sinu analüütikavalikut.',
       storageTheme: '<code>khe-theme</code> hoiab sinu heleda või tumeda teema valikut, kui oled seda päise nupuga muutnud.',
       storageResume: '<code>unejanku:v1:pos:&lt;jutt&gt;</code> jätab meelde, kus sa lehel <code>khe.ee/stories/</code> jutu kuulamise pooleli jätsid (koha sekundites, ettelugemise pikkuse ja kuulamise aja), et jutt saaks sealt jätkuda. Kui jutt mängib lõpuni, väärtus kustutatakse.',
+      storageTrips: '<code>khe-trips-locale</code> ja <code>khe-trips-theme</code> hoiavad reisilehtede <code>khe.ee/r/</code> ja <code>khe.ee/trips/</code> keelt ja teemat.',
       storageLocal: 'Need väärtused jäävad sinu brauseri kohalikku salvestusruumi (<code>localStorage</code>), kuni sa need kustutad. Saidile neid ei saadeta.',
       storageView: '<code>khe-view:/stories/</code> jätab meelde, kas tulid lehele <code>khe.ee/stories/</code> mõnelt teiselt khe.ee või games.khe.ee lehelt, et leht näitaks ülejäänud külastuse ajal saidi päist. Leht vaatab sinu brauseris, kust külastus algas, ja midagi ei saadeta kuhugi. Väärtus jääb seansi salvestusruumi (<code>sessionStorage</code>), kuni sa vahekaardi sulged.',
       storageOffline: 'Leht <code>khe.ee/stories/</code> seab sinu brauseris sisse taustaskripti (service worker), mis hoiab lehte ja juttude tekste brauseri vahemälus (Cache Storage), et jutud avaneksid ka ilma võrguta. Jutu ettelugemine salvestatakse sinna ainult siis, kui vajutad „Hoia telefonis“, ja sama nupuga saad selle eemaldada. Vahemälust ei saadeta saidile midagi ja saidilt eemaldatud jutt kaob sealt sinu järgmisel võrguga külastusel.',
@@ -122,7 +124,7 @@
       hostingCloudflare: 'Avalik ligipääs käib läbi ettevõtte Cloudflare, Inc. teenuste (DNS, tunnel, TLS-ühenduse lõpp-punkt, botikaitse ja sinu nõusolekul analüütika). Cloudflare näeb päringu andmeid, näiteks IP-aadressi, URL-i ja brauseri tunnust (user agent). Cloudflare asub Ameerika Ühendriikides; andmete edastamine sinna põhineb Cloudflare\'i sertifitseeringul ELi-USA andmekaitseraamistikus (EU-U.S. Data Privacy Framework).',
       hostingLogs: 'Serveri juurdepääsu- ja vealogid talletavad päringute andmeid, näiteks aega, küsitud aadressi, vastuse olekut ja brauseri andmeid, ning võivad sisaldada IP-aadressi. Neid hoitakse keskselt 30 päeva, seejärel need kustutatakse.',
       sharesHeading: 'Reisilehed ja muud teenused',
-      sharesBody: 'Aadressi <code>khe.ee/r/</code> all on privaatsed reisilehed, mida jagatakse ainult otselingiga ja mis on otsingumootorite eest peidetud. Nende kaardid võivad laadida kaardipilte välisest kaarditeenusest (OpenFreeMap), mis näeb siis sinu IP-aadressi.',
+      sharesBody: 'Aadressi <code>khe.ee/r/</code> all on privaatsed reisilehed, mida jagatakse ainult otselingiga, ja <code>khe.ee/trips/</code> on reisiatlase näidis. Mõlemad on otsingumootorite eest peidetud. Nende kaardid võivad laadida kaardipilte välisest kaarditeenusest (OpenFreeMap), mis näeb siis sinu IP-aadressi.',
       servicesBody: 'Teistel khe.ee alamdomeenidel on saidi omaniku ja tema pere privaatsed rakendused. Need ei ole avalikuks registreerimiseks avatud ja see teade neid ei hõlma.',
       basisHeading: 'Õiguslikud alused',
       basisAnalytics: 'Analüütika: sinu nõusolek (isikuandmete kaitse üldmääruse ehk IKÜM art 6 lg 1 punkt a).',
@@ -130,7 +132,7 @@
       retentionHeading: 'Kui kaua andmeid hoitakse',
       retentionCookie: 'Küpsis <code>__cf_bm</code>: umbes 30 minutit.',
       retentionLogs: 'Serveri logid: 30 päeva.',
-      retentionStorage: 'Brauseri salvestus (<code>app_locale</code>, <code>khe.analyticsConsent.v1</code>, <code>khe-theme</code>): kuni sa selle kustutad; <code>unejanku:v1:pos:&lt;jutt&gt;</code>: kuni jutt mängib lõpuni või sa selle kustutad; <code>khe-view:/stories/</code>: kuni sa vahekaardi sulged.',
+      retentionStorage: 'Brauseri salvestus (<code>app_locale</code>, <code>khe.analyticsConsent.v1</code>, <code>khe-theme</code>, <code>khe-trips-locale</code>, <code>khe-trips-theme</code>): kuni sa selle kustutad; <code>unejanku:v1:pos:&lt;jutt&gt;</code>: kuni jutt mängib lõpuni või sa selle kustutad; <code>khe-view:/stories/</code>: kuni sa vahekaardi sulged.',
       retentionOffline: 'Juttude lehe vahemälu: leht ja tekstid, kuni uuem versioon need asendab; salvestatud ettelugemine, kuni sa selle eemaldad, saidi andmed kustutad või jutt saidilt eemaldatakse.',
       retentionAnalytics: 'Analüütika: saidi omanik näeb Cloudflare\'is ainult koondstatistikat.',
       automatedHeading: 'Automatiseeritud otsused',
@@ -143,7 +145,7 @@
       title: 'Privacy - Kaido Henrik Elias',
       description: 'Privacy notice for khe.ee',
       heading: 'Privacy',
-      updated: 'Last updated: 2026-11-16',
+      updated: 'Last updated: 2026-11-19',
       intro: 'This notice explains what personal data khe.ee handles, why, and what your rights are. khe.ee is a personal page. It has no advertising and no user accounts, and it does no profiling or cross-site tracking.',
       controllerHeading: 'Controller and contact',
       controllerBody: 'The controller is Kaido Henrik Elias, who runs khe.ee as a private person. For questions about your data or to use your rights, write to <a href="mailto:kaidoelias@gmail.com">kaidoelias@gmail.com</a>.',
@@ -157,6 +159,7 @@
       storageConsent: '<code>khe.analyticsConsent.v1</code> keeps your analytics choice.',
       storageTheme: '<code>khe-theme</code> keeps your light or dark theme choice, once you change it with the button in the header.',
       storageResume: '<code>unejanku:v1:pos:&lt;story&gt;</code> keeps where you stopped listening to a story on <code>khe.ee/stories/</code> (the position in seconds, the length of the reading and when you listened), so the story can continue from there. It is removed when the story plays to the end.',
+      storageTrips: '<code>khe-trips-locale</code> and <code>khe-trips-theme</code> keep the language and theme of the trip pages, <code>khe.ee/r/</code> and <code>khe.ee/trips/</code>.',
       storageLocal: 'These stay in your browser\'s <code>localStorage</code> until you clear it. The site does not receive them.',
       storageView: '<code>khe-view:/stories/</code> notes whether you came to <code>khe.ee/stories/</code> from another khe.ee or games.khe.ee page, so the page keeps the site\'s header for the rest of the visit. The page reads where the visit came from in your browser, and nothing is sent anywhere. It stays in <code>sessionStorage</code> until you close the tab.',
       storageOffline: '<code>khe.ee/stories/</code> sets up a service worker in your browser, which keeps the page and the story texts in the browser\'s cache (Cache Storage), so the stories open without a connection. A story\'s reading is kept there only when you press "Keep on this phone", and the same button removes it. Nothing in the cache is sent to the site, and a story taken off the site leaves it at your next visit online.',
@@ -169,7 +172,7 @@
       hostingCloudflare: 'Public access goes through Cloudflare, Inc. (DNS, tunnel, TLS endpoint, bot protection and, with your consent, analytics). Cloudflare sees request data such as IP address, URL and browser user agent. Cloudflare is based in the United States; the transfer relies on its certification under the EU-U.S. Data Privacy Framework.',
       hostingLogs: 'The server\'s access and error logs record requests, such as the time, requested address, response status and browser details, and may include the IP address. They are kept centrally for 30 days and then deleted.',
       sharesHeading: 'Trip pages and other services',
-      sharesBody: 'Pages under <code>khe.ee/r/</code> are private trip pages, shared only by direct link and hidden from search engines. Their maps may load tiles from an external map service (OpenFreeMap), which then sees your IP address.',
+      sharesBody: 'Pages under <code>khe.ee/r/</code> are private trip pages, shared only by direct link, and <code>khe.ee/trips/</code> is a demo of the trip atlas. Both are hidden from search engines. Their maps may load tiles from an external map service (OpenFreeMap), which then sees your IP address.',
       servicesBody: 'Other khe.ee subdomains host private self-hosted applications for the site owner and family. They are not open to public registration, and this notice does not cover them.',
       basisHeading: 'Legal bases',
       basisAnalytics: 'Analytics: your consent (GDPR Art. 6(1)(a)).',
@@ -177,7 +180,7 @@
       retentionHeading: 'How long data is kept',
       retentionCookie: '<code>__cf_bm</code> cookie: about 30 minutes.',
       retentionLogs: 'Server logs: 30 days.',
-      retentionStorage: 'Browser storage (<code>app_locale</code>, <code>khe.analyticsConsent.v1</code>, <code>khe-theme</code>): until you clear it; <code>unejanku:v1:pos:&lt;story&gt;</code>: until the story plays to the end or you clear it; <code>khe-view:/stories/</code>: until you close the tab.',
+      retentionStorage: 'Browser storage (<code>app_locale</code>, <code>khe.analyticsConsent.v1</code>, <code>khe-theme</code>, <code>khe-trips-locale</code>, <code>khe-trips-theme</code>): until you clear it; <code>unejanku:v1:pos:&lt;story&gt;</code>: until the story plays to the end or you clear it; <code>khe-view:/stories/</code>: until you close the tab.',
       retentionOffline: 'The stories page\'s cache: the page and texts until a newer version replaces them; a kept reading until you remove it, clear the site\'s data or the story leaves the site.',
       retentionAnalytics: 'Analytics: the site owner sees only aggregate statistics in Cloudflare.',
       automatedHeading: 'Automated decisions',

@@ -458,7 +458,7 @@ await runReportingSourceErrors(async () => {
   if (!Array.isArray(demoModel.walls) || !demoModel.walls.length) throw new Error('dist/landing/ha/model.json has no walls');
   if (!sitemap.includes('<loc>https://khe.ee/ha/</loc>')) throw new Error('sitemap.xml does not list /ha/');
   const demoPage = await readFile(join(demo, 'index.html'), 'utf8');
-  for (const marker of ['/assets/site-header.css', 'class="site-header site-header--fixed"', 'data-lang-option="et"', 'data-lang-option="en"']) {
+  for (const marker of ['/assets/site-header.css', 'class="site-header site-header--fixed"', 'data-lang-option="et"', 'data-lang-option="en"', '/assets/analytics-consent.js']) {
     if (!demoPage.includes(marker)) throw new Error(`dist/landing/ha/index.html is missing ${marker}`);
   }
 
