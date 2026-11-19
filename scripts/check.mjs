@@ -486,9 +486,9 @@ await runReportingSourceErrors(async () => {
       }
     }
   }
-  for (const name of await readdir(join(workshop, 'assets'), { recursive: true })) {
-    if (!name.endsWith('.js') || /three\.(?:core|module)\.js$/.test(name)) continue;
-    for (const [url] of (await readFile(join(workshop, 'assets', name), 'utf8')).matchAll(/[\w./-]*three\.module\.js(?:\?v=\w+)?/g)) three.add(url);
+  for (const name of await readdir(workshop, { recursive: true })) {
+    if (!/\.(?:js|html)$/.test(name) || /three\.(?:core|module)\.js$/.test(name)) continue;
+    for (const [url] of (await readFile(join(workshop, name), 'utf8')).matchAll(/[\w./-]*three\.module\.js(?:\?v=\w+)?/g)) three.add(url);
   }
   if (three.size !== 1 || ![...three][0].includes('?v=')) {
     throw new Error(`dist/landing${WORKSHOP_BASE} imports three.module.js as ${[...three].join(', ') || 'nothing'}, not under one stamped URL`);
