@@ -186,6 +186,12 @@ await runReportingSourceErrors(async () => {
       throw new Error(`${consentName}: the ${theme} values ${JSON.stringify(own)} are not site-header.css's ${JSON.stringify(expected)}`);
     }
   }
+  // It floats like the rooms list, so it carries the same shadow.
+  const menuShadow = tokenCss.match(/--khe-header-menu-shadow:\s*([^;]+);/)?.[1];
+  const consentShadow = consentCss.match(/box-shadow:\s*([^;]+);/)?.[1];
+  if (!menuShadow || consentShadow !== menuShadow) {
+    throw new Error(`${consentName}: box-shadow ${consentShadow} is not site-header.css's --khe-header-menu-shadow ${menuShadow}`);
+  }
   const consentUnpaired = unpairedDarkRules(consentCss);
   if (consentUnpaired.length) throw new Error(consentUnpaired.map((message) => `${consentName}: ${message}`).join('\n'));
   // The rooms list's dots are @khelias/ui's values (estate ADR-021); each room's light and dark
