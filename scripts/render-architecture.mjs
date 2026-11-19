@@ -19,16 +19,22 @@ function i18n(key, tag = 'span', attributes = '') {
   return `<${tag}${attributes} data-i18n="${key}">${escapeHtml(copyText(key))}</${tag}>`;
 }
 
+// Fills every empty element whose attribute matches `attributes`, a regex
+// alternation, with fill(attribute, name), which returns HTML.
+function fillEmpty(html, attributes, fill) {
+  return html.replace(
+    new RegExp(`<([a-z][a-z0-9]*)\\b([^>]*?)\\s(${attributes})="([^"]+)"([^>]*)><\\/\\1>`, 'g'),
+    (match, tag, before, attribute, name, after) => `<${tag}${before} ${attribute}="${name}"${after}>${fill(attribute, name)}</${tag}>`,
+  );
+}
+
 // Fills every empty element that names a copy key, so the page reads in
 // English without JS and the strings live only in copy.js.
 export function fillI18n(html) {
-  return html.replace(
-    /<([a-z][a-z0-9]*)\b([^>]*?)\sdata-i18n(-html)?="([^"]+)"([^>]*)><\/\1>/g,
-    (match, tag, before, html, key, after) => {
-      const text = copyText(key);
-      return `<${tag}${before} data-i18n${html || ''}="${key}"${after}>${html ? text : escapeHtml(text)}</${tag}>`;
-    },
-  );
+  return fillEmpty(html, 'data-i18n(?:-html)?', (attribute, key) => {
+    const text = copyText(key);
+    return attribute === 'data-i18n-html' ? text : escapeHtml(text);
+  });
 }
 
 const LOCALES = Object.keys(COPY);
@@ -167,14 +173,6 @@ function routeEdge(edge, a, b) {
   const [bx, by, bw, bh] = b;
   const below = by + bh / 2 > ay + ah / 2;
   const right = bx + bw / 2 > ax + aw / 2;
-  if (edge.route === 'tree') {
-    const sx = ax + aw / 2;
-    const ex = bx + bw / 2;
-    const sy = below ? ay + ah : ay;
-    const ey = below ? by : by + bh;
-    const mid = (sy + ey) / 2;
-    return { points: [[sx, sy], [sx, mid], [ex, mid], [ex, ey]], labelAt: [sx, mid], vertical: true };
-  }
   const x = sharedAxis(span(ax, aw), span(bx, bw));
   if (x !== null) {
     const sy = below ? ay + ah : ay;
@@ -214,19 +212,14 @@ function horizontalRun(points, y) {
   return 0;
 }
 
-// Edge labels are wrapped to the room they have: a fixed `labelAt` to the
-// layout width around it, a label beside a vertical line to the layout edge,
-// a label above a horizontal line to that line's length.
+// Edge labels are wrapped to the room they have: a label beside a vertical
+// line to the layout edge, a label above a horizontal line to that line's
+// length.
 function renderEdgeLabel(edge, route, layout, where) {
   const { size, line } = TEXT.edge;
   return perLocale((locale) => {
     const text = localeText(edge.label, locale);
     const name = `${where}: edge ${edge.from} -> ${edge.to} (${locale})`;
-    if (edge.labelAt) {
-      const [x, y] = edge.labelAt;
-      const lines = wrap(text, TEXT.edge, 2 * Math.min(x, layout.width - x) - 8, name);
-      return lines.map((part, i) => svgLine(part, x, y - (lines.length - 1 - i) * line, 'arch-edge-label', 'middle')).join('');
-    }
     const [mx, my] = route.labelAt;
     if (route.vertical) {
       const lines = wrap(text, TEXT.edge, layout.width - mx - 12, name);
@@ -461,6 +454,70 @@ function renderDecisionPage(template, decision, byId, rewriteLink) {
   }));
 }
 
+const MONTHS_EN = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+
+// The snapshot's period in each language, shown by html[lang]:
+// 22.10.–19.11.2026 and 22 Oct – 19 Nov 2026.
+function period(since, until) {
+  const [sy, sm, sd] = since.split('-');
+  const [uy, um, ud] = until.split('-');
+  const sameYear = sy === uy;
+  const et = `${sd}.${sm}.${sameYear ? '' : sy}–${ud}.${um}.${uy}`;
+  const en = `${Number(sd)} ${MONTHS_EN[sm - 1]}${sameYear ? '' : ` ${sy}`} – ${Number(ud)} ${MONTHS_EN[um - 1]} ${uy}`;
+  return `<span lang="et">${et}</span><span lang="en">${en}</span>`;
+}
+
+function duration(minutes) {
+  const hours = Math.floor(minutes / 60);
+  if (!hours) return `${minutes} min`;
+  return minutes % 60 ? `${hours} h ${minutes % 60} min` : `${hours} h`;
+}
+
+// The findings rows on /agents/: what each check acted on and dropped, with
+// code and security review as one row, the bars scaled to the longest.
+export function findingRows(loop) {
+  const sum = (a, b) => Object.fromEntries(Object.keys(a).map((key) => [key, a[key] + b[key]]));
+  return [
+    { title: 'case03Title', who: 'whoSeparate', counts: loop.planReview },
+    { title: 'case08Title', who: 'whoSeparate', counts: loop.planCheck },
+    { title: 'agentsCodeRow', who: 'whoAgent', counts: sum(loop.codeReview, loop.securityReview) },
+  ];
+}
+
+// Every value a data-metric element on /agents/ can name, as HTML.
+function agentLoopMetrics(loop) {
+  const looked = loop.plans - loop.operator.notRun - loop.operator.pending;
+  return {
+    period: period(loop.since, loop.until),
+    plans: String(loop.plans),
+    median: loop.planToPush.count ? duration(loop.planToPush.medianMinutes) : '–',
+    reverted: `${loop.revertedPlans} / ${loop.pushedPlans}`,
+    looked: `${looked} / ${loop.plans}`,
+  };
+}
+
+function renderFindings(loop) {
+  const rows = findingRows(loop);
+  const longest = Math.max(1, ...rows.map(({ counts }) => counts.acted + counts.dropped));
+  const width = (count) => `${round((100 * count) / longest)}%`;
+  const items = rows.map(({ title, who, counts }) => {
+    const dropped = counts.dropped > 0;
+    const bar = `<span class="arch-bar" aria-hidden="true"><span class="arch-bar__acted" style="width: ${width(counts.acted)}"></span>${dropped ? `<span class="arch-bar__dropped" style="width: ${width(counts.dropped)}"></span>` : ''}</span>`;
+    const acted = `<strong>${counts.acted} <span data-i18n="${counts.acted === 1 ? 'agentsFix' : 'agentsFixes'}"></span></strong>`;
+    const droppedText = dropped ? `, ${counts.dropped} <span data-i18n="agentsDroppedCount"></span>` : '';
+    return `<li class="arch-found"><p class="arch-found__name"><span class="arch-found__title" data-i18n="${title}"></span><span class="arch-found__who" data-i18n="${who}"></span></p><div class="arch-found__data">${bar}<p class="arch-found__count">${acted}${droppedText}</p></div></li>`;
+  });
+  return `<ul class="arch-found-list">${items.join('')}</ul>`;
+}
+
+// Fills every empty data-metric element; a name the values lack fails the build.
+function fillMetrics(html, values, file) {
+  return fillEmpty(html, 'data-metric', (attribute, name) => {
+    if (!(name in values)) throw new SourceError(`${file} names the metric ${name}, which the snapshot does not give`);
+    return values[name];
+  });
+}
+
 // The pages the build fills: each gets the views whose `page` it is, then its
 // own markers.
 export const ARCHITECTURE_PAGES = [
@@ -474,7 +531,12 @@ export const ARCHITECTURE_PAGES = [
       'product-decisions': renderProductDecisions(),
     }),
   },
-  { path: 'agents/index.html', page: 'agents', markers: () => ({}) },
+  {
+    path: 'agents/index.html',
+    page: 'agents',
+    markers: (sources) => ({ 'agents-findings': renderFindings(sources.agentLoop) }),
+    metrics: (sources) => agentLoopMetrics(sources.agentLoop),
+  },
 ];
 
 export async function renderArchitecture(landingDist, sources) {
@@ -484,11 +546,12 @@ export async function renderArchitecture(landingDist, sources) {
     if (!ARCHITECTURE_PAGES.some(({ page }) => page === view.page)) throw new SourceError(`Diagram ${view.id} is on the page ${view.page}, which the build does not fill`);
   }
 
-  for (const { path, page, markers } of ARCHITECTURE_PAGES) {
+  for (const { path, page, markers, metrics } of ARCHITECTURE_PAGES) {
     const pagePath = join(landingDist, path);
     let html = await readFile(pagePath, 'utf8');
     for (const view of views.filter((view) => view.page === page)) html = replaceMarker(html, `view:${view.id}`, renderView(view), pagePath);
     for (const [marker, content] of Object.entries(markers(sources))) html = replaceMarker(html, marker, content, pagePath);
+    if (metrics) html = fillMetrics(html, metrics(sources), pagePath);
     await writeFile(pagePath, fillI18n(html));
   }
 

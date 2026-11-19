@@ -46,43 +46,23 @@ export const elements = {
   'khe-workshop': { kind: 'repo', name: 'khe-workshop', repo: 'khe-workshop' },
 
   fromPush: { kind: 'boundary', label: 'groupFromPush', style: 'rule' },
-  gate: { kind: 'step', owner: 'machine', tag: 'tagHook', label: 'elGate', sub: 'elGateSub' },
   push: { kind: 'step', owner: 'agent', tag: 'tagAgent', label: 'elPush', sub: 'elPushSub' },
   ci: { kind: 'step', owner: 'machine', tag: 'tagCi', label: 'elCi', sub: 'elCiSub' },
   ghcr: { kind: 'step', owner: 'machine', tag: 'tagRegistry', label: 'elGhcr', sub: 'elGhcrSub' },
   pinPr: { kind: 'step', owner: 'machine', tag: 'tagHomelab', label: 'elPinPr', sub: 'elPinPrSub' },
   deploy: { kind: 'step', owner: 'machine', tag: 'tagVm', label: 'elDeploy', sub: 'elDeploySub' },
-
-  stepLoop: { kind: 'boundary', label: 'groupStepLoop', style: 'dashed' },
-  afterSteps: { kind: 'boundary', label: 'groupAfterSteps', style: 'rule' },
-  task: { kind: 'step', owner: 'person', tag: 'tagPerson', label: 'elTask', sub: 'elTaskSub' },
-  runPlan: { kind: 'step', owner: 'agent', tag: 'tagAgent', label: 'elRunPlan', sub: 'elRunPlanSub' },
-  planReview: { kind: 'step', owner: 'agent', tag: 'tagAgent', label: 'elPlanReview', sub: 'elPlanReviewSub' },
-  goalSet: { kind: 'step', owner: 'person', tag: 'tagPerson', label: 'elGoalSet', sub: 'elGoalSetSub' },
-  stepChange: { kind: 'step', owner: 'agent', tag: 'tagAgent', label: 'elStepChange', sub: 'elStepChangeSub' },
-  stepCheck: { kind: 'step', owner: 'agent', tag: 'tagAgent', label: 'elStepCheck', sub: 'elStepCheckSub' },
-  stepBrowser: { kind: 'step', owner: 'agent', tag: 'tagAgent', label: 'elStepBrowser', sub: 'elStepBrowserSub' },
-  planDiff: { kind: 'step', owner: 'agent', tag: 'tagAgent', label: 'elPlanDiff', sub: 'elPlanDiffSub' },
-  simplify: { kind: 'step', owner: 'agent', tag: 'tagAgent', label: 'elSimplify', sub: 'elSimplifySub' },
-  codeReview: { kind: 'step', owner: 'agent', tag: 'tagAgent', label: 'elCodeReview', sub: 'elCodeReviewSub' },
-  retro: { kind: 'step', owner: 'agent', tag: 'tagAgent', label: 'elRetro', sub: 'elRetroSub' },
-  goalMet: { kind: 'step', owner: 'agent', tag: 'tagAgent', label: 'elGoalMet', sub: 'elGoalMetSub' },
 };
 
 // Each view has a wide layout (desktop) and a narrow one (phones), naming the
 // same nodes. Node geometry is [x, y, width, height] in the layout's own
-// coordinates. Edges route orthogonally (render-architecture.mjs); `route:
-// 'tree'` leaves from the source's centre, and `labelAt` puts the label's
-// baseline centre at a fixed point.
+// coordinates. Edges route orthogonally (render-architecture.mjs).
 const column = (ids, x, y, w, h, step) => Object.fromEntries(ids.map((id, i) => [id, [x, y + i * step, w, h]]));
 const row = (ids, x, y, w, h, step) => Object.fromEntries(ids.map((id, i) => [id, [x + i * step, y, w, h]]));
 const chain = (ids) => ids.slice(1).map((id, i) => ({ from: ids[i], to: id }));
 const shipping = ['push', 'ci', 'ghcr', 'pinPr', 'deploy'];
-const agentsStart = ['task', 'runPlan', 'planReview', 'goalSet', 'stepChange', 'stepCheck', 'stepBrowser'];
-const agentsFinish = ['planDiff', 'simplify', 'codeReview', 'gate', 'retro', 'goalMet', 'push'];
 
-// `page` is the built page a view is drawn on: architecture (/architecture/)
-// or agents (/agents/).
+// `page` is the built page a view is drawn on, one of ARCHITECTURE_PAGES in
+// render-architecture.mjs.
 export const views = [
   {
     id: 'estate',
@@ -168,46 +148,6 @@ export const views = [
           ...column(shipping, 12, 36, 318, 64, 104),
         },
         edges: chain(shipping),
-      },
-    },
-  },
-  {
-    id: 'agents',
-    page: 'agents',
-    title: 'viewAgentsTitle',
-    desc: 'viewAgentsDesc',
-    focus: 'planDiff',
-    layouts: {
-      wide: {
-        width: 1164,
-        height: 344,
-        nodes: {
-          stepLoop: [660, 0, 504, 152],
-          afterSteps: [0, 200, 1164, 144],
-          ...row(agentsStart, 0, 40, 156, 100, 168),
-          ...row(agentsFinish, 0, 244, 156, 100, 168),
-        },
-        edges: [
-          ...chain(agentsStart),
-          { from: 'stepBrowser', to: 'planDiff', route: 'tree', label: 'relStepsDone', labelAt: [582, 184] },
-          ...chain(agentsFinish),
-        ],
-      },
-      narrow: {
-        width: 342,
-        height: 1528,
-        nodes: {
-          ...column(agentsStart.slice(0, 4), 12, 0, 318, 64, 104),
-          stepLoop: [0, 416, 342, 324],
-          ...column(agentsStart.slice(4), 12, 452, 318, 64, 104),
-          afterSteps: [0, 788, 342, 740],
-          ...column(agentsFinish, 12, 824, 318, 64, 104),
-        },
-        edges: [
-          ...chain(agentsStart),
-          { from: 'stepBrowser', to: 'planDiff', label: 'relStepsDone' },
-          ...chain(agentsFinish),
-        ],
       },
     },
   },
