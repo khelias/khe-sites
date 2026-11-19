@@ -150,6 +150,11 @@ reaches khe.ee at the next deploy here.
 
 ## Gotchas
 
+- `createLocaleController` stores the language (`app_locale`) only when the
+  visitor presses the switcher; a `?lang` only picks the page's language. On
+  games.khe.ee the key is shared with Tarkade Mängud and AI Seiklus, which
+  open in Estonian when installed until a language is chosen, and every room
+  link carries a `?lang` whether or not one was.
 - Build and check read their sources at build time: `ARCHITECTURE_ROOT`
   (khe-architecture: `ESTATE.md`, `decisions/`) and `HOMELAB_ROOT`
   (khe-homelab: compose files, the `## Resilience` list), else the sibling

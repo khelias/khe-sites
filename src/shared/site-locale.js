@@ -138,7 +138,6 @@ export function createLocaleController({
     setMetaContent('meta[property="og:description"]', activeCopy.description);
     setMetaContent('meta[name="twitter:title"]', activeCopy.title);
     setMetaContent('meta[name="twitter:description"]', activeCopy.description);
-    window.localStorage.setItem(STORAGE_KEY, activeLocale);
     setQueryLocale(activeLocale);
 
     setText('[data-i18n]', activeCopy, 'data-i18n');
@@ -160,8 +159,15 @@ export function createLocaleController({
     });
   }
 
+  // Only a press is stored: app_locale is shared with the games on the origin, and an installed
+  // game opens in Estonian until a language is chosen. A ?lang shows the page in its language
+  // and goes on in the links, since the build writes one into every room link.
   document.querySelectorAll('[data-lang-option]').forEach((button) => {
-    button.addEventListener('click', () => applyLocale(button.getAttribute('data-lang-option')));
+    button.addEventListener('click', () => {
+      const locale = normalizeLocale(button.getAttribute('data-lang-option'), supported);
+      if (locale) window.localStorage.setItem(STORAGE_KEY, locale);
+      applyLocale(locale);
+    });
   });
 
   applyLocale(initialLocale());
