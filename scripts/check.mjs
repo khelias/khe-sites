@@ -140,10 +140,11 @@ async function checkLanguagePages(landing, sitemap, sources) {
     }
   }
 
-  // The ADR pages are English only: their own canonical and no alternates.
+  // The ADR pages are English only: their own canonical and no alternates. An ADR's text may
+  // name hreflang, so only the attribute counts.
   for (const decision of sources.decisions) {
     const html = await readFile(join(landing, 'architecture/decisions', decision.id, 'index.html'), 'utf8');
-    if (html.includes('hreflang')) throw new Error(`dist/landing/architecture/decisions/${decision.id}/index.html has hreflang; an ADR page is English only`);
+    if (/\shreflang=/.test(html)) throw new Error(`dist/landing/architecture/decisions/${decision.id}/index.html has hreflang; an ADR page is English only`);
   }
 
   // The sitemap lists exactly the indexed pages: the language pages, the ADR pages, the workshop
