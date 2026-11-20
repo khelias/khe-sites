@@ -224,7 +224,7 @@ reaches khe.ee at the next deploy here.
   `site-header.css` and the room's `room.css`, not `site.css`.
 - The built `/assets/site-header.css` is `@khelias/ui`'s header CSS and its
   footer CSS from `node_modules`, followed by `src/shared/site-header.css`, which holds only
-  khe-sites' fonts (Inter, Source Serif 4), the family tokens and the
+  khe-sites' font (Familjen Grotesk), the family tokens and the
   `--khe-header-*` values it sets on `.site-header`;
   no rule here restyles a `.site-header__*` part. Every page links it
   before `site.css`; `/ha/`, with Home Assistant's own styles, links only
@@ -319,8 +319,10 @@ reaches khe.ee at the next deploy here.
   with a missing or unknown key or a count that is not whole
   (`parseAgentLoop`), fills each `data-metric` element and writes the bar
   widths inline, scaled to the longest row; check fails on an empty one.
-- Headings use Source Serif 4 (weight 600, latin and latin-ext subsets in
-  `src/shared/fonts/`), body text Inter, mono labels the system mono stack.
+- All text uses Familjen Grotesk (estate ADR-049; the variable latin and
+  latin-ext files and their `OFL.txt` in `src/shared/fonts/`), mono labels
+  the system mono stack. `scripts/render-architecture.mjs` estimates its
+  advance for the diagram word-wrap, so a font change re-measures it.
   Check fails when `site-header.css` or `site.css` loads a font file that is
   not there.
 - ADRs render through `scripts/markdown.mjs`, which throws with file and line
@@ -343,7 +345,7 @@ reaches khe.ee at the next deploy here.
   `:root:not([data-theme="light"])`, and again on `:root[data-theme="dark"]`;
   `:root[data-theme="light"]` sets only `color-scheme: light`. Check fails when `DESIGN.md`'s frontmatter colours differ from the light
   block or the two dark blocks differ. The pre-family tokens (`--bg`,
-  `--text*`, `--border*`, `--card-bg`, `--accent*`, `--display-font`) are
+  `--text*`, `--border*`, `--card-bg`, `--accent*`, `--display-font`, `--serif`) are
   gone, and check fails when one comes back in a source file. The
   architecture pages' `--a-*` names alias the family tokens; only the
   diagram tokens keep values of their own. `--a-accent` is the page's
