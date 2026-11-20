@@ -1,44 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
         xmlns:xhtml="http://www.w3.org/1999/xhtml">
-  <url>
-    <loc>https://khe.ee/</loc>
-    <xhtml:link rel="alternate" hreflang="en" href="https://khe.ee/?lang=en"/>
-    <xhtml:link rel="alternate" hreflang="et" href="https://khe.ee/?lang=et"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://khe.ee/"/>
-  </url>
+<!-- language-pages -->
   <url>
     <loc>https://khe.ee/stories/</loc>
-    <xhtml:link rel="alternate" hreflang="en" href="https://khe.ee/stories/?lang=en"/>
-    <xhtml:link rel="alternate" hreflang="et" href="https://khe.ee/stories/?lang=et"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://khe.ee/stories/"/>
-  </url>
-  <url>
-    <loc>https://khe.ee/architecture/</loc>
-    <xhtml:link rel="alternate" hreflang="en" href="https://khe.ee/architecture/?lang=en"/>
-    <xhtml:link rel="alternate" hreflang="et" href="https://khe.ee/architecture/?lang=et"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://khe.ee/architecture/"/>
-  </url>
-  <url>
-    <loc>https://khe.ee/architecture/decisions/</loc>
-    <xhtml:link rel="alternate" hreflang="en" href="https://khe.ee/architecture/decisions/?lang=en"/>
-    <xhtml:link rel="alternate" hreflang="et" href="https://khe.ee/architecture/decisions/?lang=et"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://khe.ee/architecture/decisions/"/>
-  </url>
-  <url>
-    <loc>https://khe.ee/agents/</loc>
-    <xhtml:link rel="alternate" hreflang="en" href="https://khe.ee/agents/?lang=en"/>
-    <xhtml:link rel="alternate" hreflang="et" href="https://khe.ee/agents/?lang=et"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://khe.ee/agents/"/>
   </url>
 <!-- decisions -->
 <!-- workshop -->
   <url>
     <loc>https://khe.ee/ha/</loc>
-  </url>
-  <url>
-    <loc>https://khe.ee/privacy</loc>
-    <xhtml:link rel="alternate" hreflang="en" href="https://khe.ee/privacy?lang=en"/>
-    <xhtml:link rel="alternate" hreflang="et" href="https://khe.ee/privacy?lang=et"/>
   </url>
 </urlset>

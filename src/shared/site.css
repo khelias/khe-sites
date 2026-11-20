@@ -82,8 +82,23 @@ a { color: var(--ink-2); }
   line-height: 1.5;
 }
 
-.landing-hero .hero-title {
+.hero-head {
+  display: flex;
+  align-items: center;
+  gap: clamp(0.875rem, 2.5vw, 1.25rem);
   margin-bottom: 0.375rem;
+}
+
+.hero-portrait {
+  flex: none;
+}
+
+.hero-portrait img {
+  display: block;
+  width: clamp(4rem, 11vw, 5.5rem);
+  height: auto;
+  border-radius: 50%;
+  background: var(--rule);
 }
 
 .games-hero .hero-title {

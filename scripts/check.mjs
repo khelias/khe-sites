@@ -3,17 +3,18 @@ import { existsSync } from 'node:fs';
 import { readdir, readFile } from 'node:fs/promises';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { AGENT_LOOP_SHAPE, loadSources, parseAgentLoop, runReportingSourceErrors, SourceError } from './architecture-sources.mjs';
+import { AGENT_LOOP_SHAPE, loadSources, parseAgentLoop, runReportingSourceErrors, SITE, SourceError } from './architecture-sources.mjs';
 import { adrLinkRewriter, MarkdownError, renderMarkdown } from './markdown.mjs';
 import { views } from './architecture-model.mjs';
 import { ARCHITECTURE_PAGES, findingRows, modelMismatches } from './render-architecture.mjs';
 import { WORKSHOP_BASE, workshopRoot } from './workshop-room.mjs';
+import { LANGUAGE_PAGES, pageFile, pageUrl, REDIRECT } from './language-pages.mjs';
 import { ASSET_REFERENCE, assetVersion, builtPages as listBuiltPages } from './asset-versions.mjs';
 import { ROOM_IDS } from '@khelias/ui/rooms';
 import { themeInitScript } from '@khelias/ui/theme';
 import { readPageCopy } from './site-header.mjs';
 import { COPY } from '../src/landing/architecture/copy.js';
-import { SITE_FOOTER_COPY, SITE_HEADER_COPY, THEME_STORAGE_KEY } from '../src/shared/site-locale.js';
+import { LOCALES, SITE_FOOTER_COPY, SITE_HEADER_COPY, THEME_STORAGE_KEY } from '../src/shared/site-locale.js';
 
 const root = dirname(dirname(fileURLToPath(import.meta.url)));
 
@@ -84,6 +85,85 @@ function assertDarkPaired(sheet, name) {
   if (unpaired.length) throw new Error(unpaired.map((message) => `${name}: ${message}`).join('\n'));
 }
 
+// Each khe.ee page built once per language (estate ADR-048): its own language, canonical,
+// alternates (every one of them built, since the loop reads both), share image and structured
+// data, the redirect where it reads the alternates, and a sitemap that lists exactly the indexed
+// pages with no ?lang anywhere.
+async function checkLanguagePages(landing, sitemap, sources) {
+  const metas = (html, attribute, name) => [...html.matchAll(new RegExp(`<meta ${attribute}="${name}" content="([^"]*)">`, 'g'))].map((match) => match[1]);
+  const links = (html, rel) => [...html.matchAll(new RegExp(`<link rel="${rel}"(?: hreflang="([^"]+)")? href="([^"]+)">`, 'g'))];
+  for (const page of LANGUAGE_PAGES) {
+    const texts = {};
+    for (const locale of LOCALES) {
+      const url = pageUrl(page, locale);
+      const name = `dist/landing/${pageFile(page, locale)}`;
+      const html = await readFile(join(landing, pageFile(page, locale)), 'utf8');
+      const fail = (problem) => { throw new Error(`${name} ${problem}`); };
+      if (htmlAttribute(html, 'lang') !== locale) fail(`is not <html lang="${locale}">`);
+      const empty = html.match(/<([a-z][a-z0-9]*)\b[^>]*\sdata-i18n(?:-html)?="([^"]+)"[^>]*><\/\1>/);
+      if (empty) fail(`leaves ${empty[2]} empty`);
+      const canonical = links(html, 'canonical').map((match) => match[2]);
+      if (canonical.length !== 1 || canonical[0] !== url) fail(`has canonical ${JSON.stringify(canonical)}, expected ["${url}"]`);
+      if (metas(html, 'property', 'og:url').join() !== url) fail(`has og:url ${metas(html, 'property', 'og:url')}, expected ${url}`);
+      const alternates = Object.fromEntries(links(html, 'alternate').map(([, lang, href]) => [lang, href]));
+      const expected = { et: pageUrl(page, 'et'), en: pageUrl(page, 'en'), 'x-default': pageUrl(page, 'et') };
+      if (JSON.stringify(alternates) !== JSON.stringify(expected)) fail(`has hreflang ${JSON.stringify(alternates)}, expected ${JSON.stringify(expected)}`);
+      const head = html.slice(0, html.indexOf('</head>'));
+      const redirect = head.indexOf(REDIRECT);
+      const lastAlternate = head.lastIndexOf('<link rel="alternate"');
+      const firstStylesheet = head.indexOf('<link rel="stylesheet"');
+      if (redirect < 0 || redirect < lastAlternate || (firstStylesheet >= 0 && redirect > firstStylesheet)) fail('does not have the language redirect after its alternates and before its first stylesheet');
+      if (metas(html, 'property', 'og:locale').join() !== { et: 'et_EE', en: 'en_US' }[locale]) fail(`has og:locale ${metas(html, 'property', 'og:locale')}`);
+      const image = metas(html, 'property', 'og:image');
+      const imageName = locale === 'et' ? 'og-image-et.png' : 'og-image.png';
+      if (image.join() !== `${SITE}/${imageName}`) fail(`has og:image ${image}, expected ${SITE}/${imageName}`);
+      if (!existsSync(join(landing, imageName))) fail(`shares ${imageName}, which was not built`);
+      if (metas(html, 'name', 'twitter:card').join() !== 'summary_large_image') fail('is not twitter:card summary_large_image');
+      if (Boolean(page.noindex) !== metas(html, 'name', 'robots').some((value) => value.includes('noindex'))) fail(page.noindex ? 'is not noindex' : 'is noindex');
+      const scripts = [...html.matchAll(/<script type="application\/ld\+json">([\s\S]*?)<\/script>/g)];
+      if (scripts.length !== 1) fail(`has ${scripts.length} JSON-LD scripts, expected 1`);
+      let jsonLd;
+      try {
+        jsonLd = JSON.parse(scripts[0][1]);
+      } catch (error) {
+        fail(`has JSON-LD that does not parse: ${error.message}`);
+      }
+      const nodes = jsonLd['@graph'] ?? [jsonLd];
+      const languages = nodes.filter((node) => 'inLanguage' in node).map((node) => node.inLanguage);
+      if (!languages.length || languages.some((value) => value !== locale)) fail(`has JSON-LD inLanguage ${JSON.stringify(languages)}, expected ${locale}`);
+      const website = nodes.find((node) => node['@type'] === 'WebSite');
+      if (page.id === 'home' && website?.name !== 'KHE') fail(`names its WebSite ${website?.name}, expected KHE`);
+      texts[locale] = { title: html.match(/<title>([^<]*)<\/title>/)?.[1], description: metas(html, 'name', 'description').join() };
+    }
+    for (const key of ['title', 'description']) {
+      if (!texts.et[key] || texts.et[key] === texts.en[key]) throw new Error(`${page.file} has the same ${key} in Estonian and English: ${texts.et[key]}`);
+    }
+  }
+
+  // The ADR pages are English only: their own canonical and no alternates.
+  for (const decision of sources.decisions) {
+    const html = await readFile(join(landing, 'architecture/decisions', decision.id, 'index.html'), 'utf8');
+    if (html.includes('hreflang')) throw new Error(`dist/landing/architecture/decisions/${decision.id}/index.html has hreflang; an ADR page is English only`);
+  }
+
+  // The sitemap lists exactly the indexed pages: the language pages, the ADR pages, the workshop
+  // pages and /ha/, plus /stories/, which khe-stories serves from its own mount, never from dist.
+  const locs = [...sitemap.matchAll(/<loc>([^<]+)<\/loc>/g)].map((match) => match[1]);
+  if (sitemap.includes('?lang')) throw new Error('sitemap.xml carries a ?lang address');
+  const expected = new Set([
+    ...LANGUAGE_PAGES.filter((page) => !page.noindex).flatMap((page) => LOCALES.map((locale) => pageUrl(page, locale))),
+    ...sources.decisions.map((decision) => `${SITE}/architecture/decisions/${decision.id}/`),
+    ...(await listBuiltPages(join(landing, WORKSHOP_BASE))).map((file) => `${SITE}${file.slice(landing.length).replace(/index\.html$/, '')}`),
+    `${SITE}/ha/`,
+    `${SITE}/stories/`,
+  ]);
+  const listed = new Set(locs);
+  if (listed.size !== locs.length) throw new Error('sitemap.xml lists an address twice');
+  const missing = [...expected].filter((url) => !listed.has(url));
+  const extra = locs.filter((url) => !expected.has(url));
+  if (missing.length || extra.length) throw new Error(`sitemap.xml misses ${JSON.stringify(missing)} and lists ${JSON.stringify(extra)} beyond the built pages`);
+}
+
 await runReportingSourceErrors(async () => {
   const htmlFiles = [
     'src/landing/index.html',
@@ -138,7 +218,6 @@ await runReportingSourceErrors(async () => {
     'Nokitseja loomult',
     'Ise majutatud Tallinnas',
     'Self-hosted in Tallinn',
-    'Software architect in Tallinn',
   ];
 
   // The pre-family tokens are gone from khe-sites' own sources. dist is not checked: /ha/'s
@@ -388,7 +467,7 @@ await runReportingSourceErrors(async () => {
   // The rest checks the build output; npm run check builds first.
   const landing = join(root, 'dist/landing');
   const builtPages = [
-    ...ARCHITECTURE_PAGES.map(({ path }) => path),
+    ...ARCHITECTURE_PAGES.flatMap(({ path }) => [path, `en/${path}`]),
     ...sources.decisions.map((decision) => `architecture/decisions/${decision.id}/index.html`),
   ];
   for (const page of builtPages) {
@@ -412,59 +491,55 @@ await runReportingSourceErrors(async () => {
       }
     }
   }
-  // Each page draws two SVGs and a text list per view whose `page` it is, and no other diagram.
-  const filled = {};
-  for (const { path, page } of ARCHITECTURE_PAGES) {
-    const html = await readFile(join(landing, path), 'utf8');
-    filled[page] = html;
-    const pageViews = views.filter((view) => view.page === page);
-    const svgCount = (html.match(/<svg class="arch-svg\b/g) || []).length;
-    if (svgCount !== 2 * pageViews.length) throw new Error(`dist/landing/${path} has ${svgCount} diagram <svg>, expected ${2 * pageViews.length}`);
-    if (html.includes('<!--')) throw new Error(`dist/landing/${path} still has an unfilled placeholder`);
-    for (const view of pageViews) {
-      const start = html.indexOf(`<figure class="arch-figure" data-view="${view.id}"`);
-      const figure = start < 0 ? '' : html.slice(start, html.indexOf('</figure>', start));
-      const textStart = figure.indexOf('class="visually-hidden"');
-      const text = textStart < 0 ? '' : figure.slice(textStart);
-      if (!text) throw new Error(`dist/landing/${path} has no text list for the ${view.id} diagram`);
-      for (const edge of view.layouts.narrow.edges) {
-        if (!text.includes(`data-edge="${edge.from}:${edge.to}"`)) throw new Error(`The ${view.id} text list lacks the edge ${edge.from} -> ${edge.to}`);
+  // Each page, in both languages, draws two SVGs and a text list per view whose `page` it is, and
+  // no other diagram.
+  for (const prefix of ['', 'en/']) {
+    const filled = {};
+    for (const { page, path: sourcePath } of ARCHITECTURE_PAGES) {
+      const path = `${prefix}${sourcePath}`;
+      const html = await readFile(join(landing, path), 'utf8');
+      filled[page] = html;
+      const pageViews = views.filter((view) => view.page === page);
+      const svgCount = (html.match(/<svg class="arch-svg\b/g) || []).length;
+      if (svgCount !== 2 * pageViews.length) throw new Error(`dist/landing/${path} has ${svgCount} diagram <svg>, expected ${2 * pageViews.length}`);
+      if (html.includes('<!--')) throw new Error(`dist/landing/${path} still has an unfilled placeholder`);
+      for (const view of pageViews) {
+        const start = html.indexOf(`<figure class="arch-figure" data-view="${view.id}"`);
+        const figure = start < 0 ? '' : html.slice(start, html.indexOf('</figure>', start));
+        const textStart = figure.indexOf('class="visually-hidden"');
+        const text = textStart < 0 ? '' : figure.slice(textStart);
+        if (!text) throw new Error(`dist/landing/${path} has no text list for the ${view.id} diagram`);
+        for (const edge of view.layouts.narrow.edges) {
+          if (!text.includes(`data-edge="${edge.from}:${edge.to}"`)) throw new Error(`The ${view.id} text list lacks the edge ${edge.from} -> ${edge.to}`);
+        }
       }
     }
-  }
-  // /agents/ shows the snapshot's numbers (every page's empty-element check above covers
-  // data-metric), and every findings row has its bar.
-  if (!filled.agents.includes(' data-metric="')) throw new Error('dist/landing/agents/index.html shows no data-metric number');
-  const rowCount = findingRows(sources.agentLoop).length;
-  const foundRows = (filled.agents.match(/<li class="arch-found">/g) || []).length;
-  const bars = (filled.agents.match(/class="arch-bar__acted" style="width: /g) || []).length;
-  if (foundRows !== rowCount || bars !== rowCount) throw new Error(`dist/landing/agents/index.html has ${foundRows} findings rows and ${bars} bars, expected ${rowCount} of each`);
-  const mainPage = filled.architecture;
-  const uptime = mainPage.slice(mainPage.indexOf('id="uptime"'), mainPage.indexOf('</section>', mainPage.indexOf('id="uptime"')));
-  const layerList = uptime.match(/<ol class="arch-layers">([\s\S]*?)<\/ol>/);
-  const layerRows = layerList ? (layerList[1].match(/<li\b/g) || []).length : 0;
-  const readmeLayers = sources.homelab.resilienceLayers.length;
-  if (layerRows !== readmeLayers) {
-    throw new Error(`#uptime lists ${layerRows} resilience layers, the khe-homelab README has ${readmeLayers}`);
-  }
-  // The register lives on /architecture/decisions/ at id="decisions", where the ADR pages and the
-  // key decisions' last cell link it.
-  if (!/id="decisions"[\s\S]*<table class="arch-table arch-register">/.test(filled.decisions)) {
-    throw new Error('dist/landing/architecture/decisions/index.html has no register under id="decisions"');
-  }
-  for (const page of ['architecture', 'agents']) {
-    if (filled[page].includes('arch-register')) throw new Error(`the ${page} page carries the register, which belongs on /architecture/decisions/`);
-  }
-  const sitemap = await readFile(join(landing, 'sitemap.xml'), 'utf8');
-  for (const { path } of ARCHITECTURE_PAGES) {
-    const url = `/${path.replace(/index\.html$/, '')}`;
-    if (!sitemap.includes(`<loc>https://khe.ee${url}</loc>`)) throw new Error(`sitemap.xml does not list ${url}`);
-  }
-  for (const decision of sources.decisions) {
-    if (!sitemap.includes(`<loc>https://khe.ee/architecture/decisions/${decision.id}/</loc>`)) {
-      throw new Error(`sitemap.xml does not list ADR-${decision.id}`);
+    // /agents/ shows the snapshot's numbers (every page's empty-element check above covers
+    // data-metric), and every findings row has its bar.
+    if (!filled.agents.includes(' data-metric="')) throw new Error(`dist/landing/${prefix}agents/index.html shows no data-metric number`);
+    const rowCount = findingRows(sources.agentLoop).length;
+    const foundRows = (filled.agents.match(/<li class="arch-found">/g) || []).length;
+    const bars = (filled.agents.match(/class="arch-bar__acted" style="width: /g) || []).length;
+    if (foundRows !== rowCount || bars !== rowCount) throw new Error(`dist/landing/${prefix}agents/index.html has ${foundRows} findings rows and ${bars} bars, expected ${rowCount} of each`);
+    const mainPage = filled.architecture;
+    const uptime = mainPage.slice(mainPage.indexOf('id="uptime"'), mainPage.indexOf('</section>', mainPage.indexOf('id="uptime"')));
+    const layerList = uptime.match(/<ol class="arch-layers">([\s\S]*?)<\/ol>/);
+    const layerRows = layerList ? (layerList[1].match(/<li\b/g) || []).length : 0;
+    const readmeLayers = sources.homelab.resilienceLayers.length;
+    if (layerRows !== readmeLayers) {
+      throw new Error(`#uptime lists ${layerRows} resilience layers, the khe-homelab README has ${readmeLayers}`);
+    }
+    // The register lives on /architecture/decisions/ at id="decisions", where the ADR pages and the
+    // key decisions' last cell link it.
+    if (!/id="decisions"[\s\S]*<table class="arch-table arch-register">/.test(filled.decisions)) {
+      throw new Error(`dist/landing/${prefix}architecture/decisions/index.html has no register under id="decisions"`);
+    }
+    for (const page of ['architecture', 'agents']) {
+      if (filled[page].includes('arch-register')) throw new Error(`the ${page} page carries the register, which belongs on /architecture/decisions/`);
     }
   }
+  const sitemap = await readFile(join(landing, 'sitemap.xml'), 'utf8');
+  await checkLanguagePages(landing, sitemap, sources);
 
   // the house demo, built from khe-home-assistant's test house; its dashboard is either the
   // hand-written dashboard.js of the old demo or the generated dashboard.json of the new one
@@ -578,7 +653,7 @@ await runReportingSourceErrors(async () => {
       if (!ROOM_IDS.includes(room)) throw new Error(`dist/${site}/${page} has no data-room on <html> from ${ROOM_IDS.join(', ')}`);
       // The rooms menu (estate ADR-021): every page but the khe.ee landing, with its own room current.
       const roomButtons = [...html.matchAll(/<button class="site-header__rooms"[^>]*\sdata-khe-room="([^"]*)"/g)].map((match) => match[1]);
-      const expectedButtons = site === 'landing' && page === 'index.html' ? [] : [room];
+      const expectedButtons = site === 'landing' && LOCALES.some((locale) => page === pageFile(LANGUAGE_PAGES[0], locale)) ? [] : [room];
       if (JSON.stringify(roomButtons) !== JSON.stringify(expectedButtons)) {
         throw new Error(`dist/${site}/${page} has rooms buttons for ${JSON.stringify(roomButtons)}, expected ${JSON.stringify(expectedButtons)}`);
       }

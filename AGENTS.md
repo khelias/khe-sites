@@ -56,8 +56,10 @@ scripts/
   workshop-room.mjs        runs khe-workshop's room build into
                            dist/landing/workshop/
   architecture-model.mjs   diagram elements, edges and layout
-  render-architecture.mjs  renders the three pages, ADR pages and sitemap
-                           entries
+  render-architecture.mjs  renders the three pages in both languages, the ADR
+                           pages and their sitemap entries
+  language-pages.mjs       the khe.ee pages built once per language: head,
+                           redirect, links, sitemap entries
   site-header.mjs          fills each page's site-header, site-theme and
                            site-footer markers through @khelias/ui
   asset-versions.mjs       stamps ?v=<content hash> on asset links
@@ -153,8 +155,32 @@ reaches khe.ee at the next deploy here.
 
 ## Gotchas
 
+- The khe.ee landing, privacy notice and architecture pages are one static
+  page per language
+  ([estate ADR-048](https://github.com/khelias/khe-architecture/blob/main/decisions/048-khe-ee-pages-are-one-static-page-per-language-estonian-at-the-root.md)):
+  Estonian at the path, English under `/en/` (`localePath` and `PAGE_LINKS` in
+  `site-locale.js`). `scripts/language-pages.mjs` lists them in
+  `LANGUAGE_PAGES` and, after the architecture build, writes both languages
+  from one source: `<html lang>`, the empty `data-i18n` elements and the
+  `aria-label`s from the page's copy, the `data-link` hrefs, the consent
+  banner's privacy URL, the inline `COPY` cut to the page's language, and at
+  the `<!-- page-meta -->` marker the title, description, self canonical,
+  absolute hreflang (`x-default` Estonian), the redirect script, the Open
+  Graph tags with `og:site_name` KHE and a share image per language
+  (`og-image-et.png`, `og-image.png`) and the JSON-LD. Check holds each pair
+  to it and the sitemap to exactly the indexed pages. The redirect script
+  opens the other page when `?lang` or the stored language differs from the
+  page's; khe-homelab's landing nginx and the edge fallback answer a
+  mismatched `?lang` with a 301 first. The privacy pages are `noindex` and
+  out of the sitemap. The ADR pages stay English only, with no hreflang, and
+  `404.html` stays one page, translated in place, English under `/en/`.
 - `createLocaleController` stores the language (`app_locale`) only when the
-  visitor presses the switcher; a `?lang` only picks the page's language. On
+  visitor presses the switcher; a `?lang` only picks the page's language. On a
+  page per language (`alternatePages`) it shows the page's own language,
+  never writes `?lang` into the address bar and goes to the other page's
+  pathname on a switch. On every page it fills a `data-link` named in
+  `PAGE_LINKS`, unless the page's `links` name it, with `pageHref`, which
+  keeps the page's `?lang` so an asked language holds over a stored one. On
   games.khe.ee the key is shared with Tarkade Mängud and AI Seiklus, which
   open in Estonian when installed until a language is chosen, and every room
   link carries a `?lang` whether or not one was.
@@ -190,11 +216,9 @@ reaches khe.ee at the next deploy here.
   (`scripts/templates/workshop-header.html`), the footer and the consent
   script, and lists every page at the sitemap's `<!-- workshop -->`. The room
   has one page per language (`/workshop/...`, `/workshop/en/...`) rather than
-  translating in place: a classic script at the top of `<head>` opens the
-  other page, named by the page's `<link rel="alternate" hreflang>`, when
-  `?lang` or the stored language differs from the page's, before any style or
-  module loads, and `createLocaleController`'s `alternatePages` option makes
-  the switcher store the language and go there. Its modules import each other root-relative, so the
+  translating in place, under the room's own `/workshop/en/` rather than
+  `/en/workshop/` (estate ADR-048 point 5), with the same redirect script
+  from `language-pages.mjs` at the top of `<head>`. Its modules import each other root-relative, so the
   stamper versions the whole module graph and three.js has one URL (check);
   its STL and replay files carry khe-workshop's own `?v=`. The page links
   `site-header.css` and the room's `room.css`, not `site.css`.
@@ -304,7 +328,8 @@ reaches khe.ee at the next deploy here.
   deeper nesting, relative links other than `NNN-slug.md`). Extend the
   renderer and its fixtures in `check.mjs` together.
 - Every copy key used on the architecture pages lives in `copy.js`, in both
-  languages, except the header's; the build fills the HTML from `COPY.en`.
+  languages, except the header's; the build fills each language's page from
+  its own.
 - Touch: `:hover` rules sit inside `@media (hover: hover) and (pointer: fine)`
   so they do not stick after a tap; the press state is `:active` (a row
   mirrors its hover state, plain links and summaries dim through a
