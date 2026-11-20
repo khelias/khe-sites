@@ -1,12 +1,19 @@
 import { renderSiteHeader } from '@khelias/ui/site-header';
 import { renderSiteFooter } from '@khelias/ui/site-footer';
 import { themeInitScript } from '@khelias/ui/theme';
-import { SITE_FOOTER_COPY, SITE_HEADER_COPY, THEME_STORAGE_KEY } from '../src/shared/site-locale.js';
+import { pageHref, SITE_FOOTER_COPY, SITE_HEADER_COPY, THEME_STORAGE_KEY } from '../src/shared/site-locale.js';
 
-// Where the brand mark leads: the khe.ee front page, from games.khe.ee by its full address.
+// Where the brand mark leads: the khe.ee front page in the page's language (estate ADR-048), from
+// games.khe.ee by its full address.
 const HOMES = {
-  landing: { href: '/', label: 'headerHomeLanding' },
-  'khe.ee': { href: 'https://khe.ee/', label: 'headerHomeKheEe' },
+  landing: { href: (locale) => pageHref('home', locale), label: 'headerHomeLanding' },
+  'khe.ee': { href: (locale) => `https://khe.ee${pageHref('home', locale)}`, label: 'headerHomeKheEe' },
+};
+
+// The footer's privacy notice: khe.ee's page per language, games.khe.ee's own one page.
+const PRIVACY_HREFS = {
+  landing: (locale) => pageHref('privacy', locale),
+  games: (locale) => `/privacy?lang=${locale}`,
 };
 
 // Where a demo's family link leads, by room (estate ADR-034): the real site's root, without
@@ -65,7 +72,7 @@ function renderHeader({ home, rooms, theme, fixed, demo }, locale, room, indent,
   if (demo && !demoLink) throw new Error(`${file}: site-header demo for room ${room} has no DEMO_LINKS entry`);
 
   return renderSiteHeader({
-    brand: { href: `${target.href}?lang=${locale}`, label: copyText(target.label) },
+    brand: { href: target.href(locale), label: copyText(target.label) },
     rooms: rooms ? { current: room, locale } : undefined,
     demo: demo ? { label: copyText('headerDemo'), note: copyText(noteKey), link: { href: demoLink, label: copyText('headerDemoLink') } } : undefined,
     themeToggle: theme ? { label: copyText('headerTheme') } : undefined,
@@ -83,7 +90,7 @@ function renderHeader({ home, rooms, theme, fixed, demo }, locale, room, indent,
   });
 }
 
-function renderFooter(locale, indent, file) {
+function renderFooter(locale, site, indent, file) {
   const copyText = copyFor(SITE_FOOTER_COPY, 'site-footer', locale, file);
   return renderSiteFooter({
     label: copyText('footerLinksLabel'),
@@ -92,7 +99,7 @@ function renderFooter(locale, indent, file) {
       { label: 'LinkedIn', href: 'https://www.linkedin.com/in/kaido-henrik-elias/', icon: 'linkedin' },
       {
         label: copyText('privacyLink'),
-        href: `/privacy?lang=${locale}`,
+        href: PRIVACY_HREFS[site](locale),
         attrs: { 'data-link': 'privacy', 'data-i18n': 'privacyLink' },
       },
     ],
@@ -102,8 +109,10 @@ function renderFooter(locale, indent, file) {
   });
 }
 
-// Fills the site-header, site-theme and site-footer markers of a built page.
-export function fillSiteChrome(html, file) {
+// Fills the site-header, site-theme and site-footer markers of a built page of a site
+// (`landing` or `games`).
+export function fillSiteChrome(html, file, site) {
+  if (!PRIVACY_HREFS[site]) throw new Error(`${file}: fillSiteChrome needs the site, one of ${Object.keys(PRIVACY_HREFS).join(', ')}`);
   const htmlTag = html.match(/<html\b[^>]*>/)?.[0] ?? '';
   const locale = htmlTag.match(/\slang="([^"]+)"/)?.[1];
   const room = htmlTag.match(/\sdata-room="([^"]+)"/)?.[1];
@@ -116,5 +125,5 @@ export function fillSiteChrome(html, file) {
   return html
     .replace(MARKER, (match, indent) => renderHeader(headers[header++], needLocale('site-header'), room, indent, file))
     .replace(THEME_MARKER, (match, indent) => `${indent}<script>${themeInitScript(THEME_STORAGE_KEY)}</script>`)
-    .replace(FOOTER_MARKER, (match, indent) => renderFooter(needLocale('site-footer'), indent, file));
+    .replace(FOOTER_MARKER, (match, indent) => renderFooter(needLocale('site-footer'), site, indent, file));
 }

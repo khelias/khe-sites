@@ -1,76 +1,20 @@
 <!DOCTYPE html>
-<html lang="en" data-room="home">
+<html lang="et" data-room="home">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-  <title>Kaido Henrik Elias | Software Architect</title>
-  <meta name="description" content="Software architect in Estonia. At home I make things for my family: games, home automation, a travel journal and bedtime stories.">
-  <link rel="canonical" href="https://khe.ee/">
-  <link rel="alternate" hreflang="en" href="https://khe.ee/?lang=en">
-  <link rel="alternate" hreflang="et" href="https://khe.ee/?lang=et">
-  <link rel="alternate" hreflang="x-default" href="https://khe.ee/">
+  <!-- page-meta -->
   <link rel="icon" href="/logo.svg" type="image/svg+xml" sizes="any">
   <meta name="theme-color" content="#fafafa" media="(prefers-color-scheme: light)">
   <meta name="theme-color" content="#0b0d0d" media="(prefers-color-scheme: dark)">
   <!-- site-theme -->
-  <meta property="og:type" content="profile">
-  <meta property="og:url" content="https://khe.ee/">
-  <meta property="og:site_name" content="Kaido Henrik Elias">
-  <meta property="og:title" content="Kaido Henrik Elias | Software Architect">
-  <meta property="og:description" content="Software architect in Estonia. At home I make things for my family: games, home automation, a travel journal and bedtime stories.">
-  <meta property="og:image" content="https://khe.ee/og-image.png">
-  <meta property="og:image:width" content="1200">
-  <meta property="og:image:height" content="630">
-  <meta name="twitter:card" content="summary">
-  <meta name="twitter:title" content="Kaido Henrik Elias | Software Architect">
-  <meta name="twitter:description" content="Software architect in Estonia. At home I make things for my family: games, home automation, a travel journal and bedtime stories.">
-  <meta name="twitter:image" content="https://khe.ee/og-image.png">
   <link rel="preload" href="/assets/fonts/inter-400.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="/assets/fonts/inter-600.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="/assets/fonts/source-serif-4-600-latin.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="modulepreload" href="/assets/theme.js">
   <link rel="stylesheet" href="/assets/site-header.css">
   <link rel="stylesheet" href="/assets/site.css">
-  <script defer src="/assets/analytics-consent.js" data-analytics-token="58734ed4ae1e4b4e8a8f8f7d50ff74f2" data-analytics-privacy-url="/privacy?lang=en"></script>
-  <script type="application/ld+json">
-    {
-      "@context": "https://schema.org",
-      "@graph": [
-        {
-          "@type": "WebSite",
-          "@id": "https://khe.ee/#website",
-          "url": "https://khe.ee/",
-          "name": "Kaido Henrik Elias",
-          "alternateName": [
-            "KHE",
-            "KHE.ee",
-            "Kaido Elias"
-          ],
-          "inLanguage": [
-            "en",
-            "et"
-          ]
-        },
-        {
-          "@type": "Person",
-          "@id": "https://khe.ee/#person",
-          "name": "Kaido Henrik Elias",
-          "url": "https://khe.ee/",
-          "jobTitle": "Software Architect",
-          "sameAs": [
-            "https://github.com/khelias",
-            "https://www.linkedin.com/in/kaido-henrik-elias/"
-          ],
-          "knowsAbout": [
-            "Software architecture",
-            "Web applications",
-            "Self-hosting",
-            "Automation"
-          ]
-        }
-      ]
-    }
-  </script>
+  <script defer src="/assets/analytics-consent.js" data-analytics-token="58734ed4ae1e4b4e8a8f8f7d50ff74f2" data-analytics-privacy-url="/privacy/"></script>
 </head>
 <body class="landing-home">
 
@@ -78,14 +22,20 @@
 
 <main class="landing">
   <section class="landing-hero" aria-labelledby="landing-title">
-    <h1 class="hero-title" id="landing-title">Kaido Henrik Elias</h1>
-    <p class="hero-role" data-i18n="role">Software architect</p>
-    <p class="hero-lead" data-i18n="introWork">In my day job I design systems thousands of people use.</p>
-    <p class="hero-lead" data-i18n="introHome">In my free time I build software for my family: what they need right now, and sometimes something just for fun.</p>
+    <div class="hero-head">
+      <picture class="hero-portrait">
+        <source srcset="/portrait.webp" type="image/webp">
+        <img src="/portrait.jpg" width="192" height="192" alt="Kaido Henrik Elias">
+      </picture>
+      <h1 class="hero-title" id="landing-title">Kaido Henrik Elias</h1>
+    </div>
+    <p class="hero-role" data-i18n="role"></p>
+    <p class="hero-lead" data-i18n="introWork"></p>
+    <p class="hero-lead" data-i18n="introHome"></p>
   </section>
 
   <section class="landing-projects" aria-label="Projects" data-i18n-aria="projectsLabel">
-    <a class="project-row" data-room="games" href="https://games.khe.ee/?lang=en" data-link="games">
+    <a class="project-row" data-room="games" href="https://games.khe.ee/?lang=et" data-link="games">
       <span class="project-thumb" aria-hidden="true">
         <svg viewBox="0 0 160 120" focusable="false">
           <rect class="t-ground" width="160" height="120"/>
@@ -99,8 +49,8 @@
         </svg>
       </span>
       <span class="project-copy">
-        <span class="project-title" data-i18n="gamesTitle">Games</span>
-        <span class="project-desc" data-i18n="gamesDesc">Learning games for kids and an AI-narrated party game for adults.</span>
+        <span class="project-title" data-i18n="gamesTitle"></span>
+        <span class="project-desc" data-i18n="gamesDesc"></span>
       </span>
       <span class="row-arrow" aria-hidden="true">→</span>
     </a>
@@ -116,13 +66,13 @@
         </svg>
       </span>
       <span class="project-copy">
-        <span class="project-title" data-i18n="house3dTitle">Home automation</span>
-        <span class="project-desc" data-i18n="house3dDesc">Running the house with Home Assistant.</span>
+        <span class="project-title" data-i18n="house3dTitle"></span>
+        <span class="project-desc" data-i18n="house3dDesc"></span>
       </span>
       <span class="row-arrow" aria-hidden="true">→</span>
     </a>
 
-    <a class="project-row" data-room="trips" href="/trips/?lang=en" data-link="trips">
+    <a class="project-row" data-room="trips" href="/trips/?lang=et" data-link="trips">
       <span class="project-thumb" aria-hidden="true">
         <svg viewBox="0 0 160 120" focusable="false">
           <rect class="t-ground" width="160" height="120"/>
@@ -135,13 +85,13 @@
         </svg>
       </span>
       <span class="project-copy">
-        <span class="project-title" data-i18n="tripsTitle">Travel journal</span>
-        <span class="project-desc" data-i18n="tripsDesc">Planning trips and remembering them.</span>
+        <span class="project-title" data-i18n="tripsTitle"></span>
+        <span class="project-desc" data-i18n="tripsDesc"></span>
       </span>
       <span class="row-arrow" aria-hidden="true">→</span>
     </a>
 
-    <a class="project-row" data-room="stories" href="/stories/?lang=en" data-link="stories">
+    <a class="project-row" data-room="stories" href="/stories/?lang=et" data-link="stories">
       <span class="project-thumb" aria-hidden="true">
         <svg viewBox="0 0 160 120" focusable="false">
           <rect class="t-ground" width="160" height="120"/>
@@ -154,13 +104,13 @@
         </svg>
       </span>
       <span class="project-copy">
-        <span class="project-title" data-i18n="storiesTitle">Stories</span>
-        <span class="project-desc" data-i18n="storiesDesc">Bedtime stories of a bunny family, read aloud.</span>
+        <span class="project-title" data-i18n="storiesTitle"></span>
+        <span class="project-desc" data-i18n="storiesDesc"></span>
       </span>
       <span class="row-arrow" aria-hidden="true">→</span>
     </a>
 
-    <a class="project-row" data-room="workshop" href="/workshop/en/?lang=en" data-link="workshop">
+    <a class="project-row" data-room="workshop" href="/workshop/?lang=et" data-link="workshop">
       <span class="project-thumb" aria-hidden="true">
         <svg viewBox="0 0 160 120" focusable="false">
           <rect class="t-ground" width="160" height="120"/>
@@ -173,13 +123,13 @@
         </svg>
       </span>
       <span class="project-copy">
-        <span class="project-title" data-i18n="workshopTitle">Workshop</span>
-        <span class="project-desc" data-i18n="workshopDesc">Parts we design and print for our own home.</span>
+        <span class="project-title" data-i18n="workshopTitle"></span>
+        <span class="project-desc" data-i18n="workshopDesc"></span>
       </span>
       <span class="row-arrow" aria-hidden="true">→</span>
     </a>
 
-    <a class="project-row" data-room="server" href="/architecture/?lang=en" data-link="architecture">
+    <a class="project-row" data-room="server" href="/architecture/?lang=et" data-link="architecture">
       <span class="project-thumb" aria-hidden="true">
         <svg viewBox="0 0 160 120" focusable="false">
           <rect class="t-ground" width="160" height="120"/>
@@ -193,13 +143,13 @@
         </svg>
       </span>
       <span class="project-copy">
-        <span class="project-title" data-i18n="architectureTitle">The home server</span>
-        <span class="project-desc" data-i18n="architectureDesc">All of this runs on one server in my home. How, and why.</span>
+        <span class="project-title" data-i18n="architectureTitle"></span>
+        <span class="project-desc" data-i18n="architectureDesc"></span>
       </span>
       <span class="row-arrow" aria-hidden="true">→</span>
     </a>
 
-    <a class="project-row" data-room="home" href="/agents/?lang=en" data-link="agents">
+    <a class="project-row" data-room="home" href="/agents/?lang=et" data-link="agents">
       <span class="project-thumb" aria-hidden="true">
         <svg viewBox="0 0 160 120" focusable="false">
           <rect class="t-ground" width="160" height="120"/>
@@ -213,8 +163,8 @@
         </svg>
       </span>
       <span class="project-copy">
-        <span class="project-title" data-i18n="agentsTitle">Agentic development</span>
-        <span class="project-desc" data-i18n="agentsDesc">AI agents write the code to a plan and check each other's work.</span>
+        <span class="project-title" data-i18n="agentsTitle"></span>
+        <span class="project-desc" data-i18n="agentsDesc"></span>
       </span>
       <span class="row-arrow" aria-hidden="true">→</span>
     </a>
@@ -222,10 +172,10 @@
 
   <section class="landing-work" aria-labelledby="work-title">
     <div>
-      <h2 id="work-title" data-i18n="workTitle">Got something interesting in mind?</h2>
-      <p data-i18n="workBody">Or want to know more about something here? Let's talk.</p>
+      <h2 id="work-title" data-i18n="workTitle"></h2>
+      <p data-i18n="workBody"></p>
     </div>
-    <a class="work-cta" href="mailto:kaidoelias@gmail.com?subject=KHE.ee" data-link="contact"><span data-i18n="workCta">Write to me</span> <span aria-hidden="true">→</span></a>
+    <a class="work-cta" href="mailto:kaidoelias@gmail.com?subject=KHE.ee" data-link="contact"><span data-i18n="workCta"></span> <span aria-hidden="true">→</span></a>
   </section>
 </main>
 
@@ -236,11 +186,11 @@
 
   const COPY = {
     et: {
-      title: 'Kaido Henrik Elias | Tarkvaraarhitekt',
-      description: 'Tarkvaraarhitekt Eestis. Kodus teen asju oma perele: mängud, koduautomaatika, reisipäevik ja unejutud.',
+      title: 'Kaido Henrik Elias, tarkvaraarhitekt',
+      description: 'Tarkvaraarhitekt Tallinnas. Kavandan suuri süsteeme, mida kasutavad tuhanded inimesed, ja ehitan vabal ajal perele tarkvara: mängud, koduautomaatika, reisipäevik ja unejutud.',
       projectsLabel: 'Projektid',
       role: 'Tarkvaraarhitekt',
-      introWork: 'Igapäevatöös kavandan süsteeme, mida kasutavad tuhanded inimesed.',
+      introWork: 'Igapäevatöös kavandan suuri süsteeme, mida kasutavad tuhanded inimesed.',
       introHome: 'Vabal ajal ehitan oma perele tarkvara: seda, mida parajasti vaja on, ja vahel midagi lihtsalt lõbu pärast.',
       workTitle: 'Midagi põnevat mõttes?',
       workBody: 'Või tahad mõne siinse asja kohta lähemalt teada? Räägime.',
@@ -261,11 +211,11 @@
       agentsDesc: 'AI-agendid kirjutavad koodi plaani järgi ja kontrollivad üksteise tööd.',
     },
     en: {
-      title: 'Kaido Henrik Elias | Software Architect',
-      description: 'Software architect in Estonia. At home I make things for my family: games, home automation, a travel journal and bedtime stories.',
+      title: 'Kaido Henrik Elias, software architect',
+      description: 'Software architect in Tallinn. I design large systems that thousands of people use, and in my free time I build software for my family: games, home automation, a travel journal and bedtime stories.',
       projectsLabel: 'Projects',
       role: 'Software architect',
-      introWork: 'In my day job I design systems thousands of people use.',
+      introWork: 'In my day job I design large systems that thousands of people use.',
       introHome: 'In my free time I build software for my family: what they need right now, and sometimes something just for fun.',
       workTitle: 'Got something interesting in mind?',
       workBody: "Or want to know more about something here? Let's talk.",
@@ -294,19 +244,8 @@
 
   createLocaleController({
     copy: COPY,
-    defaultLocale: 'en',
-    links: {
-      home: (locale) => `/?lang=${locale}`,
-      architecture: (locale) => `/architecture/?lang=${locale}`,
-      agents: (locale) => `/agents/?lang=${locale}`,
-      house3d: () => '/ha/',
-      trips: (locale) => `/trips/?lang=${locale}`,
-      stories: (locale) => `/stories/?lang=${locale}`,
-      workshop: (locale) => `/workshop/${locale === 'et' ? '' : 'en/'}?lang=${locale}`,
-      games: (locale) => `${gamesOrigin}/?lang=${locale}`,
-      contact: () => 'mailto:kaidoelias@gmail.com?subject=KHE.ee',
-      privacy: (locale) => `/privacy?lang=${locale}`,
-    },
+    alternatePages: true,
+    links: { games: (locale) => `${gamesOrigin}/?lang=${locale}` },
   });
 </script>
 

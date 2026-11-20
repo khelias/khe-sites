@@ -9,14 +9,15 @@ import { COPY } from '../src/landing/architecture/copy.js';
 const root = dirname(dirname(fileURLToPath(import.meta.url)));
 const SOURCE_BASE = 'https://github.com/khelias/khe-architecture/blob/main/';
 
-function copyText(key) {
-  const text = COPY.en[key];
-  if (typeof text !== 'string') throw new SourceError(`copy.js has no COPY.en.${key}`);
+function copyText(key, locale) {
+  const text = COPY[locale]?.[key];
+  if (typeof text !== 'string') throw new SourceError(`copy.js has no COPY.${locale}.${key}`);
   return text;
 }
 
+// An element that names a copy key; fillCopy gives it the text in the page's language.
 function i18n(key, tag = 'span', attributes = '') {
-  return `<${tag}${attributes} data-i18n="${key}">${escapeHtml(copyText(key))}</${tag}>`;
+  return `<${tag}${attributes} data-i18n="${key}"></${tag}>`;
 }
 
 // Fills every empty element whose attribute matches `attributes`, a regex
@@ -28,11 +29,12 @@ function fillEmpty(html, attributes, fill) {
   );
 }
 
-// Fills every empty element that names a copy key, so the page reads in
-// English without JS and the strings live only in copy.js.
-export function fillI18n(html) {
+// Fills every empty element that names a key of `values`, one language's copy,
+// so the page reads without JS and the strings live only in their copy.
+export function fillCopy(html, values, where) {
   return fillEmpty(html, 'data-i18n(?:-html)?', (attribute, key) => {
-    const text = copyText(key);
+    const text = values[key];
+    if (typeof text !== 'string') throw new SourceError(`${where} has no copy for ${key}`);
     return attribute === 'data-i18n-html' ? text : escapeHtml(text);
   });
 }
@@ -59,11 +61,6 @@ function textWidth(text, style) {
   return [...text].reduce((sum, char) => sum + (/[A-ZÕÄÖÜŠŽmwMW]/.test(char) ? 1.25 : 1) * style.size * factor, 0);
 }
 
-function localeText(key, locale) {
-  const text = COPY[locale][key];
-  if (typeof text !== 'string') throw new SourceError(`copy.js has no COPY.${locale}.${key}`);
-  return text;
-}
 
 // Greedy word wrap at build time, per locale: Estonian and English break in
 // different places, so each language gets its own lines.
@@ -91,14 +88,14 @@ function perLocale(render) {
 function nodeLines(element, locale, width, where) {
   const lines = [];
   if (element.tag) {
-    const tag = localeText(element.tag, locale);
+    const tag = copyText(element.tag, locale);
     if (textWidth(tag, TEXT.tag) > width) throw new SourceError(`${where}: tag "${tag}" (${locale}) does not fit ${width}px`);
     lines.push({ text: tag, style: TEXT.tag, className: 'arch-node-tag' });
   }
-  const label = element.name || localeText(element.label, locale);
+  const label = element.name || copyText(element.label, locale);
   for (const text of wrap(label, TEXT.label, width, `${where} (${locale})`)) lines.push({ text, style: TEXT.label, className: 'arch-node-label' });
   if (element.sub) {
-    for (const text of wrap(localeText(element.sub, locale), TEXT.sub, width, `${where} (${locale})`)) lines.push({ text, style: TEXT.sub, className: 'arch-node-sub' });
+    for (const text of wrap(copyText(element.sub, locale), TEXT.sub, width, `${where} (${locale})`)) lines.push({ text, style: TEXT.sub, className: 'arch-node-sub' });
   }
   return lines;
 }
@@ -123,7 +120,7 @@ function renderBoundary(id, box, where) {
     ? `<line x1="${x}" y1="${y + 0.5}" x2="${x + w}" y2="${y + 0.5}"/>`
     : `<rect x="${x + 0.5}" y="${y + 0.5}" width="${w - 1}" height="${h - 1}" rx="10"/>`;
   const label = perLocale((locale) => {
-    const text = localeText(element.label, locale).toLocaleUpperCase(locale);
+    const text = copyText(element.label, locale).toLocaleUpperCase(locale);
     if (labelX - x + textWidth(text, TEXT.group) > w - 8) throw new SourceError(`${where}: boundary label "${text}" does not fit ${id}`);
     return svgLine(text, labelX, y + 22, 'arch-group-label');
   });
@@ -218,7 +215,7 @@ function horizontalRun(points, y) {
 function renderEdgeLabel(edge, route, layout, where) {
   const { size, line } = TEXT.edge;
   return perLocale((locale) => {
-    const text = localeText(edge.label, locale);
+    const text = copyText(edge.label, locale);
     const name = `${where}: edge ${edge.from} -> ${edge.to} (${locale})`;
     const [mx, my] = route.labelAt;
     if (route.vertical) {
@@ -436,7 +433,7 @@ function renderDecisionPage(template, decision, byId, rewriteLink) {
     inLanguage: 'en',
     isPartOf: { '@id': `${SITE}/#website` },
   }).replace(/</g, '\\u003c');
-  return fillI18n(fillTemplate(template, {
+  return fillCopy(fillTemplate(template, {
     pageTitle: escapeHtml(`ADR-${decision.id}: ${decision.title} | KHE`),
     description: escapeHtml(decision.title),
     url,
@@ -451,7 +448,7 @@ function renderDecisionPage(template, decision, byId, rewriteLink) {
       rewriteLink,
     }),
     sourceUrl: `${SOURCE_BASE}${decision.file}`,
-  }));
+  }), COPY.en, 'copy.js COPY.en');
 }
 
 const MONTHS_EN = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
@@ -552,7 +549,8 @@ export async function renderArchitecture(landingDist, sources) {
     for (const view of views.filter((view) => view.page === page)) html = replaceMarker(html, `view:${view.id}`, renderView(view), pagePath);
     for (const [marker, content] of Object.entries(markers(sources))) html = replaceMarker(html, marker, content, pagePath);
     if (metrics) html = fillMetrics(html, metrics(sources), pagePath);
-    await writeFile(pagePath, fillI18n(html));
+    // renderLanguagePages fills its copy, once per language (estate ADR-048).
+    await writeFile(pagePath, html);
   }
 
   const template = await readFile(join(root, 'scripts', 'templates', 'decision.html'), 'utf8');

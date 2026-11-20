@@ -21,14 +21,10 @@ const copy = Object.fromEntries(
   Object.entries(COPY).map(([locale, values]) => [locale, { ...values, ...pageMeta(values) }]),
 );
 
+// The three pages are one page per language (estate ADR-048); an ADR page is English and
+// translates its chrome in place.
 createLocaleController({
   copy,
-  defaultLocale: 'en',
-  links: {
-    home: (locale) => `/?lang=${locale}`,
-    privacy: (locale) => `/privacy?lang=${locale}`,
-    shipping: (locale) => `/architecture/?lang=${locale}#shipping`,
-    register: (locale) => `/architecture/decisions/?lang=${locale}`,
-    agents: (locale) => `/agents/?lang=${locale}`,
-  },
+  defaultLocale: document.documentElement.lang,
+  alternatePages: page !== 'decision',
 });

@@ -42,6 +42,36 @@ export const SITE_FOOTER_COPY = {
   },
 };
 
+export const LOCALES = ['et', 'en'];
+
+// The khe.ee pages with one static page per language (estate ADR-048), by the key their links
+// carry in data-link: the Estonian path, which localePath turns into the page's language.
+export const PAGE_LINKS = {
+  home: '/',
+  privacy: '/privacy/',
+  architecture: '/architecture/',
+  shipping: '/architecture/#shipping',
+  register: '/architecture/decisions/',
+  agents: '/agents/',
+  workshop: '/workshop/',
+};
+
+// A room built by its own repo keeps its own language folders (ADR-048 point 5).
+const ROOM_LOCAL_PATHS = ['/workshop/'];
+
+export function localePath(path, locale) {
+  if (locale !== 'en') return path;
+  const room = ROOM_LOCAL_PATHS.find((prefix) => path.startsWith(prefix));
+  return room ? `${room}en/${path.slice(room.length)}` : `/en${path}`;
+}
+
+// A link to a PAGE_LINKS page in a language, carrying it as ?lang so the asked language holds
+// over a stored one.
+export function pageHref(key, locale) {
+  const [path, hash] = PAGE_LINKS[key].split('#');
+  return `${localePath(path, locale)}?lang=${locale}${hash ? `#${hash}` : ''}`;
+}
+
 function normalizeLocale(value, supported) {
   return supported.includes(value) ? value : null;
 }
@@ -112,7 +142,9 @@ export function createLocaleController({
   const supported = Object.keys(copy);
   const fallbackLocale = supported.includes(defaultLocale) ? defaultLocale : supported[0];
 
+  // A page per language shows its own; its head script has already opened the asked one.
   function initialLocale() {
+    if (alternatePages) return builtLocale;
     return normalizeLocale(queryLocale(), supported)
       || normalizeLocale(window.localStorage.getItem(LOCALE_STORAGE_KEY), supported)
       || (useBrowserDefault ? browserLocale(supported, fallbackLocale) : fallbackLocale);
@@ -140,7 +172,7 @@ export function createLocaleController({
     setMetaContent('meta[property="og:description"]', activeCopy.description);
     setMetaContent('meta[name="twitter:title"]', activeCopy.title);
     setMetaContent('meta[name="twitter:description"]', activeCopy.description);
-    setQueryLocale(activeLocale);
+    if (!alternatePages) setQueryLocale(activeLocale);
 
     setText('[data-i18n]', activeCopy, 'data-i18n');
     setHtml('[data-i18n-html]', activeCopy, 'data-i18n-html');
@@ -156,16 +188,17 @@ export function createLocaleController({
 
     document.querySelectorAll('[data-link]').forEach((anchor) => {
       const key = anchor.getAttribute('data-link');
-      const resolveHref = links[key];
-      if (resolveHref) anchor.setAttribute('href', resolveHref(activeLocale));
+      if (links[key]) anchor.setAttribute('href', links[key](activeLocale));
+      else if (Object.hasOwn(PAGE_LINKS, key)) anchor.setAttribute('href', pageHref(key, activeLocale));
     });
   }
 
   // Only a press is stored: app_locale is shared with the games on the origin, and an installed
   // game opens in Estonian until a language is chosen. A ?lang shows the page in its language
   // and goes on in the links, since the build writes one into every room link.
-  // A room with one page per language (alternatePages, /workshop/) goes to the page in the chosen
-  // language, named by its <link rel="alternate" hreflang>, instead of translating this one.
+  // A page per language (alternatePages, estate ADR-048) goes to the page in the chosen language,
+  // named by its <link rel="alternate" hreflang>, instead of translating this one. By pathname, so
+  // a local preview stays local.
   document.querySelectorAll('[data-lang-option]').forEach((button) => {
     button.addEventListener('click', () => {
       const option = button.getAttribute('data-lang-option');
@@ -173,7 +206,7 @@ export function createLocaleController({
         && document.querySelector(`link[rel="alternate"][hreflang="${option}"]`)?.getAttribute('href');
       if (page) {
         window.localStorage.setItem(LOCALE_STORAGE_KEY, option);
-        window.location.assign(`${page}?lang=${option}`);
+        window.location.assign(`${new URL(page, window.location.href).pathname}?lang=${option}${window.location.hash}`);
         return;
       }
       const locale = normalizeLocale(option, supported);

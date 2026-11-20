@@ -5,6 +5,7 @@ import { loadSources, runReportingSourceErrors } from './architecture-sources.mj
 import { renderArchitecture } from './render-architecture.mjs';
 import { buildHouse3dDemo } from './house3d-demo.mjs';
 import { buildWorkshopRoom } from './workshop-room.mjs';
+import { renderLanguagePages } from './language-pages.mjs';
 import { fillSiteChrome } from './site-header.mjs';
 import { builtPages, createAssetStamper } from './asset-versions.mjs';
 
@@ -52,6 +53,7 @@ await runReportingSourceErrors(async () => {
   }
 
   await renderArchitecture(join(dist, 'landing'), await loadSources());
+  await renderLanguagePages(join(dist, 'landing'));
   await buildHouse3dDemo(join(dist, 'landing', 'ha'));
   await buildWorkshopRoom(join(dist, 'landing'));
 
@@ -59,7 +61,7 @@ await runReportingSourceErrors(async () => {
     const outputDir = join(dist, app);
     const stamp = createAssetStamper(outputDir);
     for (const page of await builtPages(outputDir)) {
-      await writeFile(page, await stamp(fillSiteChrome(await readFile(page, 'utf8'), page), page));
+      await writeFile(page, await stamp(fillSiteChrome(await readFile(page, 'utf8'), page, app), page));
     }
   }
 
