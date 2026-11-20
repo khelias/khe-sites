@@ -352,7 +352,7 @@ reaches khe.ee at the next deploy here.
 - Every built page's `<html>` carries `data-room` (`home`, `server`,
   `trips`, `house`, `games`, `stories`, `workshop`; check), which sets `--room` (fills, dots) and
   `--room-text` (text, the `.ee`, focus). A landing row
-  sets its own `data-room` for its dot and arrow. `/ha/` gets
+  sets its own `data-room` for its thumbnail's accent. `/ha/` gets
   `data-room="house" data-theme="dark"` from `house3d-demo.mjs`: the house
   view has no light theme yet, so its header stays dark (check).
 - The landing and games pages, and their privacy pages, keep their copy in an
