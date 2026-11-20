@@ -282,8 +282,9 @@ bottom centre with its question and two equal buttons.
 ## Motion and touch
 
 Hover rules sit inside `@media (hover: hover) and (pointer: fine)`; the press
-state is `:active`. A row's arrow moves 2px on hover and stays put under
-`prefers-reduced-motion: reduce`. Every hit area is at least 44px. The
+state is `:active`. A games row's arrow moves 2px on hover and stays put under
+`prefers-reduced-motion: reduce`; the landing's rows have no arrow, and their
+title underlines on hover. Every hit area is at least 44px. The
 package's own press scale has no reduced-motion rule yet (a khe-ui follow-up).
 
 ## Focus

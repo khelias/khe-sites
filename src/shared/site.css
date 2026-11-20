@@ -18,8 +18,7 @@ summary {
 }
 
 .site-header,
-.project-row,
-.work-cta {
+.project-row {
   --press-opacity: 1;
 }
 
@@ -119,57 +118,20 @@ a { color: var(--ink-2); }
 }
 
 /* Below the project rows: the projects come first, contact after them. */
-.landing-work {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) auto;
-  gap: 1.5rem clamp(2rem, 6vw, 5rem);
-  align-items: end;
-  margin-top: clamp(3rem, 8vh, 4.5rem);
-}
-
-.landing-work > div:first-child {
-  display: grid;
-  gap: 0.75rem;
+.landing-contact {
   max-width: 34rem;
-}
-
-.landing-work h2 {
-  color: var(--ink);
-  font-family: var(--serif);
-  font-size: 1.375rem;
-  font-weight: 600;
-  line-height: 1.25;
-}
-
-.landing-work p {
+  margin-top: clamp(3rem, 8vh, 4.5rem);
   color: var(--ink-2);
   line-height: 1.6;
 }
 
-.work-cta {
-  justify-self: start;
-  min-height: 2.75rem;
-  display: inline-flex;
-  align-items: center;
-  gap: 0.5rem;
-  padding: 0 1.1rem;
-  border-radius: 8px;
-  background: var(--ink);
-  color: var(--paper);
-  font-size: 0.875rem;
-  font-weight: 600;
-  text-decoration: none;
-  user-select: none;
-  -webkit-user-select: none;
-  transition: transform 0.1s ease-out;
-}
-
-.work-cta:active {
-  transform: scale(0.97);
+/* The block padding lifts the inline link's hit area to 44px without moving the line. */
+.landing-contact a {
+  padding-block: 0.8125rem;
 }
 
 @media (hover: hover) and (pointer: fine) {
-  .landing .work-cta:hover { color: var(--paper); }
+  .landing-contact a:hover { text-decoration-color: var(--room); }
 }
 
 
@@ -182,11 +144,12 @@ a { color: var(--ink-2); }
 :root {
   --row-thumb: 9rem;
   --row-gap: clamp(1rem, 3vw, 2rem);
+  --row-arrow: 2rem;
 }
 
 .project-row {
   display: grid;
-  grid-template-columns: var(--row-thumb) minmax(0, 1fr) 2rem;
+  grid-template-columns: var(--row-thumb) minmax(0, 1fr);
   gap: var(--row-gap);
   align-items: center;
   padding: 1.25rem 0;
@@ -329,6 +292,7 @@ body.games-home {
 }
 
 .game-item .project-row {
+  grid-template-columns: var(--row-thumb) minmax(0, 1fr) var(--row-arrow);
   padding-bottom: 0.6rem;
 }
 
@@ -1626,7 +1590,8 @@ body.privacy-page {
   margin-bottom: 0.75rem;
 }
 
-.privacy-page main a {
+.privacy-page main a,
+.landing-contact a {
   color: var(--ink);
   text-decoration-color: var(--rule-strong);
   text-underline-offset: 0.2em;
@@ -1689,17 +1654,10 @@ body.privacy-page {
 }
 
 @media (max-width: 760px) {
-  .landing-work {
-    grid-template-columns: minmax(0, 1fr);
-  }
-
   :root {
     --row-thumb: 96px;
     --row-gap: 1rem;
-  }
-
-  .project-row {
-    grid-template-columns: var(--row-thumb) minmax(0, 1fr) 1.5rem;
+    --row-arrow: 1.5rem;
   }
 
   .project-title {
