@@ -223,7 +223,7 @@ await runReportingSourceErrors(async () => {
 
   // The pre-family tokens are gone from khe-sites' own sources. dist is not checked: /ha/'s
   // house3d-card.js from khe-home-assistant defines --bg and friends in its shadow DOM.
-  const oldToken = /(?<![\w-])--(bg|text|text-dim|text-muted|text-faint|border|border-hover|card-bg|accent|accent-bright|accent-deep|accent-warm|accent-cool|accent-border|display-font)(?![\w-])/;
+  const oldToken = /(?<![\w-])--(bg|text|text-dim|text-muted|text-faint|border|border-hover|card-bg|accent|accent-bright|accent-deep|accent-warm|accent-cool|accent-border|display-font|serif)(?![\w-])/;
   for (const relativePath of sourceFiles) {
     const content = await readFile(join(root, relativePath), 'utf8');
     const oldUse = content.match(oldToken);

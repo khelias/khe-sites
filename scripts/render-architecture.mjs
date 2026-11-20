@@ -51,13 +51,13 @@ const TEXT = {
 const PAD_X = 8;
 const PAD_Y = 6;
 
-// An estimate of Inter's advance. Measured in a browser it comes within 1% of
-// the real width at worst, which the 8px box padding absorbs; it is not a
-// safety margin in itself. The mono labels carry 0.08em letter spacing on a
-// 0.6em advance.
+// An estimate of Familjen Grotesk's advance. Measured against the shaped
+// font it comes within 1% of the real width at worst, which the 8px box
+// padding absorbs; it is not a safety margin in itself. The mono labels
+// carry 0.08em letter spacing on a 0.6em advance.
 function textWidth(text, style) {
   if (style.mono) return [...text].length * style.size * 0.7;
-  const factor = style.weight >= 500 ? 0.6 : 0.57;
+  const factor = style.weight >= 500 ? 0.53 : 0.57;
   return [...text].reduce((sum, char) => sum + (/[A-ZÕÄÖÜŠŽmwMW]/.test(char) ? 1.25 : 1) * style.size * factor, 0);
 }
 

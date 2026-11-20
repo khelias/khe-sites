@@ -25,42 +25,47 @@ colors:
   primary: "#121415"
 typography:
   display:
-    fontFamily: Source Serif 4
+    fontFamily: Familjen Grotesk
     fontSize: clamp(2.6rem, 6vw, 4rem)
-    fontWeight: 600
+    fontWeight: 500
     lineHeight: 1.02
+    letterSpacing: -0.02em
   title:
-    fontFamily: Source Serif 4
+    fontFamily: Familjen Grotesk
     fontSize: 34px
-    fontWeight: 600
+    fontWeight: 500
     lineHeight: 1.15
+    letterSpacing: -0.02em
   heading:
-    fontFamily: Source Serif 4
+    fontFamily: Familjen Grotesk
     fontSize: 22px
-    fontWeight: 600
+    fontWeight: 500
     lineHeight: 1.25
   context:
-    fontFamily: Source Serif 4
+    fontFamily: Familjen Grotesk
     fontSize: 17px
-    fontWeight: 600
+    fontWeight: 500
   lead:
-    fontFamily: Inter
+    fontFamily: Familjen Grotesk
     fontSize: 19px
+    fontWeight: 400
     lineHeight: 1.5
   body:
-    fontFamily: Inter
+    fontFamily: Familjen Grotesk
     fontSize: 16px
+    fontWeight: 400
     lineHeight: 1.6
   small:
-    fontFamily: Inter
+    fontFamily: Familjen Grotesk
     fontSize: 14px
+    fontWeight: 400
     lineHeight: 1.5
   control:
-    fontFamily: Inter
+    fontFamily: Familjen Grotesk
     fontSize: 12px
     fontWeight: 600
   label:
-    fontFamily: Inter
+    fontFamily: Familjen Grotesk
     fontSize: 13px
     fontWeight: 500
     lineHeight: 1.4
@@ -233,27 +238,27 @@ same ones.
 
 ## Typography
 
-Source Serif 4 600 for what you read (display, titles, headings, the header
-title), Inter for what you look up (lead, body, controls, labels), the system
-mono stack for facts: dates, numbers, times and codes.
+One typeface, Familjen Grotesk ([estate ADR-049](https://github.com/khelias/khe-architecture/blob/main/decisions/049-the-familys-type-is-familjen-grotesk.md)),
+for everything in the shell; the system mono stack for facts: dates,
+numbers, times and codes. The stack is `'Familjen Grotesk', system-ui,
+sans-serif` everywhere.
 
-- `display` serif 600, clamp(2.6rem, 6vw, 4rem) / 1.02: the landing name,
+- `display` 500, clamp(2.6rem, 6vw, 4rem) / 1.02, -0.02em: the landing name,
   the games hub title
-- `title` serif 34px, `heading` serif 22px
-- `context` serif 17px: the header title's family size (see the mark)
-- `lead` Inter 19px, `body` 16px / 1.6, `small` 14px
-- `control` Inter 600 12px
-- `label` Inter 500 13px / 1.4, sentence case, no tracking and no dot: the
+- `title` 500 34px, -0.02em; `heading` 500 22px
+- `context` 500 17px: the header title's family size (see the mark)
+- `lead` 400 19px, `body` 400 16px / 1.6, `small` 400 14px
+- `control` 600 12px
+- `label` 500 13px / 1.4, sentence case, no tracking and no dot: the
   kicker above a title, a list's heading; `muted`, or the room's text accent
   on a page's own kicker
 - `fact` mono 500 11px, no capitals or tracking: a date, a number, a code
 
-The Source Serif 4 files (weight 600, latin and latin-ext) ship in khe-sites
-only. The apps use the family serif stack, `'Source Serif 4', 'Iowan Old
-Style', Georgia, serif`, so an app without the files (trips) falls back to
-Iowan Old Style. The Stories room sets its own type ([estate ADR-028](https://github.com/khelias/khe-architecture/blob/main/decisions/028-the-stories-room-keeps-its-own-look.md)):
+Each app self-hosts the variable files (weight 400 to 700, latin and
+latin-ext) with their OFL text; khe-sites' pages preload the latin one. Play areas keep
+their own type (estate ADR-049 point 4). The Stories room sets its own type ([estate ADR-028](https://github.com/khelias/khe-architecture/blob/main/decisions/028-the-stories-room-keeps-its-own-look.md)):
 the system font, and `ui-serif` (New York on Apple) for the story, with
-Source Serif 4 as its fallback.
+its own serif as the fallback.
 
 ## Layout
 
@@ -294,7 +299,7 @@ focus colour is the same property.
 
 ## The mark
 
-`KHE` in Inter 600, ink, with `.ee` at 0.7em in `--room-text`, in a
+`KHE` in Familjen Grotesk 600, ink, with `.ee` at 0.7em in `--room-text`, in a
 `rule-strong` box with an 8px corner on `paper`, no shadow. The favicon is the
 same mark with the Home `.ee`. In the header the mark, rooms button, title and
 buttons keep `@khelias/ui`'s sizes; the family `context`, `control` and
@@ -307,7 +312,8 @@ The values reach every app as `--khe-header-*` properties set on
 where they would not reach the header:
 
 - `bg` paper, `blur` 0px, `border` rule, `text` ink, `text-muted` muted
-- `title-font` the serif stack, `focus` the room's text accent
+- `font` the family stack (`title-font` follows it), `title-weight` 500,
+  `focus` the room's text accent
 - `brand-border` rule-strong, `brand-bg` paper, `brand-shadow` none,
   `suffix` the room's text accent
 - `switcher-radius` and `button-radius` 999px, `switcher-border` rule,

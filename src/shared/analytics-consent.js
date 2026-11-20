@@ -93,7 +93,7 @@
         background: var(--khe-consent-surface);
         box-shadow: 0 12px 32px rgb(0 0 0 / 0.14); /* design-lint-allow shadow: a floating layer, like the rooms list */
         color: var(--khe-consent-ink);
-        font: 400 0.875rem/1.4 'Inter', system-ui, sans-serif;
+        font: 400 0.875rem/1.4 'Familjen Grotesk', system-ui, sans-serif;
         transform: translateX(-50%);
         white-space: nowrap;
       }
@@ -128,7 +128,7 @@
         background: var(--khe-consent-paper);
         color: var(--khe-consent-ink);
         cursor: pointer;
-        font: 600 0.8125rem/1 'Inter', system-ui, sans-serif;
+        font: 600 0.8125rem/1 'Familjen Grotesk', system-ui, sans-serif;
         touch-action: manipulation;
         user-select: none;
         -webkit-user-select: none;
