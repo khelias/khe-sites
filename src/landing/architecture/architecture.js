@@ -21,7 +21,7 @@ const copy = Object.fromEntries(
   Object.entries(COPY).map(([locale, values]) => [locale, { ...values, ...pageMeta(values) }]),
 );
 
-// The three pages are one page per language (estate ADR-048); an ADR page is English and
+// The three pages are one page per language (khe-sites ADR-001); an ADR page is English and
 // translates its chrome in place.
 createLocaleController({
   copy,

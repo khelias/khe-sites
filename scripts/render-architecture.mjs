@@ -1,9 +1,9 @@
 import { mkdir, readFile, writeFile } from 'node:fs/promises';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { blockCards, elements, keyDecisions, productDecisionDirs, views } from './architecture-model.mjs';
+import { blockCards, elements, keyDecisions, repoDecisionDirs, views } from './architecture-model.mjs';
 import { replaceMarker, SITE, SourceError } from './architecture-sources.mjs';
-import { adrLinkRewriter, escapeHtml, renderMarkdown } from './markdown.mjs';
+import { adrLinkRewriter, escapeHtml, renderInlineMarkdown, renderMarkdown } from './markdown.mjs';
 import { COPY } from '../src/landing/architecture/copy.js';
 
 const root = dirname(dirname(fileURLToPath(import.meta.url)));
@@ -362,7 +362,7 @@ const statusKey = (status) => `status${status}`;
 const decisionUrl = (id) => `/architecture/decisions/${id}/`;
 
 // The five decisions: what each buys and costs, then a cell that counts the
-// rest of the register so the number cannot go stale.
+// rest of the register in force so the number cannot go stale.
 function renderKeyDecisions(decisions) {
   const byId = new Map(decisions.map((decision) => [decision.id, decision]));
   const shown = new Set();
@@ -370,33 +370,31 @@ function renderKeyDecisions(decisions) {
     for (const id of ids) {
       const decision = byId.get(id);
       if (!decision) throw new SourceError(`The key decisions name ADR-${id}, which khe-architecture lacks`);
-      if (decision.status === 'Superseded') {
-        throw new SourceError(`The key decisions name ADR-${id}, superseded by ADR-${decision.supersededBy.join(', ADR-')}`);
-      }
+      if (!decision.inForce) throw new SourceError(`The key decisions name ADR-${id}, which is ${decision.status}`);
       shown.add(id);
     }
     const tag = ids.map((id) => `ADR-${id}`).join(' · ');
     return `<article class="arch-pick"><p class="arch-tag">${tag}</p>${i18n(`${key}Title`, 'h3')}<p>${i18n('buysLabel', 'span', ' class="arch-tag arch-tag--buys"')}${i18n(`${key}Buys`)}</p><p>${i18n('costsLabel', 'span', ' class="arch-tag arch-tag--costs"')}${i18n(`${key}Costs`)}</p><a href="${decisionUrl(ids[0])}">${i18n('readAdr')} ADR-${ids[0]}</a></article>`;
   });
-  const rest = decisions.length - shown.size;
+  const rest = decisions.filter((decision) => decision.inForce).length - shown.size;
   const more = `<a class="arch-pick arch-pick--more" href="#decisions">${i18n('registerTag', 'span', ' class="arch-tag"')}<span class="arch-pick__title">${rest} ${i18n('moreDecisions')}</span>${i18n('moreDecisionsBody')}</a>`;
   return `<div class="arch-picks">${cards.join('')}${more}</div>`;
 }
 
+// The decisions in force, then one line linking every decision that left the register; each of
+// those keeps its page, which points onward.
 function renderRegister(decisions) {
-  const byId = new Map(decisions.map((decision) => [decision.id, decision]));
-  const rows = decisions.map((decision) => {
-    const successor = decision.supersededBy
-      .map((id) => ` <span class="arch-successor">&rarr; <a href="${decisionUrl(id)}">ADR-${id}</a></span>`)
-      .join('');
-    return `<tr><td><a href="${decisionUrl(decision.id)}">ADR-${decision.id}</a></td><td lang="en"><a href="${decisionUrl(decision.id)}">${escapeHtml(decision.title)}</a></td><td>${i18n(statusKey(decision.status), 'span', ` class="arch-status arch-status--${decision.status.toLowerCase()}"`)}${successor}</td><td><time datetime="${decision.date}">${decision.date}</time></td></tr>`;
-  });
-  if (rows.length !== byId.size) throw new SourceError('Two decisions share an id');
-  return `<div class="arch-table-wrap"><table class="arch-table arch-register"><thead><tr><th scope="col">ADR</th>${i18n('regTitle', 'th', ' scope="col"')}${i18n('regStatus', 'th', ' scope="col"')}${i18n('regDate', 'th', ' scope="col"')}</tr></thead><tbody>${rows.join('')}</tbody></table></div>`;
+  const inForce = [];
+  const stubs = [];
+  for (const decision of decisions) (decision.inForce ? inForce : stubs).push(decision);
+  const rows = inForce.map((decision) => `<tr><td><a href="${decisionUrl(decision.id)}">ADR-${decision.id}</a></td><td lang="en"><a href="${decisionUrl(decision.id)}">${escapeHtml(decision.title)}</a></td><td>${i18n(statusKey(decision.status), 'span', ` class="arch-status arch-status--${decision.status.toLowerCase()}"`)}</td><td><time datetime="${decision.date}">${decision.date}</time></td></tr>`);
+  const history = stubs.map((decision) => `<a href="${decisionUrl(decision.id)}">ADR-${decision.id}</a>`);
+  const table = `<div class="arch-table-wrap"><table class="arch-table arch-register"><thead><tr><th scope="col">ADR</th>${i18n('regTitle', 'th', ' scope="col"')}${i18n('regStatus', 'th', ' scope="col"')}${i18n('regDate', 'th', ' scope="col"')}</tr></thead><tbody>${rows.join('')}</tbody></table></div>`;
+  return history.length ? `${table}<p class="arch-history">${i18n('regHistory')} ${history.join(', ')}.</p>` : table;
 }
 
 function renderProductDecisions() {
-  const links = productDecisionDirs.map((dir) => `<li><a href="${dir.url}">${escapeHtml(dir.repo)}</a></li>`).join('');
+  const links = repoDecisionDirs.map((dir) => `<li><a href="${dir.url}">${escapeHtml(dir.repo)}</a></li>`).join('');
   return `${i18n('productDecisions', 'p', ' class="arch-prose"')}<ul class="arch-inline-list">${links}</ul>`;
 }
 
@@ -411,6 +409,19 @@ function decisionLinks(ids, byId) {
   return ids.map((id) => `<a href="${decisionUrl(id)}" lang="en">ADR-${id}: ${escapeHtml(byId.get(id).title)}</a>`).join('<br>');
 }
 
+// Where a decision no longer in force went: its successor's page, or its new home as the
+// Moved to bullet writes it (a public repo linked, a private one named).
+function onward(decision, byId, rewriteLink) {
+  if (decision.supersededBy.length > 0) return `${i18n('supersededNotice')} ${decisionLinks(decision.supersededBy, byId)}.`;
+  if (decision.movedTo) {
+    const home = renderInlineMarkdown(decision.movedTo, { file: decision.file, line: decision.movedToLine, rewriteLink });
+    return `${i18n('movedNotice')} <span lang="en">${home}</span>.`;
+  }
+  return null;
+}
+
+// The notice carries the link onward, so the meta list does not repeat it. A stub has no body,
+// so its page has no article.
 function renderDecisionPage(template, decision, byId, rewriteLink) {
   const url = `${SITE}${decisionUrl(decision.id)}`;
   const meta = [
@@ -418,11 +429,14 @@ function renderDecisionPage(template, decision, byId, rewriteLink) {
     `<div>${i18n('metaDate', 'dt')}<dd><time datetime="${decision.date}">${decision.date}</time></dd></div>`,
   ];
   if (decision.supersedes.length) meta.push(`<div>${i18n('metaSupersedes', 'dt')}<dd>${decisionLinks(decision.supersedes, byId)}</dd></div>`);
-  if (decision.supersededBy.length) meta.push(`<div>${i18n('metaSupersededBy', 'dt')}<dd>${decisionLinks(decision.supersededBy, byId)}</dd></div>`);
   if (decision.related.length) meta.push(`<div>${i18n('metaRelated', 'dt')}<dd>${decisionLinks(decision.related, byId)}</dd></div>`);
-  const notice = decision.status === 'Superseded'
-    ? `  <p class="arch-notice">${i18n('supersededNotice')} ${decisionLinks(decision.supersededBy, byId)}.</p>`
-    : '';
+  const notice = onward(decision, byId, rewriteLink);
+  const article = decision.stub ? '' : [
+    `  ${i18n('decisionsInEnglish', 'p', ' class="arch-lang-note"')}`,
+    '  <article class="arch-adr" lang="en">',
+    renderMarkdown(decision.body, { file: decision.file, firstLine: decision.bodyStartLine, rewriteLink }),
+    '  </article>',
+  ].join('\n');
   const jsonLd = JSON.stringify({
     '@context': 'https://schema.org',
     '@type': 'TechArticle',
@@ -441,12 +455,8 @@ function renderDecisionPage(template, decision, byId, rewriteLink) {
     id: decision.id,
     title: escapeHtml(decision.title),
     meta: meta.map((line) => `    ${line}`).join('\n'),
-    notice,
-    body: renderMarkdown(decision.body, {
-      file: decision.file,
-      firstLine: decision.bodyStartLine,
-      rewriteLink,
-    }),
+    notice: notice ? `  <p class="arch-notice">${notice}</p>` : '',
+    article,
     sourceUrl: `${SOURCE_BASE}${decision.file}`,
   }), COPY.en, 'copy.js COPY.en');
 }
@@ -549,7 +559,7 @@ export async function renderArchitecture(landingDist, sources) {
     for (const view of views.filter((view) => view.page === page)) html = replaceMarker(html, `view:${view.id}`, renderView(view), pagePath);
     for (const [marker, content] of Object.entries(markers(sources))) html = replaceMarker(html, marker, content, pagePath);
     if (metrics) html = fillMetrics(html, metrics(sources), pagePath);
-    // renderLanguagePages fills its copy, once per language (estate ADR-048).
+    // renderLanguagePages fills its copy, once per language (khe-sites ADR-001).
     await writeFile(pagePath, html);
   }
 

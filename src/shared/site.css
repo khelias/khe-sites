@@ -1091,21 +1091,12 @@ html[lang="et"] .arch-period [lang="en"] {
   background: var(--a-proposed);
 }
 
-.arch-status--superseded,
-.arch-status--deprecated,
-.arch-successor {
+.arch-history {
+  max-width: 40rem;
+  margin: 1.25rem 0 1.5rem;
   color: var(--a-muted);
-}
-
-.arch-status--superseded::before,
-.arch-status--deprecated::before {
-  border: 1px solid var(--a-muted);
-  background: none;
-}
-
-.arch-successor {
-  margin-left: 0.35rem;
   font-size: 0.9rem;
+  font-variant-numeric: tabular-nums;
 }
 
 .arch-inline-list {

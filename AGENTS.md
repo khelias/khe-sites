@@ -15,8 +15,8 @@ rooms menu and theme toggle, the site footer and the design check), pinned
 exactly; run `npm ci` before building.
 
 The look is the KHE family layer
-([estate ADR-035](https://github.com/khelias/khe-architecture/blob/main/decisions/035-family-shell-and-design-check-with-its-exceptions.md),
-which supersedes ADR-021): shared chrome and application shell on one ground
+([estate ADR-035](https://github.com/khelias/khe-architecture/blob/main/decisions/035-family-shell-and-design-check-with-its-exceptions.md)):
+shared chrome and application shell on one ground
 in every room, one accent per room shown in the chrome only in the `.ee` and
 as the room's dot in the rooms list, light and dark following the system
 setting. khe-sites owns the family [`DESIGN.md`](DESIGN.md), the one source
@@ -92,7 +92,7 @@ scripts/
    by khe-trips and served by khe-homelab's landing container.** It shows
    only trips that are over, and only their short title, place and start
    date for trips that do not open
-   ([estate ADR-013](https://github.com/khelias/khe-architecture/blob/main/decisions/013-trips-public-demo.md)).
+   (a decision in khe-trips' own records).
    It is not in the sitemap and `robots.txt` does not disallow it, so a
    crawler reads its `noindex`.
 7. **Shared UI comes from versioned packages, never automerged.** The KHE
@@ -101,7 +101,7 @@ scripts/
    `renderSiteHeader` and `renderSiteFooter`, the theme rules from
    `@khelias/ui/theme`, the CSS from the package, and a fix to any of them
    is made in khe-ui
-   ([estate ADR-017](https://github.com/khelias/khe-architecture/blob/main/decisions/017-shared-theme-toggle-and-footer.md)). A shared package holds presentation
+   ([estate ADR-014](https://github.com/khelias/khe-architecture/blob/main/decisions/014-shared-ui-packages.md) points 6-8). A shared package holds presentation
    only, is pinned, and is merged here by hand: the last rule in
    `renovate.json` turns automerge off for it
    ([estate ADR-014](https://github.com/khelias/khe-architecture/blob/main/decisions/014-shared-ui-packages.md)).
@@ -157,7 +157,7 @@ reaches khe.ee at the next deploy here.
 
 - The khe.ee landing, privacy notice and architecture pages are one static
   page per language
-  ([estate ADR-048](https://github.com/khelias/khe-architecture/blob/main/decisions/048-khe-ee-pages-are-one-static-page-per-language-estonian-at-the-root.md)):
+  ([ADR-001](docs/decisions/001-khe-ee-pages-are-one-static-page-per-language.md)):
   Estonian at the path, English under `/en/` (`localePath` and `PAGE_LINKS` in
   `site-locale.js`). `scripts/language-pages.mjs` lists them in
   `LANGUAGE_PAGES` and, after the architecture build, writes both languages
@@ -217,7 +217,7 @@ reaches khe.ee at the next deploy here.
   script, and lists every page at the sitemap's `<!-- workshop -->`. The room
   has one page per language (`/workshop/...`, `/workshop/en/...`) rather than
   translating in place, under the room's own `/workshop/en/` rather than
-  `/en/workshop/` (estate ADR-048 point 5), with the same redirect script
+  `/en/workshop/` (ADR-001 point 5), with the same redirect script
   from `language-pages.mjs` at the top of `<head>`. Its modules import each other root-relative, so the
   stamper versions the whole module graph and three.js has one URL (check);
   its STL and replay files carry khe-workshop's own `?v=`. The page links
@@ -253,7 +253,7 @@ reaches khe.ee at the next deploy here.
   `--khe-header-menu-*` values are set in `site-header.css`; its dots are the
   package's room accents, which check compares with `DESIGN.md`'s Colors
   table.
-- Theme (estate ADR-017): every page but `/ha/` follows the system setting
+- Theme (estate ADR-014 points 6-7): every page but `/ha/` follows the system setting
   until the visitor presses the header's toggle (`theme` on the marker,
   label `headerTheme`). The choice is stored under `THEME_STORAGE_KEY`
   (`khe-theme`, in `site-locale.js`) per origin, so khe.ee and games.khe.ee
@@ -308,7 +308,11 @@ reaches khe.ee at the next deploy here.
   the counts), then a line to the decisions page.
   `/architecture/decisions/` (server room): `#key-decisions` (from
   `keyDecisions` in the model) and `#decisions`, the register, which check
-  requires there and nowhere else; the ADR pages' breadcrumb links it, and
+  requires there and nowhere else: a table of the decisions in force
+  (Proposed, Accepted), then one line linking every stub (Superseded, Moved,
+  Deprecated), whose page shows its status and the link onward and no
+  article; `repoDecisionDirs` in the model lists the public repos that keep
+  their own decisions; the ADR pages' breadcrumb links it, and
   khe-homelab's landing nginx and edge fallback serve the bare directory
   (no redirect). `/agents/` (home room), no diagram: `#path`, the steps
   a planned change takes, as a timeline with no counts; `#numbers`, the
@@ -319,12 +323,14 @@ reaches khe.ee at the next deploy here.
   with a missing or unknown key or a count that is not whole
   (`parseAgentLoop`), fills each `data-metric` element and writes the bar
   widths inline, scaled to the longest row; check fails on an empty one.
-- All text uses Familjen Grotesk (estate ADR-049; the variable latin and
+- All text uses Familjen Grotesk (`DESIGN.md` "Typography"; the variable latin and
   latin-ext files and their `OFL.txt` in `src/shared/fonts/`), mono labels
   the system mono stack. `scripts/render-architecture.mjs` estimates its
   advance for the diagram word-wrap, so a font change re-measures it.
   Check fails when `site-header.css` or `site.css` loads a font file that is
   not there.
+- This repo's own decisions are in `docs/decisions/`, in the estate ADRs'
+  heading and status pattern.
 - ADRs render through `scripts/markdown.mjs`, which throws with file and line
   on anything outside its subset (tables, fences, quotes, raw HTML, images,
   deeper nesting, relative links other than `NNN-slug.md`). Extend the
@@ -372,7 +378,7 @@ reaches khe.ee at the next deploy here.
   as do khe.ee/stories/ (khe-stories) and khe.ee/trips/ and khe.ee/r/
   (khe-trips) from the khe.ee root, where a change reaches them within the
   30-day browser cache
-  ([estate ADR-045](https://github.com/khelias/khe-architecture/blob/main/decisions/045-khe-ee-pages-from-other-repos-load-the-consent-banner-unstamped.md)),
+  ([estate ADR-019](https://github.com/khelias/khe-architecture/blob/main/decisions/019-consent-banner-from-the-origin-root.md) point 5),
   so renaming or moving it, or changing its `data-analytics-token` and
   `data-analytics-privacy-url` attributes, the `khe.analyticsConsent.v1`
   storage key, `window.kheAnalyticsConsent`, `[data-analytics-preferences]`
@@ -380,12 +386,11 @@ reaches khe.ee at the next deploy here.
   its phone tab bar, breaks them; a breaking change goes to a new path. Its colours are its own
   `--khe-consent-*` values in both themes, which check holds equal to
   `site-header.css`, and it reads no page token, since the games define none.
-- Demos (estate ADR-030,
-  [the frame and the product view](https://github.com/khelias/khe-architecture/blob/main/decisions/030-the-portfolio-frame-and-the-product-view.md)):
+- Demos ([estate ADR-035](https://github.com/khelias/khe-architecture/blob/main/decisions/035-family-shell-and-design-check-with-its-exceptions.md) point 11):
   `demo` on the marker adds the package's demo line under the header, with
   `headerDemo` and `headerDemoNote<Room>` from `SITE_HEADER_COPY`; `/ha/`
   has it and no other page (check). The line's link to the real site
-  ([estate ADR-034](https://github.com/khelias/khe-architecture/blob/main/decisions/034-the-demo-line-links-the-real-site.md))
+  ([khe-ui ADR-006](https://github.com/khelias/khe-ui/blob/main/docs/adr/006-the-demo-line-links-the-real-site.md))
   is `headerDemoLink` with the room's `DEMO_LINKS` entry in
   `scripts/site-header.mjs`, which throws on a demo room without one; check
   holds `/ha/` to its one link. No page here is a product page, so none

@@ -12,7 +12,7 @@ const OG_IMAGES = { et: `${SITE}/og-image-et.png`, en: `${SITE}/og-image.png` };
 const WEBSITE_ID = `${SITE}/#website`;
 const PERSON_ID = `${SITE}/#person`;
 
-// A page per language (estate ADR-048) opens the other one when ?lang or the stored language
+// A page per language (khe-sites ADR-001) opens the other one when ?lang or the stored language
 // differs from its own: a classic script at the top of <head>, so it leaves before the page
 // loads its styles, fonts and modules. The order is createLocaleController's. It goes to the
 // alternate's pathname, so a local preview stays local.

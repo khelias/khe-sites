@@ -113,7 +113,7 @@
 [data-room="games"] { --room: var(--games); --room-text: var(--games); }
 
 /* The family header: opaque paper, one rule, no shadow; the room shows only in the .ee and the
-   rooms list's dots, whose values come from the package (estate ADR-021). */
+   rooms list's dots, whose values come from the package (estate ADR-035 point 4). */
 .site-header {
   --khe-header-font: var(--sans);
   --khe-header-title-weight: 500;
@@ -146,7 +146,7 @@
   --khe-header-menu-shadow: 0 12px 32px rgb(0 0 0 / 0.14);
   --khe-header-menu-current-bg: var(--sunken);
 
-  /* A demo's line under the row (estate ADR-030): neutral, no room accent. */
+  /* A demo's line under the row (estate ADR-035 point 11): neutral, no room accent. */
   --khe-header-demo-bg: var(--sunken);
 }
 

@@ -3,8 +3,8 @@ import { existsSync } from 'node:fs';
 import { readdir, readFile } from 'node:fs/promises';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { AGENT_LOOP_SHAPE, loadSources, parseAgentLoop, runReportingSourceErrors, SITE, SourceError } from './architecture-sources.mjs';
-import { adrLinkRewriter, MarkdownError, renderMarkdown } from './markdown.mjs';
+import { AGENT_LOOP_SHAPE, checkDecisions, loadSources, parseAgentLoop, parseDecision, runReportingSourceErrors, SITE, SourceError } from './architecture-sources.mjs';
+import { adrLinkRewriter, MarkdownError, renderInlineMarkdown, renderMarkdown } from './markdown.mjs';
 import { views } from './architecture-model.mjs';
 import { ARCHITECTURE_PAGES, findingRows, modelMismatches } from './render-architecture.mjs';
 import { WORKSHOP_BASE, workshopRoot } from './workshop-room.mjs';
@@ -85,7 +85,7 @@ function assertDarkPaired(sheet, name) {
   if (unpaired.length) throw new Error(unpaired.map((message) => `${name}: ${message}`).join('\n'));
 }
 
-// Each khe.ee page built once per language (estate ADR-048): its own language, canonical,
+// Each khe.ee page built once per language (khe-sites ADR-001): its own language, canonical,
 // alternates (every one of them built, since the loop reads both), share image and structured
 // data, the redirect where it reads the alternates, and a sitemap that lists exactly the indexed
 // pages with no ?lang anywhere.
@@ -286,7 +286,7 @@ await runReportingSourceErrors(async () => {
     throw new Error(`${consentName}: box-shadow ${consentShadow} is not site-header.css's --khe-header-menu-shadow ${menuShadow}`);
   }
   assertDarkPaired(consentCss, consentName);
-  // The rooms list's dots are @khelias/ui's values (estate ADR-021); each room's light and dark
+  // The rooms list's dots are @khelias/ui's values (estate ADR-035 point 4); each room's light and dark
   // value is its accent in DESIGN.md's Colors table.
   const packageCss = await readFile(fileURLToPath(import.meta.resolve('@khelias/ui/site-header.css')), 'utf8');
   const packageDots = (selector) => tokenBlock(selector, packageCss, "@khelias/ui's site-header.css");
@@ -304,7 +304,7 @@ await runReportingSourceErrors(async () => {
     });
   }
 
-  // A page committed to one theme (estate ADR-021 point 2) has that theme's paper alone, in its
+  // A page committed to one theme (estate ADR-035 point 2) has that theme's paper alone, in its
   // theme-color and in its web app manifest, if it has one.
   const papers = { light: light.paper, dark: forcedDark.paper };
   for (const relativePath of htmlFiles) {
@@ -405,6 +405,47 @@ await runReportingSourceErrors(async () => {
   expectLoopThrow('an inner key removed', (data) => delete data.planReview.dropped, 'planReview lacks dropped');
   expectLoopThrow('a fractional count', (data) => { data.planCheck.acted = 1.5; }, 'planCheck.acted is not a whole count');
   expectLoopThrow('a bad date', (data) => { data.until = '19.11.2026'; }, 'until is not a YYYY-MM-DD date');
+
+  // The decision reader takes a register in force beside its stubs (khe-architecture AGENTS.md
+  // Rule 3): a stub has its header bullets and no sections, and points onward.
+  const decisionFixture = (id, slug, bullets, body = '') => parseDecision(`decisions/${id}-${slug}.md`, `# ADR-${id}: ${slug}\n\n${bullets.join('\n')}\n${body}`);
+  const inForce = decisionFixture('002', 'kept', ['- **Status:** Accepted (2026-11-21)', '- **Supersedes:** [ADR-001](001-old.md)'], '\n## Context\n\nWhy.\n');
+  const superseded = decisionFixture('001', 'old', ['- **Status:** Superseded (2026-11-21)', '- **Superseded by:** [ADR-002](002-kept.md)']);
+  const movedLink = decisionFixture('003', 'away', ['- **Status:** Moved (2026-11-21)', '- **Moved to:** [khe-x `docs/a.md`](https://github.com/khelias/khe-x/blob/main/docs/a.md)']);
+  const movedProse = decisionFixture('004', 'hidden', ['- **Status:** Moved (2026-11-21)', '- **Moved to:** khe-y `docs/decisions/` (private)']);
+  checkDecisions([superseded, inForce, movedLink, movedProse]);
+  if (!inForce.inForce || inForce.stub || superseded.inForce || !superseded.stub || !movedLink.stub || !movedProse.stub) {
+    throw new Error('Decision fixtures: in force and stub read wrong');
+  }
+  if (superseded.supersededBy.join() !== '002' || movedLink.supersedes.length) throw new Error('Decision fixtures: onward links read wrong');
+  const movedHtml = (decision) => renderInlineMarkdown(decision.movedTo, { file: decision.file, line: decision.movedToLine, rewriteLink: adrLinkRewriter(new Set()) });
+  if (movedHtml(movedLink) !== '<a href="https://github.com/khelias/khe-x/blob/main/docs/a.md">khe-x <code>docs/a.md</code></a>') {
+    throw new Error(`Decision fixtures: Moved to link renders as ${movedHtml(movedLink)}`);
+  }
+  if (movedHtml(movedProse) !== 'khe-y <code>docs/decisions/</code> (private)') throw new Error(`Decision fixtures: Moved to prose renders as ${movedHtml(movedProse)}`);
+  const expectDecisionsThrow = (name, decisions, fragment) => {
+    try {
+      checkDecisions(decisions());
+    } catch (error) {
+      if (error instanceof SourceError && error.message.includes(fragment)) return;
+      throw error;
+    }
+    throw new Error(`checkDecisions accepted ${name}`);
+  };
+  expectDecisionsThrow('a Moved stub without Moved to', () => [decisionFixture('005', 'lost', ['- **Status:** Moved (2026-11-21)'])], 'Moved without a "Moved to" home');
+  expectDecisionsThrow('a Superseded stub without Superseded by', () => [decisionFixture('005', 'lost', ['- **Status:** Superseded (2026-11-21)'])], 'Superseded without');
+  expectDecisionsThrow('an Accepted decision with no sections', () => [decisionFixture('005', 'empty', ['- **Status:** Accepted (2026-11-21)'])], 'Accepted with no sections');
+  expectDecisionsThrow('a Moved to on an Accepted decision', () => [decisionFixture('005', 'both', ['- **Status:** Accepted (2026-11-21)', '- **Moved to:** khe-y'], '\n## Context\n')], 'a "Moved to" bullet, but the status is Accepted');
+  expectDecisionsThrow('a stub with a body', () => [decisionFixture('005', 'long', ['- **Status:** Moved (2026-11-21)', '- **Moved to:** khe-y'], '\n## Context\n')], 'so a stub with no body');
+  expectDecisionsThrow('a Deprecated stub with no way onward', () => [decisionFixture('005', 'gone', ['- **Status:** Deprecated (2026-11-21)'])], 'Deprecated without');
+  const deprecated = decisionFixture('005', 'gone', ['- **Status:** Deprecated (2026-11-21)', '- **Moved to:** khe-y']);
+  checkDecisions([deprecated]);
+  try {
+    decisionFixture('005', 'twice', ['- **Status:** Moved (2026-11-21)', '- **Moved to:** khe-x', '- **Moved to:** khe-y']);
+    throw new Error('parseDecision accepted a second Moved to bullet');
+  } catch (error) {
+    if (!(error instanceof SourceError && error.message.includes('a second "Moved to" bullet'))) throw error;
+  }
 
   const sources = await loadSources();
   const knownIds = new Set(sources.decisions.map((decision) => decision.id));
@@ -612,7 +653,7 @@ await runReportingSourceErrors(async () => {
   // carries the hash of the built file. Every page but /ha/ has the theme toggle, the
   // pre-paint theme script in <head> before the first stylesheet, and the footer; /ha/, dark
   // until the house view has a light theme, has none of them. A page committed to one theme on
-  // its <html data-theme> (estate ADR-021 point 2) has the footer but neither toggle nor script.
+  // its <html data-theme> (estate ADR-035 point 2) has the footer but neither toggle nor script.
   for (const site of ['landing', 'games']) {
     const siteDist = join(root, 'dist', site);
     const versions = new Map();
@@ -652,13 +693,13 @@ await runReportingSourceErrors(async () => {
       }
       const room = htmlAttribute(html, 'data-room');
       if (!ROOM_IDS.includes(room)) throw new Error(`dist/${site}/${page} has no data-room on <html> from ${ROOM_IDS.join(', ')}`);
-      // The rooms menu (estate ADR-021): every page but the khe.ee landing, with its own room current.
+      // The rooms menu (estate ADR-035 point 6): every page but the khe.ee landing, with its own room current.
       const roomButtons = [...html.matchAll(/<button class="site-header__rooms"[^>]*\sdata-khe-room="([^"]*)"/g)].map((match) => match[1]);
       const expectedButtons = site === 'landing' && LOCALES.some((locale) => page === pageFile(LANGUAGE_PAGES[0], locale)) ? [] : [room];
       if (JSON.stringify(roomButtons) !== JSON.stringify(expectedButtons)) {
         throw new Error(`dist/${site}/${page} has rooms buttons for ${JSON.stringify(roomButtons)}, expected ${JSON.stringify(expectedButtons)}`);
       }
-      // No page here is a product page (estate ADR-030) since the stories moved to khe-stories
+      // No page here is a product page (estate ADR-035 point 11) since the stories moved to khe-stories
       // (estate ADR-031), so none has the view script or the footer's KHE.ee link.
       if (head.includes('khe-view:') || (html.match(/class="site-footer__home"/g) || []).length) {
         throw new Error(`dist/${site}/${page} has the product view script or the footer KHE.ee link`);
@@ -666,7 +707,7 @@ await runReportingSourceErrors(async () => {
       const demoLines = (html.match(/<p class="site-header__demo"/g) || []).length;
       const expectedDemoLines = site === 'landing' && page === 'ha/index.html' ? 1 : 0;
       if (demoLines !== expectedDemoLines) throw new Error(`dist/${site}/${page} has ${demoLines} demo lines, expected ${expectedDemoLines}`);
-      // The demo's one link to the real site (estate ADR-034).
+      // The demo's one link to the real site (khe-ui ADR-006).
       const demoLinks = [...html.matchAll(/<a class="site-header__demo-link" href="([^"]*)"/g)].map((match) => match[1]);
       const expectedDemoLinks = expectedDemoLines ? ['https://home.khe.ee/'] : [];
       if (JSON.stringify(demoLinks) !== JSON.stringify(expectedDemoLinks)) {

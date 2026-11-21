@@ -171,8 +171,12 @@ export const keyDecisions = [
   { ids: ['023'], key: 'kd023' },
 ];
 
-// Product repos keep their own decisions; the page links the directories.
-export const productDecisionDirs = [
+// The public repos that keep their own decisions; the page links the directories.
+export const repoDecisionDirs = [
   { repo: 'khe-study', url: 'https://github.com/khelias/khe-study/tree/main/docs/adr' },
   { repo: 'khe-ai-adventure', url: 'https://github.com/khelias/khe-ai-adventure/tree/main/docs/decisions' },
+  { repo: 'khe-stories', url: 'https://github.com/khelias/khe-stories/tree/main/docs/decisions' },
+  { repo: 'khe-deals', url: 'https://github.com/khelias/khe-deals/tree/main/docs/decisions' },
+  { repo: 'khe-ui', url: 'https://github.com/khelias/khe-ui/tree/main/docs/adr' },
+  { repo: 'khe-sites', url: 'https://github.com/khelias/khe-sites/tree/main/docs/decisions' },
 ];
