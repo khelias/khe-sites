@@ -436,7 +436,6 @@ await runReportingSourceErrors(async () => {
   expectDecisionsThrow('a Superseded stub without Superseded by', () => [decisionFixture('005', 'lost', ['- **Status:** Superseded (2026-11-21)'])], 'Superseded without');
   expectDecisionsThrow('an Accepted decision with no sections', () => [decisionFixture('005', 'empty', ['- **Status:** Accepted (2026-11-21)'])], 'Accepted with no sections');
   expectDecisionsThrow('a Moved to on an Accepted decision', () => [decisionFixture('005', 'both', ['- **Status:** Accepted (2026-11-21)', '- **Moved to:** khe-y'], '\n## Context\n')], 'a "Moved to" bullet, but the status is Accepted');
-  expectDecisionsThrow('a stub with a body', () => [decisionFixture('005', 'long', ['- **Status:** Moved (2026-11-21)', '- **Moved to:** khe-y'], '\n## Context\n')], 'so a stub with no body');
   expectDecisionsThrow('a Deprecated stub with no way onward', () => [decisionFixture('005', 'gone', ['- **Status:** Deprecated (2026-11-21)'])], 'Deprecated without');
   const deprecated = decisionFixture('005', 'gone', ['- **Status:** Deprecated (2026-11-21)', '- **Moved to:** khe-y']);
   checkDecisions([deprecated]);

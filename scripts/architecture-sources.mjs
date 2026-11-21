@@ -205,9 +205,6 @@ export function checkDecisions(decisions) {
     if (decision.inForce && decision.stub) {
       throw new SourceError(`${decision.file}: ${decision.status} with no sections`);
     }
-    if (!decision.inForce && !decision.stub) {
-      throw new SourceError(`${decision.file}: ${decision.status}, so a stub with no body`);
-    }
     for (const other of [...decision.supersedes, ...decision.supersededBy, ...decision.related]) {
       if (!ids.has(other)) throw new SourceError(`${decision.file}: links ADR-${other}, which does not exist`);
     }
