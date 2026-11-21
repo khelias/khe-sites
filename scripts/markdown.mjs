@@ -247,6 +247,11 @@ export function renderMarkdown(source, { file = 'markdown', firstLine = 1, rewri
     .join('\n');
 }
 
+// One line of inline Markdown, such as a header bullet's value, without the paragraph around it.
+export function renderInlineMarkdown(source, { file = 'markdown', line = 1, rewriteLink = defaultRewriteLink } = {}) {
+  return renderInline(source, { file, rewriteLink, lineAt: () => line });
+}
+
 // ADR cross-links become their page on the site; any other relative link has
 // no published target, so it fails rather than shipping a broken link. A link into a private
 // repo is a 404 for a visitor, so only its text is kept.

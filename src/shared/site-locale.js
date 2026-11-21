@@ -1,7 +1,7 @@
 // The language the visitor chose with the switcher, shared by every page on the origin.
 export const LOCALE_STORAGE_KEY = 'app_locale';
 
-// The visitor's light or dark choice over the system setting (estate ADR-017); the same key on
+// The visitor's light or dark choice over the system setting (estate ADR-014 point 6); the same key on
 // khe.ee and games.khe.ee, which are separate origins and so keep separate choices.
 export const THEME_STORAGE_KEY = 'khe-theme';
 
@@ -44,7 +44,7 @@ export const SITE_FOOTER_COPY = {
 
 export const LOCALES = ['et', 'en'];
 
-// The khe.ee pages with one static page per language (estate ADR-048), by the key their links
+// The khe.ee pages with one static page per language (khe-sites ADR-001), by the key their links
 // carry in data-link: the Estonian path, which localePath turns into the page's language.
 export const PAGE_LINKS = {
   home: '/',
@@ -56,7 +56,7 @@ export const PAGE_LINKS = {
   workshop: '/workshop/',
 };
 
-// A room built by its own repo keeps its own language folders (ADR-048 point 5).
+// A room built by its own repo keeps its own language folders (khe-sites ADR-001 point 5).
 const ROOM_LOCAL_PATHS = ['/workshop/'];
 
 export function localePath(path, locale) {
@@ -196,7 +196,7 @@ export function createLocaleController({
   // Only a press is stored: app_locale is shared with the games on the origin, and an installed
   // game opens in Estonian until a language is chosen. A ?lang shows the page in its language
   // and goes on in the links, since the build writes one into every room link.
-  // A page per language (alternatePages, estate ADR-048) goes to the page in the chosen language,
+  // A page per language (alternatePages, khe-sites ADR-001) goes to the page in the chosen language,
   // named by its <link rel="alternate" hreflang>, instead of translating this one. By pathname, so
   // a local preview stays local.
   document.querySelectorAll('[data-lang-option]').forEach((button) => {

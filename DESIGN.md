@@ -100,8 +100,8 @@ components:
 ## Overview
 
 The KHE sites and apps are one family of rooms
-([estate ADR-035](https://github.com/khelias/khe-architecture/blob/main/decisions/035-family-shell-and-design-check-with-its-exceptions.md),
-which supersedes ADR-021). Every room shares one ground, one ink
+([estate ADR-035](https://github.com/khelias/khe-architecture/blob/main/decisions/035-family-shell-and-design-check-with-its-exceptions.md)).
+Every room shares one ground, one ink
 and one type in its chrome (the header, the mark, the language switcher, the
 page ground and the type of the page chrome) and in the shell of its
 application (surfaces, controls, dialogs, notifications, menus, lists), and
@@ -181,7 +181,7 @@ dark until the 3D house view has a light theme, AI Seiklus is dark by design.
 A room that offers both themes may let the visitor override the system
 setting, and then does it with the shared header's toggle from
 `@khelias/ui`, next to the language switcher: khe.ee, KHE Games and Trips do
-([estate ADR-017](https://github.com/khelias/khe-architecture/blob/main/decisions/017-shared-theme-toggle-and-footer.md)).
+([estate ADR-014](https://github.com/khelias/khe-architecture/blob/main/decisions/014-shared-ui-packages.md) points 6-7).
 The choice is `data-theme` on `<html>`, set before first paint and stored per
 site. Each page carries two `theme-color` metas, `paper` light and dark.
 
@@ -217,7 +217,7 @@ same rooms
 A demo carries a line under the header, part of it: "Demo" in ink and one
 muted sentence on what the demo shows and what stays private, on `sunken`,
 neutral with no room accent
-([estate ADR-030](https://github.com/khelias/khe-architecture/blob/main/decisions/030-the-portfolio-frame-and-the-product-view.md)).
+([estate ADR-035](https://github.com/khelias/khe-architecture/blob/main/decisions/035-family-shell-and-design-check-with-its-exceptions.md) point 11).
 
 ## Application shell and state colour
 
@@ -229,7 +229,7 @@ Play areas, canvases, maps and the house drawing keep their own look, within
 the design check's baseline, which only shrinks. A room whose shell does not
 meet this yet says so in its `AGENTS.md`. The Stories room's content keeps
 its own look, system type, a reading serif, large radii and a material behind
-the player, under the family header and footer ([estate ADR-028](https://github.com/khelias/khe-architecture/blob/main/decisions/028-the-stories-room-keeps-its-own-look.md)); that look
+the player, under the family header and footer ([estate ADR-035](https://github.com/khelias/khe-architecture/blob/main/decisions/035-family-shell-and-design-check-with-its-exceptions.md) point 10); that look
 lives in khe-stories ([estate ADR-031](https://github.com/khelias/khe-architecture/blob/main/decisions/031-stories-public-app-private-stories-audio-outside-git.md)), whose design check skips those files. State colour is meaning, not an
 accent: on and off, ok, warning, fault, a map state, right or wrong. A room
 may use several, each naming a state, at 3:1 for marks and 4.5:1 for text in
@@ -238,10 +238,16 @@ same ones.
 
 ## Typography
 
-One typeface, Familjen Grotesk ([estate ADR-049](https://github.com/khelias/khe-architecture/blob/main/decisions/049-the-familys-type-is-familjen-grotesk.md)),
-for everything in the shell; the system mono stack for facts: dates,
-numbers, times and codes. The stack is `'Familjen Grotesk', system-ui,
-sans-serif` everywhere.
+One typeface, Familjen Grotesk, for everything in the shell; the system
+mono stack for facts: dates, numbers, times and codes. The stack is
+`'Familjen Grotesk', system-ui, sans-serif` everywhere.
+
+Why (2026-11-20): the shells used Source Serif 4 over Inter, the look of the
+AI assistants' own sites, and the first person shown khe.ee read it as made
+with AI. The system font in place of Inter changed nothing visible on Apple
+devices (tried 2026-11-17), and system type with a reading serif suits a
+story, not a shell. Familjen was chosen over Schibsted Grotesk and Hanken
+Grotesk from renders of the landing at desktop and phone width.
 
 - `display` 500, clamp(2.6rem, 6vw, 4rem) / 1.02, -0.02em: the landing name,
   the games hub title
@@ -255,8 +261,11 @@ sans-serif` everywhere.
 - `fact` mono 500 11px, no capitals or tracking: a date, a number, a code
 
 Each app self-hosts the variable files (weight 400 to 700, latin and
-latin-ext) with their OFL text; khe-sites' pages preload the latin one. Play areas keep
-their own type (estate ADR-049 point 4). The Stories room sets its own type ([estate ADR-028](https://github.com/khelias/khe-architecture/blob/main/decisions/028-the-stories-room-keeps-its-own-look.md)):
+latin-ext, from the Fontsource build of Google Fonts' release) with their
+OFL text, and none loads the font from a third-party host; khe-sites' pages
+preload the latin one. Play areas keep their own type (estate ADR-035
+point 1): the adventure game's stage its serif, the trips atlas its system
+serif. The Stories room sets its own type ([estate ADR-035](https://github.com/khelias/khe-architecture/blob/main/decisions/035-family-shell-and-design-check-with-its-exceptions.md) point 10):
 the system font, and `ui-serif` (New York on Apple) for the story, with
 its own serif as the fallback.
 

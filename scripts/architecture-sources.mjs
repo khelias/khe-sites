@@ -129,6 +129,10 @@ function adrIdsIn(text) {
   return [...text.matchAll(/\]\((\d{3})-[^)]*\.md\)/g)].map((match) => match[1]);
 }
 
+// Proposed and Accepted are in force; Superseded, Moved and Deprecated leave a page that points
+// onward (khe-architecture AGENTS.md Rule 3).
+const IN_FORCE = new Set(['Proposed', 'Accepted']);
+
 export function parseDecision(file, text) {
   const lines = text.split('\n');
   const title = lines[0].match(/^# ADR-(\d{3}): (.+)$/);
@@ -139,13 +143,16 @@ export function parseDecision(file, text) {
   }
 
   const meta = { supersedes: [], supersededBy: [], related: [] };
+  const seen = new Set();
   let index = 2;
   for (; index < lines.length && lines[index].startsWith('- **'); index += 1) {
     const bullet = lines[index].match(/^- \*\*([^:]+):\*\* (.+)$/);
     if (!bullet) throw new SourceError(`${file}:${index + 1}: unreadable header bullet`);
     const [, label, value] = bullet;
+    if (seen.has(label)) throw new SourceError(`${file}:${index + 1}: a second "${label}" bullet`);
+    seen.add(label);
     if (label === 'Status') {
-      const status = value.match(/^(Proposed|Accepted|Superseded|Deprecated) \((\d{4}-\d{2}-\d{2})\)$/);
+      const status = value.match(/^(Proposed|Accepted|Superseded|Moved|Deprecated) \((\d{4}-\d{2}-\d{2})\)$/);
       if (!status) throw new SourceError(`${file}:${index + 1}: unreadable status "${value}"`);
       meta.status = status[1];
       meta.date = status[2];
@@ -153,6 +160,9 @@ export function parseDecision(file, text) {
       meta.supersedes = adrIdsIn(value);
     } else if (label === 'Superseded by') {
       meta.supersededBy = adrIdsIn(value);
+    } else if (label === 'Moved to') {
+      meta.movedTo = value;
+      meta.movedToLine = index + 1;
     } else if (label === 'Related') {
       meta.related = adrIdsIn(value);
     } else {
@@ -161,14 +171,45 @@ export function parseDecision(file, text) {
   }
   if (!meta.status) throw new SourceError(`${file}:3: no Status bullet`);
 
+  const body = lines.slice(index).join('\n');
   return {
     id,
     file,
     title: title[2],
     ...meta,
-    body: lines.slice(index).join('\n'),
+    inForce: IN_FORCE.has(meta.status),
+    // A stub is a decision no longer in force here with nothing but its header bullets.
+    stub: body.trim() === '',
+    body,
     bodyStartLine: index + 1,
   };
+}
+
+// What the register as a whole must hold, apart from each file's own shape.
+export function checkDecisions(decisions) {
+  const ids = new Set(decisions.map((decision) => decision.id));
+  if (ids.size !== decisions.length) throw new SourceError('Two decisions share an id');
+  for (const decision of decisions) {
+    if (decision.status === 'Superseded' && decision.supersededBy.length === 0) {
+      throw new SourceError(`${decision.file}: Superseded without a "Superseded by" ADR`);
+    }
+    if (decision.status === 'Moved' && !decision.movedTo) {
+      throw new SourceError(`${decision.file}: Moved without a "Moved to" home`);
+    }
+    if (decision.status === 'Deprecated' && decision.supersededBy.length === 0 && !decision.movedTo) {
+      throw new SourceError(`${decision.file}: Deprecated without a "Superseded by" or "Moved to" bullet`);
+    }
+    if (decision.movedTo && decision.status !== 'Moved' && decision.status !== 'Deprecated') {
+      throw new SourceError(`${decision.file}: a "Moved to" bullet, but the status is ${decision.status}`);
+    }
+    if (decision.inForce && decision.stub) {
+      throw new SourceError(`${decision.file}: ${decision.status} with no sections`);
+    }
+    for (const other of [...decision.supersedes, ...decision.supersededBy, ...decision.related]) {
+      if (!ids.has(other)) throw new SourceError(`${decision.file}: links ADR-${other}, which does not exist`);
+    }
+  }
+  return decisions;
 }
 
 export async function loadDecisions(architectureRoot) {
@@ -187,21 +228,14 @@ export async function loadDecisions(architectureRoot) {
     decisions.push(parseDecision(`decisions/${name}`, text));
   }
 
-  const ids = new Set(decisions.map((decision) => decision.id));
-  for (const decision of decisions) {
-    if (decision.status === 'Superseded' && decision.supersededBy.length === 0) {
-      throw new SourceError(`${decision.file}: Superseded without a "Superseded by" ADR`);
-    }
-    for (const other of [...decision.supersedes, ...decision.supersededBy, ...decision.related]) {
-      if (!ids.has(other)) throw new SourceError(`${decision.file}: links ADR-${other}, which does not exist`);
-    }
-  }
-  return decisions;
+  return checkDecisions(decisions);
 }
 
 // The agent loop's counts, written by the workspace retro into khe-architecture
-// (estate ADR-044). The key set is exact: a renamed or new key fails the build
-// rather than showing an empty or stale number.
+// (estate ADR-044). The key list is in khe-workspace scripts/agent-metrics.sh,
+// beside --json, and khe-architecture scripts/check.sh holds the file to it.
+// The key set is exact: a renamed or new key fails the build rather than
+// showing an empty or stale number.
 const COUNT_KEYS = ['acted', 'dropped', 'notRun', 'pending'];
 export const AGENT_LOOP_SHAPE = {
   since: 'date',

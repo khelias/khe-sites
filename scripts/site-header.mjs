@@ -3,7 +3,7 @@ import { renderSiteFooter } from '@khelias/ui/site-footer';
 import { themeInitScript } from '@khelias/ui/theme';
 import { pageHref, SITE_FOOTER_COPY, SITE_HEADER_COPY, THEME_STORAGE_KEY } from '../src/shared/site-locale.js';
 
-// Where the brand mark leads: the khe.ee front page in the page's language (estate ADR-048), from
+// Where the brand mark leads: the khe.ee front page in the page's language (khe-sites ADR-001), from
 // games.khe.ee by its full address.
 const HOMES = {
   landing: { href: (locale) => pageHref('home', locale), label: 'headerHomeLanding' },
@@ -16,7 +16,7 @@ const PRIVACY_HREFS = {
   games: (locale) => `/privacy?lang=${locale}`,
 };
 
-// Where a demo's family link leads, by room (estate ADR-034): the real site's root, without
+// Where a demo's family link leads, by room (khe-ui ADR-006): the real site's root, without
 // ?lang since Home Assistant has its own language.
 const DEMO_LINKS = {
   house: 'https://home.khe.ee/',
@@ -25,7 +25,7 @@ const DEMO_LINKS = {
 // <!-- site-header home=<HOMES key> [rooms] [theme] [fixed] [demo] -->
 // on a line of its own; the header keeps the marker's indent and renders in the page's
 // <html lang>. rooms shows the rooms menu with the page's <html data-room> current (estate
-// ADR-021); every page but the landing has it. demo adds the demo line.
+// ADR-035 point 6); every page but the landing has it. demo adds the demo line.
 const MARKER = /^([ \t]*)<!-- site-header ([^>]*?) -->$/gm;
 const OPTIONS = ['home', 'rooms', 'theme', 'fixed', 'demo'];
 // <!-- site-theme --> in <head>, before the first stylesheet: the stored theme before first paint.
