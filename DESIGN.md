@@ -149,7 +149,7 @@ the four it uses in both themes, so it renders on the game pages too:
 |---|---|---|---|
 | paper | #fafafa | #0b0d0d | page ground, header ground (opaque) |
 | surface | #ffffff | #121615 | switcher track, inputs |
-| sunken | #eff1f1 | #171c1b | picture wells, dark thumbnails, pressed row |
+| sunken | #eff1f1 | #171c1b | picture wells, pressed row |
 | ink | #121415 | #eef1f0 | names, titles, the KHE of the mark, the landing's lead |
 | ink-2 | #363b3d | #c4cac7 | running text |
 | muted | #5f6567 | #8a928f | labels, inactive language, on paper only |
@@ -280,15 +280,15 @@ at 520px and below). No page scrolls sideways at 320px.
 
 - 4px: the focus ring's corner
 - 8px: the mark, controls and anything pressable
-- 12px: pictures (the landing and games thumbnails; light ones sit on a 12% tint of their room)
+- 12px: pictures
 - 999px: the language switcher, the consent pill and their buttons
 
 ## Elevation & Depth
 
 Flat. The header is opaque `paper` over one `rule`, with no blur and no
-shadow, so its contrast never depends on what scrolls under it. Sections are
-separated by space and a `rule` or `rule-strong` hairline; the landing's
-project rows by space alone. Nothing is a card.
+shadow, so its contrast never depends on what scrolls under it. Sections and
+project rows are separated by space and a `rule` or `rule-strong` hairline.
+Nothing is a card.
 The exceptions float over the page on `surface` with a `rule-strong` edge
 and a soft shadow: the rooms list, and the consent banner, a pill at the
 bottom centre with its question and two equal buttons.
