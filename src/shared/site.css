@@ -440,13 +440,16 @@ a { color: var(--ink-2); }
 
 .site-footer {
   --khe-footer-font: var(--sans);
+  --khe-footer-border: var(--rule);
   --khe-footer-text: var(--muted);
   --khe-footer-text-hover: var(--ink);
   --khe-footer-focus: var(--room-text);
 }
 
 .landing-home .site-footer {
-  padding: 0 max(16px, env(safe-area-inset-right)) 2.5rem max(16px, env(safe-area-inset-left));
+  width: min(calc(1080px - 2rem), 100% - 2 * max(16px, env(safe-area-inset-left)));
+  margin-inline: auto;
+  padding: 1.25rem 0 2.5rem;
 }
 
 /* Games launcher */
@@ -527,9 +530,13 @@ a { color: var(--ink-2); }
   fill: currentColor;
 }
 
+.games-home main {
+  margin-bottom: clamp(2rem, 5vh, 3rem);
+}
+
 .games-home .site-footer {
   margin-top: auto;
-  padding-top: clamp(2.6rem, 7vh, 4rem);
+  padding-top: 1.25rem;
   padding-bottom: calc(5.5rem + env(safe-area-inset-bottom));
 }
 
@@ -589,7 +596,13 @@ body.architecture-page {
 }
 
 .architecture-page .site-footer {
-  padding: 0 1.5rem 3rem;
+  width: min(calc(1240px - 2rem), 100% - 2 * max(1rem, env(safe-area-inset-left)));
+  margin-inline: auto;
+  padding: 1.25rem 0 3rem;
+}
+
+.architecture-decision .site-footer {
+  width: min(calc(1080px - 2rem), 100% - 2 * max(1rem, env(safe-area-inset-left)));
 }
 
 /* The diagrams need the wider column, so the header widens with it and both edges line up. */
@@ -2061,7 +2074,8 @@ body.privacy-page {
 }
 
 .privacy-page .site-footer {
-  padding-top: 0;
+  width: min(calc(44rem - 2rem), 100% - 2 * max(16px, env(safe-area-inset-left)));
+  padding: 1.25rem 0 3rem;
 }
 
 .privacy-page h1 {

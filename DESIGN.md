@@ -89,9 +89,7 @@ spacing:
   gutter: max(16px, env(safe-area-inset-*))
 components:
   mark:
-    backgroundColor: "{colors.paper}"
     textColor: "{colors.ink}"
-    rounded: "{rounded.control}"
   language-switcher:
     backgroundColor: "{colors.surface}"
     rounded: "{rounded.full}"
@@ -393,11 +391,12 @@ focus colour is the same property.
 
 ## The mark
 
-`KHE` in Familjen Grotesk 600, ink, with `.ee` at 0.7em in `--room-text`, in a
-`rule-strong` box with an 8px corner on `paper`, no shadow. The favicon is the
-same mark with the Home `.ee`. In the header the mark, rooms button, title and
-buttons keep `@khelias/ui`'s sizes; the family `context`, `control` and
-`label` sizes apply to page content until a khe-ui release exposes them.
+`KHE` in Familjen Grotesk 600, ink, with `.ee` on the baseline in
+`--room-text`, borderless and aligned flush with the content column. The
+favicon keeps the same mark with the Home `.ee`. In the header the mark,
+rooms button, title, rotating contrast-disc theme toggle and `0.75rem`
+language buttons keep `@khelias/ui`'s sizes; the family `context`, `control`
+and `label` sizes apply to page content until a khe-ui release exposes them.
 
 ## Header values in the apps
 
@@ -407,17 +406,18 @@ where they would not reach the header:
 
 - `bg` paper, `blur` 0px, `border` rule, `text` ink, `text-muted` muted
 - `font` the family stack (`title-font` follows it), `title-weight` 500,
-  `focus` the room's text accent
-- `brand-border` rule-strong, `brand-bg` paper, `brand-shadow` none,
-  `suffix` the room's text accent
-- `switcher-radius` and `button-radius` 999px, `switcher-border` rule,
-  `switcher-bg` surface, the pressed button ink on paper with a rule-strong
-  edge
-- `menu-bg` surface, `menu-border` rule-strong, `menu-current-bg` sunken,
-  `menu-shadow` a soft `0 12px 32px` black at 14%: the rooms list floats
-  over the page, the one shadow in the chrome
+  `focus` the room's text accent, `suffix` the room's text accent
+- `switcher-radius` and `button-radius` 999px, `switcher-border`
+  rule-strong, `switcher-bg` surface, the pressed button paper on ink with
+  an ink edge; the theme toggle uses the switcher's surface and border and
+  stays in ink on hover
+- `menu-radius` 10px, `menu-bg` surface, `menu-border` rule-strong,
+  `menu-current-bg` sunken, `menu-shadow` a soft `0 12px 32px` black at
+  14%: the rooms list floats over the page, the one shadow in the chrome
 - the seven `room-<id>` dots are the package's, the room accents in both
   themes; an app sets them only to differ, which it should not
+- footer: `--khe-footer-border` rule over a split row (links start, lines
+  end; stacked start on phone)
 
 ## Do's and Don'ts
 
