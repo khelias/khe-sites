@@ -139,58 +139,21 @@ a { color: var(--ink-2); }
   border-top: 1px solid var(--rule-strong);
 }
 
-/* The row's thumbnail column and gap; a game's source link lines up with its copy. */
 :root {
-  --row-thumb: 9rem;
   --row-gap: clamp(1rem, 3vw, 2rem);
   --row-arrow: 2rem;
 }
 
 .project-row {
   display: grid;
-  grid-template-columns: var(--row-thumb) minmax(0, 1fr);
-  gap: var(--row-gap);
-  align-items: center;
-  padding: 1.25rem 0;
+  grid-template-columns: minmax(11rem, 15rem) minmax(0, 1fr);
+  gap: 0.35rem var(--row-gap);
+  align-items: baseline;
+  padding: 1.15rem 0;
+  border-bottom: 1px solid var(--rule);
   color: var(--ink);
   text-decoration: none;
   transition: transform 0.1s ease-out;
-}
-
-.project-thumb {
-  display: block;
-  aspect-ratio: 4 / 3;
-  overflow: hidden;
-  border-radius: 12px;
-  background: var(--thumb-ground);
-  /* On light paper a sunken well reads as grey, so there a thumbnail sits on a 12% tint of
-     its room with darker lines; dark keeps the sunken well. */
-  --thumb-ground: color-mix(in srgb, var(--room) 12%, var(--surface));
-  --thumb-line: color-mix(in srgb, var(--ink) 45%, transparent);
-  --thumb-ink: var(--ink);
-  --thumb-stroke: 2.5;
-}
-
-@media (prefers-color-scheme: dark) {
-  :root:not([data-theme="light"]) .project-thumb {
-    --thumb-ground: var(--sunken);
-    --thumb-line: var(--rule-strong);
-    --thumb-ink: var(--ink-2);
-    --thumb-stroke: 2;
-  }
-}
-
-:root[data-theme="dark"] .project-thumb {
-  --thumb-ground: var(--sunken);
-  --thumb-line: var(--rule-strong);
-  --thumb-ink: var(--ink-2);
-  --thumb-stroke: 2;
-}
-
-.project-thumb svg {
-  display: block;
-  width: 100%;
-  height: 100%;
 }
 
 .project-copy {
@@ -201,13 +164,13 @@ a { color: var(--ink-2); }
 
 .project-title {
   color: var(--ink);
-  font-size: 1.375rem;
+  font-size: 1.25rem;
   font-weight: 500;
-  line-height: 1.2;
+  line-height: 1.25;
 }
 
 .project-desc {
-  max-width: 34rem;
+  max-width: 36rem;
   color: var(--ink-2);
   font-size: 0.9375rem;
   line-height: 1.55;
@@ -230,18 +193,6 @@ a { color: var(--ink-2); }
 .project-row:active {
   transform: scale(0.99);
 }
-
-/* Thumbnail drawings: token classes, so they follow the theme. */
-.t-ground { fill: var(--thumb-ground); }
-.t-paper { fill: var(--paper); }
-.t-house-ground { fill: var(--house-ground); }
-.t-line { fill: none; stroke: var(--thumb-line); stroke-width: var(--thumb-stroke); stroke-linecap: round; stroke-linejoin: round; }
-.t-ink { fill: none; stroke: var(--thumb-ink); stroke-width: var(--thumb-stroke); stroke-linecap: round; stroke-linejoin: round; }
-.t-room { fill: var(--room); }
-.t-room-line { fill: none; stroke: var(--room); stroke-width: calc(var(--thumb-stroke) + 0.5); stroke-linecap: round; stroke-linejoin: round; }
-.t-dash { stroke-dasharray: 4 5; }
-.t-adventure { fill: var(--adventure); }
-.t-study { fill: var(--study); }
 
 .site-footer {
   --khe-footer-font: var(--sans);
@@ -290,7 +241,9 @@ body.games-home {
 }
 
 .game-item .project-row {
-  grid-template-columns: var(--row-thumb) minmax(0, 1fr) var(--row-arrow);
+  grid-template-columns: minmax(0, 1fr) var(--row-arrow);
+  align-items: center;
+  border-bottom: 0;
   padding-bottom: 0.6rem;
 }
 
@@ -299,7 +252,6 @@ body.games-home {
 
 .game-source-link {
   width: max-content;
-  margin-left: calc(var(--row-thumb) + var(--row-gap));
   display: inline-flex;
   align-items: center;
   gap: 0.42rem;
@@ -1635,9 +1587,12 @@ body.privacy-page {
 
 @media (max-width: 760px) {
   :root {
-    --row-thumb: 96px;
     --row-gap: 1rem;
     --row-arrow: 1.5rem;
+  }
+
+  .landing-projects .project-row {
+    grid-template-columns: minmax(0, 1fr);
   }
 
   .project-title {
