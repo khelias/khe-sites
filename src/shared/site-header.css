@@ -143,22 +143,19 @@
   --khe-header-text-muted: var(--muted);
   --khe-header-focus: var(--room-text);
 
-  --khe-header-brand-radius: 8px;
-  --khe-header-brand-border: var(--rule-strong);
-  --khe-header-brand-border-hover: var(--muted);
-  --khe-header-brand-bg: var(--paper);
-  --khe-header-brand-shadow: none;
+  --khe-header-brand-radius: 6px;
   --khe-header-suffix: var(--room-text);
 
   --khe-header-switcher-radius: 999px;
-  --khe-header-switcher-border: var(--rule);
+  --khe-header-switcher-border: var(--rule-strong);
   --khe-header-switcher-bg: var(--surface);
   --khe-header-button-radius: 999px;
-  --khe-header-button-pressed-text: var(--ink);
-  --khe-header-button-pressed-bg: var(--paper);
-  --khe-header-button-pressed-border: var(--rule-strong);
+  --khe-header-button-pressed-text: var(--paper);
+  --khe-header-button-pressed-bg: var(--ink);
+  --khe-header-button-pressed-border: var(--ink);
 
   /* The rooms list floats over the page, so it alone has a soft shadow. */
+  --khe-header-menu-radius: 10px;
   --khe-header-menu-bg: var(--surface);
   --khe-header-menu-border: var(--rule-strong);
   --khe-header-menu-shadow: 0 12px 32px rgb(0 0 0 / 0.14);
