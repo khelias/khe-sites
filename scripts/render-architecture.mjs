@@ -465,8 +465,12 @@ function renderDecisionPage(template, decision, decisions, byId, rewriteLink) {
     `<div>${i18n('metaDate', 'dt')}<dd><time datetime="${decision.date}">${decision.date}</time></dd></div>`,
   ];
   const notice = onward(decision, byId, rewriteLink);
-  const body = decision.stub ? '' : renderMarkdown(decision.body, { file: decision.file, firstLine: decision.bodyStartLine, rewriteLink });
-  const sections = [...body.matchAll(/<h2 id="([^"]+)">([\s\S]*?)<\/h2>/g)].map(([, id, text]) => `<li><a href="#${id}" lang="en">${text.replace(/<[^>]+>/g, '')}</a></li>`);
+  // A rail entry is itself a link, so a link in the heading keeps only its text.
+  const sections = [];
+  const onHeading = ({ level, id, text }) => {
+    if (level === 2) sections.push(`<li><a href="#${id}" lang="en">${renderInlineMarkdown(text, { file: decision.file, rewriteLink: () => null })}</a></li>`);
+  };
+  const body = decision.stub ? '' : renderMarkdown(decision.body, { file: decision.file, firstLine: decision.bodyStartLine, rewriteLink, onHeading });
   const rail = [
     sections.length ? railSection('railOnPage', `<ul>${sections.join('')}</ul>`) : '',
     decision.supersedes.length ? railSection('metaSupersedes', railLinks(decision.supersedes, byId)) : '',

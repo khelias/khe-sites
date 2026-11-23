@@ -17,16 +17,16 @@ colors:
   obsidian-ink: "#f3f3ee"
   obsidian-muted: "#9da3a8"
   obsidian-rule: "#2c3136"
-  home: "#d7263d"
-  server: "#246b5f"
-  trips: "#b75a3a"
+  home: "#d12839"
+  server: "#1f685c"
+  trips: "#b55231"
   trips-text: "#93411f"
-  stories: "#a3336f"
-  workshop: "#5d6b16"
-  house: "#1f5fa8"
+  stories: "#9e2f69"
+  workshop: "#586914"
+  house: "#1d5ca3"
   house-ground: "#e4eaee"
-  games: "#8a5a12"
-  adventure: "#6a3d8f"
+  games: "#8a5b12"
+  adventure: "#9a6420"
   study: "#2f6b3a"
   primary: "#111315"
 typography:
@@ -149,7 +149,8 @@ headers. `study` is proposed; khe-study has no single accent yet.
 
 `data-room` on `<html>` maps the room to two properties: `--room` for fills
 and dots, `--room-text` for text, the `.ee` and the focus ring. Trips is the
-one room whose two differ, because `trips` is 4.3:1 on light `paper`.
+one room whose two differ: `trips` passes AA as text only just (4.6:1 on
+light `paper`), so its text keeps the darker `trips-text`.
 
 ## Colors
 
@@ -175,16 +176,16 @@ the four it uses in both themes, so it renders on the game pages too. The
 | obsidian-ink | #f3f3ee | #f3f3ee | titles in the band |
 | obsidian-muted | #9da3a8 | #9da3a8 | kickers and running text in the band |
 | obsidian-rule | #2c3136 | #2a3036 | the band's edges and picture frames in dark |
-| home | #d7263d | #fb4b57 | Home accent and text |
-| server | #246b5f | #7fc8b8 | Server accent and text |
-| trips | #b75a3a | #d9764f | Trips fills and marks |
+| home | #d12839 | #f65d65 | Home accent and text |
+| server | #1f685c | #7ccbb9 | Server accent and text |
+| trips | #b55231 | #ea946d | Trips fills and marks |
 | trips-text | #93411f | #e8926a | Trips text, its `.ee` |
-| stories | #a3336f | #f08cc0 | Stories accent and text |
-| workshop | #5d6b16 | #b8c75a | Workshop accent and text |
-| house | #1f5fa8 | #6fe3ff | House accent and text |
+| stories | #9e2f69 | #f292c3 | Stories accent and text |
+| workshop | #586914 | #bdd05e | Workshop accent and text |
+| house | #1d5ca3 | #70c3ff | House accent and text |
 | house-ground | #e4eaee | #070d1d | the house drawing's ground only |
-| games | #8a5a12 | #d9a441 | Games hub accent and text |
-| adventure | #6a3d8f | #b59ad6 | AI Seiklus (dark only in the game) |
+| games | #8a5b12 | #e2b253 | Games hub accent and text |
+| adventure | #9a6420 | #e5ad5e | AI Seiklus (dark only in the game) |
 | study | #2f6b3a | #7cc28a | Tarkade Mängud |
 
 `primary` in the frontmatter is `ink`: the family's one filled button is ink
@@ -199,8 +200,10 @@ adjusting. Page text never sits on the band: the band sets its own text tokens.
 `trips-text` was measured again against the new ground and kept (6.4:1 light,
 8.1:1 dark); `house-ground` keeps its old offset from `paper` per channel,
 which moved it to `#e4eaee` and `#070d1d`. `muted` on light `sunken` is 4.47:1, under AA, so
-`sunken` carries controls and plate fills, not muted text. The room accents
-stay as they are until the `@khelias/ui` release with the Nordic accents.
+`sunken` carries controls and plate fills, not muted text. Every room accent
+passes as text on `paper` and `surface` in both themes (`trips` and
+`adventure` 4.6:1 light at worst); the rooms menu's dots carry the same values
+from `@khelias/ui`.
 
 ## Themes
 

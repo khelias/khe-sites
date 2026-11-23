@@ -227,7 +227,7 @@ function defaultRewriteLink(href, context) {
   throw new MarkdownError(`${context.file}:${context.line}: relative link "${href}" has no published target`);
 }
 
-export function renderMarkdown(source, { file = 'markdown', firstLine = 1, rewriteLink = defaultRewriteLink } = {}) {
+export function renderMarkdown(source, { file = 'markdown', firstLine = 1, rewriteLink = defaultRewriteLink, onHeading } = {}) {
   const context = { file, rewriteLink };
   const ids = new Map();
   return parseBlocks(source, file, firstLine)
@@ -237,7 +237,9 @@ export function renderMarkdown(source, { file = 'markdown', firstLine = 1, rewri
         const seen = ids.get(id) || 0;
         ids.set(id, seen + 1);
         if (seen) id = `${id}-${seen + 1}`;
-        return `<h${block.level} id="${id}">${renderLines({ text: [block.text], lines: block.lines }, context)}</h${block.level}>`;
+        const html = `<h${block.level} id="${id}">${renderLines({ text: [block.text], lines: block.lines }, context)}</h${block.level}>`;
+        onHeading?.({ level: block.level, id, text: block.text });
+        return html;
       }
       if (block.type === 'paragraph') {
         return `<p>${renderLines(block, context)}</p>`;
