@@ -38,16 +38,16 @@
   --obsidian-ink: #f3f3ee;
   --obsidian-muted: #9da3a8;
   --obsidian-rule: #2c3136;
-  --home: #d7263d;
-  --server: #246b5f;
-  --trips: #b75a3a;
+  --home: #d12839;
+  --server: #1f685c;
+  --trips: #b55231;
   --trips-text: #93411f;
-  --stories: #a3336f;
-  --workshop: #5d6b16;
-  --house: #1f5fa8;
+  --stories: #9e2f69;
+  --workshop: #586914;
+  --house: #1d5ca3;
   --house-ground: #e4eaee;
-  --games: #8a5a12;
-  --adventure: #6a3d8f;
+  --games: #8a5b12;
+  --adventure: #9a6420;
   --study: #2f6b3a;
 
   --sans: 'Familjen Grotesk', system-ui, sans-serif;
@@ -73,16 +73,16 @@
     --obsidian-ink: #f3f3ee;
     --obsidian-muted: #9da3a8;
     --obsidian-rule: #2a3036;
-    --home: #fb4b57;
-    --server: #7fc8b8;
-    --trips: #d9764f;
+    --home: #f65d65;
+    --server: #7ccbb9;
+    --trips: #ea946d;
     --trips-text: #e8926a;
-    --stories: #f08cc0;
-    --workshop: #b8c75a;
-    --house: #6fe3ff;
+    --stories: #f292c3;
+    --workshop: #bdd05e;
+    --house: #70c3ff;
     --house-ground: #070d1d;
-    --games: #d9a441;
-    --adventure: #b59ad6;
+    --games: #e2b253;
+    --adventure: #e5ad5e;
     --study: #7cc28a;
   }
 }
@@ -102,16 +102,16 @@
   --obsidian-ink: #f3f3ee;
   --obsidian-muted: #9da3a8;
   --obsidian-rule: #2a3036;
-  --home: #fb4b57;
-  --server: #7fc8b8;
-  --trips: #d9764f;
+  --home: #f65d65;
+  --server: #7ccbb9;
+  --trips: #ea946d;
   --trips-text: #e8926a;
-  --stories: #f08cc0;
-  --workshop: #b8c75a;
-  --house: #6fe3ff;
+  --stories: #f292c3;
+  --workshop: #bdd05e;
+  --house: #70c3ff;
   --house-ground: #070d1d;
-  --games: #d9a441;
-  --adventure: #b59ad6;
+  --games: #e2b253;
+  --adventure: #e5ad5e;
   --study: #7cc28a;
   color-scheme: dark;
 }
