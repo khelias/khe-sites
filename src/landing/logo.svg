@@ -1,12 +1,12 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" width="256" height="256">
   <style>
-    .box { fill: #fafafa; stroke: #c3c7c7; }
-    .ink { fill: #121415; }
-    .ee { fill: #d7263d; }
+    .box { fill: #f6f6f2; stroke: #c6c6bd; }
+    .ink { fill: #111315; }
+    .ee { fill: #d12839; }
     @media (prefers-color-scheme: dark) {
-      .box { fill: #0b0d0d; stroke: #3a413f; }
-      .ink { fill: #eef1f0; }
-      .ee { fill: #fb4b57; }
+      .box { fill: #0c0e0f; stroke: #3d4448; }
+      .ink { fill: #f1f2ee; }
+      .ee { fill: #f65d65; }
     }
   </style>
   <rect class="box" x="6" y="6" width="244" height="244" rx="46" stroke-width="8"/>
