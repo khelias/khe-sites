@@ -17,7 +17,9 @@ function agentValues(loop) {
   const values = {
     period: period(loop.since, loop.until, 'tspan'),
     plans: String(loop.plans),
+    plansLabel: loop.plans === 1 ? 'platePlansOne' : 'platePlans',
     reverted: String(loop.revertedPlans),
+    revertedLabel: loop.revertedPlans === 1 ? 'plateRevertedOne' : 'plateReverted',
     median: loop.planToPush.count ? duration(loop.planToPush.medianMinutes) : '–',
     track: String(TRACK),
   };

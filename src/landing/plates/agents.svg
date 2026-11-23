@@ -5,9 +5,9 @@
   <line x1="32" y1="60" x2="608" y2="60" class="plate-rule"/>
 
   <text x="32" y="122" class="plate-ink plate-figure">{{plans}}</text>
-  <text x="32" y="146" class="plate-muted plate-t13" data-i18n="platePlans"></text>
+  <text x="32" y="146" class="plate-muted plate-t13" data-i18n="{{plansLabel}}"></text>
   <text x="200" y="122" class="plate-ink plate-figure">{{reverted}}</text>
-  <text x="200" y="146" class="plate-muted plate-t13" data-i18n="plateReverted"></text>
+  <text x="200" y="146" class="plate-muted plate-t13" data-i18n="{{revertedLabel}}"></text>
   <text x="384" y="122" class="plate-ink plate-figure">{{median}}</text>
   <text x="384" y="146" class="plate-muted plate-t13" data-i18n="plateMedian"></text>
 

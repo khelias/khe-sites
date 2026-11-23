@@ -450,14 +450,10 @@ a { color: var(--ink-2); }
 }
 
 /* Games launcher */
-body.games-home {
-  padding-bottom: 2rem;
-}
-
 .games-home .container {
   max-width: 1080px;
-  min-height: calc(100vh - 3.5rem - 2rem);
-  min-height: calc(100svh - 3.5rem - 2rem);
+  min-height: calc(100vh - 3.5rem);
+  min-height: calc(100svh - 3.5rem);
   display: flex;
   flex-direction: column;
   margin: 0 auto;
@@ -534,6 +530,7 @@ body.games-home {
 .games-home .site-footer {
   margin-top: auto;
   padding-top: clamp(2.6rem, 7vh, 4rem);
+  padding-bottom: calc(5.5rem + env(safe-area-inset-bottom));
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -1513,7 +1510,14 @@ html:not([lang="et"]) .arch-lang-note {
   margin-top: 2.5rem;
 }
 
+.arch-decision__main {
+  grid-column: 2;
+  grid-row: 1;
+}
+
 .arch-rail {
+  grid-column: 1;
+  grid-row: 1;
   position: sticky;
   top: 5.5rem;
   display: grid;
@@ -1945,11 +1949,17 @@ html:not([lang="et"]) .arch-lang-note {
     grid-template-columns: minmax(0, 1fr);
   }
 
+  .arch-decision__main,
+  .arch-rail {
+    grid-column: auto;
+    grid-row: auto;
+  }
+
   .arch-rail {
     position: static;
     grid-template-columns: repeat(auto-fit, minmax(min(12rem, 100%), 1fr));
-    padding-bottom: 1.5rem;
-    border-bottom: 1px solid var(--a-rule);
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--a-rule);
   }
 }
 
