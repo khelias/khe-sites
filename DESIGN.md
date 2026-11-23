@@ -3,14 +3,20 @@ version: alpha
 name: KHE family
 description: One family across the KHE sites and apps; shared chrome on one ground, one accent per room.
 colors:
-  paper: "#fafafa"
+  paper: "#f6f6f2"
   surface: "#ffffff"
-  sunken: "#eff1f1"
-  ink: "#121415"
-  ink-2: "#363b3d"
-  muted: "#5f6567"
-  rule: "#e3e5e5"
-  rule-strong: "#c3c7c7"
+  sunken: "#eaeae4"
+  ink: "#111315"
+  ink-2: "#3b3f42"
+  muted: "#666b6e"
+  rule: "#e2e2db"
+  rule-strong: "#c6c6bd"
+  code-bg: "#e9e9e1"
+  obsidian: "#121416"
+  obsidian-2: "#1c1f23"
+  obsidian-ink: "#f3f3ee"
+  obsidian-muted: "#9da3a8"
+  obsidian-rule: "#2c3136"
   home: "#d7263d"
   server: "#246b5f"
   trips: "#b75a3a"
@@ -18,18 +24,18 @@ colors:
   stories: "#a3336f"
   workshop: "#5d6b16"
   house: "#1f5fa8"
-  house-ground: "#e8eef6"
+  house-ground: "#e4eaee"
   games: "#8a5a12"
   adventure: "#6a3d8f"
   study: "#2f6b3a"
-  primary: "#121415"
+  primary: "#111315"
 typography:
   display:
     fontFamily: Familjen Grotesk
-    fontSize: clamp(2.6rem, 6vw, 4rem)
+    fontSize: clamp(2.75rem, 7vw, 5rem)
     fontWeight: 500
-    lineHeight: 1.02
-    letterSpacing: -0.02em
+    lineHeight: 0.98
+    letterSpacing: -0.03em
   title:
     fontFamily: Familjen Grotesk
     fontSize: 34px
@@ -106,9 +112,15 @@ and one type in its chrome (the header, the mark, the language switcher, the
 page ground and the type of the page chrome) and in the shell of its
 application (surfaces, controls, dialogs, notifications, menus, lists), and
 has one accent of its own, which the chrome shows in the `.ee` of the mark
-and as the room's dot in the rooms list. Play areas, canvases, maps and the
-house drawing keep their own look. The ground and ink are the architecture
-page's editorial pair, promoted to the family.
+and as the room's dot in the rooms list. The family covers the shared chrome
+and the khe.ee pages themselves: the landing, `/architecture/`, its decisions
+page and the ADR pages, `/agents/`, `/workshop/`, the games hub, the privacy
+and 404 pages and the `/ha/` demo frame. The content of the product rooms keeps
+its own look: Unejänku (khe-stories), the Home Assistant dashboard, Tarkade
+Mängud (khe-study) and AI Seiklus (khe-ai-adventure)
+([estate ADR-035](https://github.com/khelias/khe-architecture/blob/main/decisions/035-family-shell-and-design-check-with-its-exceptions.md)
+points 1, 10 and 13). The ground, ink and obsidian are the "Nordic contrast"
+values chosen on 2026-11-23: a pale stone ground with dark showcase bands.
 
 This file is the one source of the family values. Other repos keep only their
 own room in their design docs and cite this one. The tokens live in
@@ -137,24 +149,32 @@ headers. `study` is proposed; khe-study has no single accent yet.
 
 `data-room` on `<html>` maps the room to two properties: `--room` for fills
 and dots, `--room-text` for text, the `.ee` and the focus ring. Trips is the
-one room whose two differ, because `trips` is 4.2:1 on light `paper`.
+one room whose two differ, because `trips` is 4.3:1 on light `paper`.
 
 ## Colors
 
 The frontmatter holds the light theme. Dark values live only in the CSS, and
 the consent banner (`src/shared/analytics-consent.js`) carries its own copy of
-the four it uses in both themes, so it renders on the game pages too:
+the four it uses in both themes, so it renders on the game pages too. The
+`obsidian` tokens are the showcase band's: dark in both themes, so
+`obsidian-ink` and `obsidian-muted` keep one value.
 
 | Token | Light | Dark | Use |
 |---|---|---|---|
-| paper | #fafafa | #0b0d0d | page ground, header ground (opaque) |
-| surface | #ffffff | #121615 | switcher track, inputs |
-| sunken | #eff1f1 | #171c1b | picture wells, pressed row |
-| ink | #121415 | #eef1f0 | names, titles, the KHE of the mark, the landing's lead |
-| ink-2 | #363b3d | #c4cac7 | running text |
-| muted | #5f6567 | #8a928f | labels, inactive language, on paper only |
-| rule | #e3e5e5 | #232827 | hairlines |
-| rule-strong | #c3c7c7 | #3a413f | the mark's box, section rules |
+| paper | #f6f6f2 | #0c0e0f | page ground, header ground (opaque) |
+| surface | #ffffff | #15181a | switcher track, inputs, a card's picture well |
+| sunken | #eaeae4 | #1d2124 | pressed row, filter buttons, plate bands |
+| ink | #111315 | #f1f2ee | names, titles, the KHE of the mark, the landing's lead |
+| ink-2 | #3b3f42 | #c5c9c6 | running text |
+| muted | #666b6e | #8b928f | labels, inactive language, on paper and surface |
+| rule | #e2e2db | #252a2d | hairlines |
+| rule-strong | #c6c6bd | #3d4448 | the mark's box, section rules |
+| code-bg | #e9e9e1 | #202528 | inline code |
+| obsidian | #121416 | #14171a | the showcase band's ground |
+| obsidian-2 | #1c1f23 | #1d2226 | a picture well inside the band |
+| obsidian-ink | #f3f3ee | #f3f3ee | titles in the band |
+| obsidian-muted | #9da3a8 | #9da3a8 | kickers and running text in the band |
+| obsidian-rule | #2c3136 | #2a3036 | the band's edges and picture frames in dark |
 | home | #d7263d | #fb4b57 | Home accent and text |
 | server | #246b5f | #7fc8b8 | Server accent and text |
 | trips | #b75a3a | #d9764f | Trips fills and marks |
@@ -162,13 +182,25 @@ the four it uses in both themes, so it renders on the game pages too:
 | stories | #a3336f | #f08cc0 | Stories accent and text |
 | workshop | #5d6b16 | #b8c75a | Workshop accent and text |
 | house | #1f5fa8 | #6fe3ff | House accent and text |
-| house-ground | #e8eef6 | #060c1b | the house drawing's ground only |
+| house-ground | #e4eaee | #070d1d | the house drawing's ground only |
 | games | #8a5a12 | #d9a441 | Games hub accent and text |
 | adventure | #6a3d8f | #b59ad6 | AI Seiklus (dark only in the game) |
 | study | #2f6b3a | #7cc28a | Tarkade Mängud |
 
 `primary` in the frontmatter is `ink`: the family's one filled button is ink
 on paper, so no tool invents a primary hue.
+
+Contrast (WCAG AA, 4.5:1 for text), measured on 2026-11-23 for the Nordic
+contrast values: `ink`, `ink-2`, `muted` and every text accent pass on `paper`
+and `surface` in both themes (`muted` 5.0:1 on light paper, 5.6:1 on dark
+surface); `obsidian-ink` and `obsidian-muted` pass on `obsidian` and
+`obsidian-2` in both themes (`obsidian-muted` 6.3:1 at worst). No value needed
+adjusting. Page text never sits on the band: the band sets its own text tokens.
+`trips-text` was measured again against the new ground and kept (6.4:1 light,
+8.1:1 dark); `house-ground` keeps its old offset from `paper` per channel,
+which moved it to `#e4eaee` and `#070d1d`. `muted` on light `sunken` is 4.47:1, under AA, so
+`sunken` carries controls and plate fills, not muted text. The room accents
+stay as they are until the `@khelias/ui` release with the Nordic accents.
 
 ## Themes
 
@@ -227,7 +259,11 @@ ground, the type, the surfaces, the controls, dialogs, notifications, menus
 and lists around a room's content use the values and rules in this file.
 Play areas, canvases, maps and the house drawing keep their own look, within
 the design check's baseline, which only shrinks. A room whose shell does not
-meet this yet says so in its `AGENTS.md`. The Stories room's content keeps
+meet this yet says so in its `AGENTS.md`. The content of Tarkade Mängud and AI
+Seiklus keeps its own look, set in each repo's design docs, with the chrome
+around it on the family
+([estate ADR-035](https://github.com/khelias/khe-architecture/blob/main/decisions/035-family-shell-and-design-check-with-its-exceptions.md) point 13).
+The Stories room's content keeps
 its own look, system type, a reading serif, large radii and a material behind
 the player, under the family header and footer ([estate ADR-035](https://github.com/khelias/khe-architecture/blob/main/decisions/035-family-shell-and-design-check-with-its-exceptions.md) point 10); that look
 lives in khe-stories ([estate ADR-031](https://github.com/khelias/khe-architecture/blob/main/decisions/031-stories-public-app-private-stories-audio-outside-git.md)), whose design check skips those files. State colour is meaning, not an
@@ -249,8 +285,8 @@ devices (tried 2026-11-17), and system type with a reading serif suits a
 story, not a shell. Familjen was chosen over Schibsted Grotesk and Hanken
 Grotesk from renders of the landing at desktop and phone width.
 
-- `display` 500, clamp(2.6rem, 6vw, 4rem) / 1.02, -0.02em: the landing name,
-  the games hub title
+- `display` 500, clamp(2.75rem, 7vw, 5rem) / 0.98, -0.03em: the landing name,
+  across the hero; the games hub title one step smaller
 - `title` 500 34px, -0.02em; `heading` 500 22px
 - `context` 500 17px: the header title's family size (see the mark)
 - `lead` 400 19px, `body` 400 16px / 1.6, `small` 400 14px
@@ -273,8 +309,53 @@ its own serif as the fallback.
 
 Content is one column, `width: min(1080px, 100%)`, with a gutter of
 `max(16px, env(safe-area-inset-*))`; the header's inner row has the same
-width. The header height is `@khelias/ui`'s own (3.65rem + 1px, 3.35rem + 1px
-at 520px and below). No page scrolls sideways at 320px.
+width. `/architecture/`, its decisions page and `/agents/` widen to 1240px for
+the diagrams, and their header widens with them. The header height is
+`@khelias/ui`'s own (3.65rem + 1px, 3.35rem + 1px at 520px and below). No page
+scrolls sideways at 320px.
+
+Grids are equal: two columns, `repeat(2, minmax(0, 1fr))`, one column at
+760px and below. No asymmetric splits and no rows that mix two and three
+items. The one exception is the ADR page's rail (below).
+
+### Cards and bands
+
+The landing shows its projects as picture cards, all alike: a 16:10 picture
+(`aspect-ratio: 16 / 10`, `object-fit: cover`, 12px corner, one `rule`
+hairline), then the kicker (`label` size with the room's dot), the title and
+one line. A card is a link with no shadow and no fill; its title underlines
+in the room's accent on hover. The order is house, workshop, stories, trips,
+server, the home room's agents card, then the two games: the two spatial pieces
+(the house and the workshop) sit in the obsidian band, then three pairs on the
+ground.
+
+The obsidian band runs the full width on `obsidian` in both themes, with
+`obsidian-ink` titles and `obsidian-muted` text; in dark an `obsidian-rule`
+edge above and below separates it from the ground. In light a room's dot is
+mixed toward `obsidian-ink` so it holds on the dark ground. `/agents/` sets its
+numbers on the same ground.
+
+Pictures are screenshots of public pages (the `/ha/` demo, a Töökoda part), a
+published story picture, or plates drawn as SVG and inlined at build so their
+classes follow the theme. A plate's text is sentence case, never capitals, and
+any text in a type the family does not load is drawn as paths.
+
+### Decisions page and ADR pages
+
+The five key decisions are rows of two equal halves: the decision, and its
+`Pluss` and `Miinus`, each cued by colour and a rule above it (solid in the
+room's accent, dashed in the diagram's warm tone), so they differ in more
+than hue. The register is one table per topic, under a search and topic
+buttons that the script shows; without it every decision is listed and the
+controls stay hidden. The decisions that left the register fold under one
+line with their count.
+
+An ADR page has a head across the column (back link, number and topic, title,
+status and date), then the prose beside a 14rem rail: the sections, the
+decisions it supersedes and relates to, and its source, sticky from 960px up
+and above the prose below it. The previous and next decision close the
+column. Numbered points keep their source number in a gutter of their own,
+set with `position: relative` and `padding-left` on the item.
 
 ## Shapes
 
@@ -287,8 +368,9 @@ at 520px and below). No page scrolls sideways at 320px.
 
 Flat. The header is opaque `paper` over one `rule`, with no blur and no
 shadow, so its contrast never depends on what scrolls under it. Sections and
-project rows are separated by space and a `rule` or `rule-strong` hairline.
-Nothing is a card.
+rows are separated by space and a `rule` or `rule-strong` hairline; depth
+comes from the obsidian band, not from shadow. A picture card is a picture
+and text, not a raised box.
 The exceptions float over the page on `surface` with a `rule-strong` edge
 and a soft shadow: the rooms list, and the consent banner, a pill at the
 bottom centre with its question and two equal buttons.
@@ -297,8 +379,8 @@ bottom centre with its question and two equal buttons.
 
 Hover rules sit inside `@media (hover: hover) and (pointer: fine)`; the press
 state is `:active`. A games row's arrow moves 2px on hover and stays put under
-`prefers-reduced-motion: reduce`; the landing's rows have no arrow, and their
-title underlines on hover. Every hit area is at least 44px. The
+`prefers-reduced-motion: reduce`; a landing card has no arrow, and its title
+underlines on hover. Every hit area is at least 44px. The
 package's own press scale has no reduced-motion rule yet (a khe-ui follow-up).
 
 ## Focus

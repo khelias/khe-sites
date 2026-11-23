@@ -1,7 +1,7 @@
 import { mkdir, readFile, writeFile } from 'node:fs/promises';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { blockCards, elements, keyDecisions, repoDecisionDirs, views } from './architecture-model.mjs';
+import { blockCards, decisionClusters, elements, keyDecisions, repoDecisionDirs, views } from './architecture-model.mjs';
 import { replaceMarker, SITE, SourceError } from './architecture-sources.mjs';
 import { adrLinkRewriter, escapeHtml, renderInlineMarkdown, renderMarkdown } from './markdown.mjs';
 import { COPY } from '../src/landing/architecture/copy.js';
@@ -120,7 +120,7 @@ function renderBoundary(id, box, where) {
     ? `<line x1="${x}" y1="${y + 0.5}" x2="${x + w}" y2="${y + 0.5}"/>`
     : `<rect x="${x + 0.5}" y="${y + 0.5}" width="${w - 1}" height="${h - 1}" rx="10"/>`;
   const label = perLocale((locale) => {
-    const text = copyText(element.label, locale).toLocaleUpperCase(locale);
+    const text = copyText(element.label, locale);
     if (labelX - x + textWidth(text, TEXT.group) > w - 8) throw new SourceError(`${where}: boundary label "${text}" does not fit ${id}`);
     return svgLine(text, labelX, y + 22, 'arch-group-label');
   });
@@ -329,6 +329,13 @@ export function modelMismatches(sources) {
   const sourceGroups = new Set(Object.keys(sources.homelab.groups));
   for (const group of sourceGroups) if (!modelGroups.has(group)) problems.push(`khe-homelab has the service group ${group}, which the architecture model lacks`);
   for (const group of modelGroups) if (!sourceGroups.has(group)) problems.push(`The architecture model names the service group ${group}, which khe-homelab lacks`);
+  const clustered = decisionClusters.flatMap((cluster) => cluster.ids);
+  const inForce = new Set(sources.decisions.filter((decision) => decision.inForce).map((decision) => decision.id));
+  for (const id of inForce) {
+    const count = clustered.filter((value) => value === id).length;
+    if (count !== 1) problems.push(`ADR-${id} is in force and in ${count} decision clusters in the architecture model, expected 1`);
+  }
+  for (const id of clustered) if (!inForce.has(id)) problems.push(`The decision clusters name ADR-${id}, which is not a decision in force`);
   return problems;
 }
 
@@ -355,42 +362,49 @@ function renderBlocks(sources) {
     const repo = group.repo ? ` <span class="arch-block-group__repo">${repoLink(repoByName.get(group.repo))}</span>` : '';
     return `<div class="arch-block-group"><h3>${i18n(group.group)}${repo}</h3><ul class="arch-rows">${rows.join('')}</ul></div>`;
   });
-  return groups.join('');
+  return `<div class="arch-blocks">${groups.join('')}</div>`;
 }
 
 const statusKey = (status) => `status${status}`;
 const decisionUrl = (id) => `/architecture/decisions/${id}/`;
 
-// The five decisions: what each buys and costs, then a cell that counts the
-// rest of the register in force so the number cannot go stale.
 function renderKeyDecisions(decisions) {
   const byId = new Map(decisions.map((decision) => [decision.id, decision]));
-  const shown = new Set();
   const cards = keyDecisions.map(({ ids, key }) => {
     for (const id of ids) {
       const decision = byId.get(id);
       if (!decision) throw new SourceError(`The key decisions name ADR-${id}, which khe-architecture lacks`);
       if (!decision.inForce) throw new SourceError(`The key decisions name ADR-${id}, which is ${decision.status}`);
-      shown.add(id);
     }
-    const tag = ids.map((id) => `ADR-${id}`).join(' · ');
-    return `<article class="arch-pick"><p class="arch-tag">${tag}</p>${i18n(`${key}Title`, 'h3')}<p>${i18n('buysLabel', 'span', ' class="arch-tag arch-tag--buys"')}${i18n(`${key}Buys`)}</p><p>${i18n('costsLabel', 'span', ' class="arch-tag arch-tag--costs"')}${i18n(`${key}Costs`)}</p><a href="${decisionUrl(ids[0])}">${i18n('readAdr')} ADR-${ids[0]}</a></article>`;
+    const tag = ids.map((id) => `<a href="${decisionUrl(id)}">ADR-${id}</a>`).join(' · ');
+    return `<article class="arch-pick"><div class="arch-pick__head"><p class="arch-pick__ids">${tag}</p>${i18n(`${key}Title`, 'h3')}</div><dl class="arch-pick__pair"><div class="arch-pick__plus">${i18n('buysLabel', 'dt')}<dd>${i18n(`${key}Buys`)}</dd></div><div class="arch-pick__minus">${i18n('costsLabel', 'dt')}<dd>${i18n(`${key}Costs`)}</dd></div></dl></article>`;
   });
-  const rest = decisions.filter((decision) => decision.inForce).length - shown.size;
-  const more = `<a class="arch-pick arch-pick--more" href="#decisions">${i18n('registerTag', 'span', ' class="arch-tag"')}<span class="arch-pick__title">${rest} ${i18n('moreDecisions')}</span>${i18n('moreDecisionsBody')}</a>`;
-  return `<div class="arch-picks">${cards.join('')}${more}</div>`;
+  return `<div class="arch-picks">${cards.join('')}</div>`;
 }
 
-// The decisions in force, then one line linking every decision that left the register; each of
-// those keeps its page, which points onward.
+function registerRow(decision) {
+  return `<tr><td><a href="${decisionUrl(decision.id)}">ADR-${decision.id}</a></td><td lang="en"><a href="${decisionUrl(decision.id)}">${escapeHtml(decision.title)}</a></td><td>${i18n(statusKey(decision.status), 'span', ` class="arch-status arch-status--${decision.status.toLowerCase()}"`)}</td><td><time datetime="${decision.date}">${decision.date}</time></td></tr>`;
+}
+
+// The decisions in force by topic, each topic a table, behind a search and topic filters that
+// architecture.js shows; without JavaScript every decision is listed. Then the decisions that
+// left the register, folded: each keeps its page, which points onward.
 function renderRegister(decisions) {
-  const inForce = [];
-  const stubs = [];
-  for (const decision of decisions) (decision.inForce ? inForce : stubs).push(decision);
-  const rows = inForce.map((decision) => `<tr><td><a href="${decisionUrl(decision.id)}">ADR-${decision.id}</a></td><td lang="en"><a href="${decisionUrl(decision.id)}">${escapeHtml(decision.title)}</a></td><td>${i18n(statusKey(decision.status), 'span', ` class="arch-status arch-status--${decision.status.toLowerCase()}"`)}</td><td><time datetime="${decision.date}">${decision.date}</time></td></tr>`);
-  const history = stubs.map((decision) => `<a href="${decisionUrl(decision.id)}">ADR-${decision.id}</a>`);
-  const table = `<div class="arch-table-wrap"><table class="arch-table arch-register"><thead><tr><th scope="col">ADR</th>${i18n('regTitle', 'th', ' scope="col"')}${i18n('regStatus', 'th', ' scope="col"')}${i18n('regDate', 'th', ' scope="col"')}</tr></thead><tbody>${rows.join('')}</tbody></table></div>`;
-  return history.length ? `${table}<p class="arch-history">${i18n('regHistory')} ${history.join(', ')}.</p>` : table;
+  const byId = new Map(decisions.map((decision) => [decision.id, decision]));
+  const head = `<thead><tr><th scope="col">ADR</th>${i18n('regTitle', 'th', ' scope="col"')}${i18n('regStatus', 'th', ' scope="col"')}${i18n('regDate', 'th', ' scope="col"')}</tr></thead>`;
+  const filters = [
+    `<button type="button" class="arch-filter__topic" data-cluster="all" aria-pressed="true">${i18n('filterAll')}</button>`,
+    ...decisionClusters.map(({ key, label }) => `<button type="button" class="arch-filter__topic" data-cluster="${key}" aria-pressed="false">${i18n(label)}</button>`),
+  ];
+  const filterBar = `<div class="arch-filter" data-register-filter hidden><input type="search" class="arch-filter__search" aria-label="Search decisions" data-i18n-aria="searchLabel" placeholder="" data-i18n-placeholder="searchPlaceholder" autocomplete="off"><div class="arch-filter__topics" role="group" aria-label="Topics" data-i18n-aria="topicsLabel">${filters.join('')}</div></div>`;
+  const groups = decisionClusters.map(({ key, label, ids }) => {
+    const rows = ids.map((id) => byId.get(id)).sort((a, b) => a.id.localeCompare(b.id)).map(registerRow);
+    return `<section class="arch-cluster" data-cluster="${key}" aria-labelledby="cluster-${key}"><h3 id="cluster-${key}" class="arch-cluster__title">${i18n(label)} <span class="arch-cluster__count">${ids.length}</span></h3><div class="arch-table-wrap"><table class="arch-table arch-register">${head}<tbody>${rows.join('')}</tbody></table></div></section>`;
+  });
+  const empty = i18n('searchEmpty', 'p', ' class="arch-filter__empty" data-register-empty hidden');
+  const stubs = decisions.filter((decision) => !decision.inForce);
+  const history = stubs.length ? `<details class="arch-history"><summary>${i18n('regHistory')} <span class="arch-cluster__count">${stubs.length}</span></summary><ul class="arch-history__list">${stubs.map((decision) => `<li><a href="${decisionUrl(decision.id)}"><span class="arch-history__id">ADR-${decision.id}</span> <span lang="en">${escapeHtml(decision.title)}</span></a> ${i18n(statusKey(decision.status), 'span', ' class="arch-history__status"')}</li>`).join('')}</ul></details>` : '';
+  return `${filterBar}${groups.join('')}${empty}${history}`;
 }
 
 function renderProductDecisions() {
@@ -398,15 +412,15 @@ function renderProductDecisions() {
   return `${i18n('productDecisions', 'p', ' class="arch-prose"')}<ul class="arch-inline-list">${links}</ul>`;
 }
 
-function fillTemplate(template, values) {
+export function fillTemplate(template, values, file) {
   return template.replace(/\{\{(\w+)\}\}/g, (match, name) => {
-    if (!(name in values)) throw new SourceError(`decision.html uses {{${name}}}, which the renderer does not fill`);
+    if (!(name in values)) throw new SourceError(`${file} uses {{${name}}}, which the build does not fill`);
     return values[name];
   });
 }
 
 function decisionLinks(ids, byId) {
-  return ids.map((id) => `<a href="${decisionUrl(id)}" lang="en">ADR-${id}: ${escapeHtml(byId.get(id).title)}</a>`).join('<br>');
+  return ids.map((id) => `<a href="${decisionUrl(id)}" lang="en">ADR-${id}: ${escapeHtml(byId.get(id).title)}</a>`).join(', ');
 }
 
 // Where a decision no longer in force went: its successor's page, or its new home as the
@@ -420,23 +434,53 @@ function onward(decision, byId, rewriteLink) {
   return null;
 }
 
-// The notice carries the link onward, so the meta list does not repeat it. A stub has no body,
-// so its page has no article.
-function renderDecisionPage(template, decision, byId, rewriteLink) {
+function railLinks(ids, byId) {
+  return `<ul>${ids.map((id) => `<li><a href="${decisionUrl(id)}"><span class="arch-rail__id">ADR-${id}</span> <span lang="en">${escapeHtml(byId.get(id).title)}</span></a></li>`).join('')}</ul>`;
+}
+
+function railSection(key, body) {
+  return `<div class="arch-rail__part">${i18n(key, 'h2', ' class="arch-rail__label"')}${body}</div>`;
+}
+
+// The previous and next decision in the same list: in force beside in force, a stub beside stubs.
+function neighbours(decision, decisions) {
+  const list = decisions.filter((other) => other.inForce === decision.inForce);
+  const index = list.findIndex((other) => other.id === decision.id);
+  return [list[index - 1], list[index + 1]];
+}
+
+function neighbourLink(decision, key, className) {
+  if (!decision) return '';
+  return `<a class="arch-neighbour ${className}" href="${decisionUrl(decision.id)}">${i18n(key, 'span', ' class="arch-neighbour__dir"')}<span class="arch-neighbour__id">ADR-${decision.id}</span><span class="arch-neighbour__title" lang="en">${escapeHtml(decision.title)}</span></a>`;
+}
+
+// The page reads as one column of prose beside a rail: its sections, the decisions it supersedes
+// and relates to, its source and its neighbours. The notice carries the link onward, so the rail
+// does not repeat it. A stub has no body, so its page has no article.
+function renderDecisionPage(template, decision, decisions, byId, rewriteLink) {
   const url = `${SITE}${decisionUrl(decision.id)}`;
+  const cluster = decisionClusters.find(({ ids }) => ids.includes(decision.id));
   const meta = [
     `<div>${i18n('metaStatus', 'dt')}<dd>${i18n(statusKey(decision.status))}</dd></div>`,
     `<div>${i18n('metaDate', 'dt')}<dd><time datetime="${decision.date}">${decision.date}</time></dd></div>`,
   ];
-  if (decision.supersedes.length) meta.push(`<div>${i18n('metaSupersedes', 'dt')}<dd>${decisionLinks(decision.supersedes, byId)}</dd></div>`);
-  if (decision.related.length) meta.push(`<div>${i18n('metaRelated', 'dt')}<dd>${decisionLinks(decision.related, byId)}</dd></div>`);
   const notice = onward(decision, byId, rewriteLink);
+  const body = decision.stub ? '' : renderMarkdown(decision.body, { file: decision.file, firstLine: decision.bodyStartLine, rewriteLink });
+  const sections = [...body.matchAll(/<h2 id="([^"]+)">([\s\S]*?)<\/h2>/g)].map(([, id, text]) => `<li><a href="#${id}" lang="en">${text.replace(/<[^>]+>/g, '')}</a></li>`);
+  const rail = [
+    sections.length ? railSection('railOnPage', `<ul>${sections.join('')}</ul>`) : '',
+    decision.supersedes.length ? railSection('metaSupersedes', railLinks(decision.supersedes, byId)) : '',
+    decision.related.length ? railSection('metaRelated', railLinks(decision.related, byId)) : '',
+    railSection('railSource', `<ul><li><a href="${SOURCE_BASE}${decision.file}" data-i18n="sourceOnGithub"></a></li></ul>`),
+  ].filter(Boolean);
   const article = decision.stub ? '' : [
-    `  ${i18n('decisionsInEnglish', 'p', ' class="arch-lang-note"')}`,
-    '  <article class="arch-adr" lang="en">',
-    renderMarkdown(decision.body, { file: decision.file, firstLine: decision.bodyStartLine, rewriteLink }),
-    '  </article>',
+    `    ${i18n('decisionsInEnglish', 'p', ' class="arch-lang-note"')}`,
+    '    <article class="arch-adr" lang="en">',
+    body,
+    '    </article>',
   ].join('\n');
+  const [previous, next] = neighbours(decision, decisions);
+  const pager = previous || next ? `    <nav class="arch-neighbours" aria-label="Neighbouring decisions" data-i18n-aria="railNeighbours">${neighbourLink(previous, 'railPrevious', 'arch-neighbour--previous')}${neighbourLink(next, 'railNext', 'arch-neighbour--next')}</nav>` : '';
   const jsonLd = JSON.stringify({
     '@context': 'https://schema.org',
     '@type': 'TechArticle',
@@ -453,28 +497,30 @@ function renderDecisionPage(template, decision, byId, rewriteLink) {
     url,
     jsonLd,
     id: decision.id,
+    cluster: cluster ? ` <span class="arch-decision__cluster">· ${i18n(cluster.label)}</span>` : '',
     title: escapeHtml(decision.title),
     meta: meta.map((line) => `    ${line}`).join('\n'),
-    notice: notice ? `  <p class="arch-notice">${notice}</p>` : '',
+    notice: notice ? `    <p class="arch-notice">${notice}</p>` : '',
+    rail: rail.map((part) => `    ${part}`).join('\n'),
     article,
-    sourceUrl: `${SOURCE_BASE}${decision.file}`,
-  }), COPY.en, 'copy.js COPY.en');
+    pager,
+  }, 'decision.html'), COPY.en, 'copy.js COPY.en');
 }
 
 const MONTHS_EN = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
 
 // The snapshot's period in each language, shown by html[lang]:
 // 22.10.–19.11.2026 and 22 Oct – 19 Nov 2026.
-function period(since, until) {
+export function period(since, until, tag = 'span') {
   const [sy, sm, sd] = since.split('-');
   const [uy, um, ud] = until.split('-');
   const sameYear = sy === uy;
   const et = `${sd}.${sm}.${sameYear ? '' : sy}–${ud}.${um}.${uy}`;
   const en = `${Number(sd)} ${MONTHS_EN[sm - 1]}${sameYear ? '' : ` ${sy}`} – ${Number(ud)} ${MONTHS_EN[um - 1]} ${uy}`;
-  return `<span lang="et">${et}</span><span lang="en">${en}</span>`;
+  return `<${tag} lang="et">${et}</${tag}><${tag} lang="en">${en}</${tag}>`;
 }
 
-function duration(minutes) {
+export function duration(minutes) {
   const hours = Math.floor(minutes / 60);
   if (!hours) return `${minutes} min`;
   return minutes % 60 ? `${hours} h ${minutes % 60} min` : `${hours} h`;
@@ -570,7 +616,7 @@ export async function renderArchitecture(landingDist, sources) {
   for (const decision of sources.decisions) {
     const directory = join(landingDist, 'architecture', 'decisions', decision.id);
     await mkdir(directory, { recursive: true });
-    await writeFile(join(directory, 'index.html'), renderDecisionPage(template, decision, byId, rewriteLink));
+    await writeFile(join(directory, 'index.html'), renderDecisionPage(template, decision, sources.decisions, byId, rewriteLink));
   }
 
   const sitemapPath = join(landingDist, 'sitemap.xml');

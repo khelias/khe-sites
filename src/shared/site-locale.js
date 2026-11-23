@@ -178,6 +178,7 @@ export function createLocaleController({
     setHtml('[data-i18n-html]', activeCopy, 'data-i18n-html');
     setAttribute('[data-i18n-aria]', activeCopy, 'data-i18n-aria', 'aria-label');
     setAttribute('[data-i18n-title]', activeCopy, 'data-i18n-title', 'title');
+    setAttribute('[data-i18n-placeholder]', activeCopy, 'data-i18n-placeholder', 'placeholder');
 
     document.querySelectorAll('[data-lang-option]').forEach((button) => {
       button.setAttribute(

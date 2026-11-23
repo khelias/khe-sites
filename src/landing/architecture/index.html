@@ -5,8 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <!-- page-meta -->
   <link rel="icon" href="/logo.svg" type="image/svg+xml" sizes="any">
-  <meta name="theme-color" content="#fafafa" media="(prefers-color-scheme: light)">
-  <meta name="theme-color" content="#0b0d0d" media="(prefers-color-scheme: dark)">
+  <meta name="theme-color" content="#f6f6f2" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#0c0e0f" media="(prefers-color-scheme: dark)">
   <!-- site-theme -->
   <link rel="preload" href="/assets/fonts/familjen-grotesk-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="modulepreload" href="/assets/site-locale.js">
@@ -27,32 +27,17 @@
       <p class="arch-lead" data-i18n="lead"></p>
       <p class="arch-lead" data-i18n-html="leadHow"></p>
     </div>
-    <dl class="arch-facts" aria-label="Three facts" data-i18n-aria="factsLabel">
-      <div>
-        <dt>0</dt>
-        <dd><strong data-i18n="factPorts"></strong><span><span data-i18n="factPortsNote"></span> <a href="/architecture/decisions/022/">ADR-022</a></span></dd>
-      </div>
-      <div>
-        <dt>100%</dt>
-        <dd><strong data-i18n="factDigest"></strong><span><span data-i18n="factDigestNote"></span> <a href="/architecture/decisions/008/">ADR-008</a></span></dd>
-      </div>
-      <div>
-        <dt data-i18n="factRestoreValue"></dt>
-        <dd><strong data-i18n="factRestore"></strong><span><span data-i18n="factRestoreNote"></span> <a href="https://github.com/khelias/khe-homelab/blob/main/.github/workflows/restore-verify.yml" data-i18n="restoreWorkflow"></a></span></dd>
-      </div>
-    </dl>
   </header>
 
   <nav class="arch-nav" aria-label="On this page" data-i18n-aria="tocLabel">
     <ol>
-      <li><a href="#estate"><span class="arch-num">01</span> <span data-i18n="navEstate"></span></a></li>
-      <li><a href="#shipping"><span class="arch-num">02</span> <span data-i18n="navShipping"></span></a></li>
-      <li><a href="#uptime"><span class="arch-num">03</span> <span data-i18n="navUptime"></span></a></li>
+      <li><a href="#estate"><span data-i18n="navEstate"></span></a></li>
+      <li><a href="#shipping"><span data-i18n="navShipping"></span></a></li>
+      <li><a href="#uptime"><span data-i18n="navUptime"></span></a></li>
     </ol>
   </nav>
 
   <section class="arch-section" id="estate" aria-labelledby="estate-title">
-    <p class="arch-num" aria-hidden="true">01</p>
     <h2 id="estate-title" data-i18n="estateTitle"></h2>
     <p class="arch-prose" data-i18n="estateIntro"></p>
     <!-- view:estate -->
@@ -63,7 +48,6 @@
   </section>
 
   <section class="arch-section" id="shipping" aria-labelledby="shipping-title">
-    <p class="arch-num" aria-hidden="true">02</p>
     <h2 id="shipping-title" data-i18n="shippingTitle"></h2>
     <p class="arch-prose" data-i18n="shippingIntro"></p>
     <!-- view:shipping -->
@@ -72,7 +56,6 @@
   </section>
 
   <section class="arch-section" id="uptime" aria-labelledby="uptime-title">
-    <p class="arch-num" aria-hidden="true">03</p>
     <h2 id="uptime-title" data-i18n="uptimeTitle"></h2>
     <div class="arch-columns">
       <div>

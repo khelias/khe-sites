@@ -7,8 +7,8 @@
   <meta name="description" content="{{description}}">
   <link rel="canonical" href="{{url}}">
   <link rel="icon" href="/logo.svg" type="image/svg+xml" sizes="any">
-  <meta name="theme-color" content="#fafafa" media="(prefers-color-scheme: light)">
-  <meta name="theme-color" content="#0b0d0d" media="(prefers-color-scheme: dark)">
+  <meta name="theme-color" content="#f6f6f2" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#0c0e0f" media="(prefers-color-scheme: dark)">
   <!-- site-theme -->
   <meta property="og:type" content="article">
   <meta property="og:url" content="{{url}}">
@@ -35,15 +35,24 @@
 <!-- site-header home=landing rooms theme -->
 
 <main class="arch arch-decision">
-  <p class="arch-breadcrumb"><a href="/en/architecture/decisions/?lang=en" data-link="register">&larr; <span data-i18n="backToRegister"></span></a></p>
-  <p class="arch-kicker" data-i18n="decisionKicker"></p>
-  <h1 lang="en">ADR-{{id}}: {{title}}</h1>
-  <dl class="arch-meta">
+  <header class="arch-decision__head">
+    <p class="arch-breadcrumb"><a href="/en/architecture/decisions/?lang=en" data-link="register">&larr; <span data-i18n="backToRegister"></span></a></p>
+    <p class="arch-decision__id">ADR-{{id}}{{cluster}}</p>
+    <h1 lang="en">{{title}}</h1>
+    <dl class="arch-meta">
 {{meta}}
-  </dl>
+    </dl>
+  </header>
+  <div class="arch-decision__body">
+    <aside class="arch-rail" aria-label="About this decision" data-i18n-aria="railLabel">
+{{rail}}
+    </aside>
+    <div class="arch-decision__main">
 {{notice}}
 {{article}}
-  <p class="arch-source"><a href="{{sourceUrl}}" data-i18n="sourceOnGithub"></a></p>
+{{pager}}
+    </div>
+  </div>
 </main>
 
 <!-- site-footer -->

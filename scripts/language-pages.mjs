@@ -153,6 +153,7 @@ function localize(html, page, locale, copy) {
     .replace(/<html\b([^>]*?)\slang="[^"]*"/, `<html$1 lang="${locale}"`)
     .replace(INLINE_COPY, () => `const COPY = ${JSON.stringify({ [locale]: copy }, null, 2).replace(/\n/g, '\n  ')};`)
     .replace(/<[a-z][^>]*\sdata-i18n-aria="([^"]+)"[^>]*>/g, (tag, key) => tag.replace(/\saria-label="[^"]*"/, ` aria-label="${escapeHtml(text(key))}"`))
+    .replace(/<[a-z][^>]*\sdata-i18n-placeholder="([^"]+)"[^>]*>/g, (tag, key) => tag.replace(/\splaceholder="[^"]*"/, ` placeholder="${escapeHtml(text(key))}"`))
     .replace(/<a\b[^>]*\sdata-link="([^"]+)"[^>]*>/g, (tag, key) => (Object.hasOwn(PAGE_LINKS, key)
       ? tag.replace(/\shref="[^"]*"/, ` href="${pageHref(key, locale)}"`)
       : tag.replace(/([?&]lang=)(?:et|en)\b/, `$1${locale}`)))
