@@ -5,8 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <!-- page-meta -->
   <link rel="icon" href="/logo.svg" type="image/svg+xml" sizes="any">
-  <meta name="theme-color" content="#fafafa" media="(prefers-color-scheme: light)">
-  <meta name="theme-color" content="#0b0d0d" media="(prefers-color-scheme: dark)">
+  <meta name="theme-color" content="#f6f6f2" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#0c0e0f" media="(prefers-color-scheme: dark)">
   <!-- site-theme -->
   <link rel="preload" href="/assets/fonts/familjen-grotesk-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="modulepreload" href="/assets/theme.js">
@@ -20,56 +20,79 @@
 
 <main class="landing">
   <section class="landing-hero" aria-labelledby="landing-title">
-    <div class="hero-head">
-      <picture class="hero-portrait">
-        <source srcset="/portrait.webp" type="image/webp">
-        <img src="/portrait.jpg" width="192" height="192" alt="Kaido Henrik Elias">
-      </picture>
+    <div class="landing-wrap landing-hero__grid">
       <h1 class="hero-title" id="landing-title">Kaido Henrik Elias</h1>
+      <p class="hero-lead" data-i18n="lead"></p>
+      <div class="hero-bio">
+        <div class="hero-bio__who">
+          <picture class="hero-portrait">
+            <source srcset="/portrait.webp" type="image/webp">
+            <img src="/portrait.jpg" width="192" height="192" alt="Kaido Henrik Elias">
+          </picture>
+          <p class="hero-bio__role"><span data-i18n="role"></span><br>Tallinn</p>
+        </div>
+        <p class="landing-contact"><span data-i18n="contactLead"></span> <a href="mailto:kaidoelias@gmail.com?subject=KHE.ee" data-link="contact" data-i18n="contactLink"></a>.</p>
+      </div>
     </div>
-    <p class="hero-role" data-i18n="role"></p>
-    <p class="hero-lead" data-i18n="introWork"></p>
-    <p class="hero-lead" data-i18n="introHome"></p>
   </section>
 
-  <section class="landing-projects" aria-label="Projects" data-i18n-aria="projectsLabel">
-    <a class="project-row" data-room="games" href="https://games.khe.ee/?lang=et" data-link="games">
-      <span class="project-title" data-i18n="gamesTitle"></span>
-      <span class="project-desc" data-i18n="gamesDesc"></span>
-    </a>
-
-    <a class="project-row" data-room="house" href="/ha/" data-link="house3d">
-      <span class="project-title" data-i18n="house3dTitle"></span>
-      <span class="project-desc" data-i18n="house3dDesc"></span>
-    </a>
-
-    <a class="project-row" data-room="trips" href="/trips/?lang=et" data-link="trips">
-      <span class="project-title" data-i18n="tripsTitle"></span>
-      <span class="project-desc" data-i18n="tripsDesc"></span>
-    </a>
-
-    <a class="project-row" data-room="stories" href="/stories/?lang=et" data-link="stories">
-      <span class="project-title" data-i18n="storiesTitle"></span>
-      <span class="project-desc" data-i18n="storiesDesc"></span>
-    </a>
-
-    <a class="project-row" data-room="workshop" href="/workshop/?lang=et" data-link="workshop">
-      <span class="project-title" data-i18n="workshopTitle"></span>
-      <span class="project-desc" data-i18n="workshopDesc"></span>
-    </a>
-
-    <a class="project-row" data-room="server" href="/architecture/?lang=et" data-link="architecture">
-      <span class="project-title" data-i18n="architectureTitle"></span>
-      <span class="project-desc" data-i18n="architectureDesc"></span>
-    </a>
-
-    <a class="project-row" data-room="home" href="/agents/?lang=et" data-link="agents">
-      <span class="project-title" data-i18n="agentsTitle"></span>
-      <span class="project-desc" data-i18n="agentsDesc"></span>
-    </a>
+  <section class="landing-band" aria-label="Projects" data-i18n-aria="projectsLabel">
+    <div class="landing-wrap show-grid">
+      <a class="show-card" data-room="house" href="/ha/" data-link="house3d">
+        <span class="show-card__media"><img src="/house3d-cutaway.webp" width="1120" height="700" alt=""></span>
+        <span class="show-card__kicker"><span class="show-card__dot" aria-hidden="true"></span><span data-i18n="houseKicker"></span></span>
+        <h2 class="show-card__title" data-i18n="houseTitle"></h2>
+        <span class="show-card__desc" data-i18n="houseDesc"></span>
+      </a>
+      <a class="show-card" data-room="workshop" href="/workshop/?lang=et" data-link="workshop">
+        <span class="show-card__media"><img src="/workshop-print.webp" width="1120" height="700" alt=""></span>
+        <span class="show-card__kicker"><span class="show-card__dot" aria-hidden="true"></span><span data-i18n="workshopKicker"></span></span>
+        <h2 class="show-card__title" data-i18n="workshopTitle"></h2>
+        <span class="show-card__desc" data-i18n="workshopDesc"></span>
+      </a>
+    </div>
   </section>
 
-  <p class="landing-contact"><span data-i18n="contactLead"></span> <a href="mailto:kaidoelias@gmail.com?subject=KHE.ee" data-link="contact" data-i18n="contactLink"></a>.</p>
+  <section class="landing-gallery" aria-label="More projects" data-i18n-aria="moreProjectsLabel">
+    <div class="landing-wrap show-grid">
+      <a class="show-card" data-room="stories" href="/stories/?lang=et" data-link="stories">
+        <span class="show-card__media"><img src="/koige-aeglasem-silmapilgutus.svg" width="600" height="800" alt="" class="show-card__img--bottom" loading="lazy"></span>
+        <span class="show-card__kicker"><span class="show-card__dot" aria-hidden="true"></span><span data-i18n="storiesKicker"></span></span>
+        <h2 class="show-card__title" data-i18n="storiesTitle"></h2>
+        <span class="show-card__desc" data-i18n="storiesDesc"></span>
+      </a>
+      <a class="show-card" data-room="trips" href="/trips/?lang=et" data-link="trips">
+        <span class="show-card__media"><!-- plate:trips --></span>
+        <span class="show-card__kicker"><span class="show-card__dot" aria-hidden="true"></span><span data-i18n="tripsKicker"></span></span>
+        <h2 class="show-card__title" data-i18n="tripsTitle"></h2>
+        <span class="show-card__desc" data-i18n="tripsDesc"></span>
+      </a>
+      <a class="show-card" data-room="server" href="/architecture/?lang=et" data-link="architecture">
+        <span class="show-card__media"><!-- plate:server --></span>
+        <span class="show-card__kicker"><span class="show-card__dot" aria-hidden="true"></span><span data-i18n="serverKicker"></span></span>
+        <h2 class="show-card__title" data-i18n="serverTitle"></h2>
+        <span class="show-card__desc" data-i18n="serverDesc"></span>
+      </a>
+      <a class="show-card" data-room="home" href="/agents/?lang=et" data-link="agents">
+        <span class="show-card__media"><!-- plate:agents --></span>
+        <span class="show-card__kicker"><span class="show-card__dot" aria-hidden="true"></span><span data-i18n="agentsKicker"></span></span>
+        <h2 class="show-card__title" data-i18n="agentsTitle"></h2>
+        <span class="show-card__desc" data-i18n="agentsDesc"></span>
+      </a>
+      <a class="show-card card-study" data-room="games" href="https://games.khe.ee/study/?lang=et" data-link="study">
+        <span class="show-card__media"><!-- plate:study --></span>
+        <span class="show-card__kicker"><span class="show-card__dot" aria-hidden="true"></span><span data-i18n="studyKicker"></span></span>
+        <h2 class="show-card__title" data-i18n="studyTitle"></h2>
+        <span class="show-card__desc" data-i18n="studyDesc"></span>
+      </a>
+      <a class="show-card card-adventure" data-room="games" href="https://games.khe.ee/adventure/?lang=et" data-link="adventure">
+        <span class="show-card__media"><!-- plate:adventure --></span>
+        <span class="show-card__kicker"><span class="show-card__dot" aria-hidden="true"></span><span data-i18n="adventureKicker"></span></span>
+        <h2 class="show-card__title" data-i18n="adventureTitle"></h2>
+        <span class="show-card__desc" data-i18n="adventureDesc"></span>
+      </a>
+    </div>
+  </section>
 </main>
 
 <!-- site-footer -->
@@ -79,52 +102,160 @@
 
   const COPY = {
     et: {
-      title: 'Kaido Henrik Elias, tarkvaraarhitekt',
-      description: 'Tarkvaraarhitekt Tallinnas. Kavandan suuri süsteeme, mida kasutavad tuhanded inimesed, ja ehitan vabal ajal perele tarkvara: mängud, koduautomaatika, reisipäevik ja unejutud.',
-      projectsLabel: 'Projektid',
-      role: 'Tarkvaraarhitekt',
-      introWork: 'Igapäevatöös kavandan suuri süsteeme, mida kasutavad tuhanded inimesed.',
-      introHome: 'Vabal ajal ehitan tarkvara oma perele.',
-      contactLead: 'Kui mõni asi siin huvi pakub,',
-      contactLink: 'kirjuta mulle',
-      gamesTitle: 'Mängud',
-      gamesDesc: 'Õppemängud lastele ja AI Seiklus täiskasvanutele.',
-      house3dTitle: 'Koduautomaatika',
-      house3dDesc: 'Maja juhtimine Home Assistantiga.',
-      tripsTitle: 'Reisipäevik',
-      tripsDesc: 'Reiside planeerimine ja meenutamine.',
-      storiesTitle: 'Jutud',
-      storiesDesc: 'Jänkupere unejutud, ette loetud.',
-      workshopTitle: 'Töökoda',
-      workshopDesc: 'Detailid, mida kodu jaoks ise kavandame ja prindime.',
-      architectureTitle: 'Koduserver',
-      architectureDesc: 'Kõik see töötab ühes koduserveris.',
-      agentsTitle: 'Agentidega arendus',
-      agentsDesc: 'Kuidas AI-agendid siinset koodi kirjutavad ja kontrollivad.',
+      title: "Kaido Henrik Elias, tarkvaraarhitekt",
+      description: "Tarkvaraarhitekt Tallinnas. Kavandan suuri süsteeme, mida kasutavad tuhanded inimesed, ja ehitan vabal ajal perele tarkvara: mängud, koduautomaatika, reisipäevik ja unejutud.",
+      projectsLabel: "Projektid",
+      moreProjectsLabel: "Veel projekte",
+      role: "Tarkvaraarhitekt",
+      lead: "Igapäevatöös kavandan suuri süsteeme, mida kasutavad tuhanded inimesed. Vabal ajal ehitan tarkvara oma perele.",
+      contactLead: "Kui mõni asi siin huvi pakub,",
+      contactLink: "kirjuta mulle",
+      houseKicker: "Koduautomaatika · demo",
+      houseTitle: "Maja 3D-mudel",
+      houseDesc: "Pööratav testmaja Home Assistantis: proovi läbi valgus, küte, andurid ja stsenaariumid.",
+      workshopKicker: "Töökoda",
+      workshopTitle: "Prinditavad detailid",
+      workshopDesc: "Kodu jaoks OpenSCAD-is tehtud 3D-detailid: keera mudelit, lõika pooleks ja keri prinditööd kiht haaval.",
+      storiesKicker: "Jutud",
+      storiesTitle: "Jänkupere unejutud",
+      storiesDesc: "Pere unejutud oma piltidega, ette loetud isa häälega.",
+      tripsKicker: "Reisipäevik · demo",
+      tripsTitle: "Pere reisid kaardil",
+      tripsDesc: "Reiside planeerimine, teekonnad kaardil ja lingiga jagatavad reisid.",
+      serverKicker: "Taristu",
+      serverTitle: "Koduserver",
+      serverDesc: "Kogu KHE töötab ühes koduses serveris. Arhitektuur, käikulaskmine ja kirjapandud otsused.",
+      agentsKicker: "Töövoog",
+      agentsTitle: "Agentidega arendus",
+      agentsDesc: "Mina annan suuna ja kiidan plaani heaks. Agendid kirjutavad, kontrollivad ja avaldavad koodi.",
+      studyKicker: "Õppemängud",
+      studyTitle: "Tarkade Mängud",
+      studyDesc: "Lühikesed harjutusmängud lastele Eesti õppekava järgi: arvutamine, kell, sõnad ja loogika.",
+      adventureKicker: "Seltskonnamäng",
+      adventureTitle: "AI Seiklus",
+      adventureDesc: "Ühel telefonil mängitav seltskonnamäng: salajased rollid, ühised survenäidikud ja AI juhitud lugu.",
+      plateUser: "Kasutaja",
+      plateUserSub: "brauser",
+      plateEdgeCopy: "lehtede koopia",
+      plateTunnel: "tunnel",
+      plateHost: "Koduserver",
+      plateDockerSub: "lehed, rakendused, mängud",
+      plateDockerSub2: "varundus",
+      plateAgentVm: "Agendi VM",
+      plateAgentVmSub: "AI-agendid liivakastis",
+      plateNoPorts: "Kodus pole avatud porte",
+      plateLoop: "Kõik plaanid",
+      platePlans: "Plaanid",
+      plateReverted: "Tagasi võetud plaanid",
+      plateMedian: "Plaanist avaldamiseni, mediaan",
+      plateFixed: "Mida kontrollid parandasid",
+      platePlanReview: "Plaani ülevaatus",
+      plateCodeReview: "Koodi- ja turvaülevaatus",
+      platePlanCheck: "Plaanikontroll",
+      plateFix: "parandus",
+      plateFixes: "parandust",
+      plateRoute: "Teekond",
+      plateDay1: "Päev 1",
+      plateDay2: "Päev 2",
+      plateDay3: "Päev 3",
+      plateShared: "Jagatud lingiga",
+      plateStudyGame: "Laevade uputamine",
+      plateStudyLevel: "Korrutustabel",
+      plateStudySunk: "Laev põhjas",
+      plateStudyHit: "Tabamus E4",
+      plateStudyShot: "Lask ruudule E3",
+      plateAdvStory: "Ööbuss terminalist 13",
+      plateAdvTurn: "Käik 4/12 · 4 mängijat",
+      plateAdvWindow: "Päästeaken",
+      plateAdvWindowState: "Kitseneb",
+      plateAdvTrust: "Grupi usaldus",
+      plateAdvTrustState: "Vaikne kahtlus",
+      plateAdvSupplies: "Varude seis",
+      plateAdvSuppliesState: "Pool alles",
+      plateAdvChoice1: "Hoiame värava lahti ja jätame osa varudest maha",
+      plateAdvChoice2: "Räägime peidetud plaanist ausalt",
+      plateAdvRole: "Salajane roll · Mari",
+      plateAdvAbility1: "Avab hoolduskaardiga",
+      plateAdvAbility2: "dispetšeriruumi ukse",
+      plateAdvOnce: "Erivõime · üks kord mängus",
     },
     en: {
-      title: 'Kaido Henrik Elias, software architect',
-      description: 'Software architect in Tallinn. I design large systems that thousands of people use, and in my free time I build software for my family: games, home automation, a travel journal and bedtime stories.',
-      projectsLabel: 'Projects',
-      role: 'Software architect',
-      introWork: 'In my day job I design large systems that thousands of people use.',
-      introHome: 'In my free time I build software for my family.',
-      contactLead: 'If anything here interests you,',
-      contactLink: 'write to me',
-      gamesTitle: 'Games',
-      gamesDesc: 'Learning games for kids and an AI-narrated party game for adults.',
-      house3dTitle: 'Home automation',
-      house3dDesc: 'Running the house with Home Assistant.',
-      tripsTitle: 'Travel journal',
-      tripsDesc: 'Planning trips and remembering them.',
-      storiesTitle: 'Stories',
-      storiesDesc: 'Bedtime stories of a bunny family, read aloud.',
-      workshopTitle: 'Workshop',
-      workshopDesc: 'Parts we design and print for our own home.',
-      architectureTitle: 'The home server',
-      architectureDesc: 'All of this runs on one server in my home. How, and why.',
-      agentsTitle: 'Agentic development',
-      agentsDesc: "AI agents write the code to a plan and check each other's work.",
+      title: "Kaido Henrik Elias, software architect",
+      description: "Software architect in Tallinn. I design large systems that thousands of people use, and in my free time I build software for my family: games, home automation, a travel journal and bedtime stories.",
+      projectsLabel: "Projects",
+      moreProjectsLabel: "More projects",
+      role: "Software architect",
+      lead: "In my day job I design large systems that thousands of people use. In my free time I build software for my family.",
+      contactLead: "If anything here interests you,",
+      contactLink: "write to me",
+      houseKicker: "Home automation · demo",
+      houseTitle: "The house in 3D",
+      houseDesc: "A test house in Home Assistant you can turn around: try the lights, heating, sensors and scenarios.",
+      workshopKicker: "Workshop",
+      workshopTitle: "Printable parts",
+      workshopDesc: "3D parts for the home, made in OpenSCAD: turn the model, cut it in half and scroll through the print layer by layer.",
+      storiesKicker: "Stories",
+      storiesTitle: "The bunny family’s bedtime stories",
+      storiesDesc: "The family’s bedtime stories with their own pictures, read aloud in Dad’s voice.",
+      tripsKicker: "Travel journal · demo",
+      tripsTitle: "Family trips on a map",
+      tripsDesc: "Planning trips, routes on a map and trips shared by link.",
+      serverKicker: "Infrastructure",
+      serverTitle: "The home server",
+      serverDesc: "All of KHE runs on one server at home. The architecture, how changes go live and the decisions behind it.",
+      agentsKicker: "Workflow",
+      agentsTitle: "Agentic development",
+      agentsDesc: "I set the direction and approve the plan. Agents write, check and publish the code.",
+      studyKicker: "Learning games",
+      studyTitle: "Smart Games",
+      studyDesc: "Short practice games for children, following the Estonian curriculum: arithmetic, the clock, words and logic.",
+      adventureKicker: "Party game",
+      adventureTitle: "AI Adventure",
+      adventureDesc: "A party game played on one phone: secret roles, shared pressure gauges and a story led by AI.",
+      plateUser: "Visitor",
+      plateUserSub: "browser",
+      plateEdgeCopy: "copy of the sites",
+      plateTunnel: "tunnel",
+      plateHost: "Home server",
+      plateDockerSub: "sites, apps, games",
+      plateDockerSub2: "backups",
+      plateAgentVm: "Agent VM",
+      plateAgentVmSub: "AI agents in a sandbox",
+      plateNoPorts: "No open ports at home",
+      plateLoop: "All plans",
+      platePlans: "Plans",
+      plateReverted: "Reverted plans",
+      plateMedian: "Plan to release, median",
+      plateFixed: "What the checks fixed",
+      platePlanReview: "Plan review",
+      plateCodeReview: "Code and security review",
+      platePlanCheck: "Plan check",
+      plateFix: "fix",
+      plateFixes: "fixes",
+      plateRoute: "Route",
+      plateDay1: "Day 1",
+      plateDay2: "Day 2",
+      plateDay3: "Day 3",
+      plateShared: "Shared by link",
+      plateStudyGame: "BattleLearn",
+      plateStudyLevel: "Times tables",
+      plateStudySunk: "Ship sunk",
+      plateStudyHit: "Hit on E4",
+      plateStudyShot: "Shot at E3",
+      plateAdvStory: "Night bus from terminal 13",
+      plateAdvTurn: "Turn 4/12 · 4 players",
+      plateAdvWindow: "Rescue window",
+      plateAdvWindowState: "Narrowing",
+      plateAdvTrust: "Group trust",
+      plateAdvTrustState: "Quiet doubt",
+      plateAdvSupplies: "Supply cache",
+      plateAdvSuppliesState: "Half left",
+      plateAdvChoice1: "Hold the gate and leave some supplies behind",
+      plateAdvChoice2: "Tell the truth about the hidden plan",
+      plateAdvRole: "Secret role · Mari",
+      plateAdvAbility1: "Opens the dispatch room",
+      plateAdvAbility2: "with a service card",
+      plateAdvOnce: "Ability · once per game",
     },
   };
 
@@ -136,7 +267,10 @@
   createLocaleController({
     copy: COPY,
     alternatePages: true,
-    links: { games: (locale) => `${gamesOrigin}/?lang=${locale}` },
+    links: {
+      study: (locale) => `${gamesOrigin}/study/?lang=${locale}`,
+      adventure: (locale) => `${gamesOrigin}/adventure/?lang=${locale}`,
+    },
   });
 </script>
 

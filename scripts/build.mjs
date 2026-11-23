@@ -6,6 +6,7 @@ import { renderArchitecture } from './render-architecture.mjs';
 import { buildHouse3dDemo } from './house3d-demo.mjs';
 import { buildWorkshopRoom } from './workshop-room.mjs';
 import { renderLanguagePages } from './language-pages.mjs';
+import { renderLandingPlates } from './landing-plates.mjs';
 import { fillSiteChrome } from './site-header.mjs';
 import { builtPages, createAssetStamper } from './asset-versions.mjs';
 
@@ -52,7 +53,9 @@ await runReportingSourceErrors(async () => {
     await copyDirectory(join(root, 'src', 'shared', 'fonts'), join(outputDir, 'assets', 'fonts'));
   }
 
-  await renderArchitecture(join(dist, 'landing'), await loadSources());
+  const sources = await loadSources();
+  await renderArchitecture(join(dist, 'landing'), sources);
+  await renderLandingPlates(join(dist, 'landing'), sources);
   await renderLanguagePages(join(dist, 'landing'));
   await buildHouse3dDemo(join(dist, 'landing', 'ha'));
   await buildWorkshopRoom(join(dist, 'landing'));

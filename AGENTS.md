@@ -38,6 +38,7 @@ stricter and stays.
 ```
 src/
   landing/   khe.ee
+    plates/  the landing cards' drawn SVG plates, inlined at build
     architecture/  the home server page: copy.js (en/et strings of all
              three architecture pages), architecture.js; its diagrams and
              building blocks are rendered into it at build time
@@ -51,6 +52,8 @@ scripts/
   build.mjs                build dist/
   check.mjs                static checks
   architecture-sources.mjs reads khe-architecture and khe-homelab
+  landing-plates.mjs       inlines the plates into the landing and fills
+                           the agents plate from agent-loop.json
   house3d-demo.mjs         runs khe-home-assistant's demo build into
                            dist/landing/ha/
   workshop-room.mjs        runs khe-workshop's room build into
@@ -163,7 +166,8 @@ reaches khe.ee at the next deploy here.
   `LANGUAGE_PAGES` and, after the architecture build, writes both languages
   from one source: `<html lang>`, the empty `data-i18n` elements and the
   `aria-label`s from the page's copy, the `data-link` hrefs, the consent
-  banner's privacy URL, the inline `COPY` cut to the page's language, and at
+  banner's privacy URL, a `data-i18n-placeholder`'s placeholder, the inline
+  `COPY` cut to the page's language, and at
   the `<!-- page-meta -->` marker the title, description, self canonical,
   absolute hreflang (`x-default` Estonian), the redirect script, the Open
   Graph tags with `og:site_name` KHE and a share image per language
@@ -302,16 +306,21 @@ reaches khe.ee at the next deploy here.
 - The three pages share `copy.js`, `architecture.js` and the
   `architecture-page` body class; `body[data-page]` picks each one's title
   and description (`title` for the server page, `<page>PageTitle` for the
-  others). `/architecture/` (server room): hero with three static facts,
+  others). `/architecture/` (server room): hero, a row of in-page links,
   `#estate`, `#shipping` (the delivery view, from the push to the deploy),
   `#uptime` (one row per khe-homelab README resilience layer; check compares
   the counts), then a line to the decisions page.
   `/architecture/decisions/` (server room): `#key-decisions` (from
   `keyDecisions` in the model) and `#decisions`, the register, which check
-  requires there and nowhere else: a table of the decisions in force
-  (Proposed, Accepted), then one line linking every stub (Superseded, Moved,
-  Deprecated), whose page shows its status and the link onward and no
-  article; `repoDecisionDirs` in the model lists the public repos that keep
+  requires there and nowhere else: one table of the decisions in force
+  (Proposed, Accepted) per topic in `decisionClusters` in the model, where
+  check fails unless every decision in force is in exactly one, under a
+  search and topic buttons that `architecture.js` shows (without it every
+  decision is listed and the controls stay `hidden`), then every stub
+  (Superseded, Moved, Deprecated) folded in a `<details>`, whose page shows
+  its status and the link onward and no article; an ADR page puts its prose
+  beside a rail of its sections, the decisions it supersedes and relates to
+  and its source, and ends with the previous and next decision in its list; `repoDecisionDirs` in the model lists the public repos that keep
   their own decisions; the ADR pages' breadcrumb links it, and
   khe-homelab's landing nginx and edge fallback serve the bare directory
   (no redirect). `/agents/` (home room), no diagram: `#path`, the steps
@@ -359,10 +368,21 @@ reaches khe.ee at the next deploy here.
   tokens, so `/agents/` (home room) shows no server teal.
 - Every built page's `<html>` carries `data-room` (`home`, `server`,
   `trips`, `house`, `games`, `stories`, `workshop`; check), which sets `--room` (fills, dots) and
-  `--room-text` (text, the `.ee`, focus). A landing row
+  `--room-text` (text, the `.ee`, focus). A landing card
   sets its own `data-room` for its hover and focus accent. `/ha/` gets
   `data-room="house" data-theme="dark"` from `house3d-demo.mjs`: the house
   view has no light theme yet, so its header stays dark (check).
+- The landing shows eight picture cards (`DESIGN.md` "Cards and bands").
+  Their pictures sit in `src/landing/`: two screenshots of public pages
+  (`/ha/` and a Töökoda part), the one published story picture copied from
+  khe-bunny-tales (already public at khe.ee/stories, estate ADR-029; it goes
+  if the story is unpublished), and the plates in `src/landing/plates/`,
+  which `scripts/landing-plates.mjs` inlines at each `<!-- plate:<name> -->`
+  marker and leaves out of `dist`, so their classes follow the theme and
+  their `data-i18n` text is filled per language. The agents plate's numbers
+  come from `agent-loop.json` through `parseAgentLoop`, so the build fails on
+  a missing or non-numeric key. Nothing on the landing comes from the private
+  trips build: the trips plate is an invented map.
 - The landing and games pages, and their privacy pages, keep their copy in an
   inline `COPY` (the header and footer strings come from `site-locale.js`); check fails when a `data-i18n`, `data-i18n-html` or
   `data-i18n-aria` key of the source page is missing from its `et` or `en`.

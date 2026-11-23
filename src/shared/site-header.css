@@ -24,14 +24,20 @@
    keeps the three blocks in step. The consent banner carries its own --khe-consent-* copy of the
    six it uses, for pages without these tokens, and check.mjs holds it equal (estate ADR-019). */
 :root {
-  --paper: #fafafa;
+  --paper: #f6f6f2;
   --surface: #ffffff;
-  --sunken: #eff1f1;
-  --ink: #121415;
-  --ink-2: #363b3d;
-  --muted: #5f6567;
-  --rule: #e3e5e5;
-  --rule-strong: #c3c7c7;
+  --sunken: #eaeae4;
+  --ink: #111315;
+  --ink-2: #3b3f42;
+  --muted: #666b6e;
+  --rule: #e2e2db;
+  --rule-strong: #c6c6bd;
+  --code-bg: #e9e9e1;
+  --obsidian: #121416;
+  --obsidian-2: #1c1f23;
+  --obsidian-ink: #f3f3ee;
+  --obsidian-muted: #9da3a8;
+  --obsidian-rule: #2c3136;
   --home: #d7263d;
   --server: #246b5f;
   --trips: #b75a3a;
@@ -39,7 +45,7 @@
   --stories: #a3336f;
   --workshop: #5d6b16;
   --house: #1f5fa8;
-  --house-ground: #e8eef6;
+  --house-ground: #e4eaee;
   --games: #8a5a12;
   --adventure: #6a3d8f;
   --study: #2f6b3a;
@@ -53,14 +59,20 @@
 
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
-    --paper: #0b0d0d;
-    --surface: #121615;
-    --sunken: #171c1b;
-    --ink: #eef1f0;
-    --ink-2: #c4cac7;
-    --muted: #8a928f;
-    --rule: #232827;
-    --rule-strong: #3a413f;
+    --paper: #0c0e0f;
+    --surface: #15181a;
+    --sunken: #1d2124;
+    --ink: #f1f2ee;
+    --ink-2: #c5c9c6;
+    --muted: #8b928f;
+    --rule: #252a2d;
+    --rule-strong: #3d4448;
+    --code-bg: #202528;
+    --obsidian: #14171a;
+    --obsidian-2: #1d2226;
+    --obsidian-ink: #f3f3ee;
+    --obsidian-muted: #9da3a8;
+    --obsidian-rule: #2a3036;
     --home: #fb4b57;
     --server: #7fc8b8;
     --trips: #d9764f;
@@ -68,7 +80,7 @@
     --stories: #f08cc0;
     --workshop: #b8c75a;
     --house: #6fe3ff;
-    --house-ground: #060c1b;
+    --house-ground: #070d1d;
     --games: #d9a441;
     --adventure: #b59ad6;
     --study: #7cc28a;
@@ -76,14 +88,20 @@
 }
 
 :root[data-theme="dark"] {
-  --paper: #0b0d0d;
-  --surface: #121615;
-  --sunken: #171c1b;
-  --ink: #eef1f0;
-  --ink-2: #c4cac7;
-  --muted: #8a928f;
-  --rule: #232827;
-  --rule-strong: #3a413f;
+  --paper: #0c0e0f;
+  --surface: #15181a;
+  --sunken: #1d2124;
+  --ink: #f1f2ee;
+  --ink-2: #c5c9c6;
+  --muted: #8b928f;
+  --rule: #252a2d;
+  --rule-strong: #3d4448;
+  --code-bg: #202528;
+  --obsidian: #14171a;
+  --obsidian-2: #1d2226;
+  --obsidian-ink: #f3f3ee;
+  --obsidian-muted: #9da3a8;
+  --obsidian-rule: #2a3036;
   --home: #fb4b57;
   --server: #7fc8b8;
   --trips: #d9764f;
@@ -91,7 +109,7 @@
   --stories: #f08cc0;
   --workshop: #b8c75a;
   --house: #6fe3ff;
-  --house-ground: #060c1b;
+  --house-ground: #070d1d;
   --games: #d9a441;
   --adventure: #b59ad6;
   --study: #7cc28a;

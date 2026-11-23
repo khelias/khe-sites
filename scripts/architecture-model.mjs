@@ -180,3 +180,12 @@ export const repoDecisionDirs = [
   { repo: 'khe-ui', url: 'https://github.com/khelias/khe-ui/tree/main/docs/adr' },
   { repo: 'khe-sites', url: 'https://github.com/khelias/khe-sites/tree/main/docs/decisions' },
 ];
+
+// The decisions in force by topic, for the filters on the decisions page. Check fails when a
+// decision in force is in no cluster or in two, so a new ADR cannot drop off the page.
+export const decisionClusters = [
+  { key: 'infra', label: 'clusterInfra', ids: ['008', '010', '016', '022'] },
+  { key: 'apps', label: 'clusterApps', ids: ['001', '003', '004', '014', '031', '038', '041', '043', '047'] },
+  { key: 'public', label: 'clusterPublic', ids: ['012', '019', '029', '035'] },
+  { key: 'agents', label: 'clusterAgents', ids: ['007', '023', '027', '037', '044'] },
+];

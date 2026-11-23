@@ -1,0 +1,31 @@
+<svg class="plate" viewBox="0 0 640 400" aria-hidden="true" focusable="false">
+  <rect width="640" height="400" class="plate-bg"/>
+  <text x="32" y="44" class="plate-accent plate-t13 plate-strong" data-i18n="plateLoop"></text>
+  <text x="608" y="44" text-anchor="end" class="plate-muted plate-mono plate-t11">{{period}}</text>
+  <line x1="32" y1="60" x2="608" y2="60" class="plate-rule"/>
+
+  <text x="32" y="122" class="plate-ink plate-figure">{{plans}}</text>
+  <text x="32" y="146" class="plate-muted plate-t13" data-i18n="platePlans"></text>
+  <text x="200" y="122" class="plate-ink plate-figure">{{reverted}}</text>
+  <text x="200" y="146" class="plate-muted plate-t13" data-i18n="plateReverted"></text>
+  <text x="384" y="122" class="plate-ink plate-figure">{{median}}</text>
+  <text x="384" y="146" class="plate-muted plate-t13" data-i18n="plateMedian"></text>
+
+  <line x1="32" y1="176" x2="608" y2="176" class="plate-rule"/>
+  <text x="32" y="204" class="plate-muted plate-t13" data-i18n="plateFixed"></text>
+
+  <text x="32" y="238" class="plate-ink plate-t14 plate-strong" data-i18n="platePlanReview"></text>
+  <text x="608" y="238" text-anchor="end" class="plate-ink plate-mono plate-t12">{{planReview}}</text>
+  <rect x="32" y="248" width="{{track}}" height="10" rx="2" class="plate-bar-bg"/>
+  <rect x="32" y="248" width="{{planReviewWidth}}" height="10" rx="2" class="plate-bar"/>
+
+  <text x="32" y="290" class="plate-ink plate-t14 plate-strong" data-i18n="plateCodeReview"></text>
+  <text x="608" y="290" text-anchor="end" class="plate-ink plate-mono plate-t12">{{codeReview}}</text>
+  <rect x="32" y="300" width="{{track}}" height="10" rx="2" class="plate-bar-bg"/>
+  <rect x="32" y="300" width="{{codeReviewWidth}}" height="10" rx="2" class="plate-bar"/>
+
+  <text x="32" y="342" class="plate-ink plate-t14 plate-strong" data-i18n="platePlanCheck"></text>
+  <text x="608" y="342" text-anchor="end" class="plate-ink plate-mono plate-t12">{{planCheck}}</text>
+  <rect x="32" y="352" width="{{track}}" height="10" rx="2" class="plate-bar-bg"/>
+  <rect x="32" y="352" width="{{planCheckWidth}}" height="10" rx="2" class="plate-bar"/>
+</svg>

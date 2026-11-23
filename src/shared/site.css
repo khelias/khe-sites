@@ -47,44 +47,78 @@ a { color: var(--ink-2); }
 
 /* The family label: small sans in sentence case. */
 .arch-kicker,
-.arch-tag {
+.arch-tag,
+.show-card__kicker {
   font-size: 0.8125rem;
   font-weight: 500;
   line-height: 1.4;
 }
 
-/* Landing */
+/* Landing: the hero, an obsidian band with the two spatial pieces, then a gallery of pairs.
+   Every card is the same 16:10 picture over its kicker, title and line (DESIGN.md "Cards"). */
 .landing {
+  padding-bottom: clamp(3.5rem, 8vw, 5.5rem);
+}
+
+.landing-wrap {
   width: min(1080px, 100%);
   margin: 0 auto;
-  padding: clamp(3rem, 8vh, 5rem) max(16px, env(safe-area-inset-right)) 3.5rem max(16px, env(safe-area-inset-left));
+  padding-right: max(16px, env(safe-area-inset-right));
+  padding-left: max(16px, env(safe-area-inset-left));
+}
+
+.landing-hero {
+  padding: clamp(2.75rem, 7vw, 5rem) 0 clamp(2.5rem, 5vw, 4rem);
+}
+
+.landing-hero__grid,
+.show-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.landing-hero__grid {
+  gap: 1.25rem clamp(1.5rem, 3vw, 2.25rem);
+  align-items: end;
+}
+
+.landing-hero__grid .hero-title {
+  grid-column: 1 / -1;
 }
 
 .hero-title {
   color: var(--ink);
-  font-size: clamp(2.6rem, 6vw, 4rem);
+  font-size: clamp(2.75rem, 7vw, 5rem);
   font-weight: 500;
-  letter-spacing: -0.02em;
-  line-height: 1.02;
-}
-
-.hero-lead,
-.hero-role {
-  color: var(--ink-2);
-  font-size: 1.1875rem;
+  letter-spacing: -0.03em;
+  line-height: 0.98;
+  text-wrap: balance;
 }
 
 .hero-lead {
   max-width: 34rem;
-  text-wrap: pretty;
+  color: var(--ink-2);
+  font-size: 1.1875rem;
   line-height: 1.5;
+  text-wrap: pretty;
 }
 
-.hero-head {
+.landing-hero .hero-lead {
+  font-size: clamp(1.1875rem, 2vw, 1.375rem);
+  line-height: 1.45;
+}
+
+.hero-bio {
+  display: grid;
+  gap: 1rem;
+  justify-self: end;
+  width: min(100%, 22rem);
+}
+
+.hero-bio__who {
   display: flex;
   align-items: center;
-  gap: clamp(0.875rem, 2.5vw, 1.25rem);
-  margin-bottom: 0.375rem;
+  gap: 0.9rem;
 }
 
 .hero-portrait {
@@ -93,33 +127,19 @@ a { color: var(--ink-2); }
 
 .hero-portrait img {
   display: block;
-  width: clamp(4rem, 11vw, 5.5rem);
+  width: 3.75rem;
   height: auto;
   border-radius: 50%;
   background: var(--rule);
 }
 
-.games-hero .hero-title {
-  margin-bottom: 1rem;
+.hero-bio__role {
+  color: var(--muted);
+  font-size: 0.9375rem;
+  line-height: 1.4;
 }
 
-.hero-role {
-  margin-bottom: 1rem;
-  line-height: 1.35;
-}
-
-.landing-hero .hero-lead {
-  color: var(--ink);
-}
-
-:is(.landing-hero, .games-hero) .hero-lead + .hero-lead {
-  margin-top: 0.75rem;
-}
-
-/* Below the project rows: the projects come first, contact after them. */
 .landing-contact {
-  max-width: 34rem;
-  margin-top: clamp(3rem, 8vh, 4.5rem);
   color: var(--ink-2);
   line-height: 1.6;
 }
@@ -133,11 +153,235 @@ a { color: var(--ink-2); }
   .landing-contact a:hover { text-decoration-color: var(--room); }
 }
 
-
-.landing-projects {
-  margin-top: clamp(2.25rem, 5vh, 3rem);
-  border-top: 1px solid var(--rule-strong);
+/* Full-bleed: the band carries the dark ground in both themes. In light, a room's dot is mixed
+   toward the band's ink so it holds on the dark ground. */
+.landing-band {
+  --band-dot-mix: 55%;
+  padding: clamp(2.5rem, 6vw, 4.5rem) 0;
+  background: var(--obsidian);
+  color: var(--obsidian-ink);
 }
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) .landing-band {
+    --band-dot-mix: 100%;
+    border-top: 1px solid var(--obsidian-rule);
+    border-bottom: 1px solid var(--obsidian-rule);
+  }
+
+  :root:not([data-theme="light"]) .landing-band .show-card__media {
+    border-color: var(--obsidian-rule);
+  }
+}
+
+:root[data-theme="dark"] .landing-band {
+  --band-dot-mix: 100%;
+  border-top: 1px solid var(--obsidian-rule);
+  border-bottom: 1px solid var(--obsidian-rule);
+}
+
+:root[data-theme="dark"] .landing-band .show-card__media {
+  border-color: var(--obsidian-rule);
+}
+
+.landing-gallery {
+  padding-top: clamp(3rem, 6vw, 4.75rem);
+}
+
+.show-grid {
+  gap: clamp(2.5rem, 5vw, 3.5rem) clamp(1.5rem, 3vw, 2.25rem);
+}
+
+.show-card {
+  --press-opacity: 0.8;
+  --card-accent: color-mix(in srgb, var(--room) var(--band-dot-mix, 100%), var(--obsidian-ink));
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  min-width: 0;
+  color: inherit;
+  text-decoration: none;
+}
+
+.show-card__media {
+  display: block;
+  margin-bottom: 0.25rem;
+  aspect-ratio: 16 / 10;
+  overflow: hidden;
+  border: 1px solid var(--rule);
+  border-radius: 12px;
+  background: var(--surface);
+}
+
+.landing-band .show-card__media {
+  border-color: transparent;
+  background: var(--obsidian-2);
+}
+
+.show-card__media img,
+.show-card__media svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.show-card__img--bottom {
+  object-position: 50% 92%;
+}
+
+.show-card__kicker {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: var(--muted);
+}
+
+.show-card__dot {
+  flex: none;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--card-accent);
+}
+
+.show-card__title {
+  color: var(--ink);
+  font-size: clamp(1.5rem, 2.6vw, 2rem);
+  font-weight: 500;
+  letter-spacing: -0.02em;
+  line-height: 1.1;
+  text-wrap: balance;
+}
+
+.show-card__desc {
+  max-width: 32rem;
+  color: var(--ink-2);
+  font-size: 1rem;
+  line-height: 1.55;
+  text-wrap: pretty;
+}
+
+.landing-band .show-card__title {
+  color: var(--obsidian-ink);
+}
+
+.landing-band :is(.show-card__kicker, .show-card__desc) {
+  color: var(--obsidian-muted);
+}
+
+.landing-band .show-card:focus-visible {
+  outline-color: var(--obsidian-ink);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .show-card:hover .show-card__title {
+    text-decoration: underline;
+    text-decoration-color: var(--card-accent);
+    text-decoration-thickness: 1px;
+    text-underline-offset: 0.16em;
+  }
+}
+
+/* The drawn plates, inlined at build: their colours are the family tokens, so they follow the
+   theme. Text written once per language shows by html[lang], with the diagram labels below. */
+.plate text {
+  font-family: var(--sans);
+}
+
+.plate .plate-mono {
+  font-family: var(--mono);
+}
+
+.plate-t11 { font-size: 11px; }
+.plate-t12 { font-size: 12px; }
+.plate-t13 { font-size: 13px; }
+.plate-t14 { font-size: 14px; }
+.plate-t16 { font-size: 16px; font-weight: 600; }
+.plate-strong { font-weight: 600; }
+
+.plate-figure {
+  font-size: 44px;
+  font-weight: 500;
+  letter-spacing: -0.03em;
+}
+
+.plate-bg { fill: var(--surface); }
+.plate-ink { fill: var(--ink); }
+.plate-muted { fill: var(--muted); }
+.plate-accent { fill: var(--room-text); }
+.plate-rule { stroke: var(--rule); stroke-width: 1; }
+.plate-box { fill: var(--paper); stroke: var(--rule-strong); stroke-width: 1; }
+.plate-box-dashed { fill: none; stroke: var(--rule-strong); stroke-width: 1; stroke-dasharray: 4 3; }
+.plate-line { fill: none; stroke: var(--muted); stroke-width: 1.4; }
+.plate-accent-line { fill: none; stroke: var(--room); stroke-width: 1.6; }
+.plate-arrow { fill: var(--muted); }
+.plate-bar-bg { fill: var(--sunken); }
+.plate-bar { fill: var(--ink); }
+
+.plate-host {
+  fill: color-mix(in srgb, var(--room) 8%, var(--surface));
+  stroke: color-mix(in srgb, var(--room) 40%, transparent);
+  stroke-width: 1.2;
+}
+
+/* Reisipäevik: an invented map and route. */
+.plate-water,
+.plate-lake { fill: color-mix(in srgb, var(--house) 9%, var(--surface)); }
+.plate-land { fill: var(--paper); stroke: var(--rule-strong); stroke-width: 1; }
+.plate-road { fill: none; stroke: var(--rule-strong); stroke-width: 2; stroke-linecap: round; }
+.plate-route { fill: none; stroke: var(--room); stroke-width: 3; stroke-dasharray: 1 7; stroke-linecap: round; }
+.plate-stop { fill: var(--surface); stroke: var(--room); stroke-width: 2.5; }
+.plate-stop--end { fill: var(--room); }
+.plate-stop-dot { fill: var(--room); }
+
+.plate-stop-label {
+  fill: var(--room-text);
+  font-size: 10px;
+  font-weight: 600;
+}
+
+/* Tarkade Mängud: Laevade uputamine. */
+.study-bg { fill: color-mix(in srgb, var(--study) 5%, var(--surface)); }
+.study-title { fill: color-mix(in srgb, var(--house) 75%, var(--ink)); }
+.study-sea rect { fill: color-mix(in srgb, var(--house) 12%, var(--surface)); stroke: color-mix(in srgb, var(--house) 24%, var(--surface)); stroke-width: 1; }
+.study-miss { fill: none; stroke: color-mix(in srgb, var(--house) 45%, var(--surface)); stroke-width: 1.8; }
+.study-miss-dot { fill: color-mix(in srgb, var(--house) 45%, var(--surface)); }
+.study-ship,
+.study-answer--on { fill: color-mix(in srgb, var(--house) 70%, var(--ink)); }
+.study-sunk { stroke: var(--trips); stroke-width: 2.4; stroke-linecap: round; }
+.study-hit-cell { fill: color-mix(in srgb, var(--trips) 16%, var(--surface)); stroke: var(--trips); stroke-width: 1.5; }
+.study-hit { fill: var(--trips); }
+.study-target { fill: color-mix(in srgb, var(--games) 10%, var(--surface)); stroke: var(--games); stroke-width: 2.2; }
+.study-target-mark { fill: var(--games); font-size: 22px; font-weight: 700; }
+.study-target-text { fill: var(--games); }
+.study-sum { font-size: 32px; font-weight: 600; }
+.study-answer { fill: var(--sunken); stroke: var(--rule); stroke-width: 1; }
+.study-answer-text,
+.study-answer-text--on { font-size: 18px; font-weight: 600; }
+.study-answer-text { fill: var(--ink-2); }
+.study-answer-text--on { fill: var(--surface); }
+
+/* AI Seiklus is dark by design (DESIGN.md "Themes"), so its plate keeps the band's dark ground in
+   both themes; the serif lines are glyph paths, not a web font. */
+.adv-bg { fill: var(--obsidian); }
+.adv-stage { fill: var(--obsidian-2); stroke: var(--obsidian-rule); stroke-width: 1; }
+.adv-panel { fill: color-mix(in srgb, var(--obsidian-ink) 4%, var(--obsidian-2)); stroke: var(--obsidian-rule); stroke-width: 1; }
+.adv-choice { fill: var(--obsidian); stroke: var(--obsidian-rule); stroke-width: 1; }
+.adv-track { fill: var(--obsidian-rule); }
+.adv-rule { stroke: var(--obsidian-rule); stroke-width: 1; }
+.adv-ink { fill: var(--obsidian-ink); }
+.adv-muted { fill: var(--obsidian-muted); }
+.adv-amber,
+.adv-amber-text { fill: #e5ad5e; }
+.adv-red,
+.adv-red-text { fill: #e57368; }
+.adv-green,
+.adv-green-text { fill: #52c496; }
+.adv-role { fill: color-mix(in srgb, #e5ad5e 8%, var(--obsidian)); stroke: #c89242; stroke-width: 1.2; }
+.adv-serif-1 { fill: var(--obsidian-ink); }
+.adv-serif-2 { fill: color-mix(in srgb, var(--obsidian-ink) 84%, var(--obsidian)); }
+.adv-serif-3 { fill: color-mix(in srgb, var(--obsidian-ink) 68%, var(--obsidian)); }
 
 :root {
   --row-gap: clamp(1rem, 3vw, 2rem);
@@ -226,7 +470,12 @@ body.games-home {
 }
 
 .games-hero .hero-title {
+  margin-bottom: 1rem;
   font-size: clamp(2.25rem, 5vw, 3rem);
+}
+
+.games-hero .hero-lead + .hero-lead {
+  margin-top: 0.75rem;
 }
 
 .games-home main {
@@ -315,7 +564,7 @@ body.architecture-page {
   --a-accent-soft: color-mix(in srgb, var(--room) 10%, var(--a-bg));
   --a-node: #8d918e;
   --a-proposed: var(--games);
-  --a-code: #ebe8e1;
+  --a-code: var(--code-bg);
   --a-person: #9a4d00;
   --a-machine: #44506b;
 }
@@ -325,7 +574,6 @@ body.architecture-page {
   :root:not([data-theme="light"]) body.architecture-page {
     --a-node: #5d6562;
     --a-proposed: #f2b84b;
-    --a-code: #1a1f1e;
     --a-person: #fbbf77;
     --a-machine: #a5b4fc;
   }
@@ -334,7 +582,6 @@ body.architecture-page {
 :root[data-theme="dark"] body.architecture-page {
   --a-node: #5d6562;
   --a-proposed: #f2b84b;
-  --a-code: #1a1f1e;
   --a-person: #fbbf77;
   --a-machine: #a5b4fc;
 }
@@ -351,6 +598,10 @@ body.architecture-page {
 /* The diagrams need the wider column, so the header widens with it and both edges line up. */
 body.architecture-page:not(.architecture-decision) .site-header {
   --khe-header-max-width: 1240px;
+}
+
+.arch.arch-decision {
+  width: min(1080px, 100%);
 }
 
 .arch {
@@ -408,16 +659,17 @@ body.architecture-page:not(.architecture-decision) .site-header {
 .arch h1 {
   max-width: 18ch;
   overflow-wrap: break-word;
-  margin: 0.9rem 0 1.4rem;
-  font-size: clamp(2.3rem, 5vw, 3.75rem);
-  line-height: 1.06;
-  letter-spacing: -0.02em;
+  margin: 0.75rem 0 1.25rem;
+  font-size: clamp(2.4rem, 6vw, 4.4rem);
+  line-height: 1;
+  letter-spacing: -0.03em;
 }
 
 .arch h2 {
   margin-bottom: 0.75rem;
-  font-size: clamp(1.75rem, 3vw, 2.25rem);
-  line-height: 1.15;
+  font-size: clamp(1.65rem, 3vw, 2.35rem);
+  line-height: 1.12;
+  letter-spacing: -0.02em;
 }
 
 .arch h3 {
@@ -425,12 +677,12 @@ body.architecture-page:not(.architecture-decision) .site-header {
   line-height: 1.25;
 }
 
-/* The family fact: the section numbers, the layers' numbers and times, a decision's ADR ids. */
-.arch-num,
+/* The family fact: the layers' numbers and times, a decision's ADR ids. */
 .arch-layers li > .arch-tag,
-.arch-pick > p.arch-tag {
+.arch-pick__ids,
+.arch-decision__id {
   font-family: var(--a-mono);
-  font-size: 0.6875rem;
+  font-size: 0.75rem;
   font-weight: 500;
   line-height: 1.4;
 }
@@ -439,7 +691,6 @@ body.architecture-page:not(.architecture-decision) .site-header {
   color: var(--a-accent-ink);
 }
 
-.arch-num,
 .arch-tag {
   color: var(--a-muted);
 }
@@ -487,80 +738,27 @@ body.architecture-page:not(.architecture-decision) .site-header {
 }
 
 .arch-hero {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(18rem, 24rem);
-  gap: 3.5rem;
-  align-items: start;
+  padding-bottom: 2.5rem;
+  border-bottom: 1px solid var(--a-rule);
 }
 
 /* A page without a nav (/agents/) starts its first section closer to the hero. */
 .arch-hero + .arch-section {
-  margin-top: 3rem;
-}
-
-/* The decisions and agents pages have no facts column. */
-.arch-hero__text:only-child {
-  grid-column: 1 / -1;
+  margin-top: 3.5rem;
 }
 
 .arch-lead {
-  max-width: 40rem;
-  font-size: 1.2rem;
-  line-height: 1.55;
+  max-width: 42rem;
+  font-size: clamp(1.125rem, 1.8vw, 1.3rem);
+  line-height: 1.5;
 }
 
 .arch-lead + .arch-lead {
   margin-top: 0.75rem;
 }
 
-/* One value column as wide as the widest value, so "iga nädal" stays on one
-   line and the three rows still align. */
-.arch-facts {
-  display: grid;
-  grid-template-columns: max-content minmax(0, 1fr);
-  column-gap: 1rem;
-  border-top: 2px solid var(--a-text);
-}
-
-.arch-facts div {
-  grid-column: 1 / -1;
-  display: grid;
-  grid-template-columns: 6.5rem minmax(0, 1fr);
-  grid-template-columns: subgrid;
-  column-gap: 1rem;
-  align-items: baseline;
-  padding: 1rem 0;
-  border-bottom: 1px solid var(--a-rule);
-}
-
-.arch-facts dt {
-  color: var(--a-text);
-  font-family: var(--a-mono);
-  font-size: 1.45rem;
-  font-weight: 500;
-  line-height: 1.1;
-  white-space: nowrap;
-}
-
-.arch-facts div:first-child dt {
-  font-size: 2.1rem;
-}
-
-.arch-facts dd strong,
-.arch-facts dd > span {
-  display: block;
-}
-
-.arch-facts dd > span {
-  margin-top: 0.15rem;
-  color: var(--a-muted);
-  font-size: 0.875rem;
-  line-height: 1.5;
-}
-
+/* The in-page links: one quiet row under the hero, no numbers. */
 .arch-nav {
-  margin-top: 4rem;
-  border-top: 1px solid var(--a-rule);
   border-bottom: 1px solid var(--a-rule);
 }
 
@@ -573,26 +771,23 @@ body.architecture-page:not(.architecture-decision) .site-header {
 
 .arch .arch-nav a {
   display: inline-block;
-  padding: 0.75rem 0;
-  color: var(--a-text);
-  font-size: 0.95rem;
+  padding: 0.7rem 0;
+  color: var(--a-text-2);
+  font-size: 0.9375rem;
   text-decoration: none;
 }
 
 @media (hover: hover) and (pointer: fine) {
   .arch .arch-nav a:hover {
+    color: var(--a-text);
     text-decoration: underline;
     text-decoration-color: var(--a-accent);
   }
 }
 
 .arch-section {
-  margin-top: 6rem;
+  margin-top: clamp(4rem, 8vw, 5.5rem);
   scroll-margin-top: 5.5rem;
-}
-
-.arch-section > .arch-num {
-  margin-bottom: 0.5rem;
 }
 
 .arch-figure {
@@ -626,9 +821,12 @@ body.architecture-page:not(.architecture-decision) .site-header {
   }
 }
 
-/* Diagram labels and the /agents/ period are written once per language; html[lang] picks one. */
+/* Diagram labels, the landing plates and the /agents/ period are written once per language;
+   html[lang] picks one. */
 html:not([lang="et"]) .arch-svg [lang="et"],
 html[lang="et"] .arch-svg [lang="en"],
+html:not([lang="et"]) .plate [lang="et"],
+html[lang="et"] .plate [lang="en"],
 html:not([lang="et"]) .arch-period [lang="et"],
 html[lang="et"] .arch-period [lang="en"] {
   display: none;
@@ -755,74 +953,104 @@ html[lang="et"] .arch-period [lang="en"] {
 }
 
 .arch-details summary {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
   padding: 1rem 0;
   color: var(--a-text);
-  font-weight: 600;
+  font-weight: 500;
+  list-style: none;
   cursor: pointer;
 }
 
-.arch-details[open] summary {
-  border-bottom: 1px solid var(--a-rule);
+.arch-details summary::-webkit-details-marker {
+  display: none;
+}
+
+.arch-details summary::after {
+  content: "+";
+  color: var(--a-muted);
+  font-family: var(--a-mono);
+}
+
+.arch-details[open] summary::after {
+  content: "\2212";
+}
+
+/* The repos and blocks behind the estate picture, in two equal columns. */
+.arch-blocks {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0 clamp(1.5rem, 3vw, 2.5rem);
+  padding-bottom: 1.5rem;
 }
 
 .arch-block-group {
-  margin-bottom: 2rem;
+  margin-top: 1.5rem;
 }
 
 .arch-details .arch-block-group h3 {
-  margin: 2rem 0 0.75rem;
-  font-size: 1.15rem;
+  margin: 0 0 0.75rem;
+  font-size: 1.1rem;
 }
 
+/* The five decisions: each a row of two equal halves, the decision and its plus and minus. */
 .arch-picks {
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 3rem 2.5rem;
-  margin-top: 2.5rem;
+  gap: 2rem;
+  margin-top: 2rem;
 }
 
 .arch-pick {
-  display: flex;
-  flex-direction: column;
-  gap: 0.75rem;
-  padding-top: 1.25rem;
-  border-top: 1px solid var(--a-text);
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem clamp(1.5rem, 3vw, 2.5rem);
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--a-rule-strong);
 }
 
-.arch-pick p {
-  font-size: 0.95rem;
-  line-height: 1.6;
+.arch-pick__ids {
+  margin-bottom: 0.35rem;
 }
 
-.arch-pick p .arch-tag {
-  display: block;
-}
-
-.arch .arch-pick > a:last-child {
-  align-self: flex-start;
-  font-size: 0.95rem;
-}
-
-.arch .arch-pick--more {
-  gap: 0.5rem;
-  border-top-color: var(--a-rule-strong);
-  color: var(--a-muted);
-  font-size: 0.95rem;
+.arch .arch-pick__ids a {
+  color: var(--a-accent-ink);
   text-decoration: none;
 }
 
-.arch-pick__title {
-  color: var(--a-text);
-  font-size: 1.4rem;
-  font-weight: 500;
-  line-height: 1.25;
+.arch-pick h3 {
+  font-size: clamp(1.3rem, 2.2vw, 1.5rem);
+  line-height: 1.2;
+  letter-spacing: -0.015em;
 }
 
-@media (hover: hover) and (pointer: fine) {
-  .arch .arch-pick--more:hover .arch-pick__title {
-    text-decoration: underline;
-    text-decoration-color: var(--a-accent);
-  }
+.arch-pick__pair {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1.25rem;
+}
+
+/* The cue is colour and a rule above it, so plus and minus differ in more than hue. */
+.arch-pick__pair dt {
+  margin-bottom: 0.4rem;
+  padding-top: 0.5rem;
+  border-top: 2px solid currentColor;
+  font-size: 0.8125rem;
+  font-weight: 600;
+}
+
+.arch-pick__plus dt {
+  color: var(--a-accent-ink);
+}
+
+.arch-pick__minus dt {
+  color: var(--a-person);
+  border-top-style: dashed;
+}
+
+.arch-pick__pair dd {
+  font-size: 0.95rem;
+  line-height: 1.55;
 }
 
 .arch-columns {
@@ -1043,12 +1271,166 @@ html[lang="et"] .arch-period [lang="en"] {
   background: var(--a-proposed);
 }
 
-.arch-history {
-  max-width: 40rem;
-  margin: 1.25rem 0 1.5rem;
+/* The register: a search and topic buttons, shown by architecture.js, over one table per topic. */
+.arch-filter {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem 1.25rem;
+  margin: 1.75rem 0 0.5rem;
+}
+
+.arch-filter[hidden] {
+  display: none;
+}
+
+.arch-filter__topics {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+}
+
+.arch-filter__topic {
+  min-height: 44px;
+  padding: 0 1rem;
+  border: 0;
+  border-radius: 999px;
+  background: var(--a-sunken);
+  color: var(--a-text-2);
+  cursor: pointer;
+  font: 500 0.875rem/1 var(--sans);
+}
+
+.arch-filter__topic[aria-pressed="true"] {
+  background: var(--a-text);
+  color: var(--a-bg);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .arch-filter__topic[aria-pressed="false"]:hover {
+    color: var(--a-text);
+  }
+}
+
+.arch-filter__search {
+  width: min(18rem, 100%);
+  min-height: 44px;
+  padding: 0 1rem;
+  border: 1px solid var(--a-rule-strong);
+  border-radius: 999px;
+  background: var(--a-surface);
+  color: var(--a-text);
+  font: 400 1rem/1 var(--sans);
+}
+
+.arch-filter__topic:focus-visible,
+.arch-filter__search:focus-visible {
+  outline: 2px solid var(--a-accent);
+  outline-offset: 2px;
+}
+
+.arch-filter__empty {
+  margin-top: 2rem;
   color: var(--a-muted);
+}
+
+.arch-cluster {
+  margin-top: 2.5rem;
+}
+
+.arch .arch-cluster__title {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 1rem;
+  font-size: 1.3rem;
+  letter-spacing: -0.015em;
+}
+
+.arch-cluster__count {
+  color: var(--a-muted);
+  font-family: var(--a-mono);
+  font-size: 0.8125rem;
+  font-weight: 500;
+}
+
+.arch-cluster .arch-table-wrap {
+  margin-top: 0.75rem;
+}
+
+/* Fixed columns, so the four topic tables line up under each other. */
+.arch-cluster .arch-register {
+  table-layout: fixed;
+}
+
+.arch-cluster .arch-register th:first-child {
+  width: 6.5rem;
+}
+
+.arch-cluster .arch-register th:nth-child(3) {
+  width: 9.5rem;
+}
+
+.arch-cluster .arch-register th:last-child {
+  width: 7rem;
+}
+
+/* The decisions that left the register, folded under one line. */
+.arch-history {
+  margin: 2.5rem 0 1.5rem;
+  border-top: 1px solid var(--a-rule);
+  border-bottom: 1px solid var(--a-rule);
+}
+
+.arch-history summary {
+  display: flex;
+  align-items: baseline;
+  gap: 0.75rem;
+  padding: 1rem 0;
+  color: var(--a-text);
+  font-weight: 500;
+  cursor: pointer;
+}
+
+.arch-history__list {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.25rem clamp(1.5rem, 3vw, 2.5rem);
+  padding-bottom: 1.25rem;
+  list-style: none;
   font-size: 0.9rem;
-  font-variant-numeric: tabular-nums;
+}
+
+.arch-history__list li {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.35rem 0;
+}
+
+.arch .arch-history__list a {
+  color: var(--a-text-2);
+  text-decoration-color: transparent;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .arch .arch-history__list a:hover {
+    text-decoration-color: var(--a-accent);
+  }
+}
+
+.arch-history__id {
+  color: var(--a-muted);
+  font-family: var(--a-mono);
+  font-size: 0.8rem;
+}
+
+.arch-history__status {
+  flex: none;
+  color: var(--a-muted);
+  font-size: 0.8125rem;
 }
 
 .arch-inline-list {
@@ -1067,20 +1449,29 @@ html:not([lang="et"]) .arch-lang-note {
   font-size: 0.9rem;
 }
 
-.arch.arch-decision {
-  display: block;
-  width: min(48rem, 100%);
+/* An ADR page: a head across the column, then the prose beside a sticky rail. */
+.arch-decision__head {
+  padding-bottom: 2rem;
+  border-bottom: 1px solid var(--a-rule);
+}
+
+.arch-decision__id {
+  color: var(--a-accent-ink);
+}
+
+.arch-decision__cluster {
+  font-family: var(--sans);
 }
 
 .arch-decision h1 {
-  max-width: none;
-  margin-bottom: 1.75rem;
-  font-size: clamp(1.9rem, 3.6vw, 2.6rem);
-  line-height: 1.12;
+  max-width: 30ch;
+  margin-bottom: 1.5rem;
+  font-size: clamp(1.9rem, 4.2vw, 3rem);
+  line-height: 1.08;
 }
 
 .arch-breadcrumb {
-  margin-bottom: 2.5rem;
+  margin-bottom: 2rem;
   font-size: 0.9rem;
 }
 
@@ -1098,11 +1489,7 @@ html:not([lang="et"]) .arch-lang-note {
 .arch-meta {
   display: flex;
   flex-wrap: wrap;
-  gap: 1rem 2.5rem;
-  margin-bottom: 1.75rem;
-  padding: 1rem 0;
-  border-top: 1px solid var(--a-rule-strong);
-  border-bottom: 1px solid var(--a-rule);
+  gap: 0.75rem 2.5rem;
   font-size: 0.92rem;
   line-height: 1.5;
 }
@@ -1118,6 +1505,56 @@ html:not([lang="et"]) .arch-lang-note {
   color: var(--a-text);
 }
 
+.arch-decision__body {
+  display: grid;
+  grid-template-columns: 14rem minmax(0, 46rem);
+  gap: 2rem clamp(2rem, 5vw, 4.5rem);
+  align-items: start;
+  margin-top: 2.5rem;
+}
+
+.arch-rail {
+  position: sticky;
+  top: 5.5rem;
+  display: grid;
+  gap: 1.5rem;
+  font-size: 0.875rem;
+  line-height: 1.45;
+}
+
+.arch .arch-rail__label {
+  margin-bottom: 0.45rem;
+  color: var(--a-muted);
+  font-size: 0.8125rem;
+  font-weight: 600;
+  letter-spacing: 0;
+}
+
+.arch-rail ul {
+  display: grid;
+  gap: 0.4rem;
+  list-style: none;
+}
+
+.arch .arch-rail a {
+  color: var(--a-text-2);
+  text-decoration-color: transparent;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .arch .arch-rail a:hover {
+    color: var(--a-text);
+    text-decoration-color: var(--a-accent);
+  }
+}
+
+.arch-rail__id {
+  display: block;
+  color: var(--a-muted);
+  font-family: var(--a-mono);
+  font-size: 0.75rem;
+}
+
 .arch-notice {
   margin-bottom: 1.75rem;
   padding: 0.9rem 1.1rem;
@@ -1129,12 +1566,17 @@ html:not([lang="et"]) .arch-lang-note {
 }
 
 .arch-adr {
-  margin-top: 2.5rem;
+  margin-top: 0.75rem;
 }
 
 .arch-adr h2 {
-  margin: 3rem 0 0.9rem;
-  font-size: 1.45rem;
+  margin: 2.75rem 0 0.9rem;
+  font-size: 1.5rem;
+  scroll-margin-top: 5.5rem;
+}
+
+.arch-adr h2:first-child {
+  margin-top: 0;
 }
 
 .arch-adr h3 {
@@ -1146,18 +1588,42 @@ html:not([lang="et"]) .arch-lang-note {
   margin-bottom: 1.1rem;
 }
 
-.arch-adr ul,
-.arch-adr ol {
+.arch-adr ul {
   margin: 0 0 1.1rem 1.35rem;
 }
 
-.arch-adr li {
+.arch-adr ul li {
   margin-bottom: 0.5rem;
   padding-left: 0.2rem;
 }
 
-.arch-adr li::marker {
+.arch-adr ul li::marker {
   color: var(--a-muted);
+}
+
+/* Numbered points keep the number the source gives (start=) through the list-item counter, set
+   in a gutter of their own so two-digit numbers line up with one-digit ones. */
+.arch-adr ol {
+  margin: 0 0 1.1rem;
+  padding: 0;
+  list-style: none;
+}
+
+.arch-adr ol > li {
+  position: relative;
+  margin-bottom: 0.75rem;
+  padding-left: 2.25rem;
+}
+
+.arch-adr ol > li::before {
+  content: counter(list-item) ".";
+  position: absolute;
+  top: 0.2em;
+  left: 0;
+  color: var(--a-accent-ink);
+  font-family: var(--a-mono);
+  font-size: 0.8125rem;
+  font-variant-numeric: tabular-nums;
 }
 
 .arch-adr li > ul,
@@ -1166,11 +1632,47 @@ html:not([lang="et"]) .arch-lang-note {
   margin-bottom: 0;
 }
 
-.arch-source {
-  margin-top: 3.5rem;
-  padding-top: 1.25rem;
+.arch-neighbours {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem;
+  margin-top: 3rem;
+  padding-top: 1.5rem;
   border-top: 1px solid var(--a-rule);
-  font-size: 0.9rem;
+}
+
+.arch .arch-neighbour {
+  display: grid;
+  gap: 0.2rem;
+  padding: 1rem 1.15rem;
+  border-radius: 12px;
+  background: var(--a-surface);
+  color: var(--a-text);
+  font-size: 0.9375rem;
+  line-height: 1.4;
+  text-decoration: none;
+}
+
+.arch-neighbour--next {
+  grid-column: 2;
+  text-align: right;
+}
+
+.arch-neighbour__dir,
+.arch-neighbour__id {
+  color: var(--a-muted);
+  font-size: 0.8125rem;
+}
+
+.arch-neighbour__id {
+  font-family: var(--a-mono);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .arch .arch-neighbour:hover .arch-neighbour__title {
+    text-decoration: underline;
+    text-decoration-color: var(--a-accent);
+  }
 }
 
 /* /agents/: the steps of a planned change as a timeline, then the numbers behind every plan. */
@@ -1301,11 +1803,18 @@ html:not([lang="et"]) .arch-lang-note {
   margin: 0.375rem 0 0;
 }
 
+/* The numbers sit on the obsidian ground in both themes, like the landing's band. */
 .arch-numbers {
+  --a-text: var(--obsidian-ink);
+  --a-text-2: var(--obsidian-muted);
+  --a-muted: var(--obsidian-muted);
+  --a-rule: var(--obsidian-rule);
+  --a-accent-ink: color-mix(in srgb, var(--room-text) 55%, var(--obsidian-ink));
   padding: clamp(1.25rem, 4vw, 2.5rem);
-  border: 1px solid var(--a-rule);
+  border: 1px solid var(--obsidian-rule);
   border-radius: 12px;
-  background: var(--a-surface);
+  background: var(--obsidian);
+  color: var(--obsidian-muted);
 }
 
 .arch-numbers > h2 {
@@ -1318,7 +1827,7 @@ html:not([lang="et"]) .arch-lang-note {
 
 .arch-totals {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(min(12.5rem, 100%), 1fr));
+  grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 1.75rem 2rem;
   margin: 0;
   padding: 0;
@@ -1432,19 +1941,24 @@ html:not([lang="et"]) .arch-lang-note {
 }
 
 @media (max-width: 960px) {
-  .arch-hero {
+  .arch-decision__body {
     grid-template-columns: minmax(0, 1fr);
-    gap: 2.5rem;
   }
 
-  .arch-picks {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
+  .arch-rail {
+    position: static;
+    grid-template-columns: repeat(auto-fit, minmax(min(12rem, 100%), 1fr));
+    padding-bottom: 1.5rem;
+    border-bottom: 1px solid var(--a-rule);
   }
 }
 
 @media (max-width: 760px) {
   .arch-columns,
-  .arch-row {
+  .arch-row,
+  .arch-blocks,
+  .arch-pick,
+  .arch-history__list {
     grid-template-columns: minmax(0, 1fr);
   }
 }
@@ -1455,20 +1969,70 @@ html:not([lang="et"]) .arch-lang-note {
     font-size: 1rem;
   }
 
-  .arch-lead {
-    font-size: 1.1rem;
-  }
-
   .arch-section {
-    margin-top: 4.5rem;
+    margin-top: 4rem;
   }
 
-  .arch-picks {
+  .arch-pick__pair,
+  .arch-neighbours {
     grid-template-columns: minmax(0, 1fr);
+  }
+
+  .arch-neighbour--next {
+    grid-column: auto;
+    text-align: left;
+  }
+
+  .arch-filter__search {
+    width: 100%;
   }
 
   .arch-register td:nth-child(3) {
     white-space: normal;
+  }
+
+  /* On a phone each decision is a block: its number, date and status on one line, the title under it. */
+  .arch-cluster .arch-register,
+  .arch-cluster .arch-register tbody {
+    display: block;
+  }
+
+  .arch-cluster .arch-register thead {
+    display: none;
+  }
+
+  .arch-cluster .arch-register tr {
+    display: grid;
+    grid-template-columns: auto auto minmax(0, 1fr);
+    gap: 0.25rem 1rem;
+    padding: 0.85rem 0;
+    border-bottom: 1px solid var(--a-rule);
+  }
+
+  .arch-cluster .arch-register tr[hidden] {
+    display: none;
+  }
+
+  .arch-cluster .arch-register td {
+    padding: 0;
+    border: 0;
+    text-align: left;
+  }
+
+  .arch-cluster .arch-register td:nth-child(2) {
+    grid-column: 1 / -1;
+    grid-row: 2;
+  }
+
+  .arch-cluster .arch-register td:nth-child(3) {
+    grid-column: 3;
+    grid-row: 1;
+    justify-self: end;
+  }
+
+  .arch-cluster .arch-register td:last-child {
+    grid-column: 2;
+    grid-row: 1;
   }
 }
 /* End architecture */
@@ -1591,8 +2155,13 @@ body.privacy-page {
     --row-arrow: 1.5rem;
   }
 
-  .landing-projects .project-row {
+  .landing-hero__grid,
+  .show-grid {
     grid-template-columns: minmax(0, 1fr);
+  }
+
+  .hero-bio {
+    justify-self: start;
   }
 
   .project-title {
@@ -1606,10 +2175,6 @@ body.privacy-page {
 }
 
 @media (max-width: 520px) {
-  .landing {
-    padding-top: 2.5rem;
-  }
-
   .privacy-page main {
     padding-top: 2.5rem;
   }
