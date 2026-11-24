@@ -231,7 +231,7 @@ export async function loadDecisions(architectureRoot) {
   return checkDecisions(decisions);
 }
 
-// The agent loop's counts, written by the workspace retro into khe-architecture
+// The agent loop's counts, written weekly by the workspace agent into khe-architecture
 // (estate ADR-044). The key list is in khe-workspace scripts/agent-metrics.sh,
 // beside --json, and khe-architecture scripts/check.sh holds the file to it.
 // The key set is exact: a renamed or new key fails the build rather than

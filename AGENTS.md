@@ -326,7 +326,7 @@ reaches khe.ee at the next deploy here.
   (no redirect). `/agents/` (home room), no diagram: `#path`, the steps
   a planned change takes, as a timeline with no counts; `#numbers`, the
   agent loop's totals and findings bars from khe-architecture's
-  `metrics/agent-loop.json`, which the retro refreshes
+  `metrics/agent-loop.json`, which the workspace agent refreshes weekly
   ([estate ADR-044](https://github.com/khelias/khe-architecture/blob/main/decisions/044-agent-loop-numbers-are-a-counts-only-snapshot-here.md));
   then `#where` (estate ADR-027) and `#weak`. The build throws on a snapshot
   with a missing or unknown key or a count that is not whole
