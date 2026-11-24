@@ -45,6 +45,7 @@ export const elements = {
   'khe-home-assistant': { kind: 'repo', name: 'khe-home-assistant', repo: 'khe-home-assistant' },
   'khe-workshop': { kind: 'repo', name: 'khe-workshop', repo: 'khe-workshop' },
   'khe-house3d': { kind: 'repo', name: 'khe-house3d', repo: 'khe-house3d' },
+  'khe-makett': { kind: 'repo', name: 'khe-makett', repo: 'khe-makett' },
 
   fromPush: { kind: 'boundary', label: 'groupFromPush', style: 'rule' },
   push: { kind: 'step', owner: 'agent', tag: 'tagAgent', label: 'elPush', sub: 'elPushSub' },
@@ -158,7 +159,7 @@ export const views = [
 export const blockCards = [
   { group: 'groupProducts', ids: ['khe-study', 'khe-ai-adventure', 'khe-trips', 'khe-albums', 'khe-bunny-tales', 'khe-stories', 'khe-deals', 'khe-deals-watches', 'khe-sites', 'khe-ui'] },
   { group: 'groupPlatform', repo: 'khe-homelab', ids: ['edge', 'runtime', 'family', 'observability', 'backup', 'runner', 'agentVm'] },
-  { group: 'groupHouse', ids: ['house', 'khe-home-assistant', 'khe-house3d', 'khe-workshop'] },
+  { group: 'groupHouse', ids: ['house', 'khe-home-assistant', 'khe-house3d', 'khe-makett', 'khe-workshop'] },
   { group: 'groupMeta', ids: ['khe-workspace', 'khe-architecture', 'khe-meta', 'khelias', 'ha-estfeed'] },
 ];
 
