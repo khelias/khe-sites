@@ -44,6 +44,7 @@ export const elements = {
   'ha-estfeed': { kind: 'repo', name: 'ha-estfeed', repo: 'ha-estfeed' },
   'khe-home-assistant': { kind: 'repo', name: 'khe-home-assistant', repo: 'khe-home-assistant' },
   'khe-workshop': { kind: 'repo', name: 'khe-workshop', repo: 'khe-workshop' },
+  'khe-house3d': { kind: 'repo', name: 'khe-house3d', repo: 'khe-house3d' },
 
   fromPush: { kind: 'boundary', label: 'groupFromPush', style: 'rule' },
   push: { kind: 'step', owner: 'agent', tag: 'tagAgent', label: 'elPush', sub: 'elPushSub' },
@@ -157,7 +158,7 @@ export const views = [
 export const blockCards = [
   { group: 'groupProducts', ids: ['khe-study', 'khe-ai-adventure', 'khe-trips', 'khe-albums', 'khe-bunny-tales', 'khe-stories', 'khe-deals', 'khe-deals-watches', 'khe-sites', 'khe-ui'] },
   { group: 'groupPlatform', repo: 'khe-homelab', ids: ['edge', 'runtime', 'family', 'observability', 'backup', 'runner', 'agentVm'] },
-  { group: 'groupHouse', ids: ['house', 'khe-home-assistant', 'khe-workshop'] },
+  { group: 'groupHouse', ids: ['house', 'khe-home-assistant', 'khe-house3d', 'khe-workshop'] },
   { group: 'groupMeta', ids: ['khe-workspace', 'khe-architecture', 'khe-meta', 'khelias', 'ha-estfeed'] },
 ];
 
@@ -185,7 +186,7 @@ export const repoDecisionDirs = [
 // decision in force is in no cluster or in two, so a new ADR cannot drop off the page.
 export const decisionClusters = [
   { key: 'infra', label: 'clusterInfra', ids: ['008', '010', '016', '022'] },
-  { key: 'apps', label: 'clusterApps', ids: ['001', '003', '004', '014', '031', '038', '041', '043', '047'] },
+  { key: 'apps', label: 'clusterApps', ids: ['001', '003', '004', '014', '031', '038', '041', '043', '047', '052'] },
   { key: 'public', label: 'clusterPublic', ids: ['012', '019', '029', '035'] },
   { key: 'agents', label: 'clusterAgents', ids: ['007', '023', '027', '037', '044'] },
 ];
