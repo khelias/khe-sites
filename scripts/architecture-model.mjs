@@ -46,6 +46,7 @@ export const elements = {
   'khe-workshop': { kind: 'repo', name: 'khe-workshop', repo: 'khe-workshop' },
   'khe-house3d': { kind: 'repo', name: 'khe-house3d', repo: 'khe-house3d' },
   'khe-makett': { kind: 'repo', name: 'khe-makett', repo: 'khe-makett' },
+  'khe-kavand': { kind: 'repo', name: 'khe-kavand', repo: 'khe-kavand' },
 
   fromPush: { kind: 'boundary', label: 'groupFromPush', style: 'rule' },
   push: { kind: 'step', owner: 'agent', tag: 'tagAgent', label: 'elPush', sub: 'elPushSub' },
@@ -157,7 +158,7 @@ export const views = [
 
 // The building-block rows under the estate diagram, in reading order.
 export const blockCards = [
-  { group: 'groupProducts', ids: ['khe-study', 'khe-ai-adventure', 'khe-trips', 'khe-albums', 'khe-bunny-tales', 'khe-stories', 'khe-deals', 'khe-deals-watches', 'khe-sites', 'khe-ui'] },
+  { group: 'groupProducts', ids: ['khe-study', 'khe-ai-adventure', 'khe-trips', 'khe-albums', 'khe-bunny-tales', 'khe-stories', 'khe-deals', 'khe-deals-watches', 'khe-kavand', 'khe-sites', 'khe-ui'] },
   { group: 'groupPlatform', repo: 'khe-homelab', ids: ['edge', 'runtime', 'family', 'observability', 'backup', 'runner', 'agentVm'] },
   { group: 'groupHouse', ids: ['house', 'khe-home-assistant', 'khe-house3d', 'khe-makett', 'khe-workshop'] },
   { group: 'groupMeta', ids: ['khe-workspace', 'khe-architecture', 'khe-meta', 'khelias', 'ha-estfeed'] },
