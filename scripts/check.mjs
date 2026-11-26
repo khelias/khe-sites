@@ -582,7 +582,7 @@ await runReportingSourceErrors(async () => {
   const sitemap = await readFile(join(landing, 'sitemap.xml'), 'utf8');
   await checkLanguagePages(landing, sitemap, sources);
 
-  // the house demo, built from khe-home-assistant's test house; its dashboard is either the
+  // the house demo, built from khe-house3d's made-up demo house by khe-home-assistant; its dashboard is either the
   // hand-written dashboard.js of the old demo or the generated dashboard.json of the new one
   const demo = join(landing, 'ha');
   for (const file of ['index.html', 'demo.js', 'cards.js', 'house3d-card.js', 'model.json']) {
