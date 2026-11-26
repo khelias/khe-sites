@@ -41,6 +41,7 @@ export const elements = {
   'khe-architecture': { kind: 'repo', name: 'khe-architecture', repo: 'khe-architecture' },
   'khe-meta': { kind: 'repo', name: 'khe-meta', repo: 'khe-meta' },
   khelias: { kind: 'repo', name: 'khelias', repo: 'khelias' },
+  'khelias-github': { kind: 'repo', name: '.github', repo: '.github' },
   'ha-estfeed': { kind: 'repo', name: 'ha-estfeed', repo: 'ha-estfeed' },
   'khe-home-assistant': { kind: 'repo', name: 'khe-home-assistant', repo: 'khe-home-assistant' },
   'khe-workshop': { kind: 'repo', name: 'khe-workshop', repo: 'khe-workshop' },
@@ -161,7 +162,7 @@ export const blockCards = [
   { group: 'groupProducts', ids: ['khe-study', 'khe-ai-adventure', 'khe-trips', 'khe-albums', 'khe-bunny-tales', 'khe-stories', 'khe-deals', 'khe-deals-watches', 'khe-kavand', 'khe-sites', 'khe-ui'] },
   { group: 'groupPlatform', repo: 'khe-homelab', ids: ['edge', 'runtime', 'family', 'observability', 'backup', 'runner', 'agentVm'] },
   { group: 'groupHouse', ids: ['house', 'khe-home-assistant', 'khe-house3d', 'khe-makett', 'khe-workshop'] },
-  { group: 'groupMeta', ids: ['khe-workspace', 'khe-architecture', 'khe-meta', 'khelias', 'ha-estfeed'] },
+  { group: 'groupMeta', ids: ['khe-workspace', 'khe-architecture', 'khe-meta', 'khelias', 'khelias-github', 'ha-estfeed'] },
 ];
 
 // The five decisions section: each names its ADRs and a copy-key prefix

@@ -104,6 +104,7 @@ export const COPY = {
     purposeKheArchitecture: 'The estate\'s architecture decisions and the estate index this page is built from.',
     purposeKheMeta: 'The private working layer: the roadmap, the plans and the house documentation.',
     purposeKhelias: 'The GitHub profile page.',
+    purposeKheliasGithub: 'The security policy, contributing note and code of conduct a public repo shows when it has none of its own.',
     purposeHaEstfeed: 'A fork of the Elering meter-data integration for Home Assistant.',
 
     keyDecisionsTitle: 'Five decisions that shape it',
@@ -373,6 +374,7 @@ export const COPY = {
     purposeKheArchitecture: 'Arhitektuuriotsused (ADR-id) ja repode indeks, mille põhjal see leht ehitatakse.',
     purposeKheMeta: 'Privaatne töörepo: teekaart, plaanid ja maja dokumentatsioon.',
     purposeKhelias: 'GitHubi profiilileht.',
+    purposeKheliasGithub: 'Turvapoliitika, kaastööjuhend ja käitumisjuhend, mida avalik repo näitab, kui tal oma pole.',
     purposeHaEstfeed: 'Eleringi Estfeedi Home Assistanti liidese haru.',
 
     keyDecisionsTitle: 'Viis peamist otsust',
