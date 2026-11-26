@@ -5,8 +5,8 @@ import { runSourceBuild, SourceError } from './architecture-sources.mjs';
 
 const header = join(dirname(fileURLToPath(import.meta.url)), 'templates', 'house3d-header.html');
 
-// The 3D house demo at /ha/: khe-home-assistant's own build writes it from its made-up
-// test house, so no model and no house data pass through here. The KHE site header is added
+// The 3D house demo at /ha/: khe-home-assistant's own build writes it from the made-up
+// demo house, so no model and no house data pass through here. The KHE site header is added
 // here, so khe.ee's branding stays out of khe-home-assistant.
 export async function buildHouse3dDemo(outputDir) {
   runSourceBuild('HOME_ASSISTANT_ROOT', 'khe-home-assistant', 'scripts/house3d-build.py', ['--demo', outputDir], 'The 3D house demo build');
