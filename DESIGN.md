@@ -32,10 +32,10 @@ colors:
 typography:
   display:
     fontFamily: Familjen Grotesk
-    fontSize: clamp(2.75rem, 7vw, 5rem)
+    fontSize: clamp(2rem, 4.6vw, 3.375rem)
     fontWeight: 500
-    lineHeight: 0.98
-    letterSpacing: -0.03em
+    lineHeight: 1.06
+    letterSpacing: -0.025em
   title:
     fontFamily: Familjen Grotesk
     fontSize: 34px
@@ -163,7 +163,7 @@ the four it uses in both themes, so it renders on the game pages too. The
 | paper | #f6f6f2 | #0c0e0f | page ground, header ground (opaque) |
 | surface | #ffffff | #15181a | switcher track, inputs, a card's picture well |
 | sunken | #eaeae4 | #1d2124 | pressed row, filter buttons, plate bands |
-| ink | #111315 | #f1f2ee | names, titles, the KHE of the mark, the landing's lead |
+| ink | #111315 | #f1f2ee | names, titles, the KHE of the mark, the landing's sentence |
 | ink-2 | #3b3f42 | #c5c9c6 | running text |
 | muted | #666b6e | #8b928f | labels, inactive language, on paper and surface |
 | rule | #e2e2db | #252a2d | hairlines |
@@ -286,8 +286,9 @@ devices (tried 2026-11-17), and system type with a reading serif suits a
 story, not a shell. Familjen was chosen over Schibsted Grotesk and Hanken
 Grotesk from renders of the landing at desktop and phone width.
 
-- `display` 500, clamp(2.75rem, 7vw, 5rem) / 0.98, -0.03em: the landing name,
-  across the hero; the games hub title one step smaller
+- `display` 500, clamp(2rem, 4.6vw, 3.375rem) / 1.06, -0.025em: the landing's
+  one sentence, under the portrait, name and role in `context` and `small`;
+  the games hub title in the same style at its own size
 - `title` 500 34px, -0.02em; `heading` 500 22px
 - `context` 500 17px: the header title's family size (see the mark)
 - `lead` 400 19px, `body` 400 16px / 1.6, `small` 400 14px
