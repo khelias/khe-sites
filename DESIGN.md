@@ -311,8 +311,8 @@ its own serif as the fallback.
 
 Content is one column, `width: min(1080px, 100%)`, with a gutter of
 `max(16px, env(safe-area-inset-*))`; the header's inner row has the same
-width. `/architecture/`, its decisions page and `/agents/` widen to 1240px for
-the diagrams, and their header widens with them. The header height is
+width, on every page. Only the wide architecture diagrams leave it, by 80px a
+side from 1240px up. The header height is
 `@khelias/ui`'s own (3.65rem + 1px, 3.35rem + 1px at 520px and below). No page
 scrolls sideways at 320px.
 

@@ -184,10 +184,12 @@ reaches khe.ee at the next deploy here.
   never writes `?lang` into the address bar and goes to the other page's
   pathname on a switch. On every page it fills a `data-link` named in
   `PAGE_LINKS`, unless the page's `links` name it, with `pageHref`, which
-  keeps the page's `?lang` so an asked language holds over a stored one. On
-  games.khe.ee the key is shared with Tarkade Mängud and AI Seiklus, which
-  open in Estonian when installed until a language is chosen, and every room
-  link carries a `?lang` whether or not one was.
+  keeps the page's `?lang` so an asked language holds over a stored one, and
+  swaps the `?lang` of any other `data-link` (the ADR links) to the page's
+  language with `withLang`, as the build does. On games.khe.ee the key is shared with
+  Tarkade Mängud and AI Seiklus; its pages and `/ha/`, translating in place,
+  start in Estonian (ADR-001 point 8), and every room link carries a
+  `?lang` whether or not one was.
 - Build and check read their sources at build time: `ARCHITECTURE_ROOT`
   (khe-architecture: `ESTATE.md`, `decisions/`, `metrics/agent-loop.json`) and `HOMELAB_ROOT`
   (khe-homelab: compose files, the `## Resilience` list in its `ARCHITECTURE.md`), else the sibling

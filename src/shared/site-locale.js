@@ -32,12 +32,12 @@ export const SITE_HEADER_COPY = {
 export const SITE_FOOTER_COPY = {
   et: {
     footerLinksLabel: 'Lehe lingid',
-    footer: 'Ise majutatud Eestis',
+    footer: 'Töötab koduserveris Eestis',
     privacyLink: 'Privaatsus',
   },
   en: {
     footerLinksLabel: 'Page links',
-    footer: 'Self-hosted in Estonia',
+    footer: 'Runs on a home server in Estonia',
     privacyLink: 'Privacy',
   },
 };
@@ -70,6 +70,11 @@ export function localePath(path, locale) {
 export function pageHref(key, locale) {
   const [path, hash] = PAGE_LINKS[key].split('#');
   return `${localePath(path, locale)}?lang=${locale}${hash ? `#${hash}` : ''}`;
+}
+
+// Points an href's ?lang at a language; the build and applyLocale both use it on data-links outside PAGE_LINKS.
+export function withLang(href, locale) {
+  return href.replace(/([?&]lang=)(?:et|en)\b/, `$1${locale}`);
 }
 
 function normalizeLocale(value, supported) {
@@ -121,7 +126,7 @@ function setMetaContent(selector, content) {
 
 export function createLocaleController({
   copy: pageCopy,
-  defaultLocale = 'en',
+  defaultLocale = 'et',
   useBrowserDefault = false,
   links = {},
   alternatePages = false,
@@ -191,6 +196,7 @@ export function createLocaleController({
       const key = anchor.getAttribute('data-link');
       if (links[key]) anchor.setAttribute('href', links[key](activeLocale));
       else if (Object.hasOwn(PAGE_LINKS, key)) anchor.setAttribute('href', pageHref(key, activeLocale));
+      else if (anchor.hasAttribute('href')) anchor.setAttribute('href', withLang(anchor.getAttribute('href'), activeLocale));
     });
   }
 

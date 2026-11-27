@@ -21,7 +21,7 @@
 
   const copy = {
     en: { question: 'Allow statistics?', allow: 'Allow', deny: 'Decline' },
-    et: { question: 'Kas lubad statistika?', allow: 'Luba', deny: 'Keeldu' },
+    et: { question: 'Kas lubad statistikat?', allow: 'Luba', deny: 'Keeldu' },
   };
 
   function currentCopy() {

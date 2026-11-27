@@ -367,6 +367,10 @@ function renderBlocks(sources) {
 
 const statusKey = (status) => `status${status}`;
 const decisionUrl = (id) => `/architecture/decisions/${id}/`;
+// ?lang=en is a seed: the build and the page swap it to the reader's language (withLang).
+const decisionLink = (id) => `href="${decisionUrl(id)}?lang=en" data-link="decision"`;
+// The same for an ADR link the Markdown renderer wrote.
+const seedDecisionLinks = (html) => html && html.replace(/href="\/architecture\/decisions\/(\d{3})\/(#[^"]*)?"/g, (match, id, hash = '') => `${decisionLink(id).replace('" data-link', `${hash}" data-link`)}`);
 
 function renderKeyDecisions(decisions) {
   const byId = new Map(decisions.map((decision) => [decision.id, decision]));
@@ -376,14 +380,14 @@ function renderKeyDecisions(decisions) {
       if (!decision) throw new SourceError(`The key decisions name ADR-${id}, which khe-architecture lacks`);
       if (!decision.inForce) throw new SourceError(`The key decisions name ADR-${id}, which is ${decision.status}`);
     }
-    const tag = ids.map((id) => `<a href="${decisionUrl(id)}">ADR-${id}</a>`).join(' · ');
+    const tag = ids.map((id) => `<a ${decisionLink(id)}>ADR-${id}</a>`).join(' · ');
     return `<article class="arch-pick"><div class="arch-pick__head"><p class="arch-pick__ids">${tag}</p>${i18n(`${key}Title`, 'h3')}</div><dl class="arch-pick__pair"><div class="arch-pick__plus">${i18n('buysLabel', 'dt')}<dd>${i18n(`${key}Buys`)}</dd></div><div class="arch-pick__minus">${i18n('costsLabel', 'dt')}<dd>${i18n(`${key}Costs`)}</dd></div></dl></article>`;
   });
   return `<div class="arch-picks">${cards.join('')}</div>`;
 }
 
 function registerRow(decision) {
-  return `<tr><td><a href="${decisionUrl(decision.id)}">ADR-${decision.id}</a></td><td lang="en"><a href="${decisionUrl(decision.id)}">${escapeHtml(decision.title)}</a></td><td>${i18n(statusKey(decision.status), 'span', ` class="arch-status arch-status--${decision.status.toLowerCase()}"`)}</td><td><time datetime="${decision.date}">${decision.date}</time></td></tr>`;
+  return `<tr><td><a ${decisionLink(decision.id)}>ADR-${decision.id}</a></td><td lang="en"><a ${decisionLink(decision.id)}>${escapeHtml(decision.title)}</a></td><td>${i18n(statusKey(decision.status), 'span', ` class="arch-status arch-status--${decision.status.toLowerCase()}"`)}</td><td><time datetime="${decision.date}">${decision.date}</time></td></tr>`;
 }
 
 // The decisions in force by topic, each topic a table, behind a search and topic filters that
@@ -403,7 +407,7 @@ function renderRegister(decisions) {
   });
   const empty = i18n('searchEmpty', 'p', ' class="arch-filter__empty" data-register-empty hidden');
   const stubs = decisions.filter((decision) => !decision.inForce);
-  const history = stubs.length ? `<details class="arch-history"><summary>${i18n('regHistory')} <span class="arch-cluster__count">${stubs.length}</span></summary><ul class="arch-history__list">${stubs.map((decision) => `<li><a href="${decisionUrl(decision.id)}"><span class="arch-history__id">ADR-${decision.id}</span> <span lang="en">${escapeHtml(decision.title)}</span></a> ${i18n(statusKey(decision.status), 'span', ' class="arch-history__status"')}</li>`).join('')}</ul></details>` : '';
+  const history = stubs.length ? `<details class="arch-history"><summary>${i18n('regHistory')} <span class="arch-cluster__count">${stubs.length}</span></summary><ul class="arch-history__list">${stubs.map((decision) => `<li><a ${decisionLink(decision.id)}><span class="arch-history__id">ADR-${decision.id}</span> <span lang="en">${escapeHtml(decision.title)}</span></a> ${i18n(statusKey(decision.status), 'span', ' class="arch-history__status"')}</li>`).join('')}</ul></details>` : '';
   return `${filterBar}${groups.join('')}${empty}${history}`;
 }
 
@@ -420,7 +424,7 @@ export function fillTemplate(template, values, file) {
 }
 
 function decisionLinks(ids, byId) {
-  return ids.map((id) => `<a href="${decisionUrl(id)}" lang="en">ADR-${id}: ${escapeHtml(byId.get(id).title)}</a>`).join(', ');
+  return ids.map((id) => `<a ${decisionLink(id)} lang="en">ADR-${id}: ${escapeHtml(byId.get(id).title)}</a>`).join(', ');
 }
 
 // Where a decision no longer in force went: its successor's page, or its new home as the
@@ -435,7 +439,7 @@ function onward(decision, byId, rewriteLink) {
 }
 
 function railLinks(ids, byId) {
-  return `<ul>${ids.map((id) => `<li><a href="${decisionUrl(id)}"><span class="arch-rail__id">ADR-${id}</span> <span lang="en">${escapeHtml(byId.get(id).title)}</span></a></li>`).join('')}</ul>`;
+  return `<ul>${ids.map((id) => `<li><a ${decisionLink(id)}><span class="arch-rail__id">ADR-${id}</span> <span lang="en">${escapeHtml(byId.get(id).title)}</span></a></li>`).join('')}</ul>`;
 }
 
 function railSection(key, body) {
@@ -451,7 +455,7 @@ function neighbours(decision, decisions) {
 
 function neighbourLink(decision, key, className) {
   if (!decision) return '';
-  return `<a class="arch-neighbour ${className}" href="${decisionUrl(decision.id)}">${i18n(key, 'span', ' class="arch-neighbour__dir"')}<span class="arch-neighbour__id">ADR-${decision.id}</span><span class="arch-neighbour__title" lang="en">${escapeHtml(decision.title)}</span></a>`;
+  return `<a class="arch-neighbour ${className}" ${decisionLink(decision.id)}>${i18n(key, 'span', ' class="arch-neighbour__dir"')}<span class="arch-neighbour__id">ADR-${decision.id}</span><span class="arch-neighbour__title" lang="en">${escapeHtml(decision.title)}</span></a>`;
 }
 
 // The page reads as one column of prose beside a rail: its sections, the decisions it supersedes
@@ -464,13 +468,13 @@ function renderDecisionPage(template, decision, decisions, byId, rewriteLink) {
     `<div>${i18n('metaStatus', 'dt')}<dd>${i18n(statusKey(decision.status))}</dd></div>`,
     `<div>${i18n('metaDate', 'dt')}<dd><time datetime="${decision.date}">${decision.date}</time></dd></div>`,
   ];
-  const notice = onward(decision, byId, rewriteLink);
+  const notice = seedDecisionLinks(onward(decision, byId, rewriteLink));
   // A rail entry is itself a link, so a link in the heading keeps only its text.
   const sections = [];
   const onHeading = ({ level, id, text }) => {
     if (level === 2) sections.push(`<li><a href="#${id}" lang="en">${renderInlineMarkdown(text, { file: decision.file, rewriteLink: () => null })}</a></li>`);
   };
-  const body = decision.stub ? '' : renderMarkdown(decision.body, { file: decision.file, firstLine: decision.bodyStartLine, rewriteLink, onHeading });
+  const body = decision.stub ? '' : seedDecisionLinks(renderMarkdown(decision.body, { file: decision.file, firstLine: decision.bodyStartLine, rewriteLink, onHeading }));
   const rail = [
     sections.length ? railSection('railOnPage', `<ul>${sections.join('')}</ul>`) : '',
     decision.supersedes.length ? railSection('metaSupersedes', railLinks(decision.supersedes, byId)) : '',
