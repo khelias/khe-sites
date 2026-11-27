@@ -3,9 +3,10 @@ import { existsSync } from 'node:fs';
 import { readdir, readFile, writeFile } from 'node:fs/promises';
 import { join } from 'node:path';
 
-// A root-relative .css, .js or .json URL in an attribute, an import or a url(), with any
-// ?v= it has. Only .css and .js are read for further URLs; the rest are hashed as they are.
-export const ASSET_REFERENCE = /(?<=["'(])(\/[\w./-]+\.(?:css|js|json))(?:\?v=(\w*))?(?=["')])/g;
+// A root-relative .css, .js, .json or picture URL in an attribute, an import or a url(), with
+// any ?v= it has. Pictures are stamped because the server caches them for 30 days under one
+// URL. Only .css and .js are read for further URLs; the rest are hashed as they are.
+export const ASSET_REFERENCE = /(?<=["'(])(\/[\w./-]+\.(?:css|js|json|webp|avif|png|jpg|jpeg|gif|svg|ico))(?:\?v=(\w*))?(?=["')])/g;
 const LINKS_FURTHER = /\.(?:css|js)$/;
 
 export function assetVersion(content) {
