@@ -283,10 +283,11 @@ reaches khe.ee at the next deploy here.
   `site.css` sets its `--khe-footer-*` values from the family tokens and
   places it per page. Every page but `/ha/` has exactly one (check).
 - Nothing in the sources carries `?v=`: after the pages are built, the build
-  stamps every root-relative `.css`, `.js` and `.json` URL in them,
-  and in the `.css` and `.js` files those link, with the first 10 hex of the
-  built file's SHA-256, so a change
-  to `site.css` or `site-locale.js` needs no hand edit. Check fails on a
+  stamps every root-relative `.css`, `.js`, `.json` and picture URL in
+  them, and in the `.css` and `.js` files those link, with the first 10 hex
+  of the built file's SHA-256, so a change to `site.css` or a replaced
+  picture needs no hand edit. The share images' absolute URLs are not
+  stamped. Check fails on a
   hand-written `?v=` in a source and on a built link whose hash does not
   match its file. Relative URLs (khe-home-assistant's files under `/ha/`) and
   fonts are not stamped.
