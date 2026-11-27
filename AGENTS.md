@@ -187,7 +187,7 @@ reaches khe.ee at the next deploy here.
   keeps the page's `?lang` so an asked language holds over a stored one, and
   swaps the `?lang` of any other `data-link` (the ADR links) to the page's
   language with `withLang`, as the build does. On games.khe.ee the key is shared with
-  Tarkade Mängud and AI Seiklus; its pages and `/ha/`, translating in place,
+  Tarkade mängud and AI Seiklus; its pages and `/ha/`, translating in place,
   start in Estonian (ADR-001 point 8), and every room link carries a
   `?lang` whether or not one was.
 - Build and check read their sources at build time: `ARCHITECTURE_ROOT`

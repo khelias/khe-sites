@@ -334,7 +334,7 @@ a { color: var(--ink-2); }
   font-weight: 600;
 }
 
-/* Tarkade Mängud: Laevade uputamine. */
+/* Tarkade mängud: Laevade uputamine. */
 .study-bg { fill: color-mix(in srgb, var(--study) 5%, var(--surface)); }
 .study-title { fill: color-mix(in srgb, var(--house) 75%, var(--ink)); }
 .study-sea rect { fill: color-mix(in srgb, var(--house) 12%, var(--surface)); stroke: color-mix(in srgb, var(--house) 24%, var(--surface)); stroke-width: 1; }

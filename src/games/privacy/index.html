@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-  <title>Privacy - KHE Games</title>
+  <title>Privacy | KHE</title>
   <meta name="description" content="Privacy notice for KHE Games, including analytics, browser local storage, AI Adventure providers, and hosting.">
   <meta name="robots" content="noindex, follow">
   <link rel="canonical" href="https://games.khe.ee/privacy">
@@ -17,13 +17,13 @@
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://games.khe.ee/privacy">
   <meta property="og:site_name" content="KHE Games">
-  <meta property="og:title" content="Privacy - KHE Games">
+  <meta property="og:title" content="Privacy | KHE">
   <meta property="og:description" content="Privacy notice for KHE Games, including analytics, browser local storage, AI Adventure providers, and hosting.">
   <meta property="og:image" content="https://games.khe.ee/og-image.png">
   <meta property="og:image:width" content="1200">
   <meta property="og:image:height" content="630">
   <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="Privacy - KHE Games">
+  <meta name="twitter:title" content="Privacy | KHE">
   <meta name="twitter:description" content="Privacy notice for KHE Games, including analytics, browser local storage, AI Adventure providers, and hosting.">
   <meta name="twitter:image" content="https://games.khe.ee/og-image.png">
   <link rel="preload" href="/assets/fonts/familjen-grotesk-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
@@ -38,7 +38,7 @@
 
 <main>
   <h1 data-i18n="heading">Privacy</h1>
-  <p class="updated" data-i18n="updated">Last updated: 2026-11-18</p>
+  <p class="updated" data-i18n="updated">Last updated: 2026-11-27</p>
 
   <p data-i18n="intro">This notice explains what personal data games.khe.ee handles, why, and what your rights are. The site has no advertising and no user accounts, and it does no profiling or tracking for advertising.</p>
 
@@ -76,7 +76,7 @@
 
   <h2 data-i18n="hostingHeading">Hosting, recipients and transfers</h2>
   <ul>
-    <li data-i18n="hostingServer">The site runs on a home server in Estonia. Fonts and scripts are served from it.</li>
+    <li data-i18n="hostingServer">The site runs on a home server in Estonia, which also serves its fonts and scripts. When it does not answer, Cloudflare shows a copy of the static pages.</li>
     <li data-i18n="hostingCloudflare">Public access goes through Cloudflare, Inc. (DNS, tunnel, TLS endpoint, bot protection and, with your consent, analytics). Cloudflare sees request data such as IP address, URL and browser user agent. Cloudflare is based in the United States; the transfer relies on its certification under the EU-U.S. Data Privacy Framework.</li>
     <li data-i18n="hostingLogs">The server's access and error logs record requests, such as the time, requested address, response status and browser details, and may include the IP address. They are kept centrally for 30 days and then deleted.</li>
   </ul>
@@ -114,10 +114,10 @@
 
   const COPY = {
     et: {
-      title: 'Privaatsus - KHE Games',
+      title: 'Privaatsus | KHE',
       description: 'KHE Games privaatsusteave analüütika, brauseri kohaliku salvestuse, AI Seikluse teenusepakkujate ja majutuse kohta.',
       heading: 'Privaatsus',
-      updated: 'Uuendatud: 2026-11-18',
+      updated: 'Uuendatud: 2026-11-27',
       intro: 'Siin on kirjas, milliseid isikuandmeid games.khe.ee töötleb, miks ja millised õigused sul on. Saidil ei ole reklaame ega kasutajakontosid ning see ei profileeri sind ega jälgi sind reklaami eesmärgil.',
       controllerHeading: 'Vastutav töötleja ja kontakt',
       controllerBody: 'Vastutav töötleja on Kaido Henrik Elias, kes peab saiti games.khe.ee eraisikuna. Andmeid puudutavate küsimuste ja oma õiguste kasutamiseks kirjuta aadressil <a href="mailto:kaidoelias@gmail.com">kaidoelias@gmail.com</a>.',
@@ -127,13 +127,13 @@
       cookiesHeading: 'Küpsised ja botikaitse',
       cookiesBody: 'Mängulehed ise küpsiseid ei sea. Avalik liiklus käib läbi Cloudflare\'i, mille botikaitse, sealhulgas JavaScript Detections, kontrollib päringuid, et eristada inimesi automaatsest liiklusest. Selleks võib Cloudflare seada küpsise <code>__cf_bm</code>, mis aegub umbes 30 minuti pärast. Selline turvaküpsis on rangelt vajalik ega nõua nõusolekut.',
       storageHeading: 'Brauseri salvestus',
-      storageLocale: 'Keelevalik salvestatakse väljale <code>app_locale</code>, et see kanduks mängude avalehe ja mängude vahel üle.',
+      storageLocale: '<code>app_locale</code> hoiab sinu keelevalikut, et see kehtiks nii mängude avalehel kui ka mängudes.',
       storageConsent: 'Analüütikavalik salvestatakse väljale <code>khe.analyticsConsent.v1</code>.',
-      storageStudy: '<strong>Tarkade Mängud (/study/)</strong> salvestavad mänguseisu, näiteks taseme edenemise, brauserisse. Serverisse seda ei saadeta.',
+      storageStudy: '<strong>Tarkade mängud (/study/)</strong> salvestavad mänguseisu, näiteks taseme edenemise, brauserisse. Serverisse seda ei saadeta.',
       storageAdventure: '<strong>AI Seiklus (/adventure/)</strong> salvestab mänguseaded ja mänguseisu brauserisse.',
       storageLocal: 'Kõik see jääb sinu brauseri kohalikku salvestusruumi (<code>localStorage</code>), kuni sa selle kustutad.',
       storageView: '<code>khe-view:/study/</code> ja <code>khe-view:/adventure/</code> jätavad meelde, kas tulid mängu juurde mõnelt teiselt khe.ee või games.khe.ee lehelt, et mäng näitaks ülejäänud külastuse ajal saidi päist. Mäng vaatab sinu brauseris, kust külastus algas, ja midagi ei saadeta kuhugi. Väärtused jäävad seansi salvestusruumi (<code>sessionStorage</code>), kuni sa vahekaardi sulged.',
-      storageOffline: '<strong>Tarkade Mängud</strong> ja <strong>AI Seiklus</strong> seavad sinu brauseris sisse taustaskripti (service worker), mis hoiab mängu enda faile brauseri vahemälus (Cache Storage), et mäng avaneks ka ilma võrguta. Vahemälus ei ole isikuandmeid ja sealt ei saadeta saidile midagi. Eemaldamiseks kustuta brauseri seadetes saidi games.khe.ee andmed (see kustutab ka mänguseisu). Kui oled rakenduse paigaldanud, eemalda ka see.',
+      storageOffline: '<strong>Tarkade mängud</strong> ja <strong>AI Seiklus</strong> seavad sinu brauseris sisse taustaskripti (service worker), mis hoiab mängu enda faile brauseri vahemälus (Cache Storage), et mäng avaneks ka ilma võrguta. Vahemälus ei ole isikuandmeid ja sealt ei saadeta saidile midagi. Eemaldamiseks kustuta brauseri seadetes saidi games.khe.ee andmed (see kustutab ka mänguseisu). Kui oled rakenduse paigaldanud, eemalda ka see.',
       adventureHeading: 'AI Seiklus',
       adventureAge: 'AI Seiklus on mõeldud ainult täiskasvanutele (18+).',
       adventureBody: 'Loo kirjutamiseks saadab AI Seiklus mängijate sisestatud teksti selle saidi serveri kaudu tehisintellekti teenusepakkujale. Saadetakse seltskonna kirjeldus koos selles olevate nimedega, koht, detail, iga käigu valikud ja vaba tekst, enda kirjutatud algus (kui see on olemas) ning mänguseaded.',
@@ -143,7 +143,7 @@
       proxyBody: 'Server ei logi mängijate sisestatud teksti. Selle vealogid võivad sisaldada lühikesi katkendeid tehisintellekti vastusest. Kasutuse piiramiseks hoiab server iga IP-aadressi päringute ja tokenite loendureid mälus kuni 24 tundi.',
       advice: '<strong>Soovitus:</strong> nimede ega muude isikuandmete sisestamine ei ole kohustuslik, mäng töötab ka väljamõeldud nimedega. Sisesta ainult seda, mida kõik laua taga olijad on nõus tehisintellekti teenusepakkujale saatma.',
       hostingHeading: 'Majutus, vastuvõtjad ja edastamine',
-      hostingServer: 'Sait töötab koduserveris Eestis. Fondid ja skriptid tulevad samast serverist.',
+      hostingServer: 'Sait töötab koduserveris Eestis ja fondid ning skriptid tulevad sealt. Kui see ei vasta, näitab Cloudflare staatiliste lehtede koopiat.',
       hostingCloudflare: 'Avalik ligipääs käib läbi ettevõtte Cloudflare, Inc. teenuste (DNS, tunnel, TLS-ühenduse lõpp-punkt, botikaitse ja sinu nõusolekul analüütika). Cloudflare näeb päringu andmeid, näiteks IP-aadressi, URL-i ja brauseri tunnust (user agent). Cloudflare asub Ameerika Ühendriikides; andmete edastamine sinna põhineb Cloudflare\'i sertifitseeringul ELi-USA andmekaitseraamistikus (EU-U.S. Data Privacy Framework).',
       hostingLogs: 'Serveri juurdepääsu- ja vealogid talletavad päringute andmeid, näiteks aega, küsitud aadressi, vastuse olekut ja brauseri andmeid, ning võivad sisaldada IP-aadressi. Neid hoitakse keskselt 30 päeva, seejärel need kustutatakse.',
       basisHeading: 'Õiguslikud alused',
@@ -165,10 +165,10 @@
       complaintBody: 'Samuti on sul õigus esitada kaebus Andmekaitse Inspektsioonile (<a href="https://www.aki.ee" target="_blank" rel="noopener">aki.ee</a>).',
     },
     en: {
-      title: 'Privacy - KHE Games',
+      title: 'Privacy | KHE',
       description: 'Privacy notice for KHE Games, including analytics, browser local storage, AI Adventure providers, and hosting.',
       heading: 'Privacy',
-      updated: 'Last updated: 2026-11-18',
+      updated: 'Last updated: 2026-11-27',
       intro: 'This notice explains what personal data games.khe.ee handles, why, and what your rights are. The site has no advertising and no user accounts, and it does no profiling or tracking for advertising.',
       controllerHeading: 'Controller and contact',
       controllerBody: 'The controller is Kaido Henrik Elias, who runs games.khe.ee as a private person. For questions about your data or to use your rights, write to <a href="mailto:kaidoelias@gmail.com">kaidoelias@gmail.com</a>.',
@@ -194,7 +194,7 @@
       proxyBody: 'The server does not log what players enter. Its error logs may contain short fragments of the AI\'s response. To limit usage, it keeps request and token counters per IP address in memory for up to 24 hours.',
       advice: '<strong>Tip:</strong> entering names or other personal details is not required, and the game works with made-up names too. Enter only what everyone at the table is fine sending to the AI provider.',
       hostingHeading: 'Hosting, recipients and transfers',
-      hostingServer: 'The site runs on a home server in Estonia. Fonts and scripts are served from it.',
+      hostingServer: 'The site runs on a home server in Estonia, which also serves its fonts and scripts. When it does not answer, Cloudflare shows a copy of the static pages.',
       hostingCloudflare: 'Public access goes through Cloudflare, Inc. (DNS, tunnel, TLS endpoint, bot protection and, with your consent, analytics). Cloudflare sees request data such as IP address, URL and browser user agent. Cloudflare is based in the United States; the transfer relies on its certification under the EU-U.S. Data Privacy Framework.',
       hostingLogs: 'The server\'s access and error logs record requests, such as the time, requested address, response status and browser details, and may include the IP address. They are kept centrally for 30 days and then deleted.',
       basisHeading: 'Legal bases',
