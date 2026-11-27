@@ -1,6 +1,6 @@
 # ADR-001: khe.ee pages are one static page per language, Estonian at the root
 
-- **Status:** Accepted (2026-11-20)
+- **Status:** Accepted (2026-11-27)
 - **Related:** [estate ADR-043](https://github.com/khelias/khe-architecture/blob/main/decisions/043-household-parts-are-public-source-built-into-khe-sites.md) (the workshop room's own language folders), [estate ADR-019](https://github.com/khelias/khe-architecture/blob/main/decisions/019-consent-banner-from-the-origin-root.md) (the `/privacy` link other repos keep), [estate ADR-016](https://github.com/khelias/khe-architecture/blob/main/decisions/016-static-fallback-at-the-edge.md) (the edge fallback that mirrors the redirect)
 
 ## Context
@@ -45,8 +45,11 @@ Indexed addresses are hard to take back.
 7. **Other repos keep their links.** `/?lang=` and `/privacy?lang=` stay
    valid entry points (points 3 and 4 move them), so `khe-ui`, khe-trips
    and khe-stories change nothing.
-8. **games.khe.ee is not covered yet;** it keeps translating in place until
-   its own decision.
+8. **games.khe.ee keeps translating in place, Estonian first.** Its pages
+   and the two games (khe-study, khe-ai-adventure) are one page each until
+   their own decision, and show Estonian when the visitor has neither a
+   `?lang` nor a stored choice, as point 2 does for khe.ee. `/ha/`, which
+   also translates in place, does the same.
 
 ## Alternatives considered
 

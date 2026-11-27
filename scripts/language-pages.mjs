@@ -5,7 +5,7 @@ import { escapeHtml } from './markdown.mjs';
 import { fillCopy } from './render-architecture.mjs';
 import { readPageCopy } from './site-header.mjs';
 import { COPY as ARCHITECTURE_COPY } from '../src/landing/architecture/copy.js';
-import { LOCALE_STORAGE_KEY, LOCALES, localePath, PAGE_LINKS, pageHref } from '../src/shared/site-locale.js';
+import { LOCALE_STORAGE_KEY, LOCALES, localePath, PAGE_LINKS, pageHref, withLang } from '../src/shared/site-locale.js';
 
 const OG_LOCALES = { et: 'et_EE', en: 'en_US' };
 const OG_IMAGES = { et: `${SITE}/og-image-et.png`, en: `${SITE}/og-image.png` };
@@ -173,7 +173,7 @@ function localize(html, page, locale, copy) {
     .replace(/<[a-z][^>]*\sdata-i18n-placeholder="([^"]+)"[^>]*>/g, (tag, key) => tag.replace(/\splaceholder="[^"]*"/, ` placeholder="${escapeHtml(text(key))}"`))
     .replace(/<a\b[^>]*\sdata-link="([^"]+)"[^>]*>/g, (tag, key) => (Object.hasOwn(PAGE_LINKS, key)
       ? tag.replace(/\shref="[^"]*"/, ` href="${pageHref(key, locale)}"`)
-      : tag.replace(/([?&]lang=)(?:et|en)\b/, `$1${locale}`)))
+      : withLang(tag, locale)))
     .replace(/(\sdata-analytics-privacy-url=")[^"]*"/, `$1${localePath(PAGE_LINKS.privacy, locale)}"`);
 }
 
