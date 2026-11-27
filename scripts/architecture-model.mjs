@@ -177,13 +177,8 @@ export const keyDecisions = [
 
 // The public repos that keep their own decisions; the page links the directories.
 export const repoDecisionDirs = [
-  { repo: 'khe-study', url: 'https://github.com/khelias/khe-study/tree/main/docs/adr' },
-  { repo: 'khe-ai-adventure', url: 'https://github.com/khelias/khe-ai-adventure/tree/main/docs/decisions' },
-  { repo: 'khe-stories', url: 'https://github.com/khelias/khe-stories/tree/main/docs/decisions' },
-  { repo: 'khe-deals', url: 'https://github.com/khelias/khe-deals/tree/main/docs/decisions' },
-  { repo: 'khe-ui', url: 'https://github.com/khelias/khe-ui/tree/main/docs/adr' },
-  { repo: 'khe-sites', url: 'https://github.com/khelias/khe-sites/tree/main/docs/decisions' },
-];
+  'khe-study', 'khe-ai-adventure', 'khe-stories', 'khe-deals', 'khe-ui', 'khe-sites', 'khe-home-assistant', 'khe-house3d', 'khe-workshop',
+].map((repo) => ({ repo, url: `https://github.com/khelias/${repo}/tree/main/docs/decisions` }));
 
 // The decisions in force by topic, for the filters on the decisions page. Check fails when a
 // decision in force is in no cluster or in two, so a new ADR cannot drop off the page.

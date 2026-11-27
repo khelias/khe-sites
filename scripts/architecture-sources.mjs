@@ -303,21 +303,21 @@ async function findComposeFiles(directory) {
   return found.sort();
 }
 
-function resilienceSection(readme) {
-  const section = readme.split(/^## /m).find((part) => /^Resilience\s*\n/.test(part));
+function resilienceSection(doc) {
+  const section = doc.split(/^## /m).find((part) => /^Resilience\s*\n/.test(part));
   const layers = section ? section.match(/^\d+\.\s.*$/gm) : null;
   // Failing the build beats silently publishing a stale count, which is how
   // the old README service-summary parse went wrong unnoticed.
   if (!layers) {
-    throw new SourceError('No numbered list under "## Resilience" in khe-homelab/README.md');
+    throw new SourceError('No numbered list under "## Resilience" in khe-homelab/ARCHITECTURE.md');
   }
   return layers;
 }
 
-export function resilienceLayerTitles(readme) {
-  return resilienceSection(readme).map((line) => {
+export function resilienceLayerTitles(doc) {
+  return resilienceSection(doc).map((line) => {
     const title = line.match(/^\d+\.\s+\*\*(.+?)\.?\*\*/);
-    if (!title) throw new SourceError(`Resilience layer without a bold title in khe-homelab/README.md: ${line}`);
+    if (!title) throw new SourceError(`Resilience layer without a bold title in khe-homelab/ARCHITECTURE.md: ${line}`);
     return title[1].replace(/\s+—\s+/, ': ');
   });
 }
@@ -339,11 +339,11 @@ export async function loadHomelab(homelabRoot) {
     throw new SourceError(`No services directory at ${servicesRoot}. Check HOMELAB_ROOT.`);
   }
   const composeFiles = await findComposeFiles(servicesRoot);
-  const readme = await readSource(join(homelabRoot, 'README.md'), 'HOMELAB_ROOT');
+  const architecture = await readSource(join(homelabRoot, 'ARCHITECTURE.md'), 'HOMELAB_ROOT');
   return {
     composeFiles: composeFiles.length,
     groups: byCategory(servicesRoot, composeFiles),
-    resilienceLayers: resilienceLayerTitles(readme),
+    resilienceLayers: resilienceLayerTitles(architecture),
   };
 }
 
