@@ -3,7 +3,7 @@ import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { replaceMarker, resolveSourceRoot, runSourceBuild, SITE, SourceError } from './architecture-sources.mjs';
 import { builtPages } from './asset-versions.mjs';
-import { REDIRECT } from './language-pages.mjs';
+import { pageShareCard, REDIRECT } from './language-pages.mjs';
 import { localePath, PAGE_LINKS } from '../src/shared/site-locale.js';
 
 const header = join(dirname(fileURLToPath(import.meta.url)), 'templates', 'workshop-header.html');
@@ -12,10 +12,11 @@ const ANALYTICS_TOKEN = '58734ed4ae1e4b4e8a8f8f7d50ff74f2';
 
 export const workshopRoot = () => resolveSourceRoot('WORKSHOP_ROOT', 'khe-workshop');
 
-function shell(markup, lang) {
+function shell(markup, lang, share) {
   return {
     'khe:head': [
       REDIRECT,
+      ...share,
       '<link rel="icon" href="/logo.svg" type="image/svg+xml" sizes="any">',
       '<meta name="theme-color" content="#f6f6f2" media="(prefers-color-scheme: light)">',
       '<meta name="theme-color" content="#0c0e0f" media="(prefers-color-scheme: dark)">',
@@ -45,7 +46,8 @@ export async function buildWorkshopRoom(landingDir) {
     if (!lang || !/<html\b[^>]*\sdata-room="workshop"/.test(html)) {
       throw new SourceError(`${page} has no <html lang="et|en" data-room="workshop">. Check WORKSHOP_ROOT.`);
     }
-    for (const [marker, content] of Object.entries(shell(markup, lang))) html = replaceMarker(html, marker, content, page);
+    const share = pageShareCard(html, page, `${SITE}${WORKSHOP_BASE}${page.slice(outputDir.length).replace(/index\.html$/, '')}`, lang);
+    for (const [marker, content] of Object.entries(shell(markup, lang, share))) html = replaceMarker(html, marker, content, page);
     await writeFile(page, html);
     if (lang === 'et') pages.push(page.slice(outputDir.length).replace(/index\.html$/, ''));
   }

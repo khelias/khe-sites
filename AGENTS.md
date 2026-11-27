@@ -175,8 +175,8 @@ reaches khe.ee at the next deploy here.
   to it and the sitemap to exactly the indexed pages. The redirect script
   opens the other page when `?lang` or the stored language differs from the
   page's; khe-homelab's landing nginx and the edge fallback answer a
-  mismatched `?lang` with a 301 first. The privacy pages are `noindex` and
-  out of the sitemap. The ADR pages stay English only, with no hreflang, and
+  mismatched `?lang` with a 301 first. The privacy pages, khe.ee's and
+  games.khe.ee's, are `noindex` and out of their sitemaps. The ADR pages stay English only, with no hreflang, and
   `404.html` stays one page, translated in place, English under `/en/`.
 - `createLocaleController` stores the language (`app_locale`) only when the
   visitor presses the switcher; a `?lang` only picks the page's language. On a
@@ -190,7 +190,7 @@ reaches khe.ee at the next deploy here.
   link carries a `?lang` whether or not one was.
 - Build and check read their sources at build time: `ARCHITECTURE_ROOT`
   (khe-architecture: `ESTATE.md`, `decisions/`, `metrics/agent-loop.json`) and `HOMELAB_ROOT`
-  (khe-homelab: compose files, the `## Resilience` list), else the sibling
+  (khe-homelab: compose files, the `## Resilience` list in its `ARCHITECTURE.md`), else the sibling
   checkouts next to the main checkout (found through the git common dir, so
   a worktree works). A missing source fails the build naming the variable;
   there is no committed snapshot. CI and deploy check khe-architecture out
@@ -202,8 +202,10 @@ reaches khe.ee at the next deploy here.
   check out into `.sources/` too. A change there reaches khe.ee at the next
   deploy here: a push, the weekly schedule or `gh workflow run deploy.yml`.
   The old `/house3d/` answers 301 to the same path under `/ha/` (khe-homelab's
-  landing nginx). The build then puts the site header (`scripts/templates/house3d-header.html`)
-  on the page. The demo starts its fixed bars and views below `--host-h`,
+  landing nginx). The build then puts the site header (`scripts/templates/house3d-header.html`),
+  the favicon and the share card (`pageShareCard` in `language-pages.mjs`, from
+  the page's own title and description, so the build fails without them) on
+  the page. The demo starts its fixed bars and views below `--host-h`,
   which the header's script sets to its height, and the build fails on a
   demo without it. The switcher translates the header and the title and
   reloads the page: the demo reads `?lang`, which the locale controller
@@ -216,7 +218,7 @@ reaches khe.ee at the next deploy here.
   /workshop/` from `WORKSHOP_ROOT`, else the sibling checkout, which CI and
   deploy check out into `.sources/`; a part published there reaches khe.ee at
   the next deploy here. `scripts/workshop-room.mjs` fills each page's four
-  `khe:` markers with the family head, the header
+  `khe:` markers with the family head and each page's share card (`pageShareCard`), the header
   (`scripts/templates/workshop-header.html`), the footer and the consent
   script, and lists every page at the sitemap's `<!-- workshop -->`. The room
   has one page per language (`/workshop/...`, `/workshop/en/...`) rather than
@@ -308,7 +310,7 @@ reaches khe.ee at the next deploy here.
   and description (`title` for the server page, `<page>PageTitle` for the
   others). `/architecture/` (server room): hero, a row of in-page links,
   `#estate`, `#shipping` (the delivery view, from the push to the deploy),
-  `#uptime` (one row per khe-homelab README resilience layer; check compares
+  `#uptime` (one row per resilience layer in khe-homelab's `ARCHITECTURE.md`; check compares
   the counts), then a line to the decisions page.
   `/architecture/decisions/` (server room): `#key-decisions` (from
   `keyDecisions` in the model) and `#decisions`, the register, which check
@@ -410,7 +412,7 @@ reaches khe.ee at the next deploy here.
   `demo` on the marker adds the package's demo line under the header, with
   `headerDemo` and `headerDemoNote<Room>` from `SITE_HEADER_COPY`; `/ha/`
   has it and no other page (check). The line's link to the real site
-  ([khe-ui ADR-006](https://github.com/khelias/khe-ui/blob/main/docs/adr/006-the-demo-line-links-the-real-site.md))
+  ([khe-ui ADR-006](https://github.com/khelias/khe-ui/blob/main/docs/decisions/006-the-demo-line-links-the-real-site.md))
   is `headerDemoLink` with the room's `DEMO_LINKS` entry in
   `scripts/site-header.mjs`, which throws on a demo room without one; check
   holds `/ha/` to its one link. No page here is a product page, so none

@@ -1,7 +1,8 @@
 import { readFile, writeFile } from 'node:fs/promises';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { runSourceBuild, SourceError } from './architecture-sources.mjs';
+import { runSourceBuild, SITE, SourceError } from './architecture-sources.mjs';
+import { pageShareCard } from './language-pages.mjs';
 
 const header = join(dirname(fileURLToPath(import.meta.url)), 'templates', 'house3d-header.html');
 
@@ -20,9 +21,12 @@ export async function buildHouse3dDemo(outputDir) {
     throw new SourceError(`${page} already sets data-room or data-theme on <html>, which the build sets. Check HOME_ASSISTANT_ROOT.`);
   }
   const markup = await readFile(header, 'utf8');
+  // The page opens in Estonian, so its share card is the Estonian one.
+  const share = ['<link rel="icon" href="/logo.svg" type="image/svg+xml" sizes="any">',
+    ...pageShareCard(html, page, `${SITE}/ha/`, 'et')].join('\n');
   // The house view has no light theme yet, so the page and its header stay dark.
   await writeFile(page, html
     .replace(/<html\b/, '<html data-room="house" data-theme="dark"')
-    .replace('</head>', () => '<link rel="stylesheet" href="/assets/site-header.css">\n</head>')
+    .replace('</head>', () => `${share}\n<link rel="stylesheet" href="/assets/site-header.css">\n</head>`)
     .replace('<body>', () => `<body>\n${markup}`));
 }

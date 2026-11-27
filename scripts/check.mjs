@@ -566,9 +566,9 @@ await runReportingSourceErrors(async () => {
     const uptime = mainPage.slice(mainPage.indexOf('id="uptime"'), mainPage.indexOf('</section>', mainPage.indexOf('id="uptime"')));
     const layerList = uptime.match(/<ol class="arch-layers">([\s\S]*?)<\/ol>/);
     const layerRows = layerList ? (layerList[1].match(/<li\b/g) || []).length : 0;
-    const readmeLayers = sources.homelab.resilienceLayers.length;
-    if (layerRows !== readmeLayers) {
-      throw new Error(`#uptime lists ${layerRows} resilience layers, the khe-homelab README has ${readmeLayers}`);
+    const homelabLayers = sources.homelab.resilienceLayers.length;
+    if (layerRows !== homelabLayers) {
+      throw new Error(`#uptime lists ${layerRows} resilience layers, khe-homelab's ARCHITECTURE.md has ${homelabLayers}`);
     }
     // The register lives on /architecture/decisions/ at id="decisions", where the ADR pages and the
     // key decisions' last cell link it.

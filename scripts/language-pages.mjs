@@ -108,22 +108,12 @@ export const pageFile = (page, locale) => join(localePath(page.path, locale).sli
 
 const jsonScript = (value) => `<script type="application/ld+json">${JSON.stringify(value).replace(/</g, '\\u003c')}</script>`;
 
-// The head of one language's page, in the order check holds it to: the redirect after the
-// alternates it reads and before the first stylesheet.
-function renderHead(page, locale, copy, indent) {
-  const url = pageUrl(page, locale);
+// The share card of a page, with title and description already escaped; the outside rooms
+// (/ha/, /workshop/) get theirs from it too.
+export function shareTags({ url, locale, title, description, type }) {
   const other = LOCALES.find((value) => value !== locale);
-  const title = escapeHtml(copy.title);
-  const description = escapeHtml(copy.description);
   return [
-    `<title>${title}</title>`,
-    `<meta name="description" content="${description}">`,
-    ...(page.noindex ? ['<meta name="robots" content="noindex, follow">'] : []),
-    `<link rel="canonical" href="${url}">`,
-    ...LOCALES.map((value) => `<link rel="alternate" hreflang="${value}" href="${pageUrl(page, value)}">`),
-    `<link rel="alternate" hreflang="x-default" href="${pageUrl(page, 'et')}">`,
-    REDIRECT,
-    `<meta property="og:type" content="${page.type ?? 'website'}">`,
+    `<meta property="og:type" content="${type ?? 'website'}">`,
     '<meta property="og:site_name" content="KHE">',
     `<meta property="og:url" content="${url}">`,
     `<meta property="og:locale" content="${OG_LOCALES[locale]}">`,
@@ -137,6 +127,33 @@ function renderHead(page, locale, copy, indent) {
     `<meta name="twitter:title" content="${title}">`,
     `<meta name="twitter:description" content="${description}">`,
     `<meta name="twitter:image" content="${OG_IMAGES[locale]}">`,
+  ];
+}
+
+// The share card of a page another repo builds, from that page's own (escaped) title and
+// description.
+export function pageShareCard(html, page, url, locale) {
+  const title = html.match(/<title>([^<]*)<\/title>/)?.[1];
+  const description = html.match(/<meta name="description" content="([^"]*)">/)?.[1];
+  if (!title || !description) throw new SourceError(`${page} has no <title> or description for its share card.`);
+  return shareTags({ url, locale, title, description });
+}
+
+// The head of one language's page, in the order check holds it to: the redirect after the
+// alternates it reads and before the first stylesheet.
+function renderHead(page, locale, copy, indent) {
+  const url = pageUrl(page, locale);
+  const title = escapeHtml(copy.title);
+  const description = escapeHtml(copy.description);
+  return [
+    `<title>${title}</title>`,
+    `<meta name="description" content="${description}">`,
+    ...(page.noindex ? ['<meta name="robots" content="noindex, follow">'] : []),
+    `<link rel="canonical" href="${url}">`,
+    ...LOCALES.map((value) => `<link rel="alternate" hreflang="${value}" href="${pageUrl(page, value)}">`),
+    `<link rel="alternate" hreflang="x-default" href="${pageUrl(page, 'et')}">`,
+    REDIRECT,
+    ...shareTags({ url, locale, title, description, type: page.type }),
     jsonScript(page.jsonLd({ url, copy, locale })),
   ].join(`\n${indent}`);
 }
