@@ -19,20 +19,27 @@ jobs:
       ARCHITECTURE_ROOT: ${{ github.workspace }}/.sources/khe-architecture
       HOME_ASSISTANT_ROOT: ${{ github.workspace }}/.sources/khe-home-assistant
       WORKSHOP_ROOT: ${{ github.workspace }}/.sources/khe-workshop
-      # The homelab checkout the runner deploys from, so the architecture page
-      # counts the stacks that actually run. Job level, since Check builds too.
-      HOMELAB_ROOT: /home/khe/homelab
+      # khe-homelab's main, as in CI, not the runner's /home/khe/homelab,
+      # which its deploy updates only on a services change.
+      HOMELAB_ROOT: ${{ github.workspace }}/.sources/khe-homelab
 
     steps:
       - name: Checkout
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
 
-      # After the main checkout, whose clean would remove it.
+      # After the main checkout, whose clean would remove them.
       - name: Checkout khe-architecture
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
         with:
           repository: khelias/khe-architecture
           path: .sources/khe-architecture
+          persist-credentials: false
+
+      - name: Checkout khe-homelab
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          repository: khelias/khe-homelab
+          path: .sources/khe-homelab
           persist-credentials: false
 
       # The 3D house demo at /ha/, built by its own script from the test house.
