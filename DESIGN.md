@@ -141,7 +141,7 @@ from the Colors table below.
 | House | khe.ee/ha | `house` | `house` |
 | Games | the games.khe.ee hub and its privacy page | `games` | `games` |
 
-AI Seiklus (`adventure`) and Tarkade Mängud (`study`) live inside the Games
+AI Seiklus (`adventure`) and Tarkade mängud (`study`) live inside the Games
 room: their colours mark their rows on the hub and the `.ee` of their own
 headers. `study` is proposed; khe-study has no single accent yet.
 
@@ -184,7 +184,7 @@ the four it uses in both themes, so it renders on the game pages too. The
 | house-ground | #e4eaee | #070d1d | the house drawing's ground only |
 | games | #8a5b12 | #e2b253 | Games hub accent and text |
 | adventure | #9a6420 | #e5ad5e | AI Seiklus (dark only in the game) |
-| study | #2f6b3a | #7cc28a | Tarkade Mängud |
+| study | #2f6b3a | #7cc28a | Tarkade mängud |
 
 `primary` in the frontmatter is `ink`: the family's one filled button is ink
 on paper, so no tool invents a primary hue.
@@ -239,7 +239,7 @@ The KHE.ee mark leads to the khe.ee front page from every room. After it,
 on every page but the khe.ee landing, the current room's name with a chevron
 ("Mängud ⌄") opens the rooms list: every room in a fixed order, each with
 its dot, its name and a short note, the current one marked with a check. Inside
-an app the app's name follows after a slash ("Mängud ⌄ / Tarkade Mängud"). On a
+an app the app's name follows after a slash ("Mängud ⌄ / Tarkade mängud"). On a
 phone, from 520px down to just above 360px, an app's header shows the room's
 chevron without its name, so the app's name fits; beside an app's own action
 the app's name gives way instead. A
@@ -260,7 +260,7 @@ ground, the type, the surfaces, the controls, dialogs, notifications, menus
 and lists around a room's content use the values and rules in this file.
 Play areas, canvases, maps and the house drawing keep their own look, within
 the design check's baseline, which only shrinks. A room whose shell does not
-meet this yet says so in its `AGENTS.md`. The content of Tarkade Mängud and AI
+meet this yet says so in its `AGENTS.md`. The content of Tarkade mängud and AI
 Seiklus keeps its own look, set in each repo's design docs, with the chrome
 around it on the family
 ([estate ADR-035](https://github.com/khelias/khe-architecture/blob/main/decisions/035-family-shell-and-design-check-with-its-exceptions.md) point 13).

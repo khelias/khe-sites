@@ -15,7 +15,7 @@ export const SITE_HEADER_COPY = {
     headerTheme: 'Tume teema',
     headerDemo: 'Demo',
     headerDemoNoteHouse: 'Väljamõeldud maja, seadmed on simuleeritud.',
-    headerDemoLink: 'Perele →',
+    headerDemoLink: 'Pere sisselogimine →',
   },
   en: {
     headerLanguage: 'Language',
@@ -24,7 +24,7 @@ export const SITE_HEADER_COPY = {
     headerTheme: 'Dark theme',
     headerDemo: 'Demo',
     headerDemoNoteHouse: 'A made-up house with simulated devices.',
-    headerDemoLink: 'For family →',
+    headerDemoLink: 'Family sign-in →',
   },
 };
 
