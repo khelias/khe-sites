@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="et" data-room="house" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <!-- house3d-frame-head -->
+  <link rel="icon" href="/logo.svg" type="image/svg+xml" sizes="any">
+  <meta name="theme-color" content="#0c0e0f">
+  <link rel="preload" href="/assets/fonts/familjen-grotesk-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="/assets/site-header.css">
+  <link rel="stylesheet" href="/assets/site.css">
+  <script defer src="/assets/analytics-consent.js" data-analytics-token="58734ed4ae1e4b4e8a8f8f7d50ff74f2" data-analytics-privacy-url="/privacy?lang=en"></script>
+</head>
+<body class="ha-frame">
+
+<!-- site-header home=landing rooms demo -->
+
+<main>
+  <h1 class="hero-title" data-i18n="heading">Maja 3D-mudel</h1>
+  <iframe class="ha-frame__window" data-ha-demo data-i18n-title="windowTitle" title="Maja 3D-mudel, töötav demo"></iframe>
+</main>
+
+<script type="module">
+  import { createLocaleController } from '/assets/site-locale.js';
+
+  const description = document.querySelector('meta[name="description"]');
+
+  const COPY = {
+    et: {
+      title: document.title,
+      description: description ? description.content : '',
+      heading: document.querySelector('h1').textContent,
+      windowTitle: document.querySelector('[data-ha-demo]').title,
+    },
+    en: {
+      title: 'Home · Home Assistant demo',
+      description: 'A made-up house on a Home Assistant dashboard: a 3D view and simulated devices.',
+      heading: 'House 3D model',
+      windowTitle: 'House 3D model, a working demo',
+    },
+  };
+
+  createLocaleController({ copy: COPY });
+
+  // The demo reads its language and theme from its own URL once, when it loads (khe-home-assistant
+  // ADR-003), and routes its views by hash: the window gets all three, and the view opened inside
+  // it goes back to the address bar, so a copied link opens the same view.
+  const loaded = document.documentElement.lang;
+  const frame = document.querySelector('[data-ha-demo]');
+  const query = new URLSearchParams({ lang: loaded });
+  if (new URLSearchParams(window.location.search).has('light')) query.set('light', '');
+  frame.addEventListener('load', () => {
+    const inner = frame.contentWindow;
+    const follow = () => history.replaceState(null, '', inner.location.hash || window.location.pathname + window.location.search);
+    inner.addEventListener('hashchange', follow);
+    follow();
+  });
+  window.addEventListener('hashchange', () => {
+    const inner = frame.contentWindow;
+    if (inner.location.hash !== window.location.hash) inner.location.replace(window.location.hash || '#');
+  });
+  frame.src = `demo/?${query}${window.location.hash}`;
+
+  document.querySelectorAll('[data-lang-option]').forEach((button) => {
+    button.addEventListener('click', () => {
+      if (button.getAttribute('data-lang-option') !== loaded) window.location.reload();
+    });
+  });
+</script>
+</body>
+</html>
