@@ -193,8 +193,9 @@ reaches khe.ee at the next deploy here.
   (khe-homelab: compose files, the `## Resilience` list in its `ARCHITECTURE.md`), else the sibling
   checkouts next to the main checkout (found through the git common dir, so
   a worktree works). A missing source fails the build naming the variable;
-  there is no committed snapshot. CI and deploy check khe-architecture out
-  into `.sources/`.
+  there is no committed snapshot. CI and deploy check both out into
+  `.sources/` at `main`, so the architecture page shows khe-homelab's main,
+  not what runs on docker-vm.
 - `/ha/` is the Home Assistant 3D view on khe-home-assistant's made-up
   test house: the build runs that repo's `python3 -I
   scripts/house3d-build.py --demo` (so the build needs `python3`) from
