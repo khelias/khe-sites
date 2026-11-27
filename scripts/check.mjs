@@ -582,32 +582,41 @@ await runReportingSourceErrors(async () => {
   const sitemap = await readFile(join(landing, 'sitemap.xml'), 'utf8');
   await checkLanguagePages(landing, sitemap, sources);
 
-  // the house demo, built from khe-house3d's made-up demo house by khe-home-assistant; its dashboard is either the
-  // hand-written dashboard.js of the old demo or the generated dashboard.json of the new one
-  const demo = join(landing, 'ha');
+  // the house demo at /ha/demo/, built from khe-house3d's made-up demo house by khe-home-assistant; its dashboard
+  // is either the hand-written dashboard.js of the old demo or the generated dashboard.json of the new one
+  const demo = join(landing, 'ha', 'demo');
   for (const file of ['index.html', 'demo.js', 'cards.js', 'house3d-card.js', 'model.json']) {
-    if (!existsSync(join(demo, file))) throw new Error(`dist/landing/ha/${file} was not built`);
+    if (!existsSync(join(demo, file))) throw new Error(`dist/landing/ha/demo/${file} was not built`);
   }
   const dashboardJson = join(demo, 'dashboard.json');
   if (existsSync(dashboardJson)) {
     const dashboard = JSON.parse(await readFile(dashboardJson, 'utf8'));
-    if (!Array.isArray(dashboard.views) || !dashboard.views.length) throw new Error('dist/landing/ha/dashboard.json has no views');
+    if (!Array.isArray(dashboard.views) || !dashboard.views.length) throw new Error('dist/landing/ha/demo/dashboard.json has no views');
     // the same demo in English, which the page loads with ?lang=en, and the scenarios in both
     for (const file of ['dashboard.en.json', 'states.en.json', 'series.en.json', 'model.en.json', 'scenarios.json', 'scenarios.en.json']) {
-      if (!existsSync(join(demo, file))) throw new Error(`dist/landing/ha/${file} was not built`);
+      if (!existsSync(join(demo, file))) throw new Error(`dist/landing/ha/demo/${file} was not built`);
     }
     const dashboardEn = JSON.parse(await readFile(join(demo, 'dashboard.en.json'), 'utf8'));
-    if (!Array.isArray(dashboardEn.views) || !dashboardEn.views.length) throw new Error('dist/landing/ha/dashboard.en.json has no views');
+    if (!Array.isArray(dashboardEn.views) || !dashboardEn.views.length) throw new Error('dist/landing/ha/demo/dashboard.en.json has no views');
   } else if (!existsSync(join(demo, 'dashboard.js'))) {
-    throw new Error('dist/landing/ha has neither dashboard.json nor dashboard.js');
+    throw new Error('dist/landing/ha/demo has neither dashboard.json nor dashboard.js');
   }
   const demoModel = JSON.parse(await readFile(join(demo, 'model.json'), 'utf8'));
-  if (!Array.isArray(demoModel.walls) || !demoModel.walls.length) throw new Error('dist/landing/ha/model.json has no walls');
+  if (!Array.isArray(demoModel.walls) || !demoModel.walls.length) throw new Error('dist/landing/ha/demo/model.json has no walls');
   if (!sitemap.includes('<loc>https://khe.ee/ha/</loc>')) throw new Error('sitemap.xml does not list /ha/');
   const demoPage = await readFile(join(demo, 'index.html'), 'utf8');
-  for (const marker of ['/assets/site-header.css', 'class="site-header site-header--fixed"', 'data-lang-option="et"', 'data-lang-option="en"', '/assets/analytics-consent.js']) {
-    if (!demoPage.includes(marker)) throw new Error(`dist/landing/ha/index.html is missing ${marker}`);
+  for (const marker of ['/assets/site-header.css', 'class="site-header site-header--fixed"', 'data-lang-option="et"', 'data-lang-option="en"', '/assets/analytics-consent.js',
+    "setAttribute('data-embedded'", '<meta name="robots" content="noindex">']) {
+    if (!demoPage.includes(marker)) throw new Error(`dist/landing/ha/demo/index.html is missing ${marker}`);
   }
+  // /ha/ itself: the page's title over the demo in a window, with its own header and consent banner.
+  const framePage = await readFile(join(landing, 'ha', 'index.html'), 'utf8');
+  for (const marker of ['<iframe class="ha-frame__window" data-ha-demo', '/assets/site.css', '/assets/analytics-consent.js', '<link rel="canonical" href="https://khe.ee/ha/">', '<meta property="og:url" content="https://khe.ee/ha/">']) {
+    if (!framePage.includes(marker)) throw new Error(`dist/landing/ha/index.html is missing ${marker}`);
+  }
+  if (demoPage.includes('rel="canonical"')) throw new Error('dist/landing/ha/demo/index.html has a canonical, which would carry its noindex over to /ha/');
+  if ((framePage.match(/<iframe\b/g) || []).length !== 1 || !framePage.includes('frame.src = `demo/?')) throw new Error('dist/landing/ha/index.html does not have one window on demo/');
+  if (framePage.includes('name="robots"')) throw new Error('dist/landing/ha/index.html is noindex; /ha/ is the page the sitemap lists');
 
   // Töökoda, built from khe-workshop: the index and each published part in both languages,
   // every page in the sitemap, every data file the pages link, three.js under one stamped URL so
@@ -669,7 +678,7 @@ await runReportingSourceErrors(async () => {
       for (const marker of ['site-header', 'site-theme', 'site-view', 'site-footer', 'khe:']) {
         if (html.includes(`<!-- ${marker}`)) throw new Error(`dist/${site}/${page} has an unfilled ${marker} marker`);
       }
-      const house = site === 'landing' && page === 'ha/index.html';
+      const house = site === 'landing' && (page === 'ha/index.html' || page === 'ha/demo/index.html');
       const theme = htmlAttribute(html, 'data-theme');
       const toggles = (html.match(/<button class="site-header__theme"/g) || []).length;
       const footers = (html.match(/<footer class="site-footer"/g) || []).length;
@@ -704,7 +713,7 @@ await runReportingSourceErrors(async () => {
         throw new Error(`dist/${site}/${page} has the product view script or the footer KHE.ee link`);
       }
       const demoLines = (html.match(/<p class="site-header__demo"/g) || []).length;
-      const expectedDemoLines = site === 'landing' && page === 'ha/index.html' ? 1 : 0;
+      const expectedDemoLines = house ? 1 : 0;
       if (demoLines !== expectedDemoLines) throw new Error(`dist/${site}/${page} has ${demoLines} demo lines, expected ${expectedDemoLines}`);
       // The demo's one link to the real site (khe-ui ADR-006).
       const demoLinks = [...html.matchAll(/<a class="site-header__demo-link" href="([^"]*)"/g)].map((match) => match[1]);
@@ -713,7 +722,7 @@ await runReportingSourceErrors(async () => {
         throw new Error(`dist/${site}/${page} has demo links ${JSON.stringify(demoLinks)}, expected ${JSON.stringify(expectedDemoLinks)}`);
       }
       if (house && theme !== 'dark') {
-        throw new Error('dist/landing/ha/index.html is not data-theme="dark"; the house view has no light theme');
+        throw new Error(`dist/landing/${page} is not data-theme="dark"; the house view has no light theme`);
       }
       for (const [reference, path, version] of html.matchAll(ASSET_REFERENCE)) {
         if (!versions.has(path)) {

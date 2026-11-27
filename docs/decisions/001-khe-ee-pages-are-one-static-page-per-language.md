@@ -39,7 +39,10 @@ Indexed addresses are hard to take back.
    runs no script lands on the right page and nothing loops.
 5. **A room may keep its own language folders.** The workshop room (estate
    ADR-043) has `/workshop/` and `/workshop/en/`, built by its own repo: the
-   same scheme inside the room, not `/en/workshop/`.
+   same scheme inside the room, not `/en/workshop/`. `/ha/` is one page
+   translated in place: its demo, which khe-home-assistant builds and runs
+   in a window on it, reads its language from `?lang` once at load, so the
+   page and the demo reload on a switch and stay out of points 1 to 4.
 6. **The ADR pages stay English only,** one self-canonical page each with
    no hreflang, since their text exists only in English.
 7. **Other repos keep their links.** `/?lang=` and `/privacy?lang=` stay
