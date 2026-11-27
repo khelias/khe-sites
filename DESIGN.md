@@ -113,7 +113,7 @@ has one accent of its own, which the chrome shows in the `.ee` of the mark
 and as the room's dot in the rooms list. The family covers the shared chrome
 and the khe.ee pages themselves: the landing, `/architecture/`, its decisions
 page and the ADR pages, `/agents/`, `/workshop/`, the games hub, the privacy
-and 404 pages and the `/ha/` demo frame. The content of the product rooms keeps
+and 404 pages and the `/ha/` page around the demo window. The content of the product rooms keeps
 its own look: Unejänku (khe-stories), the Home Assistant dashboard, Tarkade
 Mängud (khe-study) and AI Seiklus (khe-ai-adventure)
 ([estate ADR-035](https://github.com/khelias/khe-architecture/blob/main/decisions/035-family-shell-and-design-check-with-its-exceptions.md)
@@ -312,7 +312,10 @@ its own serif as the fallback.
 Content is one column, `width: min(1080px, 100%)`, with a gutter of
 `max(16px, env(safe-area-inset-*))`; the header's inner row has the same
 width, on every page. Only the wide architecture diagrams leave it, by 80px a
-side from 1240px up. The header height is
+side from 1240px up, and `/ha/`, whose demo window is the screen less 40px a
+side (24px below 1100px) and fills the height under its title, so the
+dashboard keeps its widest layout; below 736px the title is hidden and the
+window runs edge to edge under the header. The header height is
 `@khelias/ui`'s own (3.65rem + 1px, 3.35rem + 1px at 520px and below). No page
 scrolls sideways at 320px.
 

@@ -55,7 +55,7 @@ scripts/
   landing-plates.mjs       inlines the plates into the landing and fills
                            the agents plate from agent-loop.json
   house3d-demo.mjs         runs khe-home-assistant's demo build into
-                           dist/landing/ha/
+                           dist/landing/ha/demo/ and writes /ha/ around it
   workshop-room.mjs        runs khe-workshop's room build into
                            dist/landing/workshop/
   architecture-model.mjs   diagram elements, edges and layout
@@ -69,7 +69,8 @@ scripts/
   markdown.mjs             strict Markdown subset for the ADRs
   templates/decision.html  the ADR page
   templates/house3d-header.html  the header marker and script the build puts
-                           on /ha/
+                           on /ha/demo/
+  templates/house3d-frame.html   the /ha/ page: title and the demo's window
   templates/workshop-header.html  the same for /workshop/
 ```
 
@@ -199,22 +200,30 @@ reaches khe.ee at the next deploy here.
   `.sources/` at `main`, so the architecture page shows khe-homelab's main,
   not what runs on docker-vm.
 - `/ha/` is the Home Assistant 3D view on khe-home-assistant's made-up
-  test house: the build runs that repo's `python3 -I
+  test house, shown in a window under the page's title. The demo itself is
+  `/ha/demo/`: the build runs that repo's `python3 -I
   scripts/house3d-build.py --demo` (so the build needs `python3`) from
   `HOME_ASSISTANT_ROOT`, else the sibling checkout, which CI and deploy
   check out into `.sources/` too. A change there reaches khe.ee at the next
   deploy here: a push, the weekly schedule or `gh workflow run deploy.yml`.
   The old `/house3d/` answers 301 to the same path under `/ha/` (khe-homelab's
   landing nginx). The build then puts the site header (`scripts/templates/house3d-header.html`),
-  the favicon and the share card (`pageShareCard` in `language-pages.mjs`, from
-  the page's own title and description, so the build fails without them) on
-  the page. The demo starts its fixed bars and views below `--host-h`,
-  which the header's script sets to its height, and the build fails on a
-  demo without it. The switcher translates the header and the title and
-  reloads the page: the demo reads `?lang`, which the locale controller
-  keeps current, once at load and shows itself in that language
-  (khe-home-assistant ADR-003, its `*.en.json` files, which the check
-  requires); the hash keeps the open view.
+  the favicon, `noindex` (with no canonical, which would carry it over to
+  `/ha/`) and the share card for `/ha/`
+  (`pageShareCard` in `language-pages.mjs`, from the demo's own title and
+  description, so the build fails without them) on the demo, and writes
+  `/ha/` from `scripts/templates/house3d-frame.html` with the same head. The
+  demo starts its fixed bars and views below `--host-h`, which the header's
+  script sets to its height, and the build fails on a demo without it.
+  Inside a frame the demo marks `<html data-embedded>`, hides its header
+  (so the script measures `--host-h` as 0), loads no consent script and opens a link that
+  leaves it in the whole tab; only `/ha/demo/` may be framed, by khe.ee
+  itself (khe-homelab `SECURITY.md`). `/ha/` passes its language, `?light`
+  and hash into the window and copies the demo's hash back to the address
+  bar. The switcher translates the header and the title and reloads the
+  page: the demo reads `?lang` once at load and shows itself in that
+  language (khe-home-assistant ADR-003, its `*.en.json` files, which the
+  check requires), so `/ha/` translates in place (ADR-001 point 5).
 - `/workshop/` is Töökoda, the household's printed parts ([estate
   ADR-043](https://github.com/khelias/khe-architecture/blob/main/decisions/043-household-parts-are-public-source-built-into-khe-sites.md)):
   the build runs khe-workshop's `python3 -I scripts/site_build.py <out> --base
@@ -236,8 +245,8 @@ reaches khe.ee at the next deploy here.
   khe-sites' font (Familjen Grotesk), the family tokens and the
   `--khe-header-*` values it sets on `.site-header`;
   no rule here restyles a `.site-header__*` part. Every page links it
-  before `site.css`; `/ha/`, with Home Assistant's own styles, links only
-  it. The package sets its defaults on `.site-header`, so a value on
+  before `site.css`; `/ha/demo/`, with Home Assistant's own styles, links
+  only it. The package sets its defaults on `.site-header`, so a value on
   `:root` never reaches the header.
 - The site header markup comes from `@khelias/ui`'s `renderSiteHeader`, called
   only by `scripts/site-header.mjs`. A page
@@ -262,7 +271,7 @@ reaches khe.ee at the next deploy here.
   `--khe-header-menu-*` values are set in `site-header.css`; its dots are the
   package's room accents, which check compares with `DESIGN.md`'s Colors
   table.
-- Theme (estate ADR-014 points 6-7): every page but `/ha/` follows the system setting
+- Theme (estate ADR-014 points 6-7): every page but `/ha/` and `/ha/demo/` follows the system setting
   until the visitor presses the header's toggle (`theme` on the marker,
   label `headerTheme`). The choice is stored under `THEME_STORAGE_KEY`
   (`khe-theme`, in `site-locale.js`) per origin, so khe.ee and games.khe.ee
@@ -277,14 +286,14 @@ reaches khe.ee at the next deploy here.
   rule in `site-header.css` or `site.css` follows the family pattern, under
   the media query on `:root:not([data-theme="light"])` and again on
   `:root[data-theme="dark"]`, or the override misses it (check).
-  `/ha/` has neither the toggle nor the script: it stays dark. The favicon
+  `/ha/` and `/ha/demo/` have neither the toggle nor the script: they stay dark. The favicon
   follows the system only.
 - The footer is a `<!-- site-footer -->` marker filled at build by
   `renderSiteFooter` in the page's language: GitHub and LinkedIn with their
   marks, Privacy (`data-link="privacy"`), and the hosting line. Its strings
   are `SITE_FOOTER_COPY` in `site-locale.js`, merged like the header's;
   `site.css` sets its `--khe-footer-*` values from the family tokens and
-  places it per page. Every page but `/ha/` has exactly one (check).
+  places it per page. Every page but `/ha/` and `/ha/demo/` has exactly one (check).
 - Nothing in the sources carries `?v=`: after the pages are built, the build
   stamps every root-relative `.css`, `.js`, `.json` and picture URL in
   them, and in the `.css` and `.js` files those link, with the first 10 hex
@@ -375,9 +384,9 @@ reaches khe.ee at the next deploy here.
 - Every built page's `<html>` carries `data-room` (`home`, `server`,
   `trips`, `house`, `games`, `stories`, `workshop`; check), which sets `--room` (fills, dots) and
   `--room-text` (text, the `.ee`, focus). A landing card
-  sets its own `data-room` for its hover and focus accent. `/ha/` gets
-  `data-room="house" data-theme="dark"` from `house3d-demo.mjs`: the house
-  view has no light theme yet, so its header stays dark (check).
+  sets its own `data-room` for its hover and focus accent. `/ha/` and
+  `/ha/demo/` get `data-room="house" data-theme="dark"`: the house view has
+  no light theme yet, so their header stays dark (check).
 - The landing shows eight picture cards (`DESIGN.md` "Cards and bands").
   Their pictures sit in `src/landing/`: two screenshots of public pages
   (`/ha/` and a Töökoda part), the one published story picture copied from
@@ -415,11 +424,11 @@ reaches khe.ee at the next deploy here.
 - Demos ([estate ADR-035](https://github.com/khelias/khe-architecture/blob/main/decisions/035-family-shell-and-design-check-with-its-exceptions.md) point 11):
   `demo` on the marker adds the package's demo line under the header, with
   `headerDemo` and `headerDemoNote<Room>` from `SITE_HEADER_COPY`; `/ha/`
-  has it and no other page (check). The line's link to the real site
+  and `/ha/demo/` have it and no other page (check). The line's link to the real site
   ([khe-ui ADR-006](https://github.com/khelias/khe-ui/blob/main/docs/decisions/006-the-demo-line-links-the-real-site.md))
   is `headerDemoLink` with the room's `DEMO_LINKS` entry in
   `scripts/site-header.mjs`, which throws on a demo room without one; check
-  holds `/ha/` to its one link. No page here is a product page, so none
+  holds both to its one link. No page here is a product page, so none
   has the view script or the footer's KHE.ee link (check).
 - `khe.ee/stories/` is Unejänku, built by khe-stories with the stories from
   khe-bunny-tales, which deploys it; khe-homelab's landing serves it from
